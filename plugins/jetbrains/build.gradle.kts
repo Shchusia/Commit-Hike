@@ -75,5 +75,13 @@ providers.gradleProperty("pycharmPath").orNull?.let { path ->
 }
 
 ktlint {
-    version.set("1.5.0") // style rules come from ../../.editorconfig (intellij_idea)
+    version.set("1.5.0")
+    // Set explicitly: ktlint under Gradle doesn't pick up .editorconfig files
+    // outside this Gradle project (the repository root one).
+    additionalEditorconfig.set(
+        mapOf(
+            "ktlint_code_style" to "intellij_idea",
+            "max_line_length" to "140",
+        ),
+    )
 }

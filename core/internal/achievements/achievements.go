@@ -20,6 +20,7 @@ const (
 	TypeDayDistance = "day_distance" // at least MinM in a single day
 )
 
+// Rule is one condition; which fields matter depends on Type.
 type Rule struct {
 	Type     string  `json:"type"`
 	MinM     float64 `json:"min_m,omitempty"`
@@ -28,6 +29,7 @@ type Rule struct {
 	Days     int     `json:"days,omitempty"`
 }
 
+// Def is an achievement as defined in a route pack.
 type Def struct {
 	ID     string `json:"id"`
 	Rule   Rule   `json:"rule"`

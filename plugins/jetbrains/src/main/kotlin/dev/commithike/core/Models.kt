@@ -9,7 +9,18 @@ package dev.commithike.core
 
 const val API_VERSION = 1
 
-data class Waypoint(val id: String = "", val name: String = "", val text: String? = null, val atM: Double = 0.0)
+data class Waypoint(
+    val id: String = "",
+    val name: String = "",
+    val text: String? = null,
+    val atM: Double = 0.0,
+    val kind: String? = null, // map symbol: peak, lake, bridge, hut…
+    val elevationM: Double = 0.0,
+)
+
+data class Biome(val atM: Double = 0.0, val type: String = "")
+
+data class Day(val date: String = "", val m: Double = 0.0)
 
 data class Story(val id: String = "", val text: String = "", val atM: Double = 0.0)
 
@@ -29,6 +40,7 @@ data class Route(
     val locales: List<String>? = null,
     val builtin: Boolean = false,
     val waypoints: List<Waypoint>? = null,
+    val biomes: List<Biome>? = null,
     val achievements: Int = 0,
 )
 
@@ -45,6 +57,8 @@ data class Journey(
     val achievements: List<Achievement>? = null,
     val commits: Int = 0,
     val streakDays: Int = 0,
+    val daily: List<Day>? = null,
+    val day: Int = 1,
 )
 
 data class Status(
@@ -81,6 +95,9 @@ data class ScanResult(
 ) {
     fun status() = Status(tracked, reason, locale, global, project, todayM, totalM)
 }
+
+/** The hiker icon: a custom PNG as a data URL, or the panel's default when not custom. */
+data class Avatar(val custom: Boolean = false, val dataUrl: String? = null)
 
 data class VerifyResult(val added: Int = 0, val updated: Int = 0, val removed: Int = 0)
 

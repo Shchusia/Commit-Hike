@@ -25,6 +25,7 @@ import (
 	"time"
 )
 
+// File format version and permissions.
 const (
 	SchemaVersion = 1
 	dirPerm       = 0o700
@@ -33,6 +34,7 @@ const (
 	staleLock     = 30 * time.Second
 )
 
+// Which projects count.
 const (
 	ModeAll      = "all"      // every repo opened in the IDE counts
 	ModeSelected = "selected" // only projects the user explicitly enabled
@@ -44,6 +46,7 @@ type Assignment struct {
 	Since   int64  `json:"since"` // unix seconds; 0 = include full history
 }
 
+// Config is the user settings file (config.json).
 type Config struct {
 	Version         int                    `json:"version"`
 	Locale          string                 `json:"locale,omitempty"` // "" = follow the IDE (--lang)
@@ -55,16 +58,19 @@ type Config struct {
 	EnabledProjects map[string]bool        `json:"enabled_projects,omitempty"` // for ModeSelected
 }
 
+// CommitRec is one counted commit. It holds no hash, path or message.
 type CommitRec struct {
 	Project string  `json:"p"`
 	Time    int64   `json:"t"` // author time, unix seconds
 	Meters  float64 `json:"m"` // raw meters before the daily cap
 }
 
+// ProjectRec is per-project bookkeeping.
 type ProjectRec struct {
 	LastScan int64 `json:"last_scan"`
 }
 
+// State is everything counted so far (state.json).
 type State struct {
 	Version  int                    `json:"version"`
 	Commits  map[string]*CommitRec  `json:"commits"`  // key: HMAC(author email|author time)
@@ -75,6 +81,7 @@ type State struct {
 	Achievements map[string]map[string]int64 `json:"achievements,omitempty"`
 }
 
+// Store gives access to the data directory. Create it with Open.
 type Store struct {
 	Dir string
 	key []byte
@@ -98,6 +105,7 @@ func DefaultDir() (string, error) {
 	return filepath.Join(base, "commit-hike"), nil
 }
 
+// Open creates the data directory if needed and loads or creates the HMAC key.
 func Open(dir string) (*Store, error) {
 	if err := os.MkdirAll(dir, dirPerm); err != nil {
 		return nil, err
@@ -146,15 +154,19 @@ func (s *Store) Lock() (func(), error) {
 	for {
 		f, err := os.OpenFile(p, os.O_CREATE|os.O_EXCL|os.O_WRONLY, filePerm)
 		if err == nil {
-			fmt.Fprintf(f, "%d\n", os.Getpid())
-			f.Close()
-			return func() { os.Remove(p) }, nil
+			_, werr := fmt.Fprintf(f, "%d\n", os.Getpid()) // the pid is only for humans debugging a stuck lock
+			if err := errors.Join(werr, f.Close()); err != nil {
+				_ = os.Remove(p)
+				return nil, fmt.Errorf("writing lock file: %w", err)
+			}
+			// If removal fails, the lock simply expires as stale after staleLock.
+			return func() { _ = os.Remove(p) }, nil
 		}
 		if !errors.Is(err, os.ErrExist) {
 			return nil, err
 		}
 		if fi, err := os.Stat(p); err == nil && time.Since(fi.ModTime()) > staleLock {
-			os.Remove(p) // owner crashed
+			_ = os.Remove(p) // owner crashed; if this fails, the next OpenFile reports it
 			continue
 		}
 		if time.Now().After(deadline) {
@@ -164,6 +176,7 @@ func (s *Store) Lock() (func(), error) {
 	}
 }
 
+// LoadConfig reads config.json; ErrNotInitialized if setup hasn't run.
 func (s *Store) LoadConfig() (*Config, error) {
 	var c Config
 	if err := readJSON(s.path("config.json"), &c); err != nil {
@@ -181,11 +194,13 @@ func (s *Store) LoadConfig() (*Config, error) {
 	return &c, nil
 }
 
+// SaveConfig writes config.json atomically.
 func (s *Store) SaveConfig(c *Config) error {
 	c.Version = SchemaVersion
 	return writeJSON(s.path("config.json"), c)
 }
 
+// LoadState reads state.json; a missing file is an empty state.
 func (s *Store) LoadState() (*State, error) {
 	st := State{Version: SchemaVersion}
 	if err := readJSON(s.path("state.json"), &st); err != nil && !errors.Is(err, os.ErrNotExist) {
@@ -203,6 +218,7 @@ func (s *Store) LoadState() (*State, error) {
 	return &st, nil
 }
 
+// SaveState writes state.json atomically.
 func (s *Store) SaveState(st *State) error {
 	st.Version = SchemaVersion
 	return writeJSON(s.path("state.json"), st)
@@ -226,25 +242,27 @@ func writeJSON(p string, v any) error {
 
 // writeAtomic writes to a temp file and renames it into place, so a crash or
 // power loss never leaves a half-written file behind.
-func writeAtomic(p string, data []byte) error {
+func writeAtomic(p string, data []byte) (err error) {
 	tmp, err := os.CreateTemp(filepath.Dir(p), ".tmp-*")
 	if err != nil {
 		return err
 	}
-	defer os.Remove(tmp.Name()) // no-op after successful rename
-	if err := tmp.Chmod(filePerm); err != nil && !isWindows() {
-		tmp.Close()
+	defer func() {
+		if err != nil { // clean up; the first error is the one worth reporting
+			_ = tmp.Close()
+			_ = os.Remove(tmp.Name())
+		}
+	}()
+	if err = tmp.Chmod(filePerm); err != nil && !isWindows() {
 		return err
 	}
-	if _, err := tmp.Write(data); err != nil {
-		tmp.Close()
+	if _, err = tmp.Write(data); err != nil {
 		return err
 	}
-	if err := tmp.Sync(); err != nil {
-		tmp.Close()
+	if err = tmp.Sync(); err != nil {
 		return err
 	}
-	if err := tmp.Close(); err != nil {
+	if err = tmp.Close(); err != nil {
 		return err
 	}
 	return os.Rename(tmp.Name(), p)

@@ -32,6 +32,12 @@
       <action id="CommitHike.ChooseRoute" class="dev.commithike.actions.ChooseRouteAction" text="Choose Trail for All Projects…"/>
       <action id="CommitHike.ChooseProjectRoute" class="dev.commithike.actions.ChooseProjectRouteAction" text="Choose Trail for This Project…"/>
       <separator/>
+      <action id="CommitHike.ImportRoute" class="dev.commithike.actions.ImportRouteAction" text="Import a Route…"/>
+      <action id="CommitHike.CreateRouteTemplate" class="dev.commithike.actions.CreateRouteTemplateAction" text="Create a Route Template…"/>
+      <action id="CommitHike.RemoveRoute" class="dev.commithike.actions.RemoveRouteAction" text="Remove a Route…"/>
+      <action id="CommitHike.SetHikerIcon" class="dev.commithike.actions.SetHikerIconAction" text="Set Hiker Icon…"/>
+      <action id="CommitHike.ResetHikerIcon" class="dev.commithike.actions.ResetHikerIconAction" text="Use Default Hiker Icon"/>
+      <separator/>
       <action id="CommitHike.EnableProject" class="dev.commithike.actions.EnableProjectAction" text="Count This Project"/>
       <action id="CommitHike.DisableProject" class="dev.commithike.actions.DisableProjectAction" text="Stop Counting This Project"/>
       <action id="CommitHike.Verify" class="dev.commithike.actions.VerifyAction" text="Recount This Project from Git History"/>

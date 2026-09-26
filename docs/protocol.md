@@ -7,7 +7,7 @@ Plugins run `commit-hike <command> [flags]` and read one JSON document from stdo
 { "api": 1, "ok": false, "error": { "code": "not_initialized", "message": "…" } }
 ```
 
-Error codes: `not_initialized`, `invalid_argument`, `unknown_route`, `not_a_repo`, `busy`, `internal`. Show your own translated text per code; `message` is for logs.
+Error codes: `not_initialized`, `invalid_argument`, `unknown_route`, `not_a_repo`, `busy`, `invalid_route`, `route_exists`, `route_in_use`, `invalid_image`, `internal`. Show your own translated text per code; `message` is for logs.
 
 Every command accepts `--lang` (IDE language, e.g. `uk`). A locale fixed in config (`init --locale`) wins.
 
@@ -15,8 +15,14 @@ Every command accepts `--lang` (IDE language, e.g. `uk`). A locale fixed in conf
 |---|---|
 | `init` | config |
 | `scan --repo` | status + `new_commits`, `added_m`, `events` |
-| `status [--repo]` | status: `global` and `project` journeys, `today_m`, `total_m`, `locale` |
-| `routes` | list of routes |
+| `status [--repo]` | status: `global` and `project` journeys (with `day` of the journey and `daily`, last 14 days), `today_m`, `total_m`, `locale` |
+| `avatar get` | `{custom, data_url}`: the hiker icon, `data_url` only when custom |
+| `avatar set --path ICON.png` | the new icon; PNG, 8–512 px per side, up to 256 KiB |
+| `avatar reset` | back to the default hiker |
+| `routes` | list of routes (waypoints with `kind`/`elevation_m`, `biomes`) |
+| `route import --path [--replace]` | the imported route |
+| `route remove --id` | `{removed}` |
+| `route template --id --path` | `{path}` of the new pack |
 | `journey --scope --route [--repo] [--from-history]` | status |
 | `project enable/disable --repo` | `{enabled}` |
 | `verify --repo` | `{added, updated, removed}` |

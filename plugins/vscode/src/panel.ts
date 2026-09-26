@@ -12,10 +12,12 @@ export interface PanelData {
   repo?: string;
   locale?: string;
   status?: Status;
+  avatar?: string; // custom hiker PNG as a data URL; absent = the panel's default
+  avatar_custom?: boolean;
 }
 
 export type PanelMessage =
-  | { command: "ready" | "setup" | "refresh" | "enableProject" }
+  | { command: "ready" | "setup" | "refresh" | "enableProject" | "setAvatar" | "resetAvatar" }
   | { command: "chooseRoute"; scope: "global" | "project" };
 
 export class TrailPanel implements vscode.WebviewViewProvider {
@@ -32,6 +34,7 @@ export class TrailPanel implements vscode.WebviewViewProvider {
     const csp = [
       "default-src 'none'",
       `style-src ${view.webview.cspSource} 'unsafe-inline'`,
+      "img-src data:", // the hiker icon is passed as a data URL
       `script-src 'nonce-${nonce}'`,
     ].join("; ");
     const html = fs.readFileSync(path.join(this.extensionPath, "media", "panel.html"), "utf8");

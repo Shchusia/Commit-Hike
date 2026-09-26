@@ -16,6 +16,7 @@ import (
 	"time"
 )
 
+// FileChange is one file in a commit, as reported by `git log --numstat`.
 type FileChange struct {
 	Path    string // new path for renames
 	Added   int
@@ -23,6 +24,7 @@ type FileChange struct {
 	Binary  bool
 }
 
+// Commit is a commit with the fields the core needs.
 type Commit struct {
 	Hash        string
 	AuthorEmail string
@@ -31,8 +33,11 @@ type Commit struct {
 	Files       []FileChange
 }
 
-var ErrNotRepo = errors.New("not a git repository")
-var ErrNoCommits = errors.New("repository has no commits yet")
+// Errors returned when a path can't be used as a project.
+var (
+	ErrNotRepo   = errors.New("not a git repository")
+	ErrNoCommits = errors.New("repository has no commits yet")
+)
 
 func run(repo string, args ...string) ([]byte, error) {
 	cmd := exec.Command("git", append([]string{"-C", repo}, args...)...)

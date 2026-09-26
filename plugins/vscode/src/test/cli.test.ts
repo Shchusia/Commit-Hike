@@ -61,6 +61,33 @@ void test("Cli talks to the real core end to end", async () => {
 
   await assert.rejects(cli.setJourney("global", "atlantis", false), (e: CliError) => e.code === "unknown_route");
 
+  // Map data and daily stats
+  const proj = (await cli.status(repo)).project!;
+  const hoverla = proj.route.waypoints.find(w => w.id === "hoverla")!;
+  assert.equal(hoverla.kind, "peak");
+  assert.equal(hoverla.elevation_m, 2061);
+  assert.ok((proj.route.biomes ?? []).length > 0);
+  assert.equal(proj.daily.length, 14);
+
+  // Custom routes: template -> import -> remove
+  const work = fs.mkdtempSync(path.join(os.tmpdir(), "ch-routes-"));
+  const dir = await cli.routeTemplate("my-trail", work);
+  const imported = await cli.importRoute(dir, false);
+  assert.equal(imported.name, "Моя стежка");
+  await assert.rejects(cli.importRoute(dir, false), (e: CliError) => e.code === "route_exists");
+  await cli.importRoute(dir, true);
+  await cli.removeRoute("my-trail");
+
+  // Hiker icon: the default figure shipped with the panel is itself a valid custom icon.
+  assert.equal((await cli.avatar()).custom, false);
+  const icon = path.join(__dirname, "..", "..", "..", "..", "ui", "panel", "hiker-default.png");
+  const av = await cli.setAvatar(icon);
+  assert.ok(av.custom && av.data_url?.startsWith("data:image/png;base64,"));
+  await assert.rejects(cli.setAvatar(path.join(work, "my-trail", "route.json")), (e: CliError) => e.code === "invalid_image");
+  await cli.resetAvatar();
+  assert.equal((await cli.avatar()).custom, false);
+  assert.ok(!(await cli.routes()).some(r => r.id === "my-trail"));
+
   const bad = await cli.scan(os.tmpdir());
   assert.equal(bad.tracked, false);
 });

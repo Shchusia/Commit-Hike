@@ -7,6 +7,8 @@ import com.intellij.notification.NotificationType
 import com.intellij.openapi.application.EDT
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.logger
+import com.intellij.openapi.fileChooser.FileChooser
+import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent
 import com.intellij.openapi.fileEditor.FileEditorManagerListener
@@ -14,6 +16,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.IconLoader
+import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.util.messages.Topic
 import dev.commithike.core.CoreException
@@ -22,6 +25,7 @@ import dev.commithike.core.Scope
 import dev.commithike.core.Status
 import dev.commithike.core.formatDistance
 import dev.commithike.core.gitGlobalEmail
+import dev.commithike.ui.RemoveRouteDialog
 import dev.commithike.ui.RouteDialog
 import dev.commithike.ui.SetupDialog
 import git4idea.repo.GitRepository
@@ -257,7 +261,14 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
         }
         val canRemove = scope == Scope.PROJECT && view.status?.project != null
         val choice = withContext(Dispatchers.EDT) {
-            val dialog = RouteDialog(project, scope, app.routes.values.sortedBy { it.name }, canRemove)
+            val dialog = RouteDialog(
+                project,
+                scope,
+                app.routes.values.sortedBy { it.name },
+                canRemove,
+                onImport = { importRoute() },
+                onTemplate = { createRouteTemplate() },
+            )
             if (dialog.showAndGet()) dialog.result() else null
         } ?: return@guarded
         app.call { it.setJourney(scope, choice.routeId, choice.fromHistory, if (scope == Scope.PROJECT) repo else null) }
@@ -295,6 +306,101 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
                 "${r.added} added, ${r.updated} corrected, ${r.removed} removed."
             },
         )
+    }
+
+    // ---------- custom routes ----------
+
+    /** Imports a route pack from a folder or a .zip chosen by the user. */
+    fun importRoute() = guarded {
+        val file = withContext(Dispatchers.EDT) {
+            val descriptor = FileChooserDescriptorFactory.createSingleFileOrFolderDescriptor()
+                .withTitle("Import a Route")
+                .withDescription("Choose a route folder or a .zip file with route.json inside.")
+            FileChooser.chooseFile(descriptor, project, null)
+        } ?: return@guarded
+        val route = try {
+            app.call { it.importRoute(file.path, replace = false) }
+        } catch (e: CoreException) {
+            if (e.code != "route_exists") throw e
+            val replace = withContext(Dispatchers.EDT) {
+                Messages.showYesNoDialog(project, "${e.message}. Replace it?", "Commit Hike", "Replace", "Cancel", null) == Messages.YES
+            }
+            if (!replace) return@guarded
+            app.call { it.importRoute(file.path, replace = true) }
+        }
+        app.reloadRoutes()
+        notify(
+            "Route imported",
+            "${route.name}: ${formatDistance(route.lengthM)}, ${route.waypoints.orEmpty().size} stops.",
+            "Walk it now",
+        ) { walkRoute(route.id) }
+    }
+
+    /** Writes a template route pack the user can edit and then import. */
+    fun createRouteTemplate() = guarded {
+        val target = withContext(Dispatchers.EDT) {
+            val descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
+                .withTitle("Where to Create the Route")
+            val folder = FileChooser.chooseFile(descriptor, project, null) ?: return@withContext null
+            val id = Messages.showInputDialog(
+                project,
+                "Route id: lowercase letters, digits and dashes.",
+                "New Route",
+                null,
+                "my-trail",
+                null,
+            ) ?: return@withContext null
+            folder.path to id.trim()
+        } ?: return@guarded
+        val dir = app.call { it.routeTemplate(target.second, target.first) }
+        withContext(Dispatchers.EDT) {
+            LocalFileSystem.getInstance().refreshAndFindFileByPath("$dir/route.json")
+                ?.let { FileEditorManager.getInstance(project).openFile(it, true) }
+        }
+        notify("Route template created", "Edit route.json and locales/*.json, then import the folder.", "Import") { importRoute() }
+    }
+
+    /** Removes one of the user's imported routes. */
+    fun removeRoute() = guarded {
+        val custom = app.routes.values.filter { !it.builtin }.sortedBy { it.name }
+        if (custom.isEmpty()) {
+            notify("", "You haven't imported any routes.")
+            return@guarded
+        }
+        val route = withContext(Dispatchers.EDT) {
+            val dialog = RemoveRouteDialog(project, custom)
+            if (dialog.showAndGet()) dialog.selected else null
+        } ?: return@guarded
+        app.call { it.removeRoute(route.id) }
+        app.reloadRoutes()
+        notify("", "${route.name} was removed.")
+    }
+
+    // ---------- hiker icon ----------
+
+    /** Lets the user pick a PNG (ideally with a transparent background) as the hiker. */
+    fun setHikerIcon() = guarded {
+        val file = withContext(Dispatchers.EDT) {
+            val descriptor = FileChooserDescriptorFactory.createSingleFileDescriptor("png")
+                .withTitle("Choose a Hiker Icon")
+                .withDescription("A PNG with a transparent background, up to 512×512 px. The figure should face right.")
+            FileChooser.chooseFile(descriptor, project, null)
+        } ?: return@guarded
+        app.call { it.setAvatar(file.path) }
+        app.reloadAvatar()
+        app.refreshAllProjects()
+    }
+
+    fun resetHikerIcon() = guarded {
+        app.call { it.resetAvatar() }
+        app.reloadAvatar()
+        app.refreshAllProjects()
+    }
+
+    private fun walkRoute(id: String) = guarded {
+        app.call { it.setJourney(Scope.GLOBAL, id, fromHistory = false) }
+        app.refreshAllProjects()
+        showTrail()
     }
 
     private suspend fun offerSetupOnce() {

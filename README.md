@@ -8,6 +8,10 @@ Every commit you make moves you along a hiking trail, right inside your IDE.
 
 - **Real routes.** Walk the Chornohora ridge from Zaroslyak over Hoverla to Pip Ivan, or a short demo trail. Each route has its own waypoints, story and achievements.
 - **Fair distance.** Meters grow with the size of a commit, but slowly: tiny commits count, huge ones can't be farmed. Lock files, generated code, whitespace-only changes and other people's commits don't count.
+- **Your own routes.** Create a route from a template, then import it as a folder or a `.zip`, right from the IDE. See [docs/routes.md](docs/routes.md).
+- **A hike you can watch.** The main view is a side-on scene: parallax mountains, a ground line that follows the route's real elevation profile, forests, meadows, lakes, and a sky that follows your clock. Scroll along the trail with the mouse wheel, drag or ← →.
+- **Your own hiker.** Replace the default figure with any PNG with a transparent background (Tools → Commit Hike → Set Hiker Icon…). The default, [`ui/panel/hiker-default.png`](ui/panel/hiker-default.png), shows the expected format: facing right, feet at the bottom edge.
+- **A real map.** Your trail is drawn like a hiking map: forests, meadows, rock, lakes, contour lines around peaks, plus a places list and daily stats.
 - **Your language.** Route texts are translated; the core picks the IDE's language and falls back to English.
 - **Private by design.** Nothing is written to your repositories and nothing leaves your computer. No source code, commit messages, file names or repository names are stored.
 

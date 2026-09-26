@@ -1,6 +1,7 @@
 package store
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 	"sync"
@@ -12,7 +13,7 @@ func TestConfigRoundTripAndPermissions(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if _, err := s.LoadConfig(); err != ErrNotInitialized {
+	if _, err := s.LoadConfig(); !errors.Is(err, ErrNotInitialized) {
 		t.Fatalf("want ErrNotInitialized, got %v", err)
 	}
 	in := &Config{Mode: ModeAll, Emails: []string{"me@x.io"}, Locale: "uk"}

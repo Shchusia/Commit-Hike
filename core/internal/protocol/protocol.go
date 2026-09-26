@@ -23,6 +23,10 @@ const (
 	CodeUnknownRoute    = "unknown_route"
 	CodeNotARepo        = "not_a_repo"
 	CodeBusy            = "busy"
+	CodeInvalidRoute    = "invalid_route" // an imported route pack is broken; message says why
+	CodeRouteExists     = "route_exists"
+	CodeRouteInUse      = "route_in_use"
+	CodeInvalidImage    = "invalid_image" // a hiker icon that isn't a usable PNG
 	CodeInternal        = "internal"
 )
 
@@ -49,10 +53,24 @@ type Config struct {
 
 // Waypoint is a named stop on a route, with translated texts.
 type Waypoint struct {
-	ID   string  `json:"id"`
-	Name string  `json:"name"`
-	Text string  `json:"text,omitempty"`
+	ID         string  `json:"id"`
+	Name       string  `json:"name"`
+	Text       string  `json:"text,omitempty"`
+	AtM        float64 `json:"at_m"`
+	Kind       string  `json:"kind,omitempty"` // map symbol: peak, lake, bridge, hut…
+	ElevationM float64 `json:"elevation_m,omitempty"`
+}
+
+// Biome is the terrain from AtM until the next biome.
+type Biome struct {
 	AtM  float64 `json:"at_m"`
+	Type string  `json:"type"` // forest, meadow, rock, snow, water, village
+}
+
+// Day is the distance walked on one day (UTC).
+type Day struct {
+	Date string  `json:"date"` // YYYY-MM-DD
+	M    float64 `json:"m"`
 }
 
 // Story is a piece of narration between waypoints.
@@ -80,6 +98,7 @@ type Route struct {
 	Locales      []string   `json:"locales"`
 	Builtin      bool       `json:"builtin"`
 	Waypoints    []Waypoint `json:"waypoints"`
+	Biomes       []Biome    `json:"biomes,omitempty"`
 	Achievements int        `json:"achievements"` // how many there are
 }
 
@@ -97,6 +116,14 @@ type Journey struct {
 	Achievements []Achievement `json:"achievements"`
 	Commits      int           `json:"commits"`
 	StreakDays   int           `json:"streak_days"`
+	Daily        []Day         `json:"daily"` // last 14 days, oldest first, today last
+	Day          int           `json:"day"`   // day of the journey: 1 on the day it started
+}
+
+// Avatar is the hiker icon: a custom PNG as a data URL, or empty for the default.
+type Avatar struct {
+	Custom  bool   `json:"custom"`
+	DataURL string `json:"data_url,omitempty"`
 }
 
 // Status is the full picture for the current project.

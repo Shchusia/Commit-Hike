@@ -4,21 +4,99 @@
   "default_locale": "en",
   "length_m": 20000,
   "waypoints": [
-    { "id": "trailhead", "at_m": 0 },
-    { "id": "old-bridge", "at_m": 1000 },
-    { "id": "pine-forest", "at_m": 5000 },
-    { "id": "mountain-lake", "at_m": 10000 },
-    { "id": "summit", "at_m": 20000 }
+    {
+      "id": "trailhead",
+      "at_m": 0,
+      "kind": "start"
+    },
+    {
+      "id": "old-bridge",
+      "at_m": 1000,
+      "kind": "bridge"
+    },
+    {
+      "id": "pine-forest",
+      "at_m": 5000,
+      "kind": "landmark"
+    },
+    {
+      "id": "mountain-lake",
+      "at_m": 10000,
+      "kind": "lake"
+    },
+    {
+      "id": "summit",
+      "at_m": 20000,
+      "kind": "peak",
+      "elevation_m": 1800
+    }
+  ],
+  "biomes": [
+    {
+      "at_m": 0,
+      "type": "meadow"
+    },
+    {
+      "at_m": 1500,
+      "type": "forest"
+    },
+    {
+      "at_m": 7500,
+      "type": "meadow"
+    },
+    {
+      "at_m": 11000,
+      "type": "rock"
+    },
+    {
+      "at_m": 17000,
+      "type": "snow"
+    }
   ],
   "story": [
-    { "id": "birdsong", "at_m": 2500 },
-    { "id": "clouds", "at_m": 15000 }
+    {
+      "id": "birdsong",
+      "at_m": 2500
+    },
+    {
+      "id": "clouds",
+      "at_m": 15000
+    }
   ],
   "achievements": [
-    { "id": "first-steps", "rule": { "type": "distance", "min_m": 100 } },
-    { "id": "bridge", "rule": { "type": "waypoint", "waypoint": "old-bridge" } },
-    { "id": "halfway", "rule": { "type": "waypoint", "waypoint": "mountain-lake" } },
-    { "id": "big-day", "rule": { "type": "day_distance", "min_m": 1500 } },
-    { "id": "summit", "rule": { "type": "finish" } }
+    {
+      "id": "first-steps",
+      "rule": {
+        "type": "distance",
+        "min_m": 100
+      }
+    },
+    {
+      "id": "bridge",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "old-bridge"
+      }
+    },
+    {
+      "id": "halfway",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "mountain-lake"
+      }
+    },
+    {
+      "id": "big-day",
+      "rule": {
+        "type": "day_distance",
+        "min_m": 1500
+      }
+    },
+    {
+      "id": "summit",
+      "rule": {
+        "type": "finish"
+      }
+    }
   ]
 }

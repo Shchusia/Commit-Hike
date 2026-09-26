@@ -59,7 +59,14 @@ class SetupDialog(project: Project, detectedEmail: String) : DialogWrapper(proje
 }
 
 /** Picks a trail for all projects or for the current one. */
-class RouteDialog(project: Project, scope: Scope, routes: List<Route>, canRemove: Boolean) : DialogWrapper(project) {
+class RouteDialog(
+    project: Project,
+    scope: Scope,
+    routes: List<Route>,
+    canRemove: Boolean,
+    private val onImport: () -> Unit,
+    private val onTemplate: () -> Unit,
+) : DialogWrapper(project) {
     data class Result(val routeId: String, val fromHistory: Boolean)
 
     private data class Choice(val id: String, val label: String, val detail: String)
@@ -94,11 +101,45 @@ class RouteDialog(project: Project, scope: Scope, routes: List<Route>, canRemove
             row { radioButton("Include commits I already made", "history") }
             row { radioButton("Start from now", "now") }
         }.bind(::start)
+        separator()
+        row {
+            link("Import a route…") {
+                close(CANCEL_EXIT_CODE)
+                onImport()
+            }
+            link("Create a route template…") {
+                close(CANCEL_EXIT_CODE)
+                onTemplate()
+            }
+        }
     }
 
     fun result(): Result? = selected?.let { Result(it.id, start == "history") }
 
     companion object {
         const val NONE = "none"
+    }
+}
+
+/** Picks one of the user's imported routes to remove. */
+class RemoveRouteDialog(project: Project, private val routes: List<Route>) : DialogWrapper(project) {
+    var selected: Route? = routes.firstOrNull()
+
+    init {
+        title = "Remove a Route"
+        setOKButtonText("Remove")
+        init()
+    }
+
+    override fun createCenterPanel(): JComponent = panel {
+        row("Route:") {
+            comboBox(
+                routes,
+                SimpleListCellRenderer.create<Route?> { label, value, _ ->
+                    label.text = value?.let { "${it.name}  (${formatDistance(it.lengthM)})" } ?: ""
+                },
+            ).bindItem(::selected)
+        }
+        row { comment("Progress you made on this route stays; you just can't choose it anymore.") }
     }
 }

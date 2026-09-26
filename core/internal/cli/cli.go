@@ -21,6 +21,10 @@ const usage = `commit-hike: turns commits into a journey. Every command prints o
   commit-hike scan     --repo PATH [--lang uk]
   commit-hike status   [--repo PATH] [--lang uk]
   commit-hike routes   [--lang uk]
+  commit-hike route    import --path FOLDER|FILE.zip [--replace] [--lang uk]
+  commit-hike route    remove --id ID
+  commit-hike route    template --id ID --path FOLDER
+  commit-hike avatar   get | set --path ICON.png | reset
   commit-hike journey  --scope global|project [--repo PATH] --route ID|none [--from-history]
   commit-hike project  enable|disable --repo PATH
   commit-hike verify   --repo PATH
@@ -65,16 +69,16 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 	repo := fs.String("repo", "", "path inside a git repository")
 	lang := fs.String("lang", "", "language for route texts, e.g. uk or en")
 
-	// "project enable|disable" has a positional sub-command before flags.
+	// "project" and "route" have a positional sub-command before flags.
 	sub := ""
-	if cmd == "project" && len(args) > 0 {
+	if (cmd == "project" || cmd == "route" || cmd == "avatar") && len(args) > 0 {
 		sub, args = args[0], args[1:]
 	}
 
 	var (
-		emails, mode, route, locale, scope, format *string
-		fromHistory                                *bool
-		width                                      *float64
+		emails, mode, route, locale, scope, format, id, path *string
+		fromHistory, replace                                 *bool
+		width                                                *float64
 	)
 	switch cmd {
 	case "init":
@@ -87,6 +91,12 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 		scope = fs.String("scope", app.ScopeGlobal, "global | project")
 		route = fs.String("route", "", "route id, or none")
 		fromHistory = fs.Bool("from-history", false, "count existing history")
+	case "avatar":
+		path = fs.String("path", "", "PNG file, ideally with a transparent background")
+	case "route":
+		id = fs.String("id", "", "route id")
+		path = fs.String("path", "", "route folder or .zip (import), target folder (template)")
+		replace = fs.Bool("replace", false, "overwrite an installed user route with the same id")
 	case "render":
 		scope = fs.String("scope", app.ScopeGlobal, "global | project")
 		format = fs.String("format", "svg", "svg | scene")
@@ -126,6 +136,27 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 			return nil, invalid("usage: commit-hike project enable|disable --repo PATH")
 		}
 		return map[string]bool{"enabled": sub == "enable"}, svc.SetProjectEnabled(*repo, sub == "enable")
+	case "route":
+		switch sub {
+		case "import":
+			return svc.ImportRoute(*path, *replace, *lang)
+		case "remove":
+			return map[string]string{"removed": *id}, svc.RemoveRoute(*id)
+		case "template":
+			dir, err := svc.RouteTemplate(*id, *path)
+			return map[string]string{"path": dir}, err
+		}
+		return nil, invalid("usage: commit-hike route import|remove|template, see `commit-hike help`")
+	case "avatar":
+		switch sub {
+		case "get":
+			return svc.Avatar()
+		case "set":
+			return svc.SetAvatar(*path)
+		case "reset":
+			return map[string]bool{"custom": false}, svc.ResetAvatar()
+		}
+		return nil, invalid("usage: commit-hike avatar get|set|reset")
 	case "verify":
 		return svc.Verify(*repo)
 	case "render":

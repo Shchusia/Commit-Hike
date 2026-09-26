@@ -1,5 +1,5 @@
 # golangci-lint v2: one binary that runs many linters and formatters.
-# Run: golangci-lint run   |   format: golangci-lint fmt
+# Run: golangci-lint run   |   format: golangci-lint fmt   (or: task core:lint / task core:fmt)
 version: "2"
 
 run:
@@ -17,9 +17,18 @@ linters:
     - unparam
     - nolintlint  # every //nolint must say why
   settings:
+    errcheck:
+      exclude-functions:
+        # Diagnostics for humans on stderr/strings.Builder: there is nowhere
+        # meaningful to report a failure to print an error message.
+        - fmt.Fprint
+        - fmt.Fprintf
+        - fmt.Fprintln
     gosec:
       excludes:
         - G204 # we run `git` with arguments on purpose
+        - G304 # we read our own data files and route packs by path on purpose
+        - G703 # same, via taint analysis: the CLI takes user-given paths by design; writes stay in our data dir
     revive:
       rules:
         - name: exported

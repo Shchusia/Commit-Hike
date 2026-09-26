@@ -85,6 +85,43 @@ class CoreCliTest {
         val notRepo = cli.scan(Files.createTempDirectory("ch-plain").toString())
         assertFalse(notRepo.tracked)
 
+        // Map data and daily stats survive the round trip through the Kotlin models.
+        val hoverla = proj.project!!.route.waypoints!!.first { it.id == "hoverla" }
+        assertEquals("peak", hoverla.kind)
+        assertEquals(2061.0, hoverla.elevationM, 0.001)
+        assertTrue(proj.project!!.route.biomes!!.isNotEmpty())
+        assertEquals(14, proj.project!!.daily!!.size)
+        assertEquals(1, proj.project!!.day)
+
+        // Custom routes: template -> import -> remove.
+        val work = Files.createTempDirectory("ch-routes").toString()
+        val dir = cli.routeTemplate("my-trail", work)
+        val imported = cli.importRoute(dir, replace = false)
+        assertEquals("Моя стежка", imported.name)
+        assertFalse(imported.builtin)
+        try {
+            cli.importRoute(dir, replace = false)
+            fail("expected route_exists")
+        } catch (e: CoreException) {
+            assertEquals("route_exists", e.code)
+        }
+        cli.removeRoute("my-trail")
+
+        // Hiker icon: the panel's default figure is itself a valid custom icon.
+        assertFalse(cli.avatar().custom)
+        val icon = Paths.get("..", "..", "ui", "panel", "hiker-default.png").toString()
+        val av = cli.setAvatar(icon)
+        assertTrue(av.custom && av.dataUrl!!.startsWith("data:image/png;base64,"))
+        try {
+            cli.setAvatar("$dir/route.json")
+            fail("expected invalid_image")
+        } catch (e: CoreException) {
+            assertEquals("invalid_image", e.code)
+        }
+        cli.resetAvatar()
+        assertFalse(cli.avatar().custom)
+        assertTrue(cli.routes().none { it.id == "my-trail" })
+
         assertEquals(0, cli.verify(repo.path).removed)
         assertEquals(listOf("me@x.io"), cli.config().emails)
     }

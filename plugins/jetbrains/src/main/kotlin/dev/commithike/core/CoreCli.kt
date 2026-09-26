@@ -49,6 +49,28 @@ class CoreCli(
         Status::class.java,
     )
 
+    fun importRoute(path: String, replace: Boolean): Route = call(
+        listOf("route", "import", "--path", path) + (if (replace) listOf("--replace") else emptyList()) + langArgs(),
+        Route::class.java,
+    )
+
+    fun removeRoute(id: String) {
+        call<JsonElement>(listOf("route", "remove", "--id", id), JsonElement::class.java)
+    }
+
+    /** Writes a template route pack to dir/id and returns its folder. */
+    fun routeTemplate(id: String, dir: String): String =
+        call<JsonElement>(listOf("route", "template", "--id", id, "--path", dir), JsonElement::class.java)
+            .asJsonObject.get("path").asString
+
+    fun avatar(): Avatar = call(listOf("avatar", "get"), Avatar::class.java)
+
+    fun setAvatar(pngPath: String): Avatar = call(listOf("avatar", "set", "--path", pngPath), Avatar::class.java)
+
+    fun resetAvatar() {
+        call<JsonElement>(listOf("avatar", "reset"), JsonElement::class.java)
+    }
+
     fun setProjectEnabled(repo: String, on: Boolean) {
         call<JsonElement>(listOf("project", if (on) "enable" else "disable", "--repo", repo), JsonElement::class.java)
     }

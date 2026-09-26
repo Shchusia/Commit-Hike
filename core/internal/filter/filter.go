@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// DefaultIgnore: lock files, dependency dirs, build output, generated code.
+// DefaultIgnore lists lock files, dependency dirs, build output and generated code.
 // Pattern rules:
 //   - ends with "/"  -> matches a directory segment anywhere in the path
 //   - contains "/"   -> glob against the full repo-relative path
@@ -24,6 +24,7 @@ var DefaultIgnore = []string{
 	"*.g.dart", "*.freezed.dart", "*.generated.*", "*.snap",
 }
 
+// Filter matches paths against ignore patterns. Create it with New.
 type Filter struct {
 	dirs  []string
 	full  []string

@@ -9,6 +9,7 @@ package score
 
 import "math"
 
+// Config holds the scoring constants.
 type Config struct {
 	BaseMeters    float64 // flat reward for any meaningful commit
 	LogFactor     float64 // weight of log2(1+lines)
@@ -17,6 +18,7 @@ type Config struct {
 	OverCapFactor float64 // multiplier for meters above DailySoftCap
 }
 
+// Default returns the scoring used by the app.
 func Default() Config {
 	return Config{
 		BaseMeters:    10,
@@ -56,4 +58,5 @@ func (c Config) DailyFactor(raw float64) float64 {
 	return c.DailyEffective(raw) / raw
 }
 
+// Round1 rounds to one decimal place, the precision shown to users.
 func Round1(v float64) float64 { return math.Round(v*10) / 10 }

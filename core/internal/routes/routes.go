@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"io/fs"
 	"path"
+	"slices"
 	"sort"
 	"strings"
 
@@ -22,10 +23,25 @@ import (
 	"github.com/commit-hike/commit-hike/core/internal/i18n"
 )
 
+// Waypoint is a named stop at a distance along the route.
 type Waypoint struct {
-	ID  string  `json:"id"`
-	AtM float64 `json:"at_m"`
+	ID         string  `json:"id"`
+	AtM        float64 `json:"at_m"`
+	Kind       string  `json:"kind,omitempty"`        // map symbol, one of WaypointKinds
+	ElevationM float64 `json:"elevation_m,omitempty"` // shown next to peaks and passes
 }
+
+// Biome sets the terrain drawn from AtM until the next biome starts.
+type Biome struct {
+	AtM  float64 `json:"at_m"`
+	Type string  `json:"type"` // one of BiomeTypes
+}
+
+// WaypointKinds are the map symbols front ends know how to draw.
+var WaypointKinds = []string{"start", "finish", "peak", "pass", "lake", "river", "bridge", "hut", "village", "landmark"}
+
+// BiomeTypes are the kinds of terrain front ends know how to draw.
+var BiomeTypes = []string{"forest", "meadow", "rock", "snow", "water", "village"}
 
 // StoryBeat is a piece of narration shown when the walker passes AtM.
 type StoryBeat struct {
@@ -33,6 +49,7 @@ type StoryBeat struct {
 	AtM float64 `json:"at_m"`
 }
 
+// Route is a loaded, validated route pack.
 type Route struct {
 	ID            string             `json:"id"`
 	Version       int                `json:"version"`
@@ -40,6 +57,7 @@ type Route struct {
 	LengthM       float64            `json:"length_m"`
 	Path          [][2]float64       `json:"path,omitempty"` // optional hand-drawn shape, points in 0..1
 	Waypoints     []Waypoint         `json:"waypoints"`
+	Biomes        []Biome            `json:"biomes,omitempty"`
 	Story         []StoryBeat        `json:"story,omitempty"`
 	Achievements  []achievements.Def `json:"achievements,omitempty"`
 
@@ -72,6 +90,9 @@ func (r *Route) WaypointPositions() map[string]float64 {
 	}
 	return m
 }
+
+// LoadPack loads and validates a single route pack in dir.
+func LoadPack(fsys fs.FS, dir string) (*Route, error) { return loadOne(fsys, dir) }
 
 // Load reads every route pack under dir and fails on the first broken one.
 // Use it for built-in routes, which must always be valid.
@@ -196,6 +217,19 @@ func (r *Route) Validate() error {
 			return fmt.Errorf("waypoint %q is outside the route", w.ID)
 		}
 	}
+	for _, w := range r.Waypoints {
+		if w.Kind != "" && !slices.Contains(WaypointKinds, w.Kind) {
+			return fmt.Errorf("waypoint %q: unknown kind %q (use one of %s)", w.ID, w.Kind, strings.Join(WaypointKinds, ", "))
+		}
+	}
+	for _, b := range r.Biomes {
+		if !slices.Contains(BiomeTypes, b.Type) {
+			return fmt.Errorf("biome at %v m: unknown type %q (use one of %s)", b.AtM, b.Type, strings.Join(BiomeTypes, ", "))
+		}
+		if b.AtM < 0 || b.AtM > r.LengthM {
+			return fmt.Errorf("biome at %v m is outside the route", b.AtM)
+		}
+	}
 	for _, s := range r.Story {
 		if s.ID == "" || s.AtM < 0 || s.AtM > r.LengthM {
 			return fmt.Errorf("story beat %q is invalid", s.ID)
@@ -228,5 +262,6 @@ func (r *Route) Validate() error {
 	}
 	sort.Slice(r.Waypoints, func(i, j int) bool { return r.Waypoints[i].AtM < r.Waypoints[j].AtM })
 	sort.Slice(r.Story, func(i, j int) bool { return r.Story[i].AtM < r.Story[j].AtM })
+	sort.Slice(r.Biomes, func(i, j int) bool { return r.Biomes[i].AtM < r.Biomes[j].AtM })
 	return nil
 }

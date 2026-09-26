@@ -2,6 +2,7 @@ package app
 
 import (
 	"math"
+	"time"
 
 	"github.com/commit-hike/commit-hike/core/internal/achievements"
 	"github.com/commit-hike/commit-hike/core/internal/i18n"
@@ -11,7 +12,10 @@ import (
 	"github.com/commit-hike/commit-hike/core/internal/store"
 )
 
-const day = 86400
+const (
+	day       = 86400
+	dailyDays = 14 // how many days of history Journey.Daily covers
+)
 
 // journey is one active route: the global one, or a project's own.
 type journey struct {
@@ -172,6 +176,24 @@ func (s *Service) journeyDTO(j journey, js journeyStats, unlocked map[string]int
 			out.Story = &protocol.Story{ID: b.ID, Text: r.T(chain, "story."+b.ID), AtM: b.AtM}
 		}
 	}
+	today := s.now().Unix() / day
+	// Day 1 is the day the journey started: the assignment date, or the first
+	// counted commit when history was included.
+	start := today
+	if j.assign.Since > 0 {
+		start = j.assign.Since / day
+	} else {
+		for d := range js.byDay {
+			start = min(start, d)
+		}
+	}
+	out.Day = int(today-start) + 1
+	for d := today - dailyDays + 1; d <= today; d++ {
+		out.Daily = append(out.Daily, protocol.Day{
+			Date: time.Unix(d*day, 0).UTC().Format(time.DateOnly),
+			M:    score.Round1(js.byDay[d]),
+		})
+	}
 	out.Achievements = make([]protocol.Achievement, 0, len(r.Achievements))
 	for _, a := range r.Achievements {
 		out.Achievements = append(out.Achievements, achievementDTO(r, chain, a.ID, a.Hidden, unlocked[a.ID]))
@@ -202,8 +224,10 @@ func events(scope string, r *routes.Route, before, after float64, chain []string
 	}
 	for _, b := range r.Story {
 		if b.AtM > before && b.AtM <= after {
-			out = append(out, protocol.Event{Type: protocol.EventStory, Journey: scope,
-				Story: &protocol.Story{ID: b.ID, Text: r.T(chain, "story."+b.ID), AtM: b.AtM}})
+			out = append(out, protocol.Event{
+				Type: protocol.EventStory, Journey: scope,
+				Story: &protocol.Story{ID: b.ID, Text: r.T(chain, "story."+b.ID), AtM: b.AtM},
+			})
 		}
 	}
 	if before < r.LengthM && after >= r.LengthM {
@@ -220,12 +244,15 @@ func routeDTO(r *routes.Route, chain []string) protocol.Route {
 	for _, w := range r.Waypoints {
 		out.Waypoints = append(out.Waypoints, waypointDTO(r, chain, w))
 	}
+	for _, b := range r.Biomes {
+		out.Biomes = append(out.Biomes, protocol.Biome{AtM: b.AtM, Type: b.Type})
+	}
 	return out
 }
 
 func waypointDTO(r *routes.Route, chain []string, w routes.Waypoint) protocol.Waypoint {
 	return protocol.Waypoint{
-		ID: w.ID, AtM: w.AtM,
+		ID: w.ID, AtM: w.AtM, Kind: w.Kind, ElevationM: w.ElevationM,
 		Name: r.T(chain, "waypoints."+w.ID+".name"),
 		Text: r.T(chain, "waypoints."+w.ID+".text"),
 	}

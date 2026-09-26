@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <g fill="#0b0e12" stroke="#0b0e12" stroke-linecap="round" stroke-linejoin="round">
+    <!-- trekking pole, planted ahead -->
+    <line x1="89" y1="46" x2="99" y2="124" stroke-width="3"/>
+    <!-- back leg (pushing off) -->
+    <path d="M63 70 L57 95 L47 117" fill="none" stroke-width="10"/>
+    <path d="M40 117 L53 115 L54 122 L41 123 Z" stroke-width="3"/>
+    <!-- front leg (stepping) -->
+    <path d="M69 70 L80 94 L84 117" fill="none" stroke-width="10"/>
+    <path d="M80 116 L95 117 L95 123 L81 123 Z" stroke-width="3"/>
+    <!-- backpack with a bedroll on top -->
+    <rect x="41" y="32" width="21" height="36" rx="6" stroke-width="2"/>
+    <rect x="40" y="25" width="23" height="9" rx="4.5" stroke-width="2"/>
+    <!-- torso, leaning into the walk -->
+    <path d="M58 33 Q70 29 77 36 L75 71 Q66 75 59 71 Z" stroke-width="3"/>
+    <!-- arm to the pole -->
+    <path d="M72 40 L82 55 L91 50" fill="none" stroke-width="7"/>
+    <!-- head and cap -->
+    <circle cx="73" cy="19" r="9" stroke-width="1"/>
+    <path d="M64 16 Q72 5 82 14 L89 16 L81 18 Z" stroke-width="1.5"/>
+  </g>
+</svg>

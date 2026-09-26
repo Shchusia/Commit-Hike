@@ -7,6 +7,7 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.project.ProjectManager
+import dev.commithike.core.Avatar
 import dev.commithike.core.CoreCli
 import dev.commithike.core.CoreException
 import dev.commithike.core.CorePlatform
@@ -36,6 +37,9 @@ class CommitHikeApp {
     @Volatile var initialized = false
         private set
 
+    @Volatile var avatar: Avatar = Avatar()
+        private set
+
     @Volatile var routes: Map<String, Route> = emptyMap()
         private set
 
@@ -52,6 +56,7 @@ class CommitHikeApp {
     suspend fun ensureLoaded() {
         if (loaded) return
         routes = call { it.routes() }.associateBy { it.id }
+        avatar = call { it.avatar() }
         initialized = try {
             call { it.config() }
             true
@@ -59,6 +64,16 @@ class CommitHikeApp {
             if (e.notInitialized) false else throw e
         }
         loaded = true
+    }
+
+    /** Re-reads the hiker icon after it was changed (in this or another IDE). */
+    suspend fun reloadAvatar() {
+        avatar = call { it.avatar() }
+    }
+
+    /** Re-reads the route list, e.g. after importing or removing a route. */
+    suspend fun reloadRoutes() {
+        routes = call { it.routes() }.associateBy { it.id }
     }
 
     fun markInitialized(value: Boolean) {

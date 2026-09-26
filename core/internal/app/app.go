@@ -78,6 +78,7 @@ func (s *Service) RouteWarnings() []error { return s.routeWarnings }
 
 // ---------- setup & config ----------
 
+// InitOptions are the first-run setup choices.
 type InitOptions struct {
 	Emails      []string
 	Mode        string
@@ -86,6 +87,7 @@ type InitOptions struct {
 	Locale      string
 }
 
+// Init creates or updates the user settings. Empty options keep current values.
 func (s *Service) Init(o InitOptions) (*protocol.Config, error) {
 	unlock, err := s.lock()
 	if err != nil {
@@ -140,6 +142,7 @@ func (s *Service) Init(o InitOptions) (*protocol.Config, error) {
 	return publicConfig(cfg), nil
 }
 
+// Config returns the settings plugins may show.
 func (s *Service) Config() (*protocol.Config, error) {
 	cfg, err := s.st.LoadConfig()
 	if err != nil {

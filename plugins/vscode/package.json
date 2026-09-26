@@ -70,6 +70,31 @@
         "command": "commitHike.verify",
         "title": "Recount This Project from Git History",
         "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.importRoute",
+        "title": "Import a Route…",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.createRouteTemplate",
+        "title": "Create a Route Template…",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.removeRoute",
+        "title": "Remove a Route…",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.setHikerIcon",
+        "title": "Set Hiker Icon…",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.resetHikerIcon",
+        "title": "Use Default Hiker Icon",
+        "category": "Commit Hike"
       }
     ],
     "configuration": {

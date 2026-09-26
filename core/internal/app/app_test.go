@@ -31,7 +31,7 @@ func newRepo(t *testing.T) *repo {
 	return r
 }
 
-func (r *repo) git(email string, args ...string) string {
+func (r *repo) git(email string, args ...string) {
 	r.t.Helper()
 	if email == "" {
 		email = "me@x.io"
@@ -43,11 +43,20 @@ func (r *repo) git(email string, args ...string) string {
 		"GIT_COMMITTER_NAME=T", "GIT_COMMITTER_EMAIL="+email,
 		"GIT_AUTHOR_DATE="+date, "GIT_COMMITTER_DATE="+date,
 		"GIT_CONFIG_GLOBAL=/dev/null")
-	out, err := cmd.CombinedOutput()
-	if err != nil {
+	if out, err := cmd.CombinedOutput(); err != nil {
 		r.t.Fatalf("git %v: %v\n%s", args, err, out)
 	}
-	return string(out)
+}
+
+// mustWrite writes a file or fails the test.
+func mustWrite(t *testing.T, path, data string) {
+	t.Helper()
+	if err := os.MkdirAll(filepath.Dir(path), 0o750); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(path, []byte(data), 0o600); err != nil {
+		t.Fatal(err)
+	}
 }
 
 // commit appends `lines` new lines to file and commits them as email.
@@ -55,17 +64,14 @@ func (r *repo) commit(email, file string, lines int) {
 	r.t.Helper()
 	r.ts += 60
 	p := filepath.Join(r.dir, file)
-	if err := os.MkdirAll(filepath.Dir(p), 0o755); err != nil {
-		r.t.Fatal(err)
-	}
-	f, err := os.OpenFile(p, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0o644)
-	if err != nil {
-		r.t.Fatal(err)
+	var b strings.Builder
+	if old, err := os.ReadFile(p); err == nil {
+		b.Write(old)
 	}
 	for i := 0; i < lines; i++ {
-		fmt.Fprintf(f, "line %d %d\n", r.ts, i)
+		fmt.Fprintf(&b, "line %d %d\n", r.ts, i)
 	}
-	f.Close()
+	mustWrite(r.t, p, b.String())
 	r.git(email, "add", "-A")
 	r.git(email, "commit", "-q", "-m", "c")
 }
@@ -110,8 +116,11 @@ func TestScanCountsOnlyMyMeaningfulCommits(t *testing.T) {
 	r.commit("other@x.io", "main.go", 50)   // not mine
 	r.commit("", "package-lock.json", 5000) // ignored file
 	r.commit("", "node_modules/a/b.js", 10) // ignored dir
-	b, _ := os.ReadFile(filepath.Join(r.dir, "main.go"))
-	os.WriteFile(filepath.Join(r.dir, "main.go"), []byte(strings.ReplaceAll(string(b), " ", "  ")), 0o644)
+	b, err := os.ReadFile(filepath.Join(r.dir, "main.go"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	mustWrite(t, filepath.Join(r.dir, "main.go"), strings.ReplaceAll(string(b), " ", "  "))
 	r.ts += 60
 	r.git("", "commit", "-qam", "whitespace only")
 
@@ -130,7 +139,7 @@ func TestAmendAndCloneAreNotDoubleCounted(t *testing.T) {
 	r.commit("", "a.go", 1)
 	scan(t, s, r.dir, "")
 
-	os.WriteFile(filepath.Join(r.dir, "a.go"), []byte(strings.Repeat("x\n", 3)), 0o644)
+	mustWrite(t, filepath.Join(r.dir, "a.go"), strings.Repeat("x\n", 3))
 	r.git("", "commit", "-q", "-a", "--amend", "--no-edit")
 	res := scan(t, s, r.dir, "")
 	if res.NewCommits != 0 || res.UpdatedCommits != 1 || res.TotalM != 50 {
@@ -268,7 +277,9 @@ func TestVerifyHealsTamperedState(t *testing.T) {
 		rec.Meters, pid = 99999, rec.Project
 	}
 	st.Commits["fake"] = &store.CommitRec{Project: pid, Time: base, Meters: 500}
-	s.st.SaveState(st)
+	if err := s.st.SaveState(st); err != nil {
+		t.Fatal(err)
+	}
 
 	v, err := s.Verify(r.dir)
 	if err != nil || v.Updated != 1 || v.Removed != 1 {
@@ -308,14 +319,12 @@ func TestRender(t *testing.T) {
 func TestUserRoutes(t *testing.T) {
 	dir := t.TempDir()
 	custom := filepath.Join(dir, "routes", "my-route")
-	os.MkdirAll(filepath.Join(custom, "locales"), 0o755)
-	os.WriteFile(filepath.Join(custom, "route.json"),
-		[]byte(`{"id":"my-route","length_m":500,"waypoints":[{"id":"a","at_m":0}]}`), 0o644)
-	os.WriteFile(filepath.Join(custom, "locales", "en.json"),
-		[]byte(`{"name":"Mine","description":"d","waypoints":{"a":{"name":"A"}}}`), 0o644)
+	mustWrite(t, filepath.Join(custom, "route.json"),
+		`{"id":"my-route","length_m":500,"waypoints":[{"id":"a","at_m":0}]}`)
+	mustWrite(t, filepath.Join(custom, "locales", "en.json"),
+		`{"name":"Mine","description":"d","waypoints":{"a":{"name":"A"}}}`)
 	// a broken one next to it must not break anything
-	os.MkdirAll(filepath.Join(dir, "routes", "broken"), 0o755)
-	os.WriteFile(filepath.Join(dir, "routes", "broken", "route.json"), []byte(`{`), 0o644)
+	mustWrite(t, filepath.Join(dir, "routes", "broken", "route.json"), `{`)
 
 	s, err := New(dir)
 	if err != nil {

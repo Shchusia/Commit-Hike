@@ -19,6 +19,7 @@ type Point struct {
 	Y float64 `json:"y"`
 }
 
+// Marker is a laid-out waypoint.
 type Marker struct {
 	ID         string  `json:"id"`
 	Label      string  `json:"label"`
@@ -118,7 +119,7 @@ func SVG(sc Scene, title string, width float64) string {
 // generate builds a smooth serpentine trail, bottom (start) to top (end).
 func generate(seed string) []Point {
 	h := fnv.New32a()
-	h.Write([]byte(seed))
+	_, _ = h.Write([]byte(seed)) // hash writes never fail
 	state := h.Sum32() | 1
 	rnd := func() float64 { // xorshift32: tiny, deterministic, good enough for shapes
 		state ^= state << 13

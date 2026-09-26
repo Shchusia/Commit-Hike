@@ -27,6 +27,7 @@ import com.intellij.ui.jcef.JBCefJSQuery
 import com.intellij.ui.scale.JBUIScale
 import com.intellij.util.ui.JBUI
 import com.intellij.util.ui.UIUtil
+import dev.commithike.CommitHikeApp
 import dev.commithike.CommitHikeIcons
 import dev.commithike.ProjectTrek
 import dev.commithike.TrailListener
@@ -166,7 +167,7 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
             ?: return "<p>panel.html is missing from this build.</p>"
         val bridge = "<script>window.commitHikeHost={send:function(m){${query.inject("m")}}};</script>"
         return raw
-            .replace("{{CSP}}", "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'")
+            .replace("{{CSP}}", "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:")
             .replace("{{NONCE}}", "")
             .replace("<html lang=\"en\">", "<html lang=\"en\" style=\"${themeVars()}\">")
             .replace("<head>", "<head>$bridge")
@@ -207,6 +208,8 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
             "setup" -> trek.setup()
             "refresh" -> trek.requestRefresh()
             "enableProject" -> trek.setProjectEnabled(true)
+            "setAvatar" -> trek.setHikerIcon()
+            "resetAvatar" -> trek.resetHikerIcon()
             "chooseRoute" -> trek.chooseRoute(if (msg.get("scope")?.asString == "project") Scope.PROJECT else Scope.GLOBAL)
         }
     }
@@ -218,6 +221,8 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
         val repo: String?,
         val locale: String,
         val status: Status?,
+        val avatar: String?, // custom hiker PNG as a data URL; null = the panel's default
+        val avatarCustom: Boolean,
     )
 
     private fun push() {
@@ -225,7 +230,16 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
         val v = project.service<ProjectTrek>().view
         if (v.state == "loading") return
         val locale = v.status?.locale ?: DynamicBundle.getLocale().toLanguageTag()
-        val data = PanelData(state = v.state, error = v.error, repo = v.repo, locale = locale, status = v.status)
+        val avatar = CommitHikeApp.getInstance().avatar
+        val data = PanelData(
+            state = v.state,
+            error = v.error,
+            repo = v.repo,
+            locale = locale,
+            status = v.status,
+            avatar = avatar.dataUrl,
+            avatarCustom = avatar.custom,
+        )
         // Gson escapes <, >, & and quotes, so its output is a safe JS literal.
         val js = "window.commitHike && window.commitHike.update(${gson.toJson(data)});"
         browser.cefBrowser.executeJavaScript(js, browser.cefBrowser.url, 0)

@@ -43,7 +43,7 @@ func TestLoadRejectsBrokenPacks(t *testing.T) {
 	goodText := `{"name":"X","description":"d","waypoints":{"a":{"name":"A"}}}`
 	cases := map[string]fstest.MapFS{
 		"unknown field": {
-			"r/x/route.json":      {Data: []byte(`{"id":"x","length_m":100,"lenght":1,"waypoints":[]}`)},
+			"r/x/route.json":      {Data: []byte(`{"id":"x","length_m":100,"extra_field":1,"waypoints":[]}`)},
 			"r/x/locales/en.json": {Data: []byte(goodText)},
 		},
 		"id mismatch": {

@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import {
-  Cli, CliError, Route, ScanResult, Status, bundledBinary, ensureExecutable, formatDistance, gitGlobalEmail,
+  Avatar, Cli, CliError, Route, ScanResult, Status, bundledBinary, ensureExecutable, formatDistance, gitGlobalEmail,
 } from "./cli";
 import { PanelMessage, TrailPanel } from "./panel";
 import { RepoTracker } from "./repos";
@@ -28,6 +28,7 @@ class App {
   private readonly panel: TrailPanel;
   private readonly tracker: RepoTracker;
   private routes: Record<string, Route> = {};
+  private avatar: Avatar = { custom: false };
   private initialized = false;
   private currentRepo?: string;
   private lastStatus?: Status;
@@ -54,12 +55,18 @@ class App {
       vscode.commands.registerCommand("commitHike.enableProject", () => this.guard(() => this.setProjectEnabled(true))),
       vscode.commands.registerCommand("commitHike.disableProject", () => this.guard(() => this.setProjectEnabled(false))),
       vscode.commands.registerCommand("commitHike.verify", () => this.guard(() => this.verify())),
+      vscode.commands.registerCommand("commitHike.importRoute", () => this.guard(() => this.importRoute())),
+      vscode.commands.registerCommand("commitHike.createRouteTemplate", () => this.guard(() => this.createRouteTemplate())),
+      vscode.commands.registerCommand("commitHike.removeRoute", () => this.guard(() => this.removeRoute())),
+      vscode.commands.registerCommand("commitHike.setHikerIcon", () => this.guard(() => this.setHikerIcon())),
+      vscode.commands.registerCommand("commitHike.resetHikerIcon", () => this.guard(() => this.resetHikerIcon())),
       vscode.window.onDidChangeActiveTextEditor(() => this.followActiveRepo()),
       this.tracker.onDidChangeRepos(() => this.followActiveRepo(true)),
     );
 
     try {
       this.routes = Object.fromEntries((await this.cli.routes()).map(r => [r.id, r]));
+      this.avatar = await this.cli.avatar();
       await this.cli.config();
       this.initialized = true;
     } catch (e) {
@@ -124,7 +131,10 @@ class App {
     try {
       this.lastStatus = await this.cli.status(this.currentRepo);
       this.renderStatusBar();
-      this.panel.update({ type: "update", state: "ok", repo: this.currentRepo, locale: this.lastStatus.locale, status: this.lastStatus });
+      this.panel.update({
+        type: "update", state: "ok", repo: this.currentRepo, locale: this.lastStatus.locale, status: this.lastStatus,
+        avatar: this.avatar.data_url, avatar_custom: this.avatar.custom,
+      });
     } catch (e) {
       if (e instanceof CliError && e.notInitialized) { this.initialized = false; return this.refresh(); }
       this.report(e);
@@ -233,10 +243,17 @@ class App {
     if (scope === "project" && this.lastStatus?.project) {
       items.push({ id: "none", label: "No trail for this project", detail: "Commits here still count toward your main journey." });
     }
+    items.push(
+      { id: "", label: "", kind: vscode.QuickPickItemKind.Separator },
+      { id: "@import", label: "$(cloud-download) Import a route…" },
+      { id: "@template", label: "$(new-file) Create a route template…" },
+    );
     const pick = await vscode.window.showQuickPick(items, {
       title: scope === "global" ? "Trail for all projects" : "Trail for this project", placeHolder: "Choose a trail",
     });
     if (!pick) return;
+    if (pick.id === "@import") return this.importRoute();
+    if (pick.id === "@template") return this.createRouteTemplate();
     let fromHistory = false;
     if (pick.id !== "none") {
       const h = await vscode.window.showQuickPick([
@@ -281,11 +298,103 @@ class App {
       : `Recount finished: ${r.added} added, ${r.updated} corrected, ${r.removed} removed.`);
   }
 
+  // ---------- custom routes ----------
+
+  private async importRoute(): Promise<void> {
+    if (!this.initialized) return this.setup();
+    // Linux and Windows dialogs can pick files or folders, not both: ask first.
+    const kind = await vscode.window.showQuickPick([
+      { label: "From a .zip file", folders: false },
+      { label: "From a folder", folders: true },
+    ], { title: "Import a route", placeHolder: "Where is the route?" });
+    if (!kind) return;
+    const picked = await vscode.window.showOpenDialog({
+      title: "Import a route", openLabel: "Import", canSelectMany: false,
+      canSelectFiles: !kind.folders, canSelectFolders: kind.folders,
+      filters: kind.folders ? undefined : { "Route pack": ["zip"] },
+    });
+    const src = picked?.[0]?.fsPath;
+    if (!src) return;
+    let route;
+    try {
+      route = await this.cli.importRoute(src, false);
+    } catch (e) {
+      if (!(e instanceof CliError) || e.code !== "route_exists") throw e;
+      const a = await vscode.window.showWarningMessage(`${e.message}. Replace it?`, { modal: true }, "Replace");
+      if (a !== "Replace") return;
+      route = await this.cli.importRoute(src, true);
+    }
+    await this.reloadRoutes();
+    const a = await vscode.window.showInformationMessage(
+      `Imported ${route.name}: ${formatDistance(route.length_m)}, ${route.waypoints.length} stops.`, "Walk it now");
+    if (a) {
+      await this.cli.setJourney("global", route.id, false);
+      await this.refresh();
+      this.showTrail();
+    }
+  }
+
+  private async createRouteTemplate(): Promise<void> {
+    const folder = await vscode.window.showOpenDialog({
+      title: "Where to create the route", openLabel: "Create here", canSelectFolders: true, canSelectFiles: false,
+    });
+    if (!folder?.[0]) return;
+    const id = await vscode.window.showInputBox({
+      title: "New route", prompt: "Route id: lowercase letters, digits and dashes.", value: "my-trail",
+      validateInput: v => (/^[a-z0-9]+(-[a-z0-9]+)*$/.test(v.trim()) ? undefined : "Use lowercase letters, digits and single dashes."),
+    });
+    if (!id) return;
+    const dir = await this.cli.routeTemplate(id.trim(), folder[0].fsPath);
+    await vscode.window.showTextDocument(vscode.Uri.file(`${dir}/route.json`));
+    const a = await vscode.window.showInformationMessage(
+      "Route template created. Edit route.json and locales/*.json, then import the folder.", "Import now");
+    if (a) await this.importRoute();
+  }
+
+  private async removeRoute(): Promise<void> {
+    const custom = Object.values(this.routes).filter(r => !r.builtin);
+    if (custom.length === 0) {
+      void vscode.window.showInformationMessage("You haven't imported any routes.");
+      return;
+    }
+    const pick = await vscode.window.showQuickPick(
+      custom.map(r => ({ label: r.name, description: formatDistance(r.length_m), id: r.id })),
+      { title: "Remove a route", placeHolder: "Progress you made stays; you just can't choose the route anymore." });
+    if (!pick) return;
+    await this.cli.removeRoute(pick.id);
+    await this.reloadRoutes();
+    void vscode.window.showInformationMessage(`${pick.label} was removed.`);
+  }
+
+  // ---------- hiker icon ----------
+
+  private async setHikerIcon(): Promise<void> {
+    const picked = await vscode.window.showOpenDialog({
+      title: "Choose a hiker icon (PNG with a transparent background, up to 512×512, facing right)",
+      openLabel: "Use as hiker", canSelectMany: false, filters: { "PNG image": ["png"] },
+    });
+    if (!picked?.[0]) return;
+    this.avatar = await this.cli.setAvatar(picked[0].fsPath);
+    await this.refresh();
+  }
+
+  private async resetHikerIcon(): Promise<void> {
+    await this.cli.resetAvatar();
+    this.avatar = { custom: false };
+    await this.refresh();
+  }
+
+  private async reloadRoutes(): Promise<void> {
+    this.routes = Object.fromEntries((await this.cli.routes()).map(r => [r.id, r]));
+  }
+
   private async onPanelMessage(m: PanelMessage): Promise<void> {
     switch (m.command) {
       case "setup": return this.guard(() => this.setup());
       case "refresh": return this.refresh();
       case "enableProject": return this.guard(() => this.setProjectEnabled(true));
+      case "setAvatar": return this.guard(() => this.setHikerIcon());
+      case "resetAvatar": return this.guard(() => this.resetHikerIcon());
       case "chooseRoute": return this.guard(() => this.chooseRoute(m.scope));
     }
   }

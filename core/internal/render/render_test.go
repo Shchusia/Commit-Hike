@@ -56,7 +56,9 @@ func TestSVGWalkedDashCoversWholePath(t *testing.T) {
 	// dasharray is "walked total": the gap must be at least the real length.
 	var walked, gap float64
 	idx := strings.LastIndex(svg, `stroke-dasharray="`)
-	fmt.Sscanf(svg[idx+len(`stroke-dasharray="`):], "%f %f", &walked, &gap)
+	if n, err := fmt.Sscanf(svg[idx+len(`stroke-dasharray="`):], "%f %f", &walked, &gap); n != 2 || err != nil {
+		t.Fatalf("cannot parse dasharray: %v", err)
+	}
 	scaled := make([]Point, len(sc.Path))
 	for k, p := range sc.Path {
 		scaled[k] = Point{p.X * 300, p.Y * 380}

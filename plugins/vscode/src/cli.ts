@@ -8,17 +8,19 @@ import * as path from "path";
 // so newer cores with extra fields keep working.
 export const API_VERSION = 1;
 
-export interface Waypoint { id: string; name: string; text?: string; at_m: number }
+export interface Waypoint { id: string; name: string; text?: string; at_m: number; kind?: string; elevation_m?: number }
+export interface Biome { at_m: number; type: string }
+export interface Day { date: string; m: number }
 export interface Story { id: string; text: string; at_m: number }
 export interface Achievement { id: string; name?: string; description?: string; hidden?: boolean; unlocked_at?: number }
 export interface Route {
   id: string; name: string; description: string; length_m: number;
-  locales: string[]; builtin: boolean; waypoints: Waypoint[]; achievements: number;
+  locales: string[]; builtin: boolean; waypoints: Waypoint[]; biomes?: Biome[]; achievements: number;
 }
 export interface Journey {
   scope: "global" | "project"; route: Route; distance_m: number; percent: number; finished: boolean;
   last_waypoint?: Waypoint; next_waypoint?: Waypoint; to_next_m?: number; story?: Story;
-  achievements: Achievement[]; commits: number; streak_days: number;
+  achievements: Achievement[]; commits: number; streak_days: number; daily: Day[]; day: number;
 }
 export interface Status {
   tracked: boolean; reason?: string; locale: string; global?: Journey; project?: Journey; today_m: number; total_m: number;
@@ -30,6 +32,7 @@ export interface JourneyEvent {
 export interface ScanResult extends Status {
   new_commits: number; updated_commits: number; added_m: number; events?: JourneyEvent[];
 }
+export interface Avatar { custom: boolean; data_url?: string }
 export interface VerifyResult { added: number; updated: number; removed: number }
 export interface Config { mode: "all" | "selected"; emails: string[]; locale?: string }
 
@@ -112,6 +115,19 @@ export class Cli {
     if (repo) args.push("--repo", repo);
     return this.run<Status>(this.withLang(args));
   }
+
+  importRoute(path: string, replace: boolean) {
+    return this.run<Route>(this.withLang(["route", "import", "--path", path, ...(replace ? ["--replace"] : [])]));
+  }
+  removeRoute(id: string) { return this.run<{ removed: string }>(["route", "remove", "--id", id]); }
+  /** Writes a template route pack to dir/id and returns its folder. */
+  async routeTemplate(id: string, dir: string) {
+    return (await this.run<{ path: string }>(["route", "template", "--id", id, "--path", dir])).path;
+  }
+
+  avatar() { return this.run<Avatar>(["avatar", "get"]); }
+  setAvatar(pngPath: string) { return this.run<Avatar>(["avatar", "set", "--path", pngPath]); }
+  resetAvatar() { return this.run<{ custom: boolean }>(["avatar", "reset"]); }
 
   setProjectEnabled(repo: string, on: boolean) {
     return this.run<{ enabled: boolean }>(["project", on ? "enable" : "disable", "--repo", repo]);

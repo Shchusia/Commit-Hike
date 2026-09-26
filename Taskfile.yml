@@ -22,19 +22,14 @@ vars:
   VSIX: plugins/vscode/commit-hike-0.1.0.vsix
   JB_ZIP: plugins/jetbrains/build/distributions/commit-hike-jetbrains-0.1.0.zip
   JB_PLUGIN_DIR_NAME: commit-hike-jetbrains
+  # Pinned so everyone (and CI) lints with the same rules. Bump deliberately.
+  GOLANGCI_VERSION: v2.14.0
 
 tasks:
   default:
+    desc: List all tasks
+    silent: true
     cmds:
-      - task help
-
-  help:
-    desc: Show available tasks and their description
-    cmds:
-      - 'echo ""'
-      - 'echo "Usage: task [task-name] [options]"'
-      - 'echo ""'
-      - 'echo "Available tasks:"'
       - task --list
 
   # ───────────────────────────── setup ─────────────────────────────
@@ -68,10 +63,50 @@ tasks:
   tools:install:
     desc: Install Go dev tools (golangci-lint, govulncheck, goreleaser) into GOPATH/bin
     cmds:
-      - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b "{{.GOBIN}}"
-      - go install golang.org/x/vuln/cmd/govulncheck@latest
-      - go install github.com/goreleaser/goreleaser/v2@latest
+      - task: tools:golangci-lint
+      - task: tools:govulncheck
+      - task: tools:goreleaser
       - echo "Tools are in {{.GOBIN}}. Add it to PATH to call them directly."
+
+  tools:golangci-lint:
+    desc: Install golangci-lint {{.GOLANGCI_VERSION}}, built with a Go at least as new as yours
+    # golangci-lint can only read packages compiled by a Go no newer than the
+    # one it was built with ("export data version N is greater than maximum
+    # supported"), so the check covers both the version and the build Go.
+    status:
+      - |
+        v=$("{{.GOBIN}}/golangci-lint" version 2>/dev/null) || exit 1
+        echo "$v" | grep -q "version {{trimPrefix "v" .GOLANGCI_VERSION}} " || exit 1
+        built=$(echo "$v" | sed -n 's/.*built with go\([0-9]*\.[0-9]*\).*/\1/p')
+        mine=$(go env GOVERSION | sed -n 's/^go\([0-9]*\.[0-9]*\).*/\1/p')
+        [ "$(printf '%s\n%s\n' "$mine" "$built" | sort -V | tail -1)" = "$built" ]
+    cmds:
+      - |
+        mkdir -p "{{.GOBIN}}"
+        if command -v curl >/dev/null 2>&1; then
+          curl -sSfL https://golangci-lint.run/install.sh | sh -s -- -b "{{.GOBIN}}" {{.GOLANGCI_VERSION}}
+        fi
+        built=$("{{.GOBIN}}/golangci-lint" version 2>/dev/null | sed -n 's/.*built with go\([0-9]*\.[0-9]*\).*/\1/p')
+        mine=$(go env GOVERSION | sed -n 's/^go\([0-9]*\.[0-9]*\).*/\1/p')
+        if [ -z "$built" ] || [ "$(printf '%s\n%s\n' "$mine" "$built" | sort -V | tail -1)" != "$built" ]; then
+          echo "Building golangci-lint {{.GOLANGCI_VERSION}} with your Go $mine (the release binary uses Go ${built:-?}); this takes a minute..."
+          go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@{{.GOLANGCI_VERSION}}
+        fi
+        "{{.GOBIN}}/golangci-lint" version
+
+  tools:govulncheck:
+    desc: Install govulncheck (skipped when already installed)
+    status:
+      - test -x "{{.GOBIN}}/govulncheck"
+    cmds:
+      - go install golang.org/x/vuln/cmd/govulncheck@latest
+
+  tools:goreleaser:
+    desc: Install goreleaser (skipped when already installed)
+    status:
+      - test -x "{{.GOBIN}}/goreleaser"
+    cmds:
+      - go install github.com/goreleaser/goreleaser/v2@latest
 
   deps:install:
     desc: Download all dependencies (Go modules, npm packages)
@@ -170,27 +205,21 @@ tasks:
   core:lint:
     desc: Run golangci-lint (config in core/.golangci.yml)
     dir: core
-    preconditions:
-      - sh: test -x "{{.GOBIN}}/golangci-lint"
-        msg: "golangci-lint is not installed. Run: task tools:install"
+    deps: [tools:golangci-lint]
     cmds:
       - '"{{.GOBIN}}/golangci-lint" run'
 
   core:fmt:
     desc: Format Go code (gofumpt + goimports)
     dir: core
-    preconditions:
-      - sh: test -x "{{.GOBIN}}/golangci-lint"
-        msg: "golangci-lint is not installed. Run: task tools:install"
+    deps: [tools:golangci-lint]
     cmds:
       - '"{{.GOBIN}}/golangci-lint" fmt'
 
   core:vuln:
     desc: Check Go dependencies for known vulnerabilities
     dir: core
-    preconditions:
-      - sh: test -x "{{.GOBIN}}/govulncheck"
-        msg: "govulncheck is not installed. Run: task tools:install"
+    deps: [tools:govulncheck]
     cmds:
       - '"{{.GOBIN}}/govulncheck" ./...'
 
@@ -221,6 +250,27 @@ tasks:
     cmds:
       - go test -count=1 -v -run 'TestBuiltinRoutes|TestLoadRejects' ./internal/routes
 
+  route:new:
+    desc: "Start a new built-in route from a template: task route:new ID=my-trail"
+    requires:
+      vars: [ID]
+    deps: [core:build]
+    env:
+      COMMIT_HIKE_HOME: "{{.SANDBOX}}/data"
+    cmds:
+      - "{{.SANDBOX_BIN}} route template --id {{.ID}} --path core/content/routes"
+      - echo "Edit core/content/routes/{{.ID}}/, then run task routes:check"
+
+  route:try:
+    desc: "Import a route pack into the sandbox to check it: task route:try SRC=path/to/folder-or.zip"
+    requires:
+      vars: [SRC]
+    deps: [core:build]
+    env:
+      COMMIT_HIKE_HOME: "{{.SANDBOX}}/data"
+    cmds:
+      - "{{.SANDBOX_BIN}} route import --path '{{.SRC}}' --replace"
+
   # ───────────────────────────── data ─────────────────────────────
 
   data:where:
@@ -244,14 +294,16 @@ tasks:
   # ───────────────────────────── VS Code ─────────────────────────────
 
   vscode:deps:
-    desc: Install npm packages for the VS Code extension
+    desc: Install npm packages for the VS Code extension (skipped when up to date)
     dir: plugins/vscode
+    sources: [package.json, package-lock.json]
+    generates: [node_modules/.package-lock.json]
     cmds:
       - npm ci
 
   vscode:test:
     desc: Run VS Code extension tests (against the real core)
-    deps: [core:dist]
+    deps: [vscode:deps, core:dist]
     dir: plugins/vscode
     cmds:
       - npm test
@@ -259,13 +311,14 @@ tasks:
   vscode:lint:
     desc: Run ESLint and the TypeScript type check
     dir: plugins/vscode
+    deps: [vscode:deps]
     cmds:
       - npm run lint
       - npm run typecheck
 
   vscode:package:
     desc: Build the .vsix package
-    deps: [core:dist]
+    deps: [vscode:deps, core:dist]
     dir: plugins/vscode
     cmds:
       - npm run package
@@ -408,9 +461,7 @@ tasks:
 
   release:snapshot:
     desc: Try a local release build with GoReleaser (nothing is published)
-    preconditions:
-      - sh: test -x "{{.GOBIN}}/goreleaser"
-        msg: "goreleaser is not installed. Run: task tools:install"
+    deps: [tools:goreleaser]
     cmds:
       - '"{{.GOBIN}}/goreleaser" release --snapshot --clean'
 

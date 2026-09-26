@@ -1,0 +1,28 @@
+{
+  "id": "chornohora-ridge",
+  "version": 1,
+  "default_locale": "en",
+  "length_m": 24000,
+  "waypoints": [
+    { "id": "zaroslyak", "at_m": 0 },
+    { "id": "hoverla", "at_m": 4000 },
+    { "id": "breskul", "at_m": 5500 },
+    { "id": "pozhyzhevska", "at_m": 8000 },
+    { "id": "nesamovyte", "at_m": 12500 },
+    { "id": "brebeneskul-lake", "at_m": 16500 },
+    { "id": "pip-ivan", "at_m": 24000 }
+  ],
+  "story": [
+    { "id": "treeline", "at_m": 2000 },
+    { "id": "ridge-wind", "at_m": 10000 },
+    { "id": "white-elephant", "at_m": 21000 }
+  ],
+  "achievements": [
+    { "id": "first-steps", "rule": { "type": "distance", "min_m": 100 } },
+    { "id": "roof-of-ukraine", "rule": { "type": "waypoint", "waypoint": "hoverla" } },
+    { "id": "quiet-stones", "rule": { "type": "waypoint", "waypoint": "nesamovyte" } },
+    { "id": "steady-pace", "rule": { "type": "streak", "days": 5 } },
+    { "id": "hundred", "rule": { "type": "commits", "count": 100 }, "hidden": true },
+    { "id": "ridge-walker", "rule": { "type": "finish" } }
+  ]
+}

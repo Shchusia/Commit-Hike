@@ -1,0 +1,35 @@
+# golangci-lint v2: one binary that runs many linters and formatters.
+# Run: golangci-lint run   |   format: golangci-lint fmt
+version: "2"
+
+run:
+  timeout: 5m
+
+linters:
+  default: standard # errcheck, govet, ineffassign, staticcheck, unused
+  enable:
+    - errorlint   # wrap/compare errors correctly (%w, errors.Is/As)
+    - gocritic    # style and small bugs
+    - gosec       # security
+    - misspell
+    - revive      # naming and doc comments
+    - unconvert
+    - unparam
+    - nolintlint  # every //nolint must say why
+  settings:
+    gosec:
+      excludes:
+        - G204 # we run `git` with arguments on purpose
+    revive:
+      rules:
+        - name: exported
+        - name: package-comments
+
+formatters:
+  enable:
+    - gofumpt   # stricter gofmt
+    - goimports # groups and sorts imports
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/commit-hike/commit-hike

@@ -1,0 +1,429 @@
+# Commit Hike: every command for developing, testing and packaging.
+#
+#   Install Task:   sudo snap install task --classic     (https://taskfile.dev/installation)
+#   List tasks:     task
+#   Run a task:     task core:test
+#   Pass arguments: task core:run -- status --lang uk
+#   Set variables:  task core:demo REPO=~/projects/my-app HIKE_LANG=en
+#
+# Experiments use a sandbox data dir (.sandbox/), so your real progress in the
+# IDE is never touched unless a task says so.
+version: "3"
+
+vars:
+  VERSION:
+    sh: git describe --tags --always --dirty 2>/dev/null || echo dev
+  LDFLAGS: -s -w -X main.version={{.VERSION}}
+  GO_TARGETS: linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64 windows/arm64
+  GOBIN:
+    sh: echo "$(go env GOPATH 2>/dev/null || echo "$HOME/go")/bin"
+  SANDBOX: "{{.ROOT_DIR}}/.sandbox"
+  SANDBOX_BIN: "{{.SANDBOX}}/bin/commit-hike"
+  VSIX: plugins/vscode/commit-hike-0.1.0.vsix
+  JB_ZIP: plugins/jetbrains/build/distributions/commit-hike-jetbrains-0.1.0.zip
+  JB_PLUGIN_DIR_NAME: commit-hike-jetbrains
+
+tasks:
+  default:
+    cmds:
+      - task help
+
+  help:
+    desc: Show available tasks and their description
+    cmds:
+      - 'echo ""'
+      - 'echo "Usage: task [task-name] [options]"'
+      - 'echo ""'
+      - 'echo "Available tasks:"'
+      - task --list
+
+  # ───────────────────────────── setup ─────────────────────────────
+
+  setup:
+    desc: Install everything needed for development (checks, tools, dependencies)
+    cmds:
+      - task: doctor
+      - task: tools:install
+      - task: deps:install
+
+  doctor:
+    desc: Check that the required programs are installed
+    silent: true
+    cmds:
+      - |
+        missing=0
+        check() {
+          if command -v "$1" >/dev/null 2>&1; then
+            printf "  ok       %-6s %s\n" "$1" "$($2 2>&1 | head -1)"
+          else
+            printf "  MISSING  %-6s install: %s\n" "$1" "$3"; missing=1
+          fi
+        }
+        check go   "go version"     "sudo snap install go --classic"
+        check git  "git --version"  "sudo apt install git"
+        check node "node --version" "sudo snap install node --classic --channel=22"
+        check java "java -version"  "sudo apt install openjdk-21-jdk"
+        [ $missing = 0 ] || { echo "Install the missing programs, then run: task setup"; exit 1; }
+
+  tools:install:
+    desc: Install Go dev tools (golangci-lint, govulncheck, goreleaser) into GOPATH/bin
+    cmds:
+      - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b "{{.GOBIN}}"
+      - go install golang.org/x/vuln/cmd/govulncheck@latest
+      - go install github.com/goreleaser/goreleaser/v2@latest
+      - echo "Tools are in {{.GOBIN}}. Add it to PATH to call them directly."
+
+  deps:install:
+    desc: Download all dependencies (Go modules, npm packages)
+    cmds:
+      - task: core:deps
+      - task: vscode:deps
+
+  deps:outdated:
+    desc: Show dependencies that have newer versions
+    cmds:
+      - echo "== Go (entries with [brackets] can be updated)"
+      - cd core && go list -u -m all
+      - echo "== npm"
+      - cd plugins/vscode && npm outdated || true
+      - echo "== Gradle/JetBrains - check versions in plugins/jetbrains/build.gradle.kts by hand"
+
+  deps:update:
+    desc: Update dependencies to the newest compatible versions, then run all checks
+    cmds:
+      - cd core && go get -u ./... && go mod tidy
+      - cd plugins/vscode && npm update
+      - task: check
+
+  # ───────────────────────────── core (Go) ─────────────────────────────
+
+  core:deps:
+    desc: Download Go modules
+    dir: core
+    cmds:
+      - go mod download
+
+  core:build:
+    desc: Build the core for this computer into .sandbox/bin
+    dir: core
+    sources: ["**/*.go", "content/**/*", "go.mod"]
+    generates: ["{{.SANDBOX_BIN}}"]
+    cmds:
+      - go build -ldflags="{{.LDFLAGS}}" -o "{{.SANDBOX_BIN}}" ./cmd/commit-hike
+
+  core:run:
+    desc: "Run the core with sandbox data, e.g. task core:run -- status --lang uk"
+    deps: [core:build]
+    env:
+      COMMIT_HIKE_HOME: "{{.SANDBOX}}/data"
+    cmds:
+      - "{{.SANDBOX_BIN}} {{.CLI_ARGS}}"
+
+  core:demo:
+    desc: "Try the core on a repository: task core:demo REPO=path [ROUTE=chornohora-ridge] [HIKE_LANG=uk] [EMAIL=you@x]"
+    deps: [core:build]
+    vars:
+      REPO: '{{.REPO | default "."}}'
+      ROUTE: '{{.ROUTE | default "chornohora-ridge"}}'
+      HIKE_LANG: '{{.HIKE_LANG | default "uk"}}'
+      EMAIL:
+        sh: '{{if .EMAIL}}echo "{{.EMAIL}}"{{else}}git -C "{{.REPO}}" config user.email || echo "you@example.com"{{end}}'
+    env:
+      COMMIT_HIKE_HOME: "{{.SANDBOX}}/data"
+    cmds:
+      - "{{.SANDBOX_BIN}} init --email '{{.EMAIL}}' --route {{.ROUTE}} > /dev/null"
+      - "{{.SANDBOX_BIN}} scan --repo '{{.REPO}}' --lang {{.HIKE_LANG}}"
+
+  core:render:
+    desc: Draw your sandbox trail as SVG into .sandbox/trail.svg
+    deps: [core:build]
+    env:
+      COMMIT_HIKE_HOME: "{{.SANDBOX}}/data"
+    cmds:
+      - >-
+        {{.SANDBOX_BIN}} render --lang {{.HIKE_LANG | default "uk"}}
+        | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const r=JSON.parse(s);if(!r.ok){console.error(r.error.message);process.exit(1)}process.stdout.write(r.data.svg)})'
+        > "{{.SANDBOX}}/trail.svg"
+      - echo "Open {{.SANDBOX}}/trail.svg in a browser"
+
+  core:test:
+    desc: Run core tests with the race detector and coverage
+    dir: core
+    cmds:
+      - go test -race -cover ./...
+
+  core:cover:
+    desc: Build an HTML coverage report in .sandbox/cover.html
+    dir: core
+    cmds:
+      - mkdir -p "{{.SANDBOX}}"
+      - go test -coverprofile="{{.SANDBOX}}/cover.out" ./...
+      - go tool cover -html="{{.SANDBOX}}/cover.out" -o "{{.SANDBOX}}/cover.html"
+      - echo "Open {{.SANDBOX}}/cover.html in a browser"
+
+  core:vet:
+    desc: Run go vet
+    dir: core
+    cmds:
+      - go vet ./...
+
+  core:lint:
+    desc: Run golangci-lint (config in core/.golangci.yml)
+    dir: core
+    preconditions:
+      - sh: test -x "{{.GOBIN}}/golangci-lint"
+        msg: "golangci-lint is not installed. Run: task tools:install"
+    cmds:
+      - '"{{.GOBIN}}/golangci-lint" run'
+
+  core:fmt:
+    desc: Format Go code (gofumpt + goimports)
+    dir: core
+    preconditions:
+      - sh: test -x "{{.GOBIN}}/golangci-lint"
+        msg: "golangci-lint is not installed. Run: task tools:install"
+    cmds:
+      - '"{{.GOBIN}}/golangci-lint" fmt'
+
+  core:vuln:
+    desc: Check Go dependencies for known vulnerabilities
+    dir: core
+    preconditions:
+      - sh: test -x "{{.GOBIN}}/govulncheck"
+        msg: "govulncheck is not installed. Run: task tools:install"
+    cmds:
+      - '"{{.GOBIN}}/govulncheck" ./...'
+
+  core:tidy:
+    desc: Add missing and remove unused Go modules
+    dir: core
+    cmds:
+      - go mod tidy
+
+  core:dist:
+    desc: Cross-compile the core for all platforms into core/dist (used by both plugins)
+    dir: core
+    sources: ["**/*.go", "content/**/*", "go.mod"]
+    generates: ["dist/commit-hike-*"]
+    cmds:
+      - |
+        mkdir -p dist
+        for t in {{.GO_TARGETS}}; do
+          os=${t%/*}; arch=${t#*/}; ext=""; [ "$os" = windows ] && ext=".exe"
+          GOOS=$os GOARCH=$arch CGO_ENABLED=0 go build -trimpath -ldflags="{{.LDFLAGS}}" \
+            -o "dist/commit-hike-$os-$arch$ext" ./cmd/commit-hike
+          echo "built core/dist/commit-hike-$os-$arch$ext"
+        done
+
+  routes:check:
+    desc: Validate every route pack and check that all translations are complete
+    dir: core
+    cmds:
+      - go test -count=1 -v -run 'TestBuiltinRoutes|TestLoadRejects' ./internal/routes
+
+  # ───────────────────────────── data ─────────────────────────────
+
+  data:where:
+    desc: Show where the IDE plugins keep your real progress
+    silent: true
+    cmds:
+      - 'echo "Real data:    ${COMMIT_HIKE_HOME:-${XDG_CONFIG_HOME:-$HOME/.config}/commit-hike}"'
+      - 'echo "Sandbox data: {{.SANDBOX}}/data"'
+
+  data:reset:
+    desc: Delete sandbox data (your real progress stays)
+    cmds:
+      - rm -rf "{{.SANDBOX}}/data"
+
+  data:reset-real:
+    desc: Delete your REAL progress used by the IDE plugins
+    prompt: This deletes all your real Commit Hike progress. Continue?
+    cmds:
+      - 'rm -rf "${COMMIT_HIKE_HOME:-${XDG_CONFIG_HOME:-$HOME/.config}/commit-hike}"'
+
+  # ───────────────────────────── VS Code ─────────────────────────────
+
+  vscode:deps:
+    desc: Install npm packages for the VS Code extension
+    dir: plugins/vscode
+    cmds:
+      - npm ci
+
+  vscode:test:
+    desc: Run VS Code extension tests (against the real core)
+    deps: [core:dist]
+    dir: plugins/vscode
+    cmds:
+      - npm test
+
+  vscode:lint:
+    desc: Run ESLint and the TypeScript type check
+    dir: plugins/vscode
+    cmds:
+      - npm run lint
+      - npm run typecheck
+
+  vscode:package:
+    desc: Build the .vsix package
+    deps: [core:dist]
+    dir: plugins/vscode
+    cmds:
+      - npm run package
+
+  vscode:install:
+    desc: Install the extension into VS Code for testing
+    deps: [vscode:package]
+    preconditions:
+      - sh: command -v code
+        msg: "The 'code' command was not found. Install VS Code first."
+    cmds:
+      - code --install-extension "{{.VSIX}}" --force
+      - echo "Installed. Reload VS Code (Ctrl+Shift+P > Developer - Reload Window)."
+
+  vscode:uninstall:
+    desc: Remove the extension from VS Code
+    cmds:
+      - code --uninstall-extension commit-hike.commit-hike
+
+  # ───────────────────────────── JetBrains ─────────────────────────────
+
+  jetbrains:build:
+    desc: Build the plugin zip for JetBrains IDEs
+    deps: [core:dist]
+    dir: plugins/jetbrains
+    cmds:
+      - ./gradlew buildPlugin
+      - echo "Plugin zip in {{.JB_ZIP}}"
+
+  jetbrains:test:
+    desc: Run JetBrains plugin tests (against the real core)
+    deps: [core:dist]
+    dir: plugins/jetbrains
+    cmds:
+      - ./gradlew test
+
+  jetbrains:lint:
+    desc: Run ktlint on the Kotlin code
+    dir: plugins/jetbrains
+    cmds:
+      - ./gradlew ktlintCheck
+
+  jetbrains:fmt:
+    desc: Auto-format the Kotlin code with ktlint
+    dir: plugins/jetbrains
+    cmds:
+      - ./gradlew ktlintFormat
+
+  jetbrains:verify:
+    desc: Check plugin compatibility with released IDE versions (downloads IDEs, slow)
+    deps: [jetbrains:build]
+    dir: plugins/jetbrains
+    cmds:
+      - ./gradlew verifyPlugin
+
+  jetbrains:run:
+    desc: Start a separate test IDE (IntelliJ IDEA Community) with the plugin
+    deps: [core:dist]
+    dir: plugins/jetbrains
+    cmds:
+      - ./gradlew runIde
+
+  jetbrains:run-pycharm:
+    desc: "Start your installed PyCharm with the plugin in a separate profile (PYCHARM_PATH=...)"
+    deps: [core:dist]
+    dir: plugins/jetbrains
+    vars:
+      PYCHARM_PATH:
+        sh: |
+          for p in /snap/pycharm-professional/current /snap/pycharm/current /snap/pycharm-community/current \
+                   "$HOME"/.local/share/JetBrains/Toolbox/apps/pycharm*; do
+            [ -d "$p" ] && { echo "$p"; exit 0; }
+          done
+    preconditions:
+      - sh: '[ -n "{{.PYCHARM_PATH}}" ]'
+        msg: "PyCharm not found. Pass it: task jetbrains:run-pycharm PYCHARM_PATH=/path/to/pycharm"
+    cmds:
+      - ./gradlew runPyCharm -PpycharmPath="{{.PYCHARM_PATH}}"
+
+  jetbrains:install:
+    desc: "Install the plugin into your newest PyCharm (IDE=IntelliJIdea for another IDE), then restart the IDE"
+    deps: [jetbrains:build]
+    vars:
+      IDE: '{{.IDE | default "PyCharm"}}'
+      PLUGINS_DIR:
+        sh: ls -d "$HOME"/.local/share/JetBrains/{{.IDE | default "PyCharm"}}* 2>/dev/null | sort -V | tail -1
+    preconditions:
+      - sh: '[ -n "{{.PLUGINS_DIR}}" ]'
+        msg: "No {{.IDE}} plugin folder in ~/.local/share/JetBrains. Start {{.IDE}} once, or install the zip via Settings > Plugins > Install Plugin from Disk."
+    cmds:
+      - rm -rf "{{.PLUGINS_DIR}}/{{.JB_PLUGIN_DIR_NAME}}"
+      - unzip -q -o "{{.JB_ZIP}}" -d "{{.PLUGINS_DIR}}"
+      - echo "Installed into {{.PLUGINS_DIR}}. Restart {{.IDE}}."
+
+  jetbrains:uninstall:
+    desc: Remove the plugin from your newest PyCharm (IDE=... for another IDE)
+    vars:
+      PLUGINS_DIR:
+        sh: ls -d "$HOME"/.local/share/JetBrains/{{.IDE | default "PyCharm"}}* 2>/dev/null | sort -V | tail -1
+    cmds:
+      - rm -rf "{{.PLUGINS_DIR}}/{{.JB_PLUGIN_DIR_NAME}}"
+      - echo "Removed. Restart the IDE."
+
+  # ───────────────────────────── everything ─────────────────────────────
+
+  test:
+    desc: Run all tests (core, VS Code, JetBrains)
+    cmds:
+      - task: core:test
+      - task: routes:check
+      - task: vscode:test
+      - task: jetbrains:test
+
+  lint:
+    desc: Run all linters (golangci-lint, ESLint + tsc, ktlint)
+    cmds:
+      - task: core:lint
+      - task: vscode:lint
+      - task: jetbrains:lint
+
+  fmt:
+    desc: Format all code
+    cmds:
+      - task: core:fmt
+      - task: jetbrains:fmt
+
+  check:
+    desc: Everything CI checks; run before pushing
+    cmds:
+      - task: lint
+      - task: core:vuln
+      - task: test
+
+  build:
+    desc: Build the core for all platforms and both plugins
+    cmds:
+      - task: core:dist
+      - task: vscode:package
+      - task: jetbrains:build
+
+  release:snapshot:
+    desc: Try a local release build with GoReleaser (nothing is published)
+    preconditions:
+      - sh: test -x "{{.GOBIN}}/goreleaser"
+        msg: "goreleaser is not installed. Run: task tools:install"
+    cmds:
+      - '"{{.GOBIN}}/goreleaser" release --snapshot --clean'
+
+  rename-module:
+    desc: "Point the Go module at your GitHub account: task rename-module OWNER=your-github-name"
+    requires:
+      vars: [OWNER]
+    dir: core
+    cmds:
+      - grep -rl 'github.com/commit-hike/commit-hike' . | xargs sed -i 's#github.com/commit-hike/commit-hike#github.com/{{.OWNER}}/commit-hike#g'
+      - go build ./... && echo "Module is now github.com/{{.OWNER}}/commit-hike/core"
+
+  clean:
+    desc: Remove build output and the sandbox
+    cmds:
+      - rm -rf .sandbox core/dist plugins/vscode/out plugins/vscode/bin plugins/vscode/*.vsix plugins/jetbrains/build

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="{{CSP}}">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Commit Hike</title>
+<style>
+/*
+ * Shared by the VS Code webview and the JetBrains JCEF tool window.
+ * Data comes from the core (protocol v1): {type, state, error, repo, locale, status}.
+ * Colors come from the host theme: VS Code provides --vscode-* variables,
+ * the JetBrains host injects --jb-* variables on :root.
+ */
+:root {
+  --ct-bg: var(--vscode-sideBar-background, var(--jb-bg, #1e1f22));
+  --ct-fg: var(--vscode-foreground, var(--jb-fg, #cfd1d6));
+  --ct-muted: var(--vscode-descriptionForeground, var(--jb-muted, #8c8f96));
+  --ct-line: var(--vscode-widget-border, var(--vscode-panel-border, var(--jb-border, #3a3c42)));
+  --ct-link: var(--vscode-textLink-foreground, var(--jb-link, #6ea6ff));
+  --ct-btn-bg: var(--vscode-button-background, var(--jb-btn-bg, #3574f0));
+  --ct-btn-fg: var(--vscode-button-foreground, var(--jb-btn-fg, #ffffff));
+  --ct-btn-hover: var(--vscode-button-hoverBackground, var(--jb-btn-hover, #4682fa));
+  --ct-focus: var(--vscode-focusBorder, var(--jb-focus, #3574f0));
+  --ct-font: var(--vscode-font-family, var(--jb-font, system-ui, sans-serif));
+  --ct-size: var(--vscode-font-size, var(--jb-font-size, 13px));
+  /* trail-blaze paint: the one accent of the panel */
+  --ct-blaze: #e8b53d;
+  --ct-blaze-ink: #3b2a05;
+}
+body.vscode-light, body[data-theme="light"] { --ct-blaze: #c98a00; --ct-blaze-ink: #fff8e6; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--ct-bg);
+  color: var(--ct-fg);
+  font-family: var(--ct-font);
+  font-size: var(--ct-size);
+  line-height: 1.45;
+  padding: 14px 16px 20px;
+  max-width: 520px;
+}
+button { font: inherit; }
+button:focus-visible, [role="tab"]:focus-visible { outline: 1px solid var(--ct-focus); outline-offset: 2px; }
+
+.tabs { display: flex; gap: 14px; margin-bottom: 12px; border-bottom: 1px solid var(--ct-line); }
+.tabs[hidden] { display: none; }
+[role="tab"] {
+  background: none; border: 0; color: var(--ct-muted); cursor: pointer;
+  padding: 0 0 6px; margin-bottom: -1px; border-bottom: 2px solid transparent;
+}
+[role="tab"][aria-selected="true"] { color: var(--ct-fg); border-bottom-color: var(--ct-blaze); }
+
+h1 { font-size: 1.35em; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+.distance { margin: 2px 0 0; color: var(--ct-muted); font-variant-numeric: tabular-nums; }
+.distance strong { color: var(--ct-fg); font-weight: 600; }
+
+.trail { display: block; width: 100%; height: auto; margin: 10px 0 6px; overflow: visible; }
+.trail .ahead { fill: none; stroke: var(--ct-muted); stroke-width: 2; stroke-dasharray: 2 7; stroke-linecap: round; opacity: .7; }
+.trail .walked { fill: none; stroke: var(--ct-blaze); stroke-width: 4; stroke-linecap: round; }
+.trail .blaze { fill: var(--ct-bg); stroke: var(--ct-muted); stroke-width: 1.5; }
+.trail .blaze.passed { fill: var(--ct-blaze); stroke: var(--ct-blaze); }
+.trail .wp-name { fill: var(--ct-muted); font-size: 12px; }
+.trail .wp-name.passed { fill: var(--ct-fg); }
+.trail .hiker-ring { fill: none; stroke: var(--ct-blaze); stroke-width: 2; opacity: .45; }
+.trail .hiker { fill: var(--ct-fg); stroke: var(--ct-bg); stroke-width: 2; }
+
+.facts { margin: 4px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 2px 14px; }
+.facts dt { color: var(--ct-muted); }
+.facts dd { margin: 0; font-variant-numeric: tabular-nums; }
+
+.postcard {
+  margin: 16px 0 0; padding: 10px 12px;
+  border-left: 3px solid var(--ct-blaze);
+  background: color-mix(in srgb, var(--ct-blaze) 8%, transparent);
+}
+.postcard p { margin: 0; }
+.postcard .from { color: var(--ct-muted); font-size: .92em; margin-top: 2px; }
+
+.actions { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+.primary {
+  background: var(--ct-btn-bg); color: var(--ct-btn-fg); border: 0; border-radius: 2px;
+  padding: 5px 12px; cursor: pointer;
+}
+.primary:hover { background: var(--ct-btn-hover); }
+.link { background: none; border: 0; padding: 0; color: var(--ct-link); cursor: pointer; }
+.link:hover { text-decoration: underline; }
+
+.achievements { margin: 18px 0 0; }
+.achievements h2 { font-size: 1em; font-weight: 600; margin: 0 0 6px; }
+.achievements h2 span { color: var(--ct-muted); font-weight: 400; }
+.achievements ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.achievements li { display: grid; grid-template-columns: 10px 1fr; gap: 0 10px; align-items: start; }
+.achievements .mark { width: 7px; height: 14px; margin-top: 2px; border-radius: 1px; border: 1.5px solid var(--ct-muted); }
+.achievements .got .mark { background: var(--ct-blaze); border-color: var(--ct-blaze); }
+.achievements .name { font-weight: 600; }
+.achievements li:not(.got) .name { font-weight: 400; color: var(--ct-muted); }
+.achievements .desc { grid-column: 2; color: var(--ct-muted); font-size: .92em; }
+.empty { padding: 18px 0 4px; }
+.empty h1 { margin-bottom: 6px; }
+.empty p { margin: 0 0 14px; color: var(--ct-muted); max-width: 36em; }
+.finished { color: var(--ct-blaze); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="tabs" role="tablist" id="tabs" hidden>
+  <button role="tab" id="tab-global" aria-selected="true" data-scope="global"></button>
+  <button role="tab" id="tab-project" aria-selected="false" data-scope="project"></button>
+</div>
+<main id="root"><p class="distance">…</p></main>
+
+<script nonce="{{NONCE}}">
+(function () {
+  "use strict";
+
+  // ---- UI strings. Route texts come translated from the core. ----
+  const STRINGS = {
+    en: {
+      tabAll: "All projects", tabProject: "This project", of: "{d} of {t}",
+      setupTitle: "Turn commits into a journey",
+      setupText: "Every commit you make moves you along a trail. Nothing is written to your projects and nothing leaves this computer.",
+      setupBtn: "Set up Commit Hike",
+      errorTitle: "Commit Hike couldn't read your progress", unknownError: "Unknown error.", retry: "Try again",
+      notCountedTitle: "This project isn't counted",
+      notCountedText: "Your settings count only the projects you choose. Commits here won't move you forward until you add it.",
+      countBtn: "Count this project",
+      noProjectTitle: "No journey for this project yet",
+      noProjectText: "Give this project its own trail. Your commits here will still count toward your main journey.",
+      chooseTrail: "Choose a trail", noTrailTitle: "No trail selected", noTrailText: "Pick a trail to start walking.",
+      status: "Status", completed: "Trail completed", nextStop: "Next stop", nextIn: "{name}, in {d}",
+      today: "Today", streak: "Streak", days: { one: "{n} day", other: "{n} days" },
+      achievements: "Achievements", achCount: "{n} of {m}", secret: "Secret achievement",
+      startNew: "Start a new trail", changeTrail: "Change trail", m: "m", km: "km", decimal: ".",
+    },
+    uk: {
+      tabAll: "Усі проєкти", tabProject: "Цей проєкт", of: "{d} з {t}",
+      setupTitle: "Перетвори коміти на подорож",
+      setupText: "Кожен твій коміт просуває тебе стежкою. У твої проєкти нічого не записується, і нічого не залишає цей комп'ютер.",
+      setupBtn: "Налаштувати Commit Hike",
+      errorTitle: "Commit Hike не зміг прочитати прогрес", unknownError: "Невідома помилка.", retry: "Спробувати ще раз",
+      notCountedTitle: "Цей проєкт не враховується",
+      notCountedText: "За твоїми налаштуваннями враховуються лише вибрані проєкти. Коміти тут не просуватимуть тебе, доки ти його не додаси.",
+      countBtn: "Враховувати цей проєкт",
+      noProjectTitle: "Для цього проєкту ще немає маршруту",
+      noProjectText: "Дай цьому проєкту власну стежку. Коміти тут і далі рахуватимуться в основну подорож.",
+      chooseTrail: "Вибрати стежку", noTrailTitle: "Стежку не вибрано", noTrailText: "Вибери стежку, щоб вирушити.",
+      status: "Статус", completed: "Стежку пройдено", nextStop: "Наступна зупинка", nextIn: "{name}, через {d}",
+      today: "Сьогодні", streak: "Серія", days: { one: "{n} день", few: "{n} дні", many: "{n} днів", other: "{n} дня" },
+      achievements: "Досягнення", achCount: "{n} з {m}", secret: "Таємне досягнення",
+      startNew: "Почати нову стежку", changeTrail: "Змінити стежку", m: "м", km: "км", decimal: ",",
+    },
+  };
+  let lang = "en";
+  function t(key, vars) {
+    let s = (STRINGS[lang] && STRINGS[lang][key]) || STRINGS.en[key] || key;
+    for (const k in vars || {}) s = s.replace("{" + k + "}", vars[k]);
+    return s;
+  }
+  function plural(key, n) {
+    const forms = (STRINGS[lang] && STRINGS[lang][key]) || STRINGS.en[key];
+    const cat = new Intl.PluralRules(lang).select(n);
+    return (forms[cat] || forms.other).replace("{n}", n);
+  }
+  function pickLang(tag) {
+    const base = String(tag || "en").toLowerCase().split(/[-_]/)[0];
+    return STRINGS[base] ? base : "en";
+  }
+
+  // ---- host bridge: VS Code webview or JetBrains JCEF ----
+  const vscode = typeof acquireVsCodeApi === "function" ? acquireVsCodeApi() : null;
+  function send(msg) {
+    if (vscode) vscode.postMessage(msg);
+    else if (window.commitHikeHost) window.commitHikeHost.send(JSON.stringify(msg));
+  }
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const root = document.getElementById("root");
+  const tabs = document.getElementById("tabs");
+  let data = null;
+  let scope = "global";
+  const lastDrawn = {}; // scope:route -> distance, to animate only real progress
+
+  function fmt(m) {
+    if (m < 1000) return Math.round(m) + " " + t("m");
+    const km = m / 1000;
+    const num = km < 100 ? km.toFixed(1).replace(".", t("decimal")) : String(Math.round(km));
+    return num + " " + t("km");
+  }
+  function el(tag, attrs, children) {
+    const isSvg = ["svg", "path", "rect", "circle", "text", "g"].includes(tag);
+    const n = isSvg ? document.createElementNS("http://www.w3.org/2000/svg", tag) : document.createElement(tag);
+    for (const k in attrs || {}) {
+      if (k === "text") n.textContent = attrs[k];
+      else if (k.startsWith("on")) n.addEventListener(k.slice(2), attrs[k]);
+      else n.setAttribute(k, attrs[k]);
+    }
+    (children || []).forEach(c => c && n.appendChild(c));
+    return n;
+  }
+
+  // ---- trail geometry: a winding path seeded by the route id ----
+  function seeded(str) {
+    let h = 2166136261;
+    for (const ch of str) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); }
+    return () => { h = Math.imul(h ^ (h >>> 15), 2246822507); h ^= h >>> 13; return ((h >>> 0) % 10000) / 10000; };
+  }
+  function trailPath(id, W, H) {
+    const rnd = seeded(id);
+    const n = 7, pts = [];
+    for (let i = 0; i <= n; i++) {
+      const y = H - 18 - (H - 36) * (i / n);
+      const side = i % 2 === 0 ? -1 : 1;
+      const x = W / 2 + side * (W * 0.12 + rnd() * W * 0.14);
+      pts.push([i === 0 || i === n ? W / 2 + side * W * 0.06 : x, y]);
+    }
+    let d = "M" + pts[0][0].toFixed(1) + "," + pts[0][1].toFixed(1);
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+      const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6];
+      const c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+      d += " C" + [c1, c2, p2].map(p => p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
+    }
+    return d;
+  }
+
+  function drawTrail(j) {
+    const route = j.route, W = 300, H = 380;
+    const svg = el("svg", { class: "trail", viewBox: "0 0 " + W + " " + H, role: "img",
+      "aria-label": route.name + ": " + t("of", { d: fmt(j.distance_m), t: fmt(route.length_m) }) });
+    const d = trailPath(route.id, W, H);
+    const ahead = el("path", { class: "ahead", d });
+    const walked = el("path", { class: "walked", d });
+    svg.append(ahead, walked);
+    root.appendChild(svg); // must be in the DOM to measure
+    const L = ahead.getTotalLength();
+    const at = f => ahead.getPointAtLength(Math.max(0, Math.min(1, f)) * L);
+
+    (route.waypoints || []).forEach(w => {
+      const p = at(w.at_m / route.length_m);
+      const passed = w.at_m <= j.distance_m;
+      const right = p.x < W / 2;
+      svg.append(
+        el("rect", { class: "blaze" + (passed ? " passed" : ""), x: p.x - 3.5, y: p.y - 7, width: 7, height: 14, rx: 1 }),
+        el("text", { class: "wp-name" + (passed ? " passed" : ""), x: right ? p.x + 12 : p.x - 12, y: p.y + 4,
+          "text-anchor": right ? "start" : "end", text: w.name })
+      );
+    });
+    const ring = el("circle", { class: "hiker-ring", r: 11 });
+    const hiker = el("circle", { class: "hiker", r: 6 });
+    svg.append(ring, hiker);
+
+    const key = scope + ":" + route.id;
+    const from = lastDrawn[key] != null ? lastDrawn[key] : j.distance_m;
+    const to = j.distance_m;
+    lastDrawn[key] = to;
+    function place(dist) {
+      const f = dist / route.length_m, p = at(f);
+      walked.setAttribute("stroke-dasharray", (f * L).toFixed(1) + " " + L.toFixed(1));
+      hiker.setAttribute("cx", p.x); hiker.setAttribute("cy", p.y);
+      ring.setAttribute("cx", p.x); ring.setAttribute("cy", p.y);
+    }
+    if (reduceMotion || to <= from) { place(to); return; }
+    // one deliberate motion: the hiker walks the newly earned stretch
+    const t0 = performance.now(), dur = 900;
+    place(from);
+    requestAnimationFrame(function step(now) {
+      const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      place(from + (to - from) * e);
+      if (k < 1) requestAnimationFrame(step);
+    });
+  }
+
+  function achievementsView(list) {
+    if (!list || !list.length) return null;
+    const got = list.filter(a => a.unlocked_at);
+    const items = list.map(a => el("li", { class: a.unlocked_at ? "got" : "" }, [
+      el("span", { class: "mark", "aria-hidden": "true" }),
+      el("span", { class: "name", text: a.name || t("secret") }),
+      a.description ? el("span", { class: "desc", text: a.description }) : null,
+    ]));
+    return el("section", { class: "achievements" }, [
+      el("h2", {}, [document.createTextNode(t("achievements") + " "),
+        el("span", { text: t("achCount", { n: got.length, m: list.length }) })]),
+      el("ul", {}, items),
+    ]);
+  }
+
+  // ---- views ----
+  function emptyView(title, text, buttonLabel, msg) {
+    root.replaceChildren(el("div", { class: "empty" }, [
+      el("h1", { text: title }),
+      el("p", { text: text }),
+      buttonLabel ? el("button", { class: "primary", text: buttonLabel, onclick: () => send(msg) }) : null,
+    ]));
+  }
+
+  function render() {
+    if (!data) return;
+    lang = pickLang(data.locale || (data.status && data.status.locale));
+    document.documentElement.lang = lang;
+    document.getElementById("tab-global").textContent = t("tabAll");
+    document.getElementById("tab-project").textContent = t("tabProject");
+
+    if (data.state === "not_initialized") {
+      tabs.hidden = true;
+      return emptyView(t("setupTitle"), t("setupText"), t("setupBtn"), { command: "setup" });
+    }
+    if (data.state === "error") {
+      tabs.hidden = true;
+      return emptyView(t("errorTitle"), data.error || t("unknownError"), t("retry"), { command: "refresh" });
+    }
+
+    const s = data.status || {};
+    tabs.hidden = !data.repo;
+    if (!data.repo) scope = "global";
+    for (const b of tabs.querySelectorAll("[role=tab]")) b.setAttribute("aria-selected", String(b.dataset.scope === scope));
+
+    if (scope === "project") {
+      if (!s.tracked) return emptyView(t("notCountedTitle"), t("notCountedText"), t("countBtn"), { command: "enableProject" });
+      if (!s.project) return emptyView(t("noProjectTitle"), t("noProjectText"), t("chooseTrail"), { command: "chooseRoute", scope: "project" });
+    }
+    const j = scope === "project" ? s.project : s.global;
+    if (!j || !j.route) return emptyView(t("noTrailTitle"), t("noTrailText"), t("chooseTrail"), { command: "chooseRoute", scope });
+
+    root.replaceChildren();
+    root.append(
+      el("h1", { text: j.route.name }),
+      el("p", { class: "distance" }, [
+        el("strong", { text: fmt(j.distance_m) }),
+        document.createTextNode(" / " + fmt(j.route.length_m) + " (" + String(j.percent).replace(".", t("decimal")) + "%)"),
+      ])
+    );
+    drawTrail(j);
+
+    const facts = el("dl", { class: "facts" });
+    if (j.finished) {
+      facts.append(el("dt", { text: t("status") }), el("dd", { class: "finished", text: t("completed") }));
+    } else if (j.next_waypoint) {
+      facts.append(el("dt", { text: t("nextStop") }),
+        el("dd", { text: t("nextIn", { name: j.next_waypoint.name, d: fmt(j.to_next_m || 0) }) }));
+    }
+    facts.append(el("dt", { text: t("today") }), el("dd", { text: fmt(s.today_m || 0) }));
+    if (j.streak_days > 0) facts.append(el("dt", { text: t("streak") }), el("dd", { text: plural("days", j.streak_days) }));
+    root.append(facts);
+
+    // Postcard: the most recent text along the trail, a story beat or a waypoint.
+    const w = j.last_waypoint, st = j.story;
+    const card = st && (!w || st.at_m >= w.at_m) ? { text: st.text, from: null }
+      : w && w.text ? { text: w.text, from: w.name } : null;
+    if (card) {
+      root.append(el("div", { class: "postcard" }, [
+        el("p", { text: card.text }),
+        card.from ? el("p", { class: "from", text: card.from }) : null,
+      ]));
+    }
+
+    root.append(achievementsView(j.achievements) || document.createTextNode(""));
+    root.append(el("div", { class: "actions" }, [
+      el("button", { class: "link", text: j.finished ? t("startNew") : t("changeTrail"),
+        onclick: () => send({ command: "chooseRoute", scope }) }),
+    ]));
+  }
+
+  tabs.addEventListener("click", e => {
+    const b = e.target.closest("[role=tab]");
+    if (b) { scope = b.dataset.scope; render(); }
+  });
+
+  function update(next) { data = next; render(); }
+  window.commitHike = { update: d => update(typeof d === "string" ? JSON.parse(d) : d) };
+  window.addEventListener("message", e => { if (e.data && e.data.type === "update") update(e.data); });
+  send({ command: "ready" });
+})();
+</script>
+</body>
+</html>

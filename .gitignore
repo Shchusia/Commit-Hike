@@ -1,32 +1,60 @@
-# If you prefer the allow list template instead of the deny list, see community template:
-# https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
-#
-# Binaries for programs and plugins
+# ─── Build output ───────────────────────────────────────────────
+# core binaries (task core:dist)
+core/dist/
+# goreleaser (task release:snapshot)
+/dist/
+# compiled TypeScript
+plugins/vscode/out/
+# core binaries copied for the extension
+plugins/vscode/bin/
+# copied from ui/panel at build time
+plugins/vscode/media/panel.html
+*.vsix
+plugins/jetbrains/build/
+plugins/jetbrains/.gradle/
+plugins/jetbrains/.intellijPlatform/
+plugins/jetbrains/.kotlin/
+
+# ─── Dependencies ───────────────────────────────────────────────
+node_modules/
+vendor/
+
+# ─── Local tooling ──────────────────────────────────────────────
+# task core:demo / core:render / core:cover
+.sandbox/
+# Task's checksum cache
+.task/
+
+# ─── Go ─────────────────────────────────────────────────────────
 *.exe
 *.exe~
 *.dll
 *.so
 *.dylib
-
-# Test binary, built with `go test -c`
+# go test -c
 *.test
-
-# Code coverage profiles and other test artifacts
+# coverage profiles
 *.out
 coverage.*
 *.coverprofile
 profile.cov
-
-# Dependency directories (remove the comment below to include it)
-# vendor/
-
-# Go workspace file
 go.work
 go.work.sum
 
-# env file
+# ─── Logs and secrets ───────────────────────────────────────────
+*.log
+npm-debug.log*
 .env
+.env.*
 
-# Editor/IDE
-# .idea/
-# .vscode/
+# ─── Editors and OS ─────────────────────────────────────────────
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+Thumbs.db
+*.swp
+
+# ─── Personal notes ─────────────────────────────────────────────
+ForMe.md

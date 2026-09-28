@@ -2,6 +2,7 @@ package app
 
 import (
 	"archive/zip"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -9,22 +10,20 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"regexp"
 	"strings"
 
-	"github.com/commit-hike/commit-hike/core/internal/i18n"
-	"github.com/commit-hike/commit-hike/core/internal/protocol"
-	"github.com/commit-hike/commit-hike/core/internal/routes"
+	"github.com/Shchusia/commit-hike/core/internal/i18n"
+	"github.com/Shchusia/commit-hike/core/internal/protocol"
+	"github.com/Shchusia/commit-hike/core/internal/routes"
 )
 
-// Limits for imported packs: a route is a few small JSON files, so anything
-// bigger is a mistake (or an attack) rather than a route.
+// Limits for imported packs: a route is a few JSON files and some pictures,
+// so anything bigger is a mistake (or an attack) rather than a route.
 const (
-	maxPackFiles = 64
-	maxPackBytes = 2 << 20 // 2 MiB in total
+	maxPackFiles  = 200
+	maxPackBytes  = 16 << 20 // 16 MiB in total
+	maxAssetBytes = 4 << 20  // 4 MiB per asset
 )
-
-var routeIDPattern = regexp.MustCompile(`^[a-z0-9]+(-[a-z0-9]+)*$`)
 
 // ImportRoute validates a route pack (a folder or a .zip) and copies it into
 // the user's routes directory. With replace, an existing user route with the
@@ -91,6 +90,11 @@ func (s *Service) ImportRoute(src string, replace bool, lang string) (*protocol.
 		return nil, err
 	}
 
+	// Point the route at its new home, so its assets resolve.
+	if moved, err := routes.LoadPack(os.DirFS(target), "."); err == nil {
+		moved.Builtin = false
+		r = moved
+	}
 	s.routes[r.ID] = r
 	dto := routeDTO(r, i18n.Chain(lang))
 	return &dto, nil
@@ -124,13 +128,50 @@ func (s *Service) RemoveRoute(id string) error {
 		return err
 	}
 	delete(s.routes, id)
+	// Achievements belong to the route: a different route imported later
+	// under the same id must start fresh.
+	if st, err := s.st.LoadState(); err == nil {
+		changed := false
+		for key := range st.Achievements {
+			if strings.HasSuffix(key, ":"+id) {
+				delete(st.Achievements, key)
+				changed = true
+			}
+		}
+		if changed {
+			return s.st.SaveState(st)
+		}
+	}
 	return nil
+}
+
+// RouteAssets returns a route's pictures as data URLs and its HTML snippets
+// as text, for the objects and the map image.
+func (s *Service) RouteAssets(id string) (*protocol.RouteAssets, error) {
+	r, ok := s.routes[id]
+	if !ok {
+		return nil, fail(protocol.CodeUnknownRoute, "unknown route %q", id)
+	}
+	out := &protocol.RouteAssets{ID: id, Images: map[string]string{}, HTML: map[string]string{}}
+	for _, name := range r.AssetNames() {
+		data, err := r.Asset(name)
+		if err != nil {
+			return nil, fail(protocol.CodeInvalidRoute, "asset %s: %s", name, err)
+		}
+		mime := routes.AssetExts[strings.ToLower(path.Ext(name))]
+		if mime == "text/html" {
+			out.HTML[name] = string(data)
+		} else {
+			out.Images[name] = "data:" + mime + ";base64," + base64.StdEncoding.EncodeToString(data)
+		}
+	}
+	return out, nil
 }
 
 // RouteTemplate writes a small, valid route pack to dir/<id> as a starting
 // point for people making their own routes. It returns the folder path.
 func (s *Service) RouteTemplate(id, dir string) (string, error) {
-	if !routeIDPattern.MatchString(id) {
+	if !routes.IDPattern.MatchString(id) {
 		return "", fail(protocol.CodeInvalidArgument,
 			"route id %q may contain only lowercase letters, digits and single dashes, e.g. my-trail", id)
 	}
@@ -146,16 +187,20 @@ func (s *Service) RouteTemplate(id, dir string) (string, error) {
 		"locales/en.json": templateTexts("en"),
 		"locales/uk.json": templateTexts("uk"),
 	}
+	raw := map[string][]byte{"assets/signpost.svg": []byte(templateSignpost)}
 	for name, content := range files {
 		b, err := json.MarshalIndent(content, "", "  ")
 		if err != nil {
 			return "", err
 		}
+		raw[name] = append(b, '\n')
+	}
+	for name, data := range raw {
 		p := filepath.Join(target, filepath.FromSlash(name))
 		if err := os.MkdirAll(filepath.Dir(p), 0o750); err != nil {
 			return "", err
 		}
-		if err := os.WriteFile(p, append(b, '\n'), 0o600); err != nil {
+		if err := os.WriteFile(p, data, 0o600); err != nil {
 			return "", err
 		}
 	}
@@ -208,6 +253,26 @@ func packFiles(fsys fs.FS, dir string) ([]string, error) {
 	if _, err := fs.Stat(fsys, path.Join(dir, "README.md")); err == nil {
 		files = append(files, "README.md")
 	}
+	assets := path.Join(dir, "assets")
+	if fi, err := fs.Stat(fsys, assets); err == nil && fi.IsDir() {
+		err := fs.WalkDir(fsys, assets, func(p string, d fs.DirEntry, err error) error {
+			if err != nil || d.IsDir() {
+				return err
+			}
+			if _, ok := routes.AssetExts[strings.ToLower(path.Ext(p))]; !ok {
+				return nil // anything else (thumbs.db, sources) stays behind
+			}
+			if fi, err := d.Info(); err == nil && fi.Size() > maxAssetBytes {
+				return fmt.Errorf("%s is too large (max %d MiB per asset)", strings.TrimPrefix(p, dir+"/"), maxAssetBytes>>20)
+			}
+			rel := strings.TrimPrefix(strings.TrimPrefix(p, dir), "/")
+			files = append(files, rel)
+			return nil
+		})
+		if err != nil {
+			return nil, err
+		}
+	}
 	if len(files) > maxPackFiles {
 		return nil, fmt.Errorf("too many files in the route pack (max %d)", maxPackFiles)
 	}
@@ -220,7 +285,7 @@ func packFiles(fsys fs.FS, dir string) ([]string, error) {
 		total += fi.Size()
 	}
 	if total > maxPackBytes {
-		return nil, fmt.Errorf("the route pack is too large (max %d KiB)", maxPackBytes>>10)
+		return nil, fmt.Errorf("the route pack is too large (max %d MiB)", maxPackBytes>>20)
 	}
 	return files, nil
 }
@@ -232,19 +297,30 @@ func templateRoute(id string) map[string]any {
 		"default_locale": "en",
 		"length_m":       5000,
 		"waypoints": []map[string]any{
-			{"id": "start", "at_m": 0, "kind": "start"},
-			{"id": "viewpoint", "at_m": 2500, "kind": "peak", "elevation_m": 900},
-			{"id": "finish", "at_m": 5000, "kind": "finish"},
+			{"id": "start", "at_m": 0, "kind": "start", "elevation_m": 420},
+			{"id": "viewpoint", "at_m": 2500, "kind": "viewpoint", "elevation_m": 900},
+			{"id": "finish", "at_m": 5000, "kind": "finish", "elevation_m": 610},
+		},
+		"profile": []map[string]any{
+			{"at_m": 1200, "elevation_m": 560},
+			{"at_m": 3800, "elevation_m": 700},
 		},
 		"biomes": []map[string]any{
 			{"at_m": 0, "type": "meadow"},
 			{"at_m": 1200, "type": "forest"},
-			{"at_m": 3500, "type": "rock"},
+			{"at_m": 2200, "type": "rock"},
+			{"at_m": 3200, "type": "grove"},
+			{"at_m": 4400, "type": "fields"},
 		},
 		"story": []map[string]any{{"id": "halfway", "at_m": 2000}},
+		"facts": []map[string]any{{"id": "how-facts-work", "at_m": 800}},
+		"objects": []map[string]any{
+			{"id": "sign", "at_m": 300, "asset": "assets/signpost.svg", "height_px": 70, "fade_m": 300},
+		},
 		"achievements": []map[string]any{
 			{"id": "first-steps", "rule": map[string]any{"type": "distance", "min_m": 100}},
 			{"id": "top", "rule": map[string]any{"type": "waypoint", "waypoint": "viewpoint"}},
+			{"id": "climber", "rule": map[string]any{"type": "climb", "min_m": 300}},
 			{"id": "done", "rule": map[string]any{"type": "finish"}},
 		},
 	}
@@ -261,10 +337,13 @@ func templateTexts(lang string) map[string]any {
 				"viewpoint": wp{"name": "Оглядовий майданчик", "text": "Тексти точок з'являються, коли ти до них доходиш."},
 				"finish":    wp{"name": "Фініш", "text": "Кінець стежки."},
 			},
-			"story": wp{"halfway": "Історія показується між точками маршруту."},
+			"story":   wp{"halfway": "Історія показується між точками маршруту."},
+			"facts":   wp{"how-facts-work": "Факти відкриваються, коли ти проходиш їхню точку. Пиши сюди справжні цікавинки про місця."},
+			"objects": wp{"sign": "Вказівник"},
 			"achievements": map[string]any{
 				"first-steps": wp{"name": "Перші кроки", "description": "Пройди 100 м."},
 				"top":         wp{"name": "Вид згори", "description": "Дійди до оглядового майданчика."},
+				"climber":     wp{"name": "Вгору!", "description": "Набери 300 м висоти."},
 				"done":        wp{"name": "Готово", "description": "Пройди стежку до кінця."},
 			},
 		}
@@ -277,11 +356,23 @@ func templateTexts(lang string) map[string]any {
 			"viewpoint": wp{"name": "Viewpoint", "text": "Waypoint texts appear when you arrive."},
 			"finish":    wp{"name": "Finish", "text": "The end of the trail."},
 		},
-		"story": wp{"halfway": "Story beats show up between waypoints."},
+		"story":   wp{"halfway": "Story beats show up between waypoints."},
+		"facts":   wp{"how-facts-work": "Facts unlock as you pass their spot. Put real, surprising things about the places here."},
+		"objects": wp{"sign": "Signpost"},
 		"achievements": map[string]any{
 			"first-steps": wp{"name": "First Steps", "description": "Walk 100 m."},
 			"top":         wp{"name": "View from the Top", "description": "Reach the viewpoint."},
+			"climber":     wp{"name": "Up We Go", "description": "Climb 300 m in total."},
 			"done":        wp{"name": "Done", "description": "Finish the trail."},
 		},
 	}
 }
+
+// templateSignpost is the example object of a new route pack.
+const templateSignpost = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 90">
+  <rect x="27" y="18" width="6" height="72" rx="1.5" fill="#6b4a2e"/>
+  <path d="M6 14h40l8 8-8 8H6z" fill="#c9952e" stroke="#5a3d1f" stroke-width="2"/>
+  <path d="M54 40H14l-8 8 8 8h40z" fill="#b5832a" stroke="#5a3d1f" stroke-width="2"/>
+  <path d="M14 22h26M18 48h28" stroke="#5a3d1f" stroke-width="2.5" stroke-linecap="round"/>
+</svg>
+`

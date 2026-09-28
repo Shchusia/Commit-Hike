@@ -9,7 +9,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/commit-hike/commit-hike/core/internal/protocol"
+	"github.com/Shchusia/commit-hike/core/internal/protocol"
 )
 
 // Hiker icons are small sprites drawn on the trail, so the limits are tight.
@@ -60,7 +60,7 @@ func (s *Service) SetAvatar(src string) (*protocol.Avatar, error) {
 		return nil, err
 	}
 	defer unlock()
-	if err := os.WriteFile(s.avatarPath(), data, 0o600); err != nil {
+	if err := s.st.WriteFile(avatarFile, data); err != nil {
 		return nil, err
 	}
 	return s.Avatar()

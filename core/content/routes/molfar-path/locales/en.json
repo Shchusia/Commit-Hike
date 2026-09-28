@@ -1,0 +1,104 @@
+{
+  "name": "The Molfar's Path",
+  "description": "An original tale in the Carpathians: old molfar Yavdokha sends her apprentice with a trembita to Thunder Peak to call the rain.",
+  "waypoints": {
+    "village": {
+      "name": "Village Below the Mountain",
+      "text": "The hay is dry, the wells are low. Yavdokha puts a trembita on your shoulder: \"Go up and ask the Storm.\""
+    },
+    "mill": {
+      "name": "The Water Mill",
+      "text": "The wheel barely turns. The miller says the river has never been this quiet."
+    },
+    "church": {
+      "name": "The Wooden Church",
+      "text": "Shingles silver with age. You light a candle for the road."
+    },
+    "beech-forest": {
+      "name": "The Primeval Beeches",
+      "text": "Grey trunks older than the village. Little green lights drift between them."
+    },
+    "vatra": {
+      "name": "Vatra Meadow",
+      "text": "The head shepherd gives you an ember from the living fire, wrapped in birch bark."
+    },
+    "black-tarn": {
+      "name": "The Black Tarn",
+      "text": "Water so dark it holds the stars in daylight. You don't drink from it."
+    },
+    "stone-guardian": {
+      "name": "The Stone Guardian",
+      "text": "An ancient carved stone watches the pass. You bow, and the wind lets you by."
+    },
+    "molfar-hut": {
+      "name": "The Old Molfar's Hut",
+      "text": "Empty but warm. Dried herbs hang from the beams, as if someone knew you'd come."
+    },
+    "seven-winds": {
+      "name": "Pass of Seven Winds",
+      "text": "Seven winds, seven voices. You answer none of them and keep walking."
+    },
+    "thunder-peak": {
+      "name": "Thunder Peak",
+      "text": "You blow the trembita. Far to the west, a grey curtain of rain begins to fall over the valley."
+    }
+  },
+  "story": {
+    "dust": "Dust rises from the road with every step. Even the dogs are too hot to bark.",
+    "lights": "The green lights move ahead of you, always just out of reach. You follow them and don't lose the path.",
+    "ember": "The ember in your pocket stays warm. Yavdokha said it must reach the top alive.",
+    "clouds-gather": "Clouds gather below you, heavy and slow, as if they were waiting for a signal."
+  },
+  "facts": {
+    "molfar": "In Hutsul tradition a molfar is a folk healer and weather-maker, believed to be able to turn away hail or call the rain.",
+    "tserkvas": "In 2013, sixteen wooden churches of the Carpathian region in Poland and Ukraine were added to the UNESCO World Heritage list.",
+    "beeches": "The Carpathians keep some of Europe's last primeval beech forests; the Ukrainian ones have been World Heritage since 2007.",
+    "forest-song": "Mavka, a forest spirit of Ukrainian folklore, became the heroine of Lesya Ukrainka's play \"The Forest Song\" (1911).",
+    "vatra-tradition": "Shepherds lit the polonyna fire at the start of the grazing season and tried to keep it burning until they drove the flocks down in autumn.",
+    "cheese": "Budz and brynza, sheep's-milk cheeses, are still made right on the polonyna beside the fire.",
+    "shadows": "Mykhailo Kotsiubynsky's novella \"Shadows of Forgotten Ancestors\" (1911) and Serhii Parajanov's 1965 film made Hutsul life known worldwide.",
+    "trembita": "A trembita is a Hutsul wooden horn that can be over 3 m long. Its call carried news across the valleys: births, weddings, deaths."
+  },
+  "objects": {
+    "mill": "The water mill",
+    "church": "The wooden church",
+    "wisps": "Mavka's lights",
+    "vatra-fire": "The living fire",
+    "guardian": "The Stone Guardian",
+    "trembita": "The trembita"
+  },
+  "achievements": {
+    "on-the-road": {
+      "name": "On the Road",
+      "description": "Walk your first 100 m."
+    },
+    "candle": {
+      "name": "A Candle for the Road",
+      "description": "Reach the wooden church."
+    },
+    "ember": {
+      "name": "Keeper of the Ember",
+      "description": "Get the ember at Vatra Meadow."
+    },
+    "high-meadows": {
+      "name": "High Meadows",
+      "description": "Climb 800 m in total."
+    },
+    "guardian": {
+      "name": "Let Through",
+      "description": "Pass the Stone Guardian."
+    },
+    "two-thousand": {
+      "name": "Where Storms Are Born",
+      "description": "Stand higher than 2000 m."
+    },
+    "steady": {
+      "name": "Seven Days, Seven Winds",
+      "description": "Commit 7 days in a row."
+    },
+    "rain": {
+      "name": "Rain-Caller",
+      "description": "Reach Thunder Peak and call the rain."
+    }
+  }
+}

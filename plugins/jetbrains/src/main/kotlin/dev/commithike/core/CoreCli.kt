@@ -35,14 +35,37 @@ class CoreCli(
 
     fun status(repo: String? = null): Status = call(listOf("status") + repoArgs(repo) + langArgs(), Status::class.java)
 
-    fun scan(repo: String): ScanResult = call(listOf("scan", "--repo", repo) + langArgs(), ScanResult::class.java)
+    /** [prevHead]: the HEAD seen before this change; if it's no longer an ancestor the core recounts in full. */
+    fun scan(repo: String, prevHead: String? = null): ScanResult = call(
+        listOf("scan", "--repo", repo) + (if (prevHead.isNullOrEmpty()) emptyList() else listOf("--prev-head", prevHead)) + langArgs(),
+        ScanResult::class.java,
+    )
+
+    /** Everyone who commits to the project, on the same route. Computed from git history, never stored. */
+    fun team(repo: String): Team = call(listOf("team", "--repo", repo), Team::class.java)
+
+    fun setTeam(repo: String, on: Boolean) {
+        call<JsonElement>(listOf("project", if (on) "team-on" else "team-off", "--repo", repo), JsonElement::class.java)
+    }
+
+    /** Reads the language setting; with [set] ("auto", "en", "uk"…) changes it for every IDE. */
+    fun locale(set: String? = null): LocaleInfo =
+        call(listOf("locale") + (if (set == null) emptyList() else listOf("--set", set)) + langArgs(), LocaleInfo::class.java)
+
+    /** Pictures (data URLs) and static HTML of a route's objects and map. */
+    fun routeAssets(id: String): RouteAssets = call(listOf("route", "assets", "--id", id), RouteAssets::class.java)
 
     fun verify(repo: String): VerifyResult = call(listOf("verify", "--repo", repo), VerifyResult::class.java)
 
-    fun init(emails: List<String>, mode: String, fromHistory: Boolean): CoreConfig = call(
-        listOf("init", "--email", emails.joinToString(","), "--mode", mode, "--from-history=$fromHistory"),
+    fun init(emails: List<String>, mode: String, fromHistory: Boolean, difficulty: String? = null): CoreConfig = call(
+        listOf("init", "--email", emails.joinToString(","), "--mode", mode, "--from-history=$fromHistory") +
+            (if (difficulty == null) emptyList() else listOf("--difficulty", difficulty)),
         CoreConfig::class.java,
     )
+
+    /** Reads the difficulty; with [set] (easy, medium, hard) changes it for commits from now on. */
+    fun difficulty(set: String? = null): DifficultyInfo =
+        call(listOf("difficulty") + (if (set == null) emptyList() else listOf("--set", set)), DifficultyInfo::class.java)
 
     fun setJourney(scope: Scope, route: String, fromHistory: Boolean, repo: String? = null): Status = call(
         listOf("journey", "--scope", scope.cli, "--route", route, "--from-history=$fromHistory") + repoArgs(repo) + langArgs(),
@@ -136,10 +159,14 @@ object CorePlatform {
     }
 }
 
-fun formatDistance(m: Double): String {
-    if (m < 1000) return "${m.roundToInt()} m"
+fun formatDistance(m: Double, lang: String = "en"): String {
+    val uk = lang == "uk"
+    if (m < 1000) return "${m.roundToInt()} " + if (uk) "м" else "m"
     val km = m / 1000
-    return if (km < 100) "%.1f km".format(java.util.Locale.ROOT, km) else "${km.roundToInt()} km"
+    val unit = if (uk) "км" else "km"
+    if (km >= 100) return "${km.roundToInt()} $unit"
+    val s = "%.1f".format(java.util.Locale.ROOT, km)
+    return (if (uk) s.replace('.', ',') else s) + " " + unit
 }
 
 /** `git config --global user.email`, or "" when git or the setting is missing. */

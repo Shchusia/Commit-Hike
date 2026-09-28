@@ -13,28 +13,52 @@ export interface Biome { at_m: number; type: string }
 export interface Day { date: string; m: number }
 export interface Story { id: string; text: string; at_m: number }
 export interface Achievement { id: string; name?: string; description?: string; hidden?: boolean; unlocked_at?: number }
+export type Level = "easy" | "medium" | "hard";
+export interface DifficultyInfo { level: Level; levels: Level[]; typical_day_m: Record<Level, number> }
+export interface Span { from_m: number; to_m: number }
+export interface Danger { id: string; at_m: number; text: string }
+export interface ProfilePoint { at_m: number; elevation_m: number }
+export interface Fact { id: string; at_m: number; text: string }
+export interface RouteObject {
+  id: string; at_m: number; asset: string; height_px: number; lift_px?: number; offset_m?: number; fade_m: number;
+  layer: "trail" | "far"; caption?: string;
+}
 export interface Route {
   id: string; name: string; description: string; length_m: number;
   locales: string[]; builtin: boolean; waypoints: Waypoint[]; biomes?: Biome[]; achievements: number;
+  profile?: ProfilePoint[]; ascent_m?: number; min_elevation_m?: number; max_elevation_m?: number;
+  facts?: Fact[]; objects?: RouteObject[]; path?: [number, number][]; map_image?: string;
+  underground?: Span[]; dangers?: Danger[];
 }
 export interface Journey {
   scope: "global" | "project"; route: Route; distance_m: number; percent: number; finished: boolean;
   last_waypoint?: Waypoint; next_waypoint?: Waypoint; to_next_m?: number; story?: Story;
   achievements: Achievement[]; commits: number; streak_days: number; daily: Day[]; day: number;
+  elevation_m?: number; ascent_m?: number; max_elevation_m?: number; to_next_climb_m?: number; underground?: boolean;
 }
 export interface Status {
-  tracked: boolean; reason?: string; locale: string; global?: Journey; project?: Journey; today_m: number; total_m: number;
+  tracked: boolean; reason?: string; reason_code?: "not_a_repo" | "not_enabled"; team?: boolean;
+  difficulty?: Level; typical_day_m?: number;
+  locale: string; global?: Journey; project?: Journey; today_m: number; total_m: number;
 }
-export type EventType = "waypoint" | "story" | "achievement" | "finished";
+export type EventType = "waypoint" | "story" | "achievement" | "finished" | "fact" | "danger";
 export interface JourneyEvent {
-  type: EventType; journey: "global" | "project"; waypoint?: Waypoint; story?: Story; achievement?: Achievement;
+  type: EventType; journey: "global" | "project"; waypoint?: Waypoint; story?: Story; achievement?: Achievement; fact?: Fact;
+  danger?: Danger;
 }
 export interface ScanResult extends Status {
-  new_commits: number; updated_commits: number; added_m: number; events?: JourneyEvent[];
+  new_commits: number; updated_commits: number; removed_commits?: number; rewritten?: boolean; added_m: number; events?: JourneyEvent[];
 }
 export interface Avatar { custom: boolean; data_url?: string }
 export interface VerifyResult { added: number; updated: number; removed: number }
 export interface Config { mode: "all" | "selected"; emails: string[]; locale?: string }
+export interface Member {
+  id: string; name: string; me?: boolean; distance_m: number; percent: number; finished?: boolean;
+  commits: number; today_m: number; last_commit_at: number; elevation_m?: number;
+}
+export interface Team { scope: "global" | "project"; route_id: string; length_m: number; members: Member[]; hidden?: number }
+export interface LocaleInfo { locale: string; effective: string; available: string[] }
+export interface RouteAssets { id: string; images: Record<string, string>; html: Record<string, string> }
 
 /** Every core response: {"api":1,"ok":true,"data":…} or {"api":1,"ok":false,"error":…}. */
 interface Envelope { api?: number; ok?: boolean; data?: unknown; error?: { code: string; message: string } }
@@ -103,11 +127,22 @@ export class Cli {
   config() { return this.run<Config>(["config"]); }
   routes() { return this.run<Route[]>(this.withLang(["routes"])); }
   status(repo?: string) { return this.run<Status>(this.withLang(repo ? ["status", "--repo", repo] : ["status"])); }
-  scan(repo: string) { return this.run<ScanResult>(this.withLang(["scan", "--repo", repo])); }
+  /** prevHead: the HEAD seen before this change; if it's no longer an ancestor the core recounts in full. */
+  scan(repo: string, prevHead?: string) {
+    return this.run<ScanResult>(this.withLang(["scan", "--repo", repo, ...(prevHead ? ["--prev-head", prevHead] : [])]));
+  }
+  team(repo: string) { return this.run<Team>(["team", "--repo", repo]); }
+  setTeam(repo: string, on: boolean) { return this.run<{ team: boolean }>(["project", on ? "team-on" : "team-off", "--repo", repo]); }
+  /** Reads the language setting; with set ("auto", "en", "uk"…) changes it for every IDE. */
+  locale(set?: string) { return this.run<LocaleInfo>(this.withLang(set === undefined ? ["locale"] : ["locale", "--set", set])); }
+  routeAssets(id: string) { return this.run<RouteAssets>(["route", "assets", "--id", id]); }
+  /** Reads the difficulty; with set, changes it for commits from now on. */
+  difficulty(set?: Level) { return this.run<DifficultyInfo>(set ? ["difficulty", "--set", set] : ["difficulty"]); }
   verify(repo: string) { return this.run<VerifyResult>(["verify", "--repo", repo]); }
 
-  init(o: { emails: string[]; mode: "all" | "selected"; fromHistory: boolean }) {
-    return this.run<Config>(["init", "--email", o.emails.join(","), "--mode", o.mode, `--from-history=${o.fromHistory}`]);
+  init(o: { emails: string[]; mode: "all" | "selected"; fromHistory: boolean; difficulty?: Level }) {
+    return this.run<Config>(["init", "--email", o.emails.join(","), "--mode", o.mode, `--from-history=${o.fromHistory}`,
+      ...(o.difficulty ? ["--difficulty", o.difficulty] : [])]);
   }
 
   setJourney(scope: "global" | "project", route: string, fromHistory: boolean, repo?: string) {

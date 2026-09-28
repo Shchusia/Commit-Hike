@@ -55,13 +55,14 @@ class CoreCliTest {
         cli.init(listOf("me@x.io"), "all", fromHistory = true)
         val scan = cli.scan(repo.path)
         assertEquals(1, scan.newCommits)
-        assertEquals(50.0, scan.addedM, 0.001)
-        assertEquals(50.0, scan.status().global!!.distanceM, 0.001)
+        assertEquals(650.0, scan.addedM, 0.001) // 3 lines = 50 base points × 13 (medium)
+        assertEquals(650.0, scan.status().global!!.distanceM, 0.001)
+        assertEquals("medium", scan.difficulty)
         assertEquals("Old Bridge", scan.global!!.nextWaypoint!!.name)
-        // 50 m: below the 100 m "first steps" threshold, so nothing is unlocked yet
-        assertTrue(scan.events.orEmpty().isEmpty())
+        // 650 m: past the 100 m "first steps" threshold and nothing else
+        assertEquals(listOf("first-steps"), scan.events.orEmpty().mapNotNull { it.achievement?.id })
         assertEquals(5, scan.global!!.achievements!!.size)
-        assertTrue(scan.global!!.achievements!!.all { it.unlockedAt == 0L })
+        assertEquals(1, scan.global!!.achievements!!.count { it.unlockedAt != 0L })
 
         cli.lang = "uk"
         val st = cli.status(repo.path)
@@ -73,7 +74,7 @@ class CoreCliTest {
         assertTrue(ridge.waypoints!!.isNotEmpty())
         val proj = cli.setJourney(Scope.PROJECT, ridge.id, fromHistory = true, repo = repo.path)
         assertEquals("Чорногірський хребет", proj.project!!.route.name)
-        assertEquals(50.0, proj.project!!.distanceM, 0.001)
+        assertEquals(650.0, proj.project!!.distanceM, 0.001)
 
         try {
             cli.setJourney(Scope.GLOBAL, "atlantis", fromHistory = false)
@@ -124,6 +125,57 @@ class CoreCliTest {
 
         assertEquals(0, cli.verify(repo.path).removed)
         assertEquals(listOf("me@x.io"), cli.config().emails)
+
+        // Elevation, facts and objects reach the Kotlin models.
+        val ridgeRoute = proj.project!!.route
+        assertEquals(2061.0, ridgeRoute.maxElevationM, 0.001)
+        assertTrue(ridgeRoute.facts!!.isNotEmpty() && ridgeRoute.objects!!.isNotEmpty())
+        assertEquals(1358.0, proj.project!!.elevationM!!, 5.0)
+
+        // A rewrite (reset) is recounted when the previous HEAD is passed.
+        val head = gitOut(repo, "rev-parse", "HEAD")
+        File(repo, "b.kt").writeText("1\n2\n3\n")
+        git(repo, "add", "-A")
+        git(repo, "commit", "-qm", "d")
+        cli.scan(repo.path)
+        val after = gitOut(repo, "rev-parse", "HEAD")
+        git(repo, "reset", "-q", "--hard", head)
+        val rewritten = cli.scan(repo.path, prevHead = after)
+        assertTrue(rewritten.rewritten)
+        assertEquals(1, rewritten.removedCommits)
+
+        // Team, language and route pictures.
+        cli.setTeam(repo.path, true)
+        assertTrue(cli.status(repo.path).team)
+        val team = cli.team(repo.path)
+        assertEquals(1, team.members!!.size)
+        assertTrue(team.members!!.first().me)
+        assertEquals("uk", cli.locale("uk").effective)
+        assertEquals("", cli.locale("auto").locale)
+        val assets = cli.routeAssets("seven-lighthouses")
+        assertTrue(assets.images!!["assets/parchment-map.svg"]!!.startsWith("data:image/svg+xml;base64,"))
+        assertTrue(assets.html!!.containsKey("assets/aurora.html"))
+
+        // Difficulty, tunnels and encounters.
+        assertEquals("easy", cli.difficulty("easy").level)
+        assertTrue(cli.difficulty().typicalDayM!!.getValue("easy") > cli.difficulty().typicalDayM!!.getValue("hard"))
+        // Tunnels and encounters, from a fixture pack rather than shipped content.
+        val tunnel = cli.importRoute(
+            Paths.get("..", "..", "core", "internal", "app", "testdata", "routes", "tunnel-test").toString(),
+            replace = true,
+        )
+        assertEquals(2, tunnel.underground!!.size)
+    }
+
+    @Test
+    fun translationsAreComplete() {
+        assertEquals(emptyMap<String, Set<String>>(), I18n.missing())
+        I18n.setLanguage("uk-UA")
+        assertEquals("uk", I18n.lang)
+        assertEquals("8,4 км", I18n.distance(8400.0))
+        assertEquals("Сьогодні: 5 м", I18n.t("barToday", I18n.distance(5.0)))
+        I18n.setLanguage("de")
+        assertEquals("en", I18n.lang)
     }
 
     private fun coreBinary(): Path {
@@ -134,14 +186,28 @@ class CoreCliTest {
         return p
     }
 
+    private fun gitOut(dir: File, vararg args: String): String {
+        val p = ProcessBuilder(listOf("git", "-C", dir.path) + args).start()
+        val out = p.inputStream.readBytes().toString(Charsets.UTF_8).trim()
+        check(p.waitFor() == 0) { "git ${args.toList()}" }
+        return out
+    }
+
+    // Every git call gets its own minute: commits made within one second
+    // share a dedup key (author email + time) and would count as one.
+    private var clock = System.currentTimeMillis() / 1000 - 6 * 3600
+
     private fun git(dir: File, vararg args: String) {
         val pb = ProcessBuilder(listOf("git", "-C", dir.path) + args).redirectErrorStream(true)
+        clock += 60
         pb.environment().putAll(
             mapOf(
                 "GIT_AUTHOR_NAME" to "T",
                 "GIT_AUTHOR_EMAIL" to "me@x.io",
                 "GIT_COMMITTER_NAME" to "T",
                 "GIT_COMMITTER_EMAIL" to "me@x.io",
+                "GIT_AUTHOR_DATE" to "@$clock +0000",
+                "GIT_COMMITTER_DATE" to "@$clock +0000",
             ),
         )
         val p = pb.start()

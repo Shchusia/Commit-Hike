@@ -1,0 +1,118 @@
+{
+  "name": "The Alchemist's Road",
+  "description": "Santiago's journey from The Alchemist by Paulo Coelho through real places at real scale, about 4370 km: Andalusia, Tangier, across the Sahara to Al-Fayoum and the Pyramids. The map is real terrain (Natural Earth).",
+  "waypoints": {
+    "andalusia": {
+      "name": "Andalusian Pastures",
+      "text": "A young shepherd sleeps among his sheep and dreams, twice, of a treasure by the Pyramids."
+    },
+    "old-church": {
+      "name": "The Ruined Church",
+      "text": "A roofless church with a sycamore growing where the sacristy once stood."
+    },
+    "tarifa": {
+      "name": "Tarifa",
+      "text": "In the town square an old man who says he is a king asks for a tenth of your flock."
+    },
+    "strait": {
+      "name": "Strait of Gibraltar",
+      "text": "You sell your sheep and cross the sea to Africa."
+    },
+    "tangier": {
+      "name": "Tangier",
+      "text": "Robbed on your first day, in a city where you don't speak the language."
+    },
+    "crystal-shop": {
+      "name": "The Crystal Merchant",
+      "text": "A year of polishing glass, selling tea and saving money. The shop has never done better."
+    },
+    "sahara-edge": {
+      "name": "Edge of the Sahara",
+      "text": "A caravan of camels leaves the last well behind. An Englishman reads books about alchemy."
+    },
+    "deep-sahara": {
+      "name": "Heart of the Sahara",
+      "text": "Weeks of sand and silence. You learn to listen to the desert."
+    },
+    "al-fayoum": {
+      "name": "Al-Fayoum Oasis",
+      "text": "Palms, wells and a woman named Fatima. Two hawks fight in the sky, and you read an omen."
+    },
+    "alchemist-tent": {
+      "name": "The Alchemist's Tent",
+      "text": "A man in black on a white horse agrees to take you across the desert."
+    },
+    "wind-rock": {
+      "name": "The Rock of the Wind",
+      "text": "Held at a desert camp, you have three days to turn yourself into the wind."
+    },
+    "giza": {
+      "name": "Pyramids of Giza",
+      "text": "You dig by the Pyramids, and a stranger's words tell you the treasure lies back home, under the sycamore."
+    }
+  },
+  "story": {
+    "reading": "You like the sheep, but you also like books and new horizons.",
+    "omens": "Two stones, one black and one white, help you when you can't decide.",
+    "war": "Tribes are at war in the desert, and the caravan moves only at night.",
+    "lead": "The alchemist shows you a trick with lead. It's not the gold that matters."
+  },
+  "facts": {
+    "first-print": "The Alchemist first came out in Brazil in 1988. The first publisher printed about 900 copies and chose not to reprint it.",
+    "camino": "Two years earlier, in 1986, Coelho walked the Camino de Santiago, the pilgrims' road across northern Spain.",
+    "tarifa-point": "Tarifa's headland is the southernmost point of continental Europe.",
+    "strait-width": "At its narrowest the Strait of Gibraltar is only about 14 km wide; on clear days Africa is visible from Spain.",
+    "ibn-battuta": "Ibn Battuta, one of the greatest travellers of the Middle Ages, was born in Tangier in 1304.",
+    "alchemy-word": "The word alchemy came into European languages from Arabic al-kīmiyā, and chemistry grew out of it.",
+    "sahara-size": "The Sahara is the largest hot desert in the world, about 9 million km², roughly the size of the United States.",
+    "not-all-sand": "Most of the Sahara is not dunes at all but rocky plateaus and gravel plains.",
+    "camel-drink": "A thirsty camel can drink more than 100 litres of water in a few minutes.",
+    "fayoum": "Al-Fayoum is a real oasis in a desert depression west of the Nile, fed by an ancient canal and home to Lake Qarun.",
+    "emerald-tablet": "The Emerald Tablet, a short cryptic text attributed to Hermes Trismegistus, was a foundation of European alchemy.",
+    "great-pyramid": "The Great Pyramid of Giza was the tallest structure built by people for about 3,800 years.",
+    "translations": "The Alchemist holds a Guinness World Record as the most translated book by a living author."
+  },
+  "objects": {
+    "flock": "Santiago's flock",
+    "church": "The sycamore church",
+    "crystal": "The crystal shop",
+    "caravan": "The caravan",
+    "oasis-palms": "The oasis",
+    "hawks": "Two hawks",
+    "pyramids": "The Pyramids"
+  },
+  "achievements": {
+    "dream": {
+      "name": "A Recurring Dream",
+      "description": "Walk your first 100 m."
+    },
+    "africa": {
+      "name": "Another Continent",
+      "description": "Reach Tangier."
+    },
+    "crystal": {
+      "name": "Polished Glass",
+      "description": "Work for the crystal merchant."
+    },
+    "desert-day": {
+      "name": "Caravan Pace",
+      "description": "Walk 20 km in a single day."
+    },
+    "oasis": {
+      "name": "Water in the Desert",
+      "description": "Reach Al-Fayoum."
+    },
+    "wind": {
+      "name": "Become the Wind",
+      "description": "Reach the Rock of the Wind."
+    },
+    "steady": {
+      "name": "Follow the Omens",
+      "description": "Commit 30 days in a row."
+    },
+    "treasure": {
+      "name": "Where the Treasure Is",
+      "description": "Reach the Pyramids and learn where the treasure is."
+    }
+  }
+}

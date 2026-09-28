@@ -2,66 +2,174 @@
 
 *[Українською](README.uk.md)*
 
+**Version:** 0.1.0 — see [CHANGELOG.md](CHANGELOG.md)
+
 Every commit you make moves you along a hiking trail, right inside your IDE.
+A day of steady work takes you about ten kilometers along a real mountain
+ridge, a desert crossing or a fairy tale, with a scene that changes as you go,
+a map, stories, facts and achievements.
+
+<p align="center">
+  <img src="docs/screenshots/en-hike.png" width="49%" alt="Hike view: a side-on scene of the trail">
+  <img src="docs/screenshots/en-map.png" width="49%" alt="Map view: the real GPS track of the Chornohora ridge">
+</p>
+<p align="center">
+  <img src="docs/screenshots/en-places.png" width="49%" alt="Places view: every stop and its story">
+  <img src="docs/screenshots/en-stats.png" width="49%" alt="Stats view: streaks, daily distance and achievements">
+</p>
 
 ## Features
 
-- **Real routes.** Walk the Chornohora ridge from Zaroslyak over Hoverla to Pip Ivan, or a short demo trail. Each route has its own waypoints, story and achievements.
-- **Fair distance.** Meters grow with the size of a commit, but slowly: tiny commits count, huge ones can't be farmed. Lock files, generated code, whitespace-only changes and other people's commits don't count.
-- **Your own routes.** Create a route from a template, then import it as a folder or a `.zip`, right from the IDE. See [docs/routes.md](docs/routes.md).
-- **A hike you can watch.** The main view is a side-on scene: parallax mountains, a ground line that follows the route's real elevation profile, forests, meadows, lakes, and a sky that follows your clock. Scroll along the trail with the mouse wheel, drag or ← →.
-- **Your own hiker.** Replace the default figure with any PNG with a transparent background (Tools → Commit Hike → Set Hiker Icon…). The default, [`ui/panel/hiker-default.png`](ui/panel/hiker-default.png), shows the expected format: facing right, feet at the bottom edge.
-- **A real map.** Your trail is drawn like a hiking map: forests, meadows, rock, lakes, contour lines around peaks, plus a places list and daily stats.
-- **Your language.** Route texts are translated; the core picks the IDE's language and falls back to English.
+- **Real, literary and original routes.** Walk the Chornohora ridge over Hoverla and New Zealand's Tongariro Alpine Crossing on their real GPS tracks, Santiago's journey from The Alchemist across real Spain, Morocco, the Sahara and Egypt on real terrain, a folk tale through the Carpathians or a fantasy journey past seven lighthouses. Each route has its own stops, story, facts and achievements.
+- **Climb for real.** Routes have elevation profiles: the ground rises and falls, your hiker leans into the slope, and you see your altitude, the grade, how much you've climbed and the climb left to the next stop. Some achievements are about height.
+- **A living scene.** The sky follows your clock and the weather changes day by day. The land changes with the route: conifer forests, deciduous woods that turn gold in autumn, meadows, fields, steppe, desert, rock, snow, tundra, lakes, swamps, the seaside, volcanoes and villages, blending smoothly into each other.
+- **Things to find.** Route packs place pictures (SVG, PNG, JPG, WebP, GIF) or small animated HTML scenes along the trail. They fade in as you approach and out once you've passed. Facts about the places unlock as you walk.
+- **A minimap and a real map.** The hike view has a minimap of the whole trail. The map tab is a topographic map generated from the route itself: contour lines, hill shading, forests, lakes and the sea, with the stops you've passed, facts you've found and your teammates. Real routes are drawn from their GPS track at true scale. Zoom and pan like a paper map: the scale bar follows the zoom, symbols and labels keep their size, and more labels appear as you zoom in. A route pack can bring its own hand-drawn map instead.
+- **Walk together.** Turn on teammates for a project and everyone who commits to it appears on the same trail, with a leaderboard. Names come from git history and are never stored.
+- **Real distances, your difficulty.** Routes have their real lengths: Santiago's road is about 4,370 km. A typical day of commits takes you about 10 km on medium (12.5 on easy, 8 on hard), about half a hiker's day, so a long route is a months-long goal. A difficulty change applies from then on, and you see how many typical days are left.
+- **Tunnels and encounters.** Walk through mines and caves by torchlight, and feel the world go cold and dark where danger crossed the road.
+- **No spoilers.** You can look back along the way you've walked, but what lies ahead stays hidden until you get there.
+- **Fair distance.** Meters grow with the size of a commit, but slowly: tiny commits count, huge ones can't be farmed. Lock files, generated code, whitespace-only changes and other people's commits don't count. Squashed, rebased or amended history is recounted, never counted twice.
+- **Your own routes and maps.** Create a route from a template, add pictures and a map, then import it as a folder or a `.zip`, right from the IDE. See [docs/routes.md](docs/routes.md).
+- **Your own hiker.** Replace the default figure with any PNG with a transparent background. The default, [`ui/panel/hiker-default.png`](ui/panel/hiker-default.png), shows the expected format: facing right, feet at the bottom edge.
+- **Your language.** The whole plugin in English and Ukrainian: route texts, the trail view, notifications, dialogs and menus. Switch it in the plugin's menu, or follow the IDE.
 - **Private by design.** Nothing is written to your repositories and nothing leaves your computer. No source code, commit messages, file names or repository names are stored.
 
 ## Supported IDEs
 
 | IDE | Status |
 |---|---|
-| JetBrains IDEs 2024.3+ (PyCharm, IntelliJ IDEA, GoLand, WebStorm…) | in development |
-| VS Code 1.85+ | in development |
+| JetBrains IDEs 2024.3+ (PyCharm, IntelliJ IDEA, GoLand, WebStorm…) | getting ready for JetBrains Marketplace |
+| VS Code 1.85+, VSCodium, Cursor | getting ready for the Visual Studio Marketplace and Open VSX |
+
+## Install
+
+Until the plugin is on the marketplaces, build it from source (see
+[Development](#development)):
+
+```bash
+task jetbrains:install   # into your newest PyCharm; IDE=IntelliJIdea for another IDE. Restart the IDE.
+task vscode:install      # into VS Code
+```
+
+A built JetBrains plugin can also be installed by hand: **Settings → Plugins →
+⚙ → Install Plugin from Disk** and pick the zip from
+`plugins/jetbrains/build/distributions/`.
+
+## Using it
+
+Open the **Commit Hike** tool window (JetBrains) or the Commit Hike view in the
+activity bar (VS Code). The first time, a short setup asks which projects count
+and where your journey starts. Then just commit.
+
+| Tab | What you see |
+|---|---|
+| **Hike** | The side-on scene with your hiker, today's distance, the day of the journey and the story of the place. Scroll back along the way you've walked with the mouse wheel, by dragging or with ← →. |
+| **Map** | The whole trail on a topographic map. Zoom with the wheel or +/−, drag to move, ⌖ jumps to you. |
+| **Places** | Every stop: passed ones with their stories, the next ones with the distance left. |
+| **Team** | Everyone committing to this project on the same trail, when teammates are on. |
+| **Stats** | Today, streaks, the last 14 days, climbing, achievements and the version you run. |
+
+Everything else is in **Tools → Commit Hike** (JetBrains) or the command
+palette, under *Commit Hike* (VS Code): choosing a trail, importing your own
+route, the hiker icon, difficulty, language, counting a project or not, and
+recounting a project from its git history.
+
+Your progress is stored in `~/.config/commit-hike` (Linux), `~/Library/Application
+Support/commit-hike` (macOS) or `%AppData%\commit-hike` (Windows). `task data:where`
+shows it.
 
 ## Repository layout
 
 ```
-core/            Go engine: counting, storage, routes, achievements, i18n, rendering
-  content/routes/  built-in route packs (route.json + locales/*.json)
-ui/panel/        trail view shared by all IDE plugins
-plugins/vscode/  VS Code extension (TypeScript)
-plugins/jetbrains/  JetBrains plugin (Kotlin)
-docs/            architecture, protocol, how to add a route
+core/                Go engine: counting, storage, routes, achievements, i18n, rendering
+  content/routes/    built-in route packs (route.json + locales/*.json + assets/)
+  tools/uncovered/   prints what the tests don't cover
+ui/panel/            the trail view shared by all IDE plugins
+plugins/vscode/      VS Code extension (TypeScript)
+plugins/jetbrains/   JetBrains plugin (Kotlin)
+extras/routes/       route packs that are never shipped (personal use only)
+scripts/             release helpers: configure, version, checks, notes
+docs/                architecture, protocol, routes, publishing
 ```
 
 ## Development
 
-You need Go, Node.js 22, JDK 21 and [Task](https://taskfile.dev) (`sudo snap install task --classic`).
+You need Go, Node.js 22, JDK 21 and [Task](https://taskfile.dev)
+(`sudo snap install task --classic`).
 
 ```bash
 task setup               # check tools, install linters, download dependencies
 task                     # list every command
+task check               # everything CI runs: linters, vulnerabilities, tests, coverage gate
 task test                # all tests: core, routes, VS Code, JetBrains
 task lint                # golangci-lint, ESLint + tsc, ktlint
-task check               # everything CI runs; use before pushing
+task fmt                 # format Go and Kotlin
 
 task core:demo REPO=~/projects/my-app    # try the core on a real repository (sandbox data)
 task core:run -- status --lang uk         # call any core command
-
-task jetbrains:install   # build and install the plugin into your PyCharm, then restart it
-task jetbrains:run-pycharm   # or run PyCharm with the plugin in a separate profile
-task vscode:install      # build and install the VS Code extension
+task route:new ID=my-trail                # start a new built-in route
+task route:try SRC=path/to/route          # check a route pack in the sandbox
 
 task deps:outdated       # what can be updated
 task deps:update         # update dependencies and re-run all checks
 ```
 
+### Development and production builds
+
+| | prod (default) | dev |
+|---|---|---|
+| Who gets it | the marketplaces, `task jetbrains:install` | you, while developing |
+| Hike view | looks only back from where you are: no spoilers | can look ahead along the whole trail |
+| How to build | `task jetbrains:install`, `task vscode:install` | `task dev:jetbrains`, `task dev:vscode`, or `FLAVOR=dev` on any build task |
+
+`task jetbrains:run` / `task jetbrains:run-pycharm` (a separate test IDE) and
+F5 in VS Code always behave like dev builds. The Stats tab shows the version
+and says when a build is a development build.
+
+### Tests and coverage
+
+```bash
+task coverage            # all three languages
+task core:cover          # Go: per package, every uncovered line with its function, HTML report; fails below 80%
+task core:cover MIN=85   # a different threshold
+task vscode:cover        # TypeScript, with uncovered lines (trust branch and function %; imports count as lines)
+task jetbrains:cover     # Kotlin via Kover, per class, plus an HTML report
+```
+
+Reports land in `.sandbox/cover/` and `plugins/jetbrains/build/reports/kover/`.
+
+## Releasing
+
+One-time setup, then one command per release. The full walkthrough, including
+accounts, tokens and signing, is in [docs/publishing.md](docs/publishing.md).
+
+```bash
+task release:configure OWNER=your-github-name NAME="Your Name" EMAIL=you@example.com   # once
+task version:set V=0.2.0     # notes under [Unreleased] in CHANGELOG.md become 0.2.0
+task release:check           # version, changelog, publisher and content are ready
+task release:build           # exactly what the marketplaces get, after every check
+git commit -am "Release 0.2.0" && git tag v0.2.0 && git push --follow-tags   # CI publishes
+```
+
 ## Adding a route or a translation
 
-A route is a folder with a `route.json` and one file per language. No code changes are needed; see [docs/routes.md](docs/routes.md). Tests fail if any translation is incomplete, so a missing string never reaches users.
+A route is a folder with a `route.json`, one file per language and optional
+pictures. No code changes are needed; see [docs/routes.md](docs/routes.md).
+Real routes can carry their GPS track, so the map shows them at true scale.
+Tests fail if any translation is incomplete, so a missing string never reaches
+users.
+
+Routes based on books, films or games need the rights holder's permission.
+The built-in fantasy routes are original works; routes based on other people's
+worlds stay in `extras/` and are never published.
 
 ## How it works
 
-IDE plugins are thin: they notice commits and draw the result. All logic lives in one small Go binary that plugins call and that answers in versioned JSON. Details: [docs/architecture.md](docs/architecture.md), [docs/protocol.md](docs/protocol.md).
+IDE plugins are thin: they notice commits and draw the result. All logic lives
+in one small Go binary that plugins call and that answers in versioned JSON.
+Details: [docs/architecture.md](docs/architecture.md),
+[docs/protocol.md](docs/protocol.md).
 
 ## License
 

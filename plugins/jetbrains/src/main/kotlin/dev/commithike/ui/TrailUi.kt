@@ -31,13 +31,18 @@ import dev.commithike.CommitHikeApp
 import dev.commithike.CommitHikeIcons
 import dev.commithike.ProjectTrek
 import dev.commithike.TrailListener
+import dev.commithike.core.I18n
+import dev.commithike.core.LocaleInfo
+import dev.commithike.core.RouteAssets
 import dev.commithike.core.Scope
 import dev.commithike.core.Status
-import dev.commithike.core.formatDistance
+import dev.commithike.core.Team
 import java.awt.Color
 import java.awt.Cursor
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.security.SecureRandom
+import java.util.Base64
 import javax.swing.JComponent
 
 // ---------------------------------------------------------------- status bar
@@ -73,10 +78,10 @@ class TrailWidget(private val project: Project) : CustomStatusBarWidget {
         val g = s?.global
         label.text = when {
             v.flash != null -> v.flash
-            v.state == "error" -> "Commit Hike: error"
+            v.state == "error" -> I18n.t("barError")
             g == null -> "Commit Hike"
-            g.finished -> "${formatDistance(g.distanceM)} ✓"
-            else -> "${formatDistance(g.distanceM)} / ${formatDistance(g.route.lengthM)}"
+            g.finished -> "${I18n.distance(g.distanceM)} ✓"
+            else -> "${I18n.distance(g.distanceM)} / ${I18n.distance(g.route.lengthM)}"
         }
         label.toolTipText = tooltip(v.state, v.error, v.repo, s)
     }
@@ -84,22 +89,23 @@ class TrailWidget(private val project: Project) : CustomStatusBarWidget {
     private fun tooltip(state: String, error: String?, repo: String?, s: Status?): String {
         fun e(t: String) = StringUtil.escapeXmlEntities(t)
         val g = s?.global
-        if (state == "error") return "<html>Commit Hike couldn't read your progress:<br>${e(error ?: "unknown error")}</html>"
-        if (s == null || g == null) return "Set up Commit Hike to turn your commits into a journey."
-        val lines =
-            mutableListOf("<b>${e(g.route.name)}</b>: ${formatDistance(g.distanceM)} of ${formatDistance(g.route.lengthM)} (${g.percent}%)")
+        val d = I18n::distance
+        if (state == "error") return "<html>${I18n.t("barErrorTip")}<br>${e(error ?: I18n.t("unknownError"))}</html>"
+        if (s == null || g == null) return I18n.t("barSetup")
+        val lines = mutableListOf("<b>${e(g.route.name)}</b>: ${I18n.t("barOf", d(g.distanceM), d(g.route.lengthM))} (${g.percent}%)")
         val next = g.nextWaypoint
         when {
-            g.finished -> lines += "Trail completed."
-            next != null -> lines += "Next stop: ${e(next.name)}, in ${formatDistance(g.toNextM ?: 0.0)}"
+            g.finished -> lines += I18n.t("barCompleted")
+            next != null -> lines += I18n.t("barNext", e(next.name), d(g.toNextM ?: 0.0))
         }
-        lines += "Today: ${formatDistance(s.todayM)}"
+        g.elevationM?.let { lines += I18n.t("barAltitude", it.toInt(), g.ascentM.toInt()) }
+        lines += I18n.t("barToday", d(s.todayM))
         val p = s.project
-        if (s.streakDays() > 0) lines += "Streak: ${s.streakDays()} days"
+        if (s.streakDays() > 0) lines += I18n.t("barStreak", s.streakDays())
         if (repo != null && p != null) {
-            lines += "This project: <b>${e(p.route.name)}</b>, ${formatDistance(p.distanceM)} (${p.percent}%)"
+            lines += I18n.t("barProject", "<b>${e(p.route.name)}</b>", "${d(p.distanceM)} (${p.percent}%)")
         } else if (repo != null && !s.tracked) {
-            lines += "This project isn't counted."
+            lines += I18n.t("barNotCounted")
         }
         return "<html>" + lines.joinToString("<br>") + "</html>"
     }
@@ -120,10 +126,7 @@ class TrailToolWindowFactory :
         val component: JComponent = if (JBCefApp.isSupported()) {
             TrailBrowser(project, toolWindow.disposable).component
         } else {
-            JBLabel(
-                "<html>The trail view needs the IDE's embedded browser (JCEF), which isn't available here. " +
-                    "Your progress is still shown in the status bar.</html>",
-            ).apply { border = JBUI.Borders.empty(12) }
+            JBLabel("<html>${I18n.t("noJcef")}</html>").apply { border = JBUI.Borders.empty(12) }
         }
         toolWindow.contentManager.addContent(ContentFactory.getInstance().createContent(component, null, false))
     }
@@ -165,13 +168,17 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
     private fun html(): String {
         val raw = TrailBrowser::class.java.getResource("/ui/panel.html")?.readText()
             ?: return "<p>panel.html is missing from this build.</p>"
-        val bridge = "<script>window.commitHikeHost={send:function(m){${query.inject("m")}}};</script>"
+        // Only scripts carrying this page load's nonce may run: route HTML
+        // objects, however they were written, can't execute anything.
+        val nonce = Base64.getEncoder().encodeToString(ByteArray(18).also { SecureRandom().nextBytes(it) })
+        val bridge = "<script nonce=\"$nonce\">window.commitHikeHost={send:function(m){${query.inject("m")}}};</script>"
+        // replaceFirst: the page's own script must never be touched by these edits.
         return raw
-            .replace("{{CSP}}", "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:")
-            .replace("{{NONCE}}", "")
-            .replace("<html lang=\"en\">", "<html lang=\"en\" style=\"${themeVars()}\">")
-            .replace("<head>", "<head>$bridge")
-            .replace("<body>", if (JBColor.isBright()) "<body data-theme=\"light\">" else "<body>")
+            .replace("{{CSP}}", "default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-$nonce'; img-src data:")
+            .replace("{{NONCE}}", nonce)
+            .replaceFirst("<html lang=\"en\">", "<html lang=\"en\" style=\"${themeVars()}\">")
+            .replaceFirst("<head>", "<head>$bridge")
+            .replaceFirst("<body>", if (JBColor.isBright()) "<body data-theme=\"light\">" else "<body>")
     }
 
     /** Maps the current IDE theme onto the --jb-* variables panel.html reads. */
@@ -211,6 +218,13 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
             "setAvatar" -> trek.setHikerIcon()
             "resetAvatar" -> trek.resetHikerIcon()
             "chooseRoute" -> trek.chooseRoute(if (msg.get("scope")?.asString == "project") Scope.PROJECT else Scope.GLOBAL)
+            "setLocale" -> msg.get("locale")?.asString?.let { trek.setLocale(it) }
+            "setTeam" -> trek.setTeam(msg.get("on")?.asBoolean == true)
+            "setDifficulty" -> msg.get("level")?.asString?.let { trek.setDifficulty(it) }
+            "requestTeam" -> trek.requestTeam()
+            "importRoute" -> trek.importRoute()
+            "createRouteTemplate" -> trek.createRouteTemplate()
+            "verify" -> trek.verify()
         }
     }
 
@@ -223,14 +237,24 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
         val status: Status?,
         val avatar: String?, // custom hiker PNG as a data URL; null = the panel's default
         val avatarCustom: Boolean,
+        val assets: Map<String, RouteAssets>, // pictures for route objects and custom maps, per route id
+        val team: Team?,
+        val teamError: String?,
+        val localeSetting: LocaleInfo?,
+        val dev: Boolean, // development build (runIde, COMMIT_HIKE_DEV=1): the trail view may look ahead
+        val build: BuildInfo,
     )
+
+    /** Version and flavor baked in by the Gradle build (see writeBuildInfo). */
+    private data class BuildInfo(val version: String, val flavor: String)
 
     private fun push() {
         if (!ready) return
         val v = project.service<ProjectTrek>().view
         if (v.state == "loading") return
         val locale = v.status?.locale ?: DynamicBundle.getLocale().toLanguageTag()
-        val avatar = CommitHikeApp.getInstance().avatar
+        val app = CommitHikeApp.getInstance()
+        val avatar = app.avatar
         val data = PanelData(
             state = v.state,
             error = v.error,
@@ -239,6 +263,12 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
             status = v.status,
             avatar = avatar.dataUrl,
             avatarCustom = avatar.custom,
+            assets = app.assetsFor(v.status),
+            team = v.team,
+            teamError = v.teamError,
+            localeSetting = app.localeInfo,
+            dev = isDevBuild,
+            build = buildInfo,
         )
         // Gson escapes <, >, & and quotes, so its output is a safe JS literal.
         val js = "window.commitHike && window.commitHike.update(${gson.toJson(data)});"
@@ -246,4 +276,17 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
     }
 
     override fun dispose() {}
+
+    private companion object {
+        val buildInfo: BuildInfo = java.util.Properties().let { p ->
+            TrailBrowser::class.java.getResourceAsStream("/commit-hike-build.properties")?.use { p.load(it) }
+            BuildInfo(p.getProperty("version", "dev"), p.getProperty("flavor", "prod"))
+        }
+
+        // A dev build (task ... FLAVOR=dev), runIde/runPyCharm, or COMMIT_HIKE_DEV=1 may look ahead.
+        val isDevBuild: Boolean =
+            buildInfo.flavor == "dev" ||
+                System.getProperty("commit-hike.dev") == "true" ||
+                System.getenv("COMMIT_HIKE_DEV") == "1"
+    }
 }

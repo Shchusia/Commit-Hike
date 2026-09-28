@@ -1,0 +1,12 @@
+<div class="sky" role="img" aria-label="Northern lights">
+  <style>
+    .sky { position: relative; width: 260px; height: 120px; overflow: hidden; border-radius: 40% 40% 0 0 / 30% 30% 0 0; }
+    .band { position: absolute; left: -20%; width: 140%; height: 70px; filter: blur(10px); opacity: .75;
+            background: linear-gradient(90deg, transparent, #57ffb0 25%, #3fd4ff 55%, #b07cff 80%, transparent);
+            border-radius: 50%; animation: wave 9s ease-in-out infinite; }
+    .band.b2 { top: 34px; opacity: .45; animation-duration: 12s; animation-direction: reverse; }
+    @keyframes wave { 0%, 100% { transform: translateX(-6%) skewX(-10deg) scaleY(.8); } 50% { transform: translateX(6%) skewX(12deg) scaleY(1.15); } }
+    @media (prefers-reduced-motion: reduce) { .band { animation: none; } }
+  </style>
+  <div class="band" style="top: 8px"></div><div class="band b2"></div>
+</div>

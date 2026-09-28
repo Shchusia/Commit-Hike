@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/commit-hike/commit-hike/core/internal/protocol"
+	"github.com/Shchusia/commit-hike/core/internal/protocol"
 )
 
 func call(t *testing.T, dir string, args ...string) (protocol.Envelope, map[string]any, int) {
@@ -45,5 +45,22 @@ func TestEnvelopeAndErrorCodes(t *testing.T) {
 	global := data["global"].(map[string]any)
 	if global["route"].(map[string]any)["name"] != "Чорногірський хребет" || data["locale"] != "uk" {
 		t.Fatalf("status uk: %v", data)
+	}
+	_, data, _ = call(t, dir, "locale", "--set", "uk")
+	if data["locale"] != "uk" || data["effective"] != "uk" {
+		t.Fatalf("locale set: %v", data)
+	}
+	_, data, _ = call(t, dir, "locale", "--set", "auto", "--lang", "en")
+	if data["locale"] != "" || data["effective"] != "en" {
+		t.Fatalf("locale auto: %v", data)
+	}
+	_, data, _ = call(t, dir, "route", "assets", "--id", "seven-lighthouses")
+	imgs, _ := data["images"].(map[string]any)
+	html, _ := data["html"].(map[string]any)
+	if imgs["assets/parchment-map.svg"] == nil || html["assets/aurora.html"] == nil {
+		t.Fatalf("assets: %v", data)
+	}
+	if env, _, _ := call(t, dir, "team", "--repo", t.TempDir()); env.Error.Code != protocol.CodeNotARepo {
+		t.Fatalf("team outside a repo: %+v", env.Error)
 	}
 }

@@ -1,0 +1,25 @@
+{
+  "name": "Tunnel Test",
+  "description": "A test fixture with tunnels and encounters. Not a real route.",
+  "waypoints": {
+    "a": {
+      "name": "Start"
+    },
+    "b": {
+      "name": "Cave"
+    },
+    "c": {
+      "name": "End"
+    }
+  },
+  "dangers": {
+    "d0": "Encounter 0",
+    "d1": "Encounter 1",
+    "d2": "Encounter 2",
+    "d3": "Encounter 3",
+    "d4": "Encounter 4",
+    "d5": "Encounter 5",
+    "d6": "Encounter 6",
+    "d7": "Encounter 7"
+  }
+}

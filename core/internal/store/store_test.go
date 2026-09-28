@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"sync"
 	"testing"
+	"time"
 )
 
 func TestConfigRoundTripAndPermissions(t *testing.T) {
@@ -75,4 +76,36 @@ func TestLockSerializes(t *testing.T) {
 		}()
 	}
 	wg.Wait()
+}
+
+func TestStaleLockIsTakenOver(t *testing.T) {
+	s, _ := Open(t.TempDir())
+	p := filepath.Join(s.Dir, "state.lock")
+	if err := os.WriteFile(p, []byte("12345\n"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	old := time.Now().Add(-2 * staleLock)
+	if err := os.Chtimes(p, old, old); err != nil {
+		t.Fatal(err)
+	}
+	unlock, err := s.Lock()
+	if err != nil {
+		t.Fatalf("a crashed owner's lock must expire: %v", err)
+	}
+	unlock()
+	unlock() // idempotent
+	if _, err := os.Stat(p); !errors.Is(err, os.ErrNotExist) {
+		t.Fatalf("lock file left behind: %v", err)
+	}
+}
+
+func TestWriteFileIsAtomicAndPrivate(t *testing.T) {
+	s, _ := Open(t.TempDir())
+	if err := s.WriteFile("avatar.png", []byte("x")); err != nil {
+		t.Fatal(err)
+	}
+	fi, err := os.Stat(filepath.Join(s.Dir, "avatar.png"))
+	if err != nil || fi.Mode().Perm() != 0o600 {
+		t.Fatalf("perms: %v %v", fi, err)
+	}
 }

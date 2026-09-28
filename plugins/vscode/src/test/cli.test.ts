@@ -8,6 +8,10 @@ import * as path from "path";
 import { Cli, CliError, bundledBinary, ensureExecutable, formatDistance } from "../cli";
 
 const ext = path.join(__dirname, "..", "..");
+// Every git call gets its own minute: commits within one second share a dedup
+// key (author email + time) and would count as one.
+let clock = Math.floor(Date.now() / 1000) - 6 * 3600;
+const dates = () => { clock += 60; return { GIT_AUTHOR_DATE: `@${clock} +0000`, GIT_COMMITTER_DATE: `@${clock} +0000` }; };
 
 void test("bundledBinary maps Node platform/arch to Go names", () => {
   assert.equal(path.basename(bundledBinary(ext, "win32", "x64")), "commit-hike-windows-amd64.exe");
@@ -27,7 +31,7 @@ void test("Cli talks to the real core end to end", async () => {
   const repo = fs.mkdtempSync(path.join(os.tmpdir(), "ct-repo-"));
   process.env.COMMIT_HIKE_HOME = home;
   const git = (...a: string[]) => execFileSync("git", ["-C", repo, ...a], {
-    env: { ...process.env, GIT_AUTHOR_NAME: "T", GIT_AUTHOR_EMAIL: "me@x.io", GIT_COMMITTER_NAME: "T", GIT_COMMITTER_EMAIL: "me@x.io" },
+    env: { ...process.env, ...dates(), GIT_AUTHOR_NAME: "T", GIT_AUTHOR_EMAIL: "me@x.io", GIT_COMMITTER_NAME: "T", GIT_COMMITTER_EMAIL: "me@x.io" },
   });
   git("init", "-q");
   fs.writeFileSync(path.join(repo, "a.go"), "x\ny\nz\n");
@@ -45,11 +49,11 @@ void test("Cli talks to the real core end to end", async () => {
   // concurrent calls are queued, not failing on the lock
   const [a, b] = await Promise.all([cli.scan(repo), cli.scan(repo)]);
   assert.equal(a.new_commits + b.new_commits, 1);
-  assert.equal(a.total_m, 50);
+  assert.equal(a.total_m, 650); // 3 lines = 50 base points × 13 (medium)
 
   cli.lang = "uk";
   const st = await cli.status(repo);
-  assert.equal(st.global?.distance_m, 50);
+  assert.equal(st.global?.distance_m, 650);
   assert.equal(st.locale, "uk");
   assert.equal(st.global?.route.name, "Демо-стежка");
 
@@ -90,4 +94,60 @@ void test("Cli talks to the real core end to end", async () => {
 
   const bad = await cli.scan(os.tmpdir());
   assert.equal(bad.tracked, false);
+});
+
+void test("Cli: rewrites, team, language and route assets", async () => {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), "ct-home2-"));
+  const repo = fs.mkdtempSync(path.join(os.tmpdir(), "ct-repo2-"));
+  process.env.COMMIT_HIKE_HOME = home;
+  const git = (email: string, ...a: string[]) => execFileSync("git", ["-C", repo, ...a], {
+    env: { ...process.env, ...dates(), GIT_AUTHOR_NAME: email.split("@")[0], GIT_AUTHOR_EMAIL: email, GIT_COMMITTER_NAME: "T", GIT_COMMITTER_EMAIL: email },
+  }).toString().trim();
+  const commit = (email: string, file: string, lines: number) => {
+    fs.appendFileSync(path.join(repo, file), "x\n".repeat(lines));
+    git(email, "add", "-A");
+    git(email, "commit", "-qm", "c");
+  };
+  git("me@x.io", "init", "-q");
+  commit("other@x.io", "README", 1);
+  commit("me@x.io", "a.go", 50);
+  commit("me@x.io", "b.go", 50);
+  commit("anna@x.io", "c.go", 3);
+
+  const cli = new Cli(bundledBinary(ext));
+  await cli.init({ emails: ["me@x.io"], mode: "all", fromHistory: true });
+  await cli.scan(repo);
+  const before = git("me@x.io", "rev-parse", "HEAD");
+  git("me@x.io", "reset", "-q", "--hard", "HEAD~3"); // back to the root: my commits are gone
+  const res = await cli.scan(repo, before);
+  assert.equal(res.rewritten, true);
+  assert.equal(res.total_m, 0);
+
+  commit("me@x.io", "d.go", 3);
+  commit("anna@x.io", "e.go", 3);
+  await cli.setTeam(repo, true);
+  assert.equal((await cli.status(repo)).team, true);
+  const team = await cli.team(repo);
+  assert.equal(team.members.length, 3); // me, anna and the root commit's author
+  assert.ok(team.members.some(m => m.me) && team.members.some(m => m.name === "anna"));
+
+  const loc = await cli.locale("uk");
+  assert.equal(loc.effective, "uk");
+  assert.equal((await cli.status(repo)).locale, "uk");
+  assert.equal((await cli.locale("auto")).locale, "");
+
+  const assets = await cli.routeAssets("molfar-path");
+  assert.ok(assets.images["assets/campfire.png"].startsWith("data:image/png;base64,"));
+  assert.ok(assets.html["assets/fireflies.html"].includes("glade"));
+});
+
+void test("Cli: difficulty", async () => {
+  process.env.COMMIT_HIKE_HOME = fs.mkdtempSync(path.join(os.tmpdir(), "ct-home3-"));
+  const cli = new Cli(bundledBinary(ext));
+  await cli.init({ emails: ["me@x.io"], mode: "all", fromHistory: true, difficulty: "hard" });
+  const info = await cli.difficulty();
+  assert.equal(info.level, "hard");
+  assert.ok(info.typical_day_m.easy > info.typical_day_m.medium && info.typical_day_m.medium > info.typical_day_m.hard);
+  assert.equal((await cli.difficulty("easy")).level, "easy");
+  assert.equal((await cli.status()).difficulty, "easy");
 });

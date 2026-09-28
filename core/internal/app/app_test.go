@@ -10,8 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/commit-hike/commit-hike/core/internal/protocol"
-	"github.com/commit-hike/commit-hike/core/internal/store"
+	"github.com/Shchusia/commit-hike/core/internal/score"
+
+	"github.com/Shchusia/commit-hike/core/internal/protocol"
+	"github.com/Shchusia/commit-hike/core/internal/store"
 )
 
 // ---------- helpers: real git repositories in temp dirs ----------
@@ -83,6 +85,8 @@ func setup(t *testing.T, route string) (*Service, *repo) {
 		t.Fatal(err)
 	}
 	s.now = func() time.Time { return time.Unix(base+50000, 0) }
+	s.loc = time.UTC // tests don't depend on the machine's time zone
+	s.score = legacyScore()
 	if _, err := s.Init(InitOptions{Emails: []string{" Me@X.io "}, RouteID: route, FromHistory: true}); err != nil {
 		t.Fatal(err)
 	}
@@ -340,4 +344,13 @@ func TestUserRoutes(t *testing.T) {
 	if !found {
 		t.Error("the valid user route should load next to the broken one")
 	}
+}
+
+// legacyScore is 1 base point = 1 m with the old single-tier daily cap, so
+// tests read in plain meters. The real calibration is tested in package score
+// and in TestDifficulty.
+func legacyScore() score.Config {
+	c := score.Default()
+	c.Pace, c.DailySoftCapM, c.OverCapFactor, c.FarCapFactor, c.FarFactor = 1, 3000, 0.25, 1e9, 0.25
+	return c
 }

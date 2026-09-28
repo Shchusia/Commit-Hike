@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140">
+  <g fill="none" stroke="#e8eef2" stroke-width="1.2" opacity=".85">
+    <path d="M70 70L70 4M70 70l47-47M70 70h66M70 70l47 47M70 70v66M70 70l-47 47M70 70H4M70 70L23 23"/>
+    <path d="M70 20l35 15 15 35-15 35-35 15-35-15-15-35 15-35z"/>
+    <path d="M70 36l24 10 10 24-10 24-24 10-24-10-10-24 10-24z"/>
+    <path d="M70 52l13 5 5 13-5 13-13 5-13-5-5-13 5-13z"/>
+  </g>
+  <path d="M0 0L23 23M140 0l-23 23" stroke="#e8eef2" stroke-width="1" opacity=".6"/>
+</svg>

@@ -3,7 +3,7 @@ import * as crypto from "crypto";
 import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
-import { Status } from "./cli";
+import { LocaleInfo, RouteAssets, Status, Team } from "./cli";
 
 export interface PanelData {
   type: "update";
@@ -14,11 +14,21 @@ export interface PanelData {
   status?: Status;
   avatar?: string; // custom hiker PNG as a data URL; absent = the panel's default
   avatar_custom?: boolean;
+  assets?: Record<string, RouteAssets>; // pictures for route objects and custom maps, per route id
+  team?: Team;
+  team_error?: string;
+  locale_setting?: LocaleInfo;
+  dev?: boolean; // development build: the trail view may look ahead
+  build?: { version: string; flavor: "dev" | "prod" }; // shown at the bottom of the stats tab
 }
 
 export type PanelMessage =
-  | { command: "ready" | "setup" | "refresh" | "enableProject" | "setAvatar" | "resetAvatar" }
-  | { command: "chooseRoute"; scope: "global" | "project" };
+  | { command: "ready" | "setup" | "refresh" | "enableProject" | "setAvatar" | "resetAvatar"
+    | "importRoute" | "createRouteTemplate" | "verify" | "requestTeam" }
+  | { command: "chooseRoute"; scope: "global" | "project" }
+  | { command: "setLocale"; locale: string }
+  | { command: "setTeam"; on: boolean }
+  | { command: "setDifficulty"; level: "easy" | "medium" | "hard" };
 
 export class TrailPanel implements vscode.WebviewViewProvider {
   static readonly viewId = "commitHike.trail";

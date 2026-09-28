@@ -1,0 +1,330 @@
+{
+  "id": "molfar-path",
+  "version": 2,
+  "default_locale": "en",
+  "length_m": 36000,
+  "waypoints": [
+    {
+      "id": "village",
+      "at_m": 0,
+      "kind": "village",
+      "elevation_m": 650
+    },
+    {
+      "id": "mill",
+      "at_m": 2500,
+      "kind": "landmark",
+      "elevation_m": 690
+    },
+    {
+      "id": "church",
+      "at_m": 6000,
+      "kind": "landmark",
+      "elevation_m": 820
+    },
+    {
+      "id": "beech-forest",
+      "at_m": 10000,
+      "kind": "landmark",
+      "elevation_m": 1080
+    },
+    {
+      "id": "vatra",
+      "at_m": 14000,
+      "kind": "camp",
+      "elevation_m": 1450
+    },
+    {
+      "id": "black-tarn",
+      "at_m": 18000,
+      "kind": "lake",
+      "elevation_m": 1620
+    },
+    {
+      "id": "stone-guardian",
+      "at_m": 22000,
+      "kind": "landmark",
+      "elevation_m": 1760
+    },
+    {
+      "id": "molfar-hut",
+      "at_m": 26000,
+      "kind": "hut",
+      "elevation_m": 1690
+    },
+    {
+      "id": "seven-winds",
+      "at_m": 30000,
+      "kind": "pass",
+      "elevation_m": 1880
+    },
+    {
+      "id": "thunder-peak",
+      "at_m": 36000,
+      "kind": "peak",
+      "elevation_m": 2020
+    }
+  ],
+  "profile": [
+    {
+      "at_m": 4000,
+      "elevation_m": 740
+    },
+    {
+      "at_m": 8000,
+      "elevation_m": 930
+    },
+    {
+      "at_m": 12000,
+      "elevation_m": 1280
+    },
+    {
+      "at_m": 16000,
+      "elevation_m": 1520
+    },
+    {
+      "at_m": 20000,
+      "elevation_m": 1700
+    },
+    {
+      "at_m": 24000,
+      "elevation_m": 1640
+    },
+    {
+      "at_m": 28000,
+      "elevation_m": 1780
+    },
+    {
+      "at_m": 32000,
+      "elevation_m": 1760
+    },
+    {
+      "at_m": 34000,
+      "elevation_m": 1920
+    }
+  ],
+  "biomes": [
+    {
+      "at_m": 0,
+      "type": "village"
+    },
+    {
+      "at_m": 1600,
+      "type": "fields"
+    },
+    {
+      "at_m": 2200,
+      "type": "water"
+    },
+    {
+      "at_m": 2900,
+      "type": "fields"
+    },
+    {
+      "at_m": 5000,
+      "type": "village"
+    },
+    {
+      "at_m": 7000,
+      "type": "grove"
+    },
+    {
+      "at_m": 12500,
+      "type": "forest"
+    },
+    {
+      "at_m": 13500,
+      "type": "meadow"
+    },
+    {
+      "at_m": 17400,
+      "type": "water"
+    },
+    {
+      "at_m": 18600,
+      "type": "tundra"
+    },
+    {
+      "at_m": 21000,
+      "type": "rock"
+    },
+    {
+      "at_m": 25000,
+      "type": "meadow"
+    },
+    {
+      "at_m": 27500,
+      "type": "tundra"
+    },
+    {
+      "at_m": 29000,
+      "type": "rock"
+    },
+    {
+      "at_m": 33000,
+      "type": "snow"
+    }
+  ],
+  "story": [
+    {
+      "id": "dust",
+      "at_m": 1200
+    },
+    {
+      "id": "lights",
+      "at_m": 11000
+    },
+    {
+      "id": "ember",
+      "at_m": 16000
+    },
+    {
+      "id": "clouds-gather",
+      "at_m": 33000
+    }
+  ],
+  "facts": [
+    {
+      "id": "molfar",
+      "at_m": 500
+    },
+    {
+      "id": "tserkvas",
+      "at_m": 6000
+    },
+    {
+      "id": "beeches",
+      "at_m": 9500
+    },
+    {
+      "id": "forest-song",
+      "at_m": 11500
+    },
+    {
+      "id": "vatra-tradition",
+      "at_m": 14000
+    },
+    {
+      "id": "cheese",
+      "at_m": 15000
+    },
+    {
+      "id": "shadows",
+      "at_m": 26000
+    },
+    {
+      "id": "trembita",
+      "at_m": 35500
+    }
+  ],
+  "objects": [
+    {
+      "id": "mill",
+      "at_m": 2500,
+      "asset": "assets/water-mill.svg",
+      "height_px": 80,
+      "fade_m": 500
+    },
+    {
+      "id": "church",
+      "at_m": 6000,
+      "asset": "assets/wooden-church.svg",
+      "height_px": 120,
+      "fade_m": 700
+    },
+    {
+      "id": "wisps",
+      "at_m": 10600,
+      "asset": "assets/fireflies.html",
+      "height_px": 100,
+      "lift_px": 24,
+      "fade_m": 900
+    },
+    {
+      "id": "vatra-fire",
+      "at_m": 14000,
+      "asset": "assets/campfire.png",
+      "height_px": 48,
+      "fade_m": 500
+    },
+    {
+      "id": "flock",
+      "at_m": 14350,
+      "asset": "assets/sheep.svg",
+      "height_px": 36,
+      "fade_m": 450
+    },
+    {
+      "id": "guardian",
+      "at_m": 22000,
+      "asset": "assets/stone-idol.svg",
+      "height_px": 110,
+      "fade_m": 600
+    },
+    {
+      "id": "trembita",
+      "at_m": 35900,
+      "asset": "assets/trembita.svg",
+      "height_px": 56,
+      "fade_m": 700
+    }
+  ],
+  "achievements": [
+    {
+      "id": "on-the-road",
+      "rule": {
+        "type": "distance",
+        "min_m": 100
+      }
+    },
+    {
+      "id": "candle",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "church"
+      }
+    },
+    {
+      "id": "ember",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "vatra"
+      }
+    },
+    {
+      "id": "high-meadows",
+      "rule": {
+        "type": "climb",
+        "min_m": 800
+      }
+    },
+    {
+      "id": "guardian",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "stone-guardian"
+      }
+    },
+    {
+      "id": "two-thousand",
+      "rule": {
+        "type": "altitude",
+        "altitude_m": 2000
+      }
+    },
+    {
+      "id": "steady",
+      "rule": {
+        "type": "streak",
+        "days": 7
+      },
+      "hidden": true
+    },
+    {
+      "id": "rain",
+      "rule": {
+        "type": "finish"
+      }
+    }
+  ]
+}

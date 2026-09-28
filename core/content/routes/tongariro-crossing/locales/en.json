@@ -1,0 +1,88 @@
+{
+  "name": "Tongariro Alpine Crossing",
+  "description": "New Zealand's famous one-day volcanic hike: across craters, past the Emerald Lakes and down through tussock and forest. Distances are approximate.",
+  "waypoints": {
+    "mangatepopo": {
+      "name": "Mangatepopo Road End",
+      "text": "An old lava valley, boardwalks over the tussock, and the cone of Ngauruhoe ahead."
+    },
+    "soda-springs": {
+      "name": "Soda Springs",
+      "text": "The last easy water. Above, the Devil's Staircase climbs to the saddle."
+    },
+    "south-crater": {
+      "name": "South Crater",
+      "text": "A flat, silent crater floor. Ngauruhoe towers to your left."
+    },
+    "red-crater": {
+      "name": "Red Crater",
+      "text": "The highest point of the crossing. Steam, sulphur and rust-red walls."
+    },
+    "emerald-lakes": {
+      "name": "Emerald Lakes",
+      "text": "Three bright green pools at the foot of a scree slope."
+    },
+    "blue-lake": {
+      "name": "Blue Lake",
+      "text": "A cold crater lake, sacred to local Māori."
+    },
+    "ketetahi-shelter": {
+      "name": "Ketetahi Shelter",
+      "text": "A day shelter with a view over Lake Rotoaira and Taupō."
+    },
+    "ketetahi-end": {
+      "name": "Ketetahi Road End",
+      "text": "Down through the forest to the road. You crossed a volcano!"
+    }
+  },
+  "story": {
+    "staircase": "The Devil's Staircase: step after step of old lava. You stop to breathe and the valley is already small.",
+    "wind": "On the ridge the wind pushes hard. You lean into it and keep your eyes on the marker poles.",
+    "scree": "You slide down the loose scree in big, careful steps, and the lakes flash green below.",
+    "forest": "The tussock gives way to trees. After hours of rock, the forest smells unbelievably green."
+  },
+  "facts": {
+    "gift": "In 1887 Te Heuheu Tūkino IV, paramount chief of Ngāti Tūwharetoa, gifted these sacred peaks to the nation. The gift became the core of New Zealand's first national park.",
+    "heritage": "Tongariro is a dual World Heritage site, listed for nature in 1990 and in 1993 as the first site recognised as a cultural landscape.",
+    "summits": "The summits are tapu (sacred) to Ngāti Tūwharetoa. They ask walkers to enjoy the peaks from the track rather than climb to the top.",
+    "film": "Ngauruhoe, the near-perfect cone beside the track, stood in for a fictional volcano in a famous fantasy film trilogy. It last erupted in 1975.",
+    "emerald": "The Emerald Lakes get their colour from minerals washed out of the surrounding volcanic rock.",
+    "blue-lake": "Blue Lake is tapu: visitors are asked not to swim in it or eat and drink beside it.",
+    "te-maari": "In 2012 the Te Māri craters just north of the track erupted and threw rocks as far as the old Ketetahi Hut, which no longer takes overnight guests."
+  },
+  "objects": {
+    "hazard": "Active volcanic hazard zone",
+    "fumarole": "Fumaroles of Red Crater",
+    "shelter": "Ketetahi Shelter"
+  },
+  "achievements": {
+    "first-steps": {
+      "name": "Boots On",
+      "description": "Walk your first 100 m."
+    },
+    "staircase": {
+      "name": "Devil's Staircase",
+      "description": "Climb to South Crater."
+    },
+    "crater-rim": {
+      "name": "Crater Rim",
+      "description": "Stand higher than 1850 m."
+    },
+    "emeralds": {
+      "name": "Emeralds",
+      "description": "Reach the Emerald Lakes."
+    },
+    "up-and-over": {
+      "name": "Up and Over",
+      "description": "Climb 700 m in total."
+    },
+    "steam": {
+      "name": "Full Steam",
+      "description": "Walk 15 km in a single day."
+    },
+    "crossed": {
+      "name": "Crossed",
+      "description": "Complete the Tongariro Alpine Crossing."
+    }
+  }
+}

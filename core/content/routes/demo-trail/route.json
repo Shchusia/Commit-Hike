@@ -1,28 +1,32 @@
 {
   "id": "demo-trail",
-  "version": 1,
+  "version": 2,
   "default_locale": "en",
   "length_m": 20000,
   "waypoints": [
     {
       "id": "trailhead",
       "at_m": 0,
-      "kind": "start"
+      "kind": "start",
+      "elevation_m": 620
     },
     {
       "id": "old-bridge",
       "at_m": 1000,
-      "kind": "bridge"
+      "kind": "bridge",
+      "elevation_m": 590
     },
     {
       "id": "pine-forest",
       "at_m": 5000,
-      "kind": "landmark"
+      "kind": "landmark",
+      "elevation_m": 880
     },
     {
       "id": "mountain-lake",
       "at_m": 10000,
-      "kind": "lake"
+      "kind": "lake",
+      "elevation_m": 1240
     },
     {
       "id": "summit",
@@ -31,17 +35,51 @@
       "elevation_m": 1800
     }
   ],
+  "profile": [
+    {
+      "at_m": 3000,
+      "elevation_m": 720
+    },
+    {
+      "at_m": 7500,
+      "elevation_m": 1050
+    },
+    {
+      "at_m": 12500,
+      "elevation_m": 1330
+    },
+    {
+      "at_m": 16000,
+      "elevation_m": 1560
+    }
+  ],
   "biomes": [
     {
       "at_m": 0,
       "type": "meadow"
     },
     {
-      "at_m": 1500,
+      "at_m": 800,
+      "type": "water"
+    },
+    {
+      "at_m": 1300,
+      "type": "grove"
+    },
+    {
+      "at_m": 3000,
       "type": "forest"
     },
     {
       "at_m": 7500,
+      "type": "meadow"
+    },
+    {
+      "at_m": 9600,
+      "type": "water"
+    },
+    {
+      "at_m": 10500,
       "type": "meadow"
     },
     {
@@ -61,6 +99,32 @@
     {
       "id": "clouds",
       "at_m": 15000
+    }
+  ],
+  "facts": [
+    {
+      "id": "lapse-rate",
+      "at_m": 6000
+    },
+    {
+      "id": "naismith",
+      "at_m": 12000
+    }
+  ],
+  "objects": [
+    {
+      "id": "bridge",
+      "at_m": 1000,
+      "asset": "assets/wooden-bridge.svg",
+      "height_px": 60,
+      "fade_m": 400
+    },
+    {
+      "id": "bench",
+      "at_m": 5300,
+      "asset": "assets/bench.svg",
+      "height_px": 34,
+      "fade_m": 300
     }
   ],
   "achievements": [
@@ -89,7 +153,7 @@
       "id": "big-day",
       "rule": {
         "type": "day_distance",
-        "min_m": 1500
+        "min_m": 15000
       }
     },
     {

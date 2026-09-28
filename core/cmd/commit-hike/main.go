@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/commit-hike/commit-hike/core/internal/cli"
-	"github.com/commit-hike/commit-hike/core/internal/store"
+	"github.com/Shchusia/commit-hike/core/internal/cli"
+	"github.com/Shchusia/commit-hike/core/internal/store"
 )
 
 // version is set at build time: -ldflags "-X main.version=1.2.3".

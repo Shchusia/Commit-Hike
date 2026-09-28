@@ -11,7 +11,11 @@ import dev.commithike.core.Avatar
 import dev.commithike.core.CoreCli
 import dev.commithike.core.CoreException
 import dev.commithike.core.CorePlatform
+import dev.commithike.core.I18n
+import dev.commithike.core.LocaleInfo
 import dev.commithike.core.Route
+import dev.commithike.core.RouteAssets
+import dev.commithike.core.Status
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -20,6 +24,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * One per IDE: owns the core binary and state shared by all open projects.
@@ -43,6 +48,13 @@ class CommitHikeApp {
     @Volatile var routes: Map<String, Route> = emptyMap()
         private set
 
+    /** The language setting; null until the core is set up. */
+    @Volatile var localeInfo: LocaleInfo? = null
+        private set
+
+    /** Pictures of route objects and custom maps, per route id. They change only on import. */
+    private val assets = ConcurrentHashMap<String, RouteAssets>()
+
     suspend fun <T> call(block: (CoreCli) -> T): T = mutex.withLock {
         withContext(Dispatchers.IO) {
             val c = cli ?: CoreCli(BinaryLocator.locate()).also { cli = it }
@@ -55,6 +67,7 @@ class CommitHikeApp {
     /** Loads routes and checks whether first-run setup is needed. Idempotent. */
     suspend fun ensureLoaded() {
         if (loaded) return
+        I18n.setLanguage(DynamicBundle.getLocale().toLanguageTag()) // until the core says otherwise
         routes = call { it.routes() }.associateBy { it.id }
         avatar = call { it.avatar() }
         initialized = try {
@@ -63,8 +76,30 @@ class CommitHikeApp {
         } catch (e: CoreException) {
             if (e.notInitialized) false else throw e
         }
+        if (initialized) reloadLocale()
         loaded = true
     }
+
+    /** Reads (or, with [set], changes) the language and applies it to plugin texts. */
+    suspend fun reloadLocale(set: String? = null) {
+        localeInfo = call { it.locale(set) }
+        I18n.setLanguage(localeInfo?.effective)
+    }
+
+    /** Fetches pictures for the routes a status shows, once per route. */
+    suspend fun ensureAssets(status: Status?) {
+        for (id in listOfNotNull(status?.global?.route?.id, status?.project?.route?.id)) {
+            if (assets.containsKey(id)) continue
+            try {
+                assets[id] = call { it.routeAssets(id) }
+            } catch (e: CoreException) {
+                com.intellij.openapi.diagnostic.logger<CommitHikeApp>().warn("Commit Hike: no assets for $id", e)
+            }
+        }
+    }
+
+    fun assetsFor(status: Status?): Map<String, RouteAssets> =
+        listOfNotNull(status?.global?.route?.id, status?.project?.route?.id).mapNotNull { id -> assets[id]?.let { id to it } }.toMap()
 
     /** Re-reads the hiker icon after it was changed (in this or another IDE). */
     suspend fun reloadAvatar() {
@@ -74,6 +109,7 @@ class CommitHikeApp {
     /** Re-reads the route list, e.g. after importing or removing a route. */
     suspend fun reloadRoutes() {
         routes = call { it.routes() }.associateBy { it.id }
+        assets.clear() // an imported route may bring new pictures
     }
 
     fun markInitialized(value: Boolean) {
@@ -98,7 +134,7 @@ class CommitHikeApp {
  * version into the IDE's system directory.
  */
 internal object BinaryLocator {
-    private const val PLUGIN_ID = "dev.commithike"
+    private const val PLUGIN_ID = "io.github.shchusia.commithike"
 
     fun locate(): Path {
         System.getenv("COMMIT_HIKE_BINARY")?.let { return Paths.get(it) } // for development

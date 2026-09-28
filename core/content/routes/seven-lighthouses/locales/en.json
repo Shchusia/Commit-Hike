@@ -1,0 +1,124 @@
+{
+  "name": "The Seven Lighthouses",
+  "description": "An original long journey along the Quiet Sea, 700 km from salt desert to northern ice, relighting seven lighthouses that went dark in one night. Comes with its own hand-drawn map.",
+  "waypoints": {
+    "salt-gate": {
+      "name": "The Salt Gate",
+      "text": "Seven lights went dark in one night. The keepers' guild gives you the last ember and a map."
+    },
+    "light-1": {
+      "name": "Dune Light",
+      "text": "Sand to the windows. You clear the stairs and light the first lamp."
+    },
+    "three-wells": {
+      "name": "Three Wells Oasis",
+      "text": "Palms, shade and cold water. A caravan heading north lets you walk beside it."
+    },
+    "light-2": {
+      "name": "Cape of Winds Light",
+      "text": "The wind nearly takes the ember. You shield it and the light flares."
+    },
+    "shepherds-pass": {
+      "name": "Shepherds' Pass",
+      "text": "From the top of the steppe highlands you can see the whole coast and three lights burning behind you."
+    },
+    "light-3": {
+      "name": "Stone Sentinels Light",
+      "text": "Standing stones ring the tower like old keepers."
+    },
+    "rye-valley": {
+      "name": "Rye Valley Mills",
+      "text": "Windmills turn over golden fields. The millers bake you bread for the road."
+    },
+    "light-4": {
+      "name": "Wreck Light",
+      "text": "A broken ship lies on the sand. Tonight no one else will join it."
+    },
+    "misty-fens": {
+      "name": "The Misty Fens",
+      "text": "Reeds higher than your head. You walk the old plank road, one board at a time."
+    },
+    "light-5": {
+      "name": "Heron Light",
+      "text": "Herons nest on the gallery and don't mind you at all."
+    },
+    "birch-grove": {
+      "name": "The Birch Grove",
+      "text": "White trunks and the first cold night. You sleep by a small fire."
+    },
+    "light-6": {
+      "name": "Silent Light",
+      "text": "Here even the sea is quiet. The lamp catches with a soft sound."
+    },
+    "light-7": {
+      "name": "North Light",
+      "text": "The last lamp takes the ember. Seven lights burn along the Quiet Sea, and above you the sky begins to glow."
+    }
+  },
+  "story": {
+    "heat": "Heat shimmers over the salt. The ember in its lantern is the only thing cooler than the air.",
+    "caravan": "The camel drivers sing to keep time. You learn the chorus by the second evening.",
+    "half": "Halfway. Behind you, three lights. Ahead, four dark towers waiting.",
+    "fog": "The fog is so thick you navigate by the smell of the sea.",
+    "snow": "Snow squeaks under your boots. The North Light stands on the last cliff before the ice."
+  },
+  "facts": {
+    "pharos": "The Pharos of Alexandria, one of the Seven Wonders of the Ancient World, gave its name to lighthouses in many languages: phare, faro, far.",
+    "singing-dunes": "Some dunes sing: when sand avalanches down their face, it can produce a low hum heard kilometres away.",
+    "fresnel": "In 1822 Augustin-Jean Fresnel designed a ringed lens that let a single lamp shine for tens of kilometres.",
+    "steppe": "The Eurasian Steppe runs for about 8000 km, from the Danube to Manchuria.",
+    "carnac": "At Carnac in Brittany more than 3000 prehistoric standing stones run in long rows across the fields.",
+    "windmills": "The earliest known windmills turned in Persia over a thousand years ago, with their sails on a vertical axis.",
+    "characteristic": "Every lighthouse has its own characteristic, a pattern of flashes, so sailors can tell one light from another at night.",
+    "peat": "Peatlands cover only about 3% of the land, yet store roughly twice as much carbon as all the world's forests.",
+    "birch": "Birches are pioneers: they are often the first trees to grow back after a fire or on bare ground.",
+    "permafrost": "In the tundra only a thin top layer thaws in summer; below lies permafrost that can stay frozen for thousands of years.",
+    "aurora": "Auroras glow when particles from the Sun hit the upper atmosphere; the common green light comes from oxygen about 100–300 km up."
+  },
+  "objects": {
+    "tower-1": "Lighthouse 1 of 7",
+    "tower-2": "Lighthouse 2 of 7",
+    "tower-3": "Lighthouse 3 of 7",
+    "tower-4": "Lighthouse 4 of 7",
+    "tower-5": "Lighthouse 5 of 7",
+    "tower-6": "Lighthouse 6 of 7",
+    "tower-7": "Lighthouse 7 of 7",
+    "caravan": "The northbound caravan",
+    "wreck": "A wreck on the sand",
+    "aurora": "Northern lights"
+  },
+  "achievements": {
+    "ember": {
+      "name": "Ember Bearer",
+      "description": "Walk your first 100 m."
+    },
+    "first-light": {
+      "name": "First Light",
+      "description": "Relight the Dune Light."
+    },
+    "highlands": {
+      "name": "Highlander",
+      "description": "Cross the steppe highlands above 800 m."
+    },
+    "halfway": {
+      "name": "Four Lights Burning",
+      "description": "Relight the Wreck Light."
+    },
+    "big-day": {
+      "name": "Long Day's March",
+      "description": "Walk 20 km in a single day."
+    },
+    "steady": {
+      "name": "The Keeper's Discipline",
+      "description": "Commit 10 days in a row."
+    },
+    "commits-300": {
+      "name": "Three Hundred Steps",
+      "description": "Make 300 commits on this route."
+    },
+    "seven": {
+      "name": "Seven Lights",
+      "description": "Relight all seven lighthouses."
+    }
+  }
+}

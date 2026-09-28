@@ -18,15 +18,18 @@ const (
 	TypeCommits     = "commits"      // at least Count counted commits on this journey
 	TypeStreak      = "streak"       // commits on Days consecutive days
 	TypeDayDistance = "day_distance" // at least MinM in a single day
+	TypeAltitude    = "altitude"     // stood at AltitudeM or higher (needs an elevation profile)
+	TypeClimb       = "climb"        // climbed at least MinM in total on this journey
 )
 
 // Rule is one condition; which fields matter depends on Type.
 type Rule struct {
-	Type     string  `json:"type"`
-	MinM     float64 `json:"min_m,omitempty"`
-	Waypoint string  `json:"waypoint,omitempty"`
-	Count    int     `json:"count,omitempty"`
-	Days     int     `json:"days,omitempty"`
+	Type      string  `json:"type"`
+	MinM      float64 `json:"min_m,omitempty"`
+	Waypoint  string  `json:"waypoint,omitempty"`
+	Count     int     `json:"count,omitempty"`
+	Days      int     `json:"days,omitempty"`
+	AltitudeM float64 `json:"altitude_m,omitempty"`
 }
 
 // Def is an achievement as defined in a route pack.
@@ -44,6 +47,8 @@ type Context struct {
 	Commits     int
 	StreakDays  int
 	BestDayM    float64
+	MaxElevM    float64 // highest point walked so far; 0 when the route has no heights
+	AscentM     float64 // total climb walked so far
 }
 
 // Met reports whether the rule is satisfied.
@@ -62,13 +67,21 @@ func (r Rule) Met(c Context) bool {
 		return c.StreakDays >= r.Days
 	case TypeDayDistance:
 		return c.BestDayM >= r.MinM
+	case TypeAltitude:
+		return c.MaxElevM > 0 && c.MaxElevM >= r.AltitudeM
+	case TypeClimb:
+		return c.AscentM >= r.MinM
 	}
 	return false
 }
 
 func (r Rule) validate(waypoints map[string]float64) error {
 	switch r.Type {
-	case TypeDistance, TypeDayDistance:
+	case TypeAltitude:
+		if r.AltitudeM <= 0 {
+			return errors.New("altitude_m must be positive")
+		}
+	case TypeDistance, TypeDayDistance, TypeClimb:
 		if r.MinM <= 0 {
 			return errors.New("min_m must be positive")
 		}

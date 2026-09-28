@@ -30,3 +30,18 @@ func TestParse(t *testing.T) {
 		t.Fatalf("root: %+v", cs[2])
 	}
 }
+
+func TestParseMailmapIdentity(t *testing.T) {
+	raw := "\x1eaaa\x1fold@x.io\x1f1790391437\x1f\x1fAnna Koval\x1fAnna@Team.io\x00\n1\t0\ta\x00" +
+		"\x1ebbb\x1fme@x.io\x1f1790391400\x1f\x1f\x1f\x00\n"
+	cs, err := Parse([]byte(raw))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if cs[0].AuthorEmail != "old@x.io" || cs[0].MailmapMail != "anna@team.io" || cs[0].AuthorName != "Anna Koval" {
+		t.Fatalf("mailmap: %+v", cs[0])
+	}
+	if cs[1].AuthorName != "me@x.io" || cs[1].MailmapMail != "me@x.io" {
+		t.Fatalf("fallback: %+v", cs[1])
+	}
+}

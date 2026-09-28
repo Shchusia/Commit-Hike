@@ -1,56 +1,194 @@
 {
   "id": "chornohora-ridge",
-  "version": 1,
+  "version": 2,
   "default_locale": "en",
   "length_m": 24000,
+  "track": [
+    [
+      48.164,
+      24.538
+    ],
+    [
+      48.164,
+      24.527
+    ],
+    [
+      48.1618,
+      24.512
+    ],
+    [
+      48.16056,
+      24.50028
+    ],
+    [
+      48.15111,
+      24.51194
+    ],
+    [
+      48.14389,
+      24.52417
+    ],
+    [
+      48.13519,
+      24.53143
+    ],
+    [
+      48.1225,
+      24.5392
+    ],
+    [
+      48.118,
+      24.545
+    ],
+    [
+      48.11139,
+      24.56
+    ],
+    [
+      48.10222,
+      24.56139
+    ],
+    [
+      48.09833,
+      24.58056
+    ],
+    [
+      48.09167,
+      24.59583
+    ],
+    [
+      48.07722,
+      24.605
+    ],
+    [
+      48.062,
+      24.615
+    ],
+    [
+      48.04778,
+      24.62778
+    ]
+  ],
   "waypoints": [
     {
       "id": "zaroslyak",
       "at_m": 0,
       "kind": "hut",
-      "elevation_m": 1290
+      "elevation_m": 1290,
+      "lat": 48.164,
+      "lon": 24.538
     },
     {
       "id": "hoverla",
       "at_m": 4000,
       "kind": "peak",
-      "elevation_m": 2061
+      "elevation_m": 2061,
+      "lat": 48.16056,
+      "lon": 24.50028
     },
     {
       "id": "breskul",
       "at_m": 5500,
       "kind": "peak",
-      "elevation_m": 1911
+      "elevation_m": 1911,
+      "lat": 48.15111,
+      "lon": 24.51194
     },
     {
       "id": "pozhyzhevska",
       "at_m": 8000,
       "kind": "peak",
-      "elevation_m": 1822
+      "elevation_m": 1822,
+      "lat": 48.14389,
+      "lon": 24.52417
     },
     {
       "id": "nesamovyte",
       "at_m": 12500,
       "kind": "lake",
-      "elevation_m": 1750
+      "elevation_m": 1750,
+      "lat": 48.1225,
+      "lon": 24.5392
     },
     {
       "id": "brebeneskul-lake",
       "at_m": 16500,
       "kind": "lake",
-      "elevation_m": 1801
+      "elevation_m": 1801,
+      "lat": 48.10222,
+      "lon": 24.56139
     },
     {
       "id": "pip-ivan",
       "at_m": 24000,
       "kind": "peak",
-      "elevation_m": 2028
+      "elevation_m": 2028,
+      "lat": 48.04778,
+      "lon": 24.62778
+    }
+  ],
+  "profile": [
+    {
+      "at_m": 2000,
+      "elevation_m": 1500
+    },
+    {
+      "at_m": 4800,
+      "elevation_m": 1760
+    },
+    {
+      "at_m": 6800,
+      "elevation_m": 1720
+    },
+    {
+      "at_m": 9400,
+      "elevation_m": 1850
+    },
+    {
+      "at_m": 11000,
+      "elevation_m": 1933
+    },
+    {
+      "at_m": 13800,
+      "elevation_m": 1880
+    },
+    {
+      "at_m": 15000,
+      "elevation_m": 2001
+    },
+    {
+      "at_m": 15600,
+      "elevation_m": 2035
+    },
+    {
+      "at_m": 17600,
+      "elevation_m": 1900
+    },
+    {
+      "at_m": 19000,
+      "elevation_m": 1780
+    },
+    {
+      "at_m": 20500,
+      "elevation_m": 1880
+    },
+    {
+      "at_m": 22000,
+      "elevation_m": 1760
+    },
+    {
+      "at_m": 23200,
+      "elevation_m": 1900
     }
   ],
   "biomes": [
     {
       "at_m": 0,
       "type": "forest"
+    },
+    {
+      "at_m": 1600,
+      "type": "grove"
     },
     {
       "at_m": 2000,
@@ -62,6 +200,10 @@
     },
     {
       "at_m": 4400,
+      "type": "tundra"
+    },
+    {
+      "at_m": 6000,
       "type": "meadow"
     },
     {
@@ -70,15 +212,19 @@
     },
     {
       "at_m": 13000,
-      "type": "meadow"
+      "type": "tundra"
     },
     {
-      "at_m": 15600,
+      "at_m": 15000,
       "type": "rock"
     },
     {
       "at_m": 17400,
       "type": "meadow"
+    },
+    {
+      "at_m": 20000,
+      "type": "tundra"
     },
     {
       "at_m": 22400,
@@ -99,6 +245,87 @@
       "at_m": 21000
     }
   ],
+  "facts": [
+    {
+      "id": "six-2000",
+      "at_m": 1200
+    },
+    {
+      "id": "prut",
+      "at_m": 3000
+    },
+    {
+      "id": "border-posts",
+      "at_m": 4600
+    },
+    {
+      "id": "polonyna",
+      "at_m": 7200
+    },
+    {
+      "id": "reserve",
+      "at_m": 11500
+    },
+    {
+      "id": "cirques",
+      "at_m": 16500
+    },
+    {
+      "id": "observatory",
+      "at_m": 23000
+    }
+  ],
+  "objects": [
+    {
+      "id": "hoverla-top",
+      "at_m": 4000,
+      "asset": "assets/summit-marker.svg",
+      "height_px": 110,
+      "fade_m": 500
+    },
+    {
+      "id": "post-1",
+      "at_m": 4700,
+      "asset": "assets/border-post.svg",
+      "height_px": 46,
+      "fade_m": 260
+    },
+    {
+      "id": "koliba",
+      "at_m": 7100,
+      "asset": "assets/koliba.svg",
+      "height_px": 80,
+      "fade_m": 450
+    },
+    {
+      "id": "sheep",
+      "at_m": 7400,
+      "asset": "assets/sheep.svg",
+      "height_px": 38,
+      "fade_m": 420
+    },
+    {
+      "id": "post-2",
+      "at_m": 9800,
+      "asset": "assets/border-post.svg",
+      "height_px": 46,
+      "fade_m": 260
+    },
+    {
+      "id": "post-3",
+      "at_m": 18800,
+      "asset": "assets/border-post.svg",
+      "height_px": 46,
+      "fade_m": 260
+    },
+    {
+      "id": "white-elephant",
+      "at_m": 23900,
+      "asset": "assets/observatory.svg",
+      "height_px": 130,
+      "fade_m": 1800
+    }
+  ],
   "achievements": [
     {
       "id": "first-steps",
@@ -115,10 +342,24 @@
       }
     },
     {
+      "id": "above-2000",
+      "rule": {
+        "type": "altitude",
+        "altitude_m": 2000
+      }
+    },
+    {
       "id": "quiet-stones",
       "rule": {
         "type": "waypoint",
         "waypoint": "nesamovyte"
+      }
+    },
+    {
+      "id": "kilometre-up",
+      "rule": {
+        "type": "climb",
+        "min_m": 1000
       }
     },
     {

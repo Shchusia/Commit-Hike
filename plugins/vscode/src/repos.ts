@@ -32,7 +32,15 @@ export class RepoTracker implements vscode.Disposable {
   /** Fires when the set of repositories changes. */
   readonly onDidChangeRepos = this.changed.event;
 
-  constructor(private readonly onHeadMoved: (root: string) => void) {}
+  /**
+   * onHeadMoved gets the HEAD seen at the previous scan (possibly from an
+   * earlier session, via memory), so the core can tell a rewrite (amend,
+   * rebase, reset, squash) from a fast-forward.
+   */
+  constructor(
+    private readonly onHeadMoved: (root: string, prevHead?: string) => void,
+    private readonly memory: { get(root: string): string | undefined; set(root: string, head: string): void },
+  ) {}
 
   async start(): Promise<void> {
     const api = await this.gitApi();
@@ -111,7 +119,14 @@ export class RepoTracker implements vscode.Disposable {
   // git writes several files per commit; coalesce them into one scan.
   private schedule(root: string): void {
     clearTimeout(this.timers.get(root));
-    this.timers.set(root, setTimeout(() => { this.timers.delete(root); this.onHeadMoved(root); }, 800));
+    this.timers.set(root, setTimeout(() => { this.timers.delete(root); void this.fire(root); }, 800));
+  }
+
+  private async fire(root: string): Promise<void> {
+    const head = this.heads.get(root) ?? await revParseHead(root);
+    const prev = this.memory.get(root);
+    if (head) this.memory.set(root, head);
+    this.onHeadMoved(root, prev && prev !== head ? prev : undefined);
   }
 
   dispose(): void {
@@ -120,6 +135,13 @@ export class RepoTracker implements vscode.Disposable {
     this.disposables.forEach(d => { d.dispose(); }); // vscode types dispose() as any
     this.changed.dispose();
   }
+}
+
+function revParseHead(dir: string): Promise<string | undefined> {
+  return new Promise(resolve => {
+    execFile("git", ["-C", dir, "rev-parse", "--verify", "-q", "HEAD"], { windowsHide: true },
+      (err, stdout) => resolve(err ? undefined : stdout.trim() || undefined));
+  });
 }
 
 function gitDirs(dir: string): Promise<{ root: string; gitDir: string } | undefined> {

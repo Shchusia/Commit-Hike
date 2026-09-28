@@ -8,17 +8,18 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
+	"regexp"
 	"sort"
 	"strings"
 	"time"
 
-	"github.com/commit-hike/commit-hike/core/content"
-	"github.com/commit-hike/commit-hike/core/internal/gitlog"
-	"github.com/commit-hike/commit-hike/core/internal/i18n"
-	"github.com/commit-hike/commit-hike/core/internal/protocol"
-	"github.com/commit-hike/commit-hike/core/internal/routes"
-	"github.com/commit-hike/commit-hike/core/internal/score"
-	"github.com/commit-hike/commit-hike/core/internal/store"
+	"github.com/Shchusia/commit-hike/core/content"
+	"github.com/Shchusia/commit-hike/core/internal/gitlog"
+	"github.com/Shchusia/commit-hike/core/internal/i18n"
+	"github.com/Shchusia/commit-hike/core/internal/protocol"
+	"github.com/Shchusia/commit-hike/core/internal/routes"
+	"github.com/Shchusia/commit-hike/core/internal/score"
+	"github.com/Shchusia/commit-hike/core/internal/store"
 )
 
 // Journey scopes.
@@ -47,6 +48,7 @@ type Service struct {
 	routeWarnings []error
 	score         score.Config
 	now           func() time.Time
+	loc           *time.Location // the user's time zone: days follow their calendar
 }
 
 // New opens the data directory and loads built-in and user routes.
@@ -59,7 +61,7 @@ func New(dir string) (*Service, error) {
 	if err != nil {
 		return nil, fmt.Errorf("built-in routes are broken: %w", err)
 	}
-	s := &Service{st: st, routes: builtin, score: score.Default(), now: time.Now}
+	s := &Service{st: st, routes: builtin, score: score.Default(), now: time.Now, loc: time.Local}
 
 	// User routes are optional; a broken one must not break the app.
 	if _, err := os.Stat(st.UserRoutesDir()); err == nil {
@@ -85,6 +87,7 @@ type InitOptions struct {
 	RouteID     string
 	FromHistory bool
 	Locale      string
+	Difficulty  string // easy | medium | hard; chosen at setup it applies to the whole history
 }
 
 // Init creates or updates the user settings. Empty options keep current values.
@@ -97,10 +100,12 @@ func (s *Service) Init(o InitOptions) (*protocol.Config, error) {
 
 	cfg, err := s.st.LoadConfig()
 	if errors.Is(err, store.ErrNotInitialized) {
+		zero := int64(0) // a new install walks all its history at the real pace
 		cfg = &store.Config{
 			Mode:            store.ModeAll,
 			ProjectJourneys: map[string]*store.Assignment{},
 			EnabledProjects: map[string]bool{},
+			PaceFrom:        &zero,
 		}
 	} else if err != nil {
 		return nil, err
@@ -125,6 +130,17 @@ func (s *Service) Init(o InitOptions) (*protocol.Config, error) {
 	}
 	if o.Locale != "" {
 		cfg.Locale = o.Locale
+	}
+	s.migratePace(cfg)
+	if o.Difficulty != "" {
+		if !score.ValidLevel(o.Difficulty) {
+			return nil, fail(protocol.CodeInvalidArgument, "difficulty must be easy, medium or hard")
+		}
+		if len(cfg.Difficulty) == 0 {
+			cfg.Difficulty = []store.DifficultyChange{{At: 0, Level: o.Difficulty}}
+		} else if levelAt(cfg, s.now().Unix()) != o.Difficulty {
+			cfg.Difficulty = append(cfg.Difficulty, store.DifficultyChange{At: s.now().Unix(), Level: o.Difficulty})
+		}
 	}
 	if cfg.GlobalJourney == nil || o.RouteID != "" {
 		id := o.RouteID
@@ -239,6 +255,123 @@ func (s *Service) SetProjectEnabled(repo string, on bool) error {
 	}
 	return s.st.SaveConfig(cfg)
 }
+
+// SetTeam turns the teammates view on or off for a project.
+func (s *Service) SetTeam(repo string, on bool) error {
+	unlock, err := s.lock()
+	if err != nil {
+		return err
+	}
+	defer unlock()
+	cfg, err := s.st.LoadConfig()
+	if err != nil {
+		return err
+	}
+	pid, _, err := s.project(repo)
+	if err != nil {
+		return err
+	}
+	if on {
+		cfg.TeamProjects[pid] = true
+	} else {
+		delete(cfg.TeamProjects, pid)
+	}
+	return s.st.SaveConfig(cfg)
+}
+
+// Locale reads the language setting and, with set, changes it: "auto" (or
+// "") follows the IDE, anything else fixes the language for every IDE.
+func (s *Service) Locale(set *string, requested string) (*protocol.LocaleInfo, error) {
+	cfg, err := s.st.LoadConfig()
+	if err != nil {
+		return nil, err
+	}
+	if set != nil {
+		v := strings.ToLower(strings.TrimSpace(*set))
+		if v == "auto" {
+			v = ""
+		}
+		if v != "" && !localePattern.MatchString(v) {
+			return nil, fail(protocol.CodeInvalidArgument, "locale must be auto or a language tag like uk or en")
+		}
+		unlock, err := s.lock()
+		if err != nil {
+			return nil, err
+		}
+		defer unlock()
+		if cfg, err = s.st.LoadConfig(); err != nil {
+			return nil, err
+		}
+		cfg.Locale = v
+		if err := s.st.SaveConfig(cfg); err != nil {
+			return nil, err
+		}
+	}
+	avail := map[string]bool{i18n.DefaultLocale: true}
+	for _, r := range s.routes {
+		for _, l := range r.Locales() {
+			avail[l] = true
+		}
+	}
+	out := &protocol.LocaleInfo{Locale: cfg.Locale, Effective: s.resolvedLocale(i18n.Chain(s.lang(cfg, requested)))}
+	for l := range avail {
+		out.Available = append(out.Available, l)
+	}
+	sort.Strings(out.Available)
+	return out, nil
+}
+
+// migratePace starts the real pace now for a config from before it existed.
+// It reports whether the config changed.
+func (s *Service) migratePace(cfg *store.Config) bool {
+	if cfg.PaceFrom != nil {
+		return false
+	}
+	now := s.now().Unix()
+	cfg.PaceFrom = &now
+	return true
+}
+
+// Difficulty reads the difficulty and, with set, changes it. A change applies
+// to commits from now on: distance already walked stays as it was.
+func (s *Service) Difficulty(set string) (*protocol.DifficultyInfo, error) {
+	if set != "" {
+		if !score.ValidLevel(set) {
+			return nil, fail(protocol.CodeInvalidArgument, "difficulty must be easy, medium or hard")
+		}
+		unlock, err := s.lock()
+		if err != nil {
+			return nil, err
+		}
+		defer unlock()
+		cfg, err := s.st.LoadConfig()
+		if err != nil {
+			return nil, err
+		}
+		now := s.now().Unix()
+		changed := s.migratePace(cfg)
+		if levelAt(cfg, now) != set {
+			cfg.Difficulty = append(cfg.Difficulty, store.DifficultyChange{At: now, Level: set})
+			changed = true
+		}
+		if changed {
+			if err := s.st.SaveConfig(cfg); err != nil {
+				return nil, err
+			}
+		}
+	}
+	cfg, err := s.st.LoadConfig()
+	if err != nil {
+		return nil, err
+	}
+	out := &protocol.DifficultyInfo{Level: levelAt(cfg, s.now().Unix()), Levels: score.Levels, TypicalDayM: map[string]float64{}}
+	for _, l := range score.Levels {
+		out.TypicalDayM[l] = s.score.TypicalDay(l)
+	}
+	return out, nil
+}
+
+var localePattern = regexp.MustCompile(`^[a-z]{2,3}([-_][a-z0-9]{2,8})*$`)
 
 // ---------- helpers ----------
 

@@ -1,0 +1,16 @@
+<div class="glade" role="img" aria-label="Will-o'-the-wisps">
+  <style>
+    .glade { position: relative; width: 150px; height: 110px; }
+    .w { position: absolute; width: 8px; height: 8px; border-radius: 50%;
+         background: radial-gradient(circle, #fffbd1 0 30%, #b9ff8a 55%, transparent 72%);
+         box-shadow: 0 0 12px 4px rgba(185, 255, 138, .55); animation: float 5s ease-in-out infinite; }
+    .w:nth-child(2) { left: 20px; top: 60px; animation-delay: -1s; animation-duration: 6s; }
+    .w:nth-child(3) { left: 58px; top: 30px; animation-delay: -2.5s; }
+    .w:nth-child(4) { left: 96px; top: 70px; animation-delay: -.5s; animation-duration: 7s; }
+    .w:nth-child(5) { left: 124px; top: 22px; animation-delay: -3.5s; animation-duration: 5.5s; }
+    .w:nth-child(6) { left: 78px; top: 88px; animation-delay: -4s; animation-duration: 6.5s; }
+    @keyframes float { 0%, 100% { transform: translate(0, 0); opacity: .35; } 50% { transform: translate(6px, -14px); opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { .w { animation: none; opacity: .8; } }
+  </style>
+  <i class="w"></i><i class="w"></i><i class="w"></i><i class="w"></i><i class="w"></i>
+</div>

@@ -2,25 +2,86 @@
   "name": "Chornohora Ridge",
   "description": "Ukraine's highest mountain ridge, from Zaroslyak over Hoverla to Pip Ivan. Distances are approximate.",
   "waypoints": {
-    "zaroslyak": { "name": "Zaroslyak", "text": "The trail starts at the old base in the spruce forest." },
-    "hoverla": { "name": "Hoverla", "text": "2061 m, the highest point of Ukraine." },
-    "breskul": { "name": "Breskul", "text": "The ridge opens up in front of you." },
-    "pozhyzhevska": { "name": "Pozhyzhevska", "text": "Meadows on both sides, wind in your face." },
-    "nesamovyte": { "name": "Lake Nesamovyte", "text": "Legend says a stone thrown into this lake brings a storm. Better not." },
-    "brebeneskul-lake": { "name": "Lake Brebeneskul", "text": "The highest lake in Ukraine." },
-    "pip-ivan": { "name": "Pip Ivan", "text": "The White Elephant observatory stands on the summit. You walked the whole ridge!" }
+    "zaroslyak": {
+      "name": "Zaroslyak",
+      "text": "The trail starts at the old base in the spruce forest."
+    },
+    "hoverla": {
+      "name": "Hoverla",
+      "text": "2061 m, the highest point of Ukraine."
+    },
+    "breskul": {
+      "name": "Breskul",
+      "text": "The ridge opens up in front of you."
+    },
+    "pozhyzhevska": {
+      "name": "Pozhyzhevska",
+      "text": "Meadows on both sides, wind in your face."
+    },
+    "nesamovyte": {
+      "name": "Lake Nesamovyte",
+      "text": "Legend says a stone thrown into this lake brings a storm. Better not."
+    },
+    "brebeneskul-lake": {
+      "name": "Lake Brebeneskul",
+      "text": "The highest lake in Ukraine."
+    },
+    "pip-ivan": {
+      "name": "Pip Ivan",
+      "text": "The White Elephant observatory stands on the summit. You walked the whole ridge!"
+    }
   },
   "story": {
-    "treeline": "The spruce trees thin out. Above you, only grass and sky.",
-    "ridge-wind": "Up here the wind never stops. You zip your jacket and keep going.",
-    "white-elephant": "Far ahead, a grey building sits on a peak: the old observatory."
+    "treeline": "The spruces thin out. Above you there is only grass and sky.",
+    "ridge-wind": "Up here the wind never stops. You zip up your jacket and walk on.",
+    "white-elephant": "Far ahead, a grey building shows on the summit: the old observatory."
+  },
+  "facts": {
+    "six-2000": "Chornohora holds six of Ukraine's peaks above 2000 m: Hoverla, Brebeneskul, Pip Ivan, Petros, Hutyn Tomnatyk and Rebra.",
+    "prut": "The Prut, one of the big rivers of Ukraine and Moldova, starts as a stream on the slopes of Hoverla.",
+    "border-posts": "Between the world wars this ridge was the border between Poland and Czechoslovakia. The numbered stone posts still stand along the path.",
+    "polonyna": "A polonyna is a high mountain meadow. Every summer Hutsul shepherds drove flocks up here and lived in wooden huts until autumn.",
+    "reserve": "Much of Chornohora is protected by the Carpathian Biosphere Reserve and the Carpathian National Nature Park.",
+    "cirques": "Lakes Nesamovyte and Brebeneskul lie in cirques: bowls carved by glaciers that covered these mountains in the last ice age.",
+    "observatory": "The observatory on Pip Ivan was built by Poland in 1936–1938 for astronomy and weather studies. Locals nicknamed it the White Elephant."
+  },
+  "objects": {
+    "hoverla-top": "Summit of Hoverla",
+    "koliba": "A shepherd's hut",
+    "white-elephant": "The White Elephant"
   },
   "achievements": {
-    "first-steps": { "name": "First Steps", "description": "Walk your first 100 m." },
-    "roof-of-ukraine": { "name": "Roof of Ukraine", "description": "Reach Hoverla." },
-    "quiet-stones": { "name": "Keep Calm", "description": "Reach Lake Nesamovyte without throwing a stone." },
-    "steady-pace": { "name": "Steady Pace", "description": "Commit on 5 days in a row." },
-    "hundred": { "name": "Hundred", "description": "Make 100 commits on this route." },
-    "ridge-walker": { "name": "Ridge Walker", "description": "Walk the whole Chornohora ridge." }
+    "first-steps": {
+      "name": "First Steps",
+      "description": "Walk your first 100 m."
+    },
+    "roof-of-ukraine": {
+      "name": "Roof of Ukraine",
+      "description": "Reach Hoverla."
+    },
+    "above-2000": {
+      "name": "Above 2000",
+      "description": "Stand higher than 2000 m."
+    },
+    "quiet-stones": {
+      "name": "No Panic",
+      "description": "Reach Lake Nesamovyte without throwing a single stone."
+    },
+    "kilometre-up": {
+      "name": "A Kilometre Up",
+      "description": "Climb 1000 m in total."
+    },
+    "steady-pace": {
+      "name": "Steady Pace",
+      "description": "Commit 5 days in a row."
+    },
+    "hundred": {
+      "name": "Hundred",
+      "description": "Make 100 commits on this route."
+    },
+    "ridge-walker": {
+      "name": "Ridge Walker",
+      "description": "Walk the whole Chornohora ridge."
+    }
   }
 }

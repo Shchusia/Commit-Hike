@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/commit-hike/commit-hike/core/internal/protocol"
+	"github.com/Shchusia/commit-hike/core/internal/protocol"
 )
 
 func writePNG(t *testing.T, w, h int) string {

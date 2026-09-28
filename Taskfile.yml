@@ -11,17 +11,33 @@
 version: "3"
 
 vars:
-  VERSION:
-    sh: git describe --tags --always --dirty 2>/dev/null || echo dev
-  LDFLAGS: -s -w -X main.version={{.VERSION}}
+  # One version for everything: the VERSION file (change it with task version:set).
+  APP_VERSION:
+    sh: cat VERSION
+  # Build flavor. prod (default): what the marketplaces get, the hike view only
+  # looks back from where you are. dev: it can look ahead too.
+  #   task dev:jetbrains      (= task jetbrains:install FLAVOR=dev)
+  FLAVOR: '{{.FLAVOR | default "prod"}}'
+  LDFLAGS: -s -w -X main.version={{.APP_VERSION}}
   GO_TARGETS: linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64 windows/arm64
   GOBIN:
     sh: echo "$(go env GOPATH 2>/dev/null || echo "$HOME/go")/bin"
   SANDBOX: "{{.ROOT_DIR}}/.sandbox"
   SANDBOX_BIN: "{{.SANDBOX}}/bin/commit-hike"
-  VSIX: plugins/vscode/commit-hike-0.1.0.vsix
-  JB_ZIP: plugins/jetbrains/build/distributions/commit-hike-jetbrains-0.1.0.zip
+  VSIX_NAME: commit-hike-{{.APP_VERSION}}.vsix
+  VSIX: plugins/vscode/{{.VSIX_NAME}}
+  JB_ZIP: plugins/jetbrains/build/distributions/commit-hike-jetbrains-{{.APP_VERSION}}.zip
+  VSCODE_ID:
+    sh: node -p "const p = require('./plugins/vscode/package.json'); p.publisher + '.' + p.name" 2>/dev/null || echo commit-hike.commit-hike
   JB_PLUGIN_DIR_NAME: commit-hike-jetbrains
+  # Your installed PyCharm (snap, Toolbox or /opt); override with PYCHARM_PATH=...
+  PYCHARM_PATH:
+    sh: |
+      for p in /snap/pycharm-professional/current /snap/pycharm/current /snap/pycharm-community/current \
+               "$HOME"/.local/share/JetBrains/Toolbox/apps/pycharm* /opt/pycharm*; do
+        [ -f "$p/product-info.json" ] && { echo "$p"; exit 0; }
+      done
+      true # not found is fine: tasks that need PyCharm say so themselves
   # Pinned so everyone (and CI) lints with the same rules. Bump deliberately.
   GOLANGCI_VERSION: v2.14.0
 
@@ -141,7 +157,7 @@ tasks:
   core:build:
     desc: Build the core for this computer into .sandbox/bin
     dir: core
-    sources: ["**/*.go", "content/**/*", "go.mod"]
+    sources: ["**/*.go", "content/**/*", "go.mod", "../VERSION"]
     generates: ["{{.SANDBOX_BIN}}"]
     cmds:
       - go build -ldflags="{{.LDFLAGS}}" -o "{{.SANDBOX_BIN}}" ./cmd/commit-hike
@@ -188,13 +204,17 @@ tasks:
       - go test -race -cover ./...
 
   core:cover:
-    desc: Build an HTML coverage report in .sandbox/cover.html
+    desc: "Core coverage: summary, every uncovered line with its function, HTML report; fails below MIN% (default 80)"
     dir: core
+    vars:
+      MIN: '{{.MIN | default "80"}}'
     cmds:
-      - mkdir -p "{{.SANDBOX}}"
-      - go test -coverprofile="{{.SANDBOX}}/cover.out" ./...
-      - go tool cover -html="{{.SANDBOX}}/cover.out" -o "{{.SANDBOX}}/cover.html"
-      - echo "Open {{.SANDBOX}}/cover.html in a browser"
+      - mkdir -p "{{.SANDBOX}}/cover"
+      # -coverpkg: a test in one package counts toward the packages it exercises
+      - go test -race -covermode=atomic -coverpkg=./internal/... -coverprofile="{{.SANDBOX}}/cover/core.out" ./... > /dev/null
+      - go tool cover -html="{{.SANDBOX}}/cover/core.out" -o "{{.SANDBOX}}/cover/core.html"
+      - go run ./tools/uncovered -profile "{{.SANDBOX}}/cover/core.out" -min {{.MIN}}
+      - 'echo "HTML report (uncovered code in red): {{.SANDBOX}}/cover/core.html"'
 
   core:vet:
     desc: Run go vet
@@ -232,7 +252,7 @@ tasks:
   core:dist:
     desc: Cross-compile the core for all platforms into core/dist (used by both plugins)
     dir: core
-    sources: ["**/*.go", "content/**/*", "go.mod"]
+    sources: ["**/*.go", "content/**/*", "go.mod", "../VERSION"]
     generates: ["dist/commit-hike-*"]
     cmds:
       - |
@@ -316,37 +336,87 @@ tasks:
       - npm run lint
       - npm run typecheck
 
-  vscode:package:
-    desc: Build the .vsix package
+  vscode:cover:
+    desc: "VS Code extension coverage with uncovered lines (trust branch/funcs %: imports and types count as lines)"
     deps: [vscode:deps, core:dist]
     dir: plugins/vscode
+    cmds:
+      - npm run copy-core && npm run build
+      - >-
+        node --test --enable-source-maps --experimental-test-coverage
+        --test-coverage-exclude='out/test/**' --test-coverage-exclude='node_modules/**'
+        out/test/*.test.js
+
+  vscode:package:
+    desc: "Build the .vsix package (FLAVOR=dev for a development build)"
+    deps: [vscode:deps, core:dist]
+    dir: plugins/vscode
+    preconditions: &flavor
+      - sh: '[ "{{.FLAVOR}}" = prod ] || [ "{{.FLAVOR}}" = dev ]'
+        msg: "FLAVOR must be prod or dev"
+    env:
+      COMMIT_HIKE_FLAVOR: "{{.FLAVOR}}"
     cmds:
       - npm run package
 
   vscode:install:
-    desc: Install the extension into VS Code for testing
-    deps: [vscode:package]
+    desc: "Install the extension into VS Code for testing (FLAVOR=dev: may look ahead)"
     preconditions:
       - sh: command -v code
         msg: "The 'code' command was not found. Install VS Code first."
     cmds:
+      - task: vscode:package
+        vars: { FLAVOR: "{{.FLAVOR}}" }
       - code --install-extension "{{.VSIX}}" --force
-      - echo "Installed. Reload VS Code (Ctrl+Shift+P > Developer - Reload Window)."
+      - echo "Installed the {{.FLAVOR}} build {{.APP_VERSION}}. Reload VS Code (Ctrl+Shift+P > Developer - Reload Window)."
 
   vscode:uninstall:
     desc: Remove the extension from VS Code
     cmds:
-      - code --uninstall-extension commit-hike.commit-hike
+      - code --uninstall-extension {{.VSCODE_ID}}
+
+  vscode:publish:
+    desc: "Publish the prod .vsix to the Visual Studio Marketplace (needs VSCE_PAT; see docs/publishing.md)"
+    dir: plugins/vscode
+    preconditions:
+      - sh: '[ -n "$VSCE_PAT" ]'
+        msg: "Set VSCE_PAT (an Azure DevOps token with Marketplace > Manage). See docs/publishing.md"
+      - sh: test -f "{{.VSIX_NAME}}"
+        msg: "{{.VSIX_NAME}} not found: run task release:build first"
+    cmds:
+      - npx vsce publish --packagePath "{{.VSIX_NAME}}"
+
+  ovsx:publish:
+    desc: "Publish the prod .vsix to Open VSX, for VSCodium, Cursor and others (needs OVSX_PAT)"
+    dir: plugins/vscode
+    preconditions:
+      - sh: '[ -n "$OVSX_PAT" ]'
+        msg: "Set OVSX_PAT (an access token from open-vsx.org). See docs/publishing.md"
+      - sh: test -f "{{.VSIX_NAME}}"
+        msg: "{{.VSIX_NAME}} not found: run task release:build first"
+    cmds:
+      - npx ovsx publish "{{.VSIX_NAME}}" -p "$OVSX_PAT"
 
   # ───────────────────────────── JetBrains ─────────────────────────────
 
   jetbrains:build:
-    desc: Build the plugin zip for JetBrains IDEs
+    desc: "Build the plugin zip for JetBrains IDEs (FLAVOR=dev for a development build)"
     deps: [core:dist]
     dir: plugins/jetbrains
+    preconditions: *flavor
     cmds:
-      - ./gradlew buildPlugin
-      - echo "Plugin zip in {{.JB_ZIP}}"
+      - ./gradlew buildPlugin -PcommitHikeFlavor={{.FLAVOR}}
+      - echo "Plugin zip ({{.FLAVOR}} build {{.APP_VERSION}}) in {{.JB_ZIP}}"
+
+  jetbrains:publish:
+    desc: "Sign and publish the prod plugin to JetBrains Marketplace (needs JETBRAINS_TOKEN; see docs/publishing.md)"
+    dir: plugins/jetbrains
+    preconditions:
+      - sh: '[ -n "$JETBRAINS_TOKEN" ]'
+        msg: "Set JETBRAINS_TOKEN (Marketplace profile > My Tokens). The first upload must be manual: see docs/publishing.md"
+    cmds:
+      - ./gradlew publishPlugin -PcommitHikeFlavor=prod
+      - '[ -n "$CERTIFICATE_CHAIN" ] || echo "Note: published unsigned (CERTIFICATE_CHAIN/PRIVATE_KEY not set); the IDE will warn users."' 
 
   jetbrains:test:
     desc: Run JetBrains plugin tests (against the real core)
@@ -361,6 +431,14 @@ tasks:
     cmds:
       - ./gradlew ktlintCheck
 
+  jetbrains:cover:
+    desc: JetBrains plugin coverage (Kover), per class, plus an HTML report with uncovered lines
+    deps: [core:dist]
+    dir: plugins/jetbrains
+    cmds:
+      - ./gradlew test koverLog koverHtmlReport
+      - 'echo "HTML report: plugins/jetbrains/build/reports/kover/html/index.html"'
+
   jetbrains:fmt:
     desc: Auto-format the Kotlin code with ktlint
     dir: plugins/jetbrains
@@ -368,11 +446,21 @@ tasks:
       - ./gradlew ktlintFormat
 
   jetbrains:verify:
-    desc: Check plugin compatibility with released IDE versions (downloads IDEs, slow)
+    desc: Check compatibility with the IDE we build against and your installed PyCharm (no big downloads)
     deps: [jetbrains:build]
     dir: plugins/jetbrains
     cmds:
-      - ./gradlew verifyPlugin
+      - ./gradlew verifyPlugin {{if .PYCHARM_PATH}}-PpycharmPath="{{.PYCHARM_PATH}}"{{end}}
+      - '{{if not .PYCHARM_PATH}}echo "PyCharm not found, checked only IntelliJ IDEA {{.PLATFORM_HINT}}. Pass PYCHARM_PATH=... to include it."{{end}}'
+    vars:
+      PLATFORM_HINT: 2024.3.5
+
+  jetbrains:verify-all:
+    desc: Check compatibility with every recent IDE release (downloads several IDEs, slow; for CI before a release)
+    deps: [jetbrains:build]
+    dir: plugins/jetbrains
+    cmds:
+      - ./gradlew verifyPlugin -PverifyRecommended {{if .PYCHARM_PATH}}-PpycharmPath="{{.PYCHARM_PATH}}"{{end}}
 
   jetbrains:run:
     desc: Start a separate test IDE (IntelliJ IDEA Community) with the plugin
@@ -382,16 +470,9 @@ tasks:
       - ./gradlew runIde
 
   jetbrains:run-pycharm:
-    desc: "Start your installed PyCharm with the plugin in a separate profile (PYCHARM_PATH=...)"
+    desc: "Start your installed PyCharm with the plugin in a separate profile (PYCHARM_PATH=... to choose)"
     deps: [core:dist]
     dir: plugins/jetbrains
-    vars:
-      PYCHARM_PATH:
-        sh: |
-          for p in /snap/pycharm-professional/current /snap/pycharm/current /snap/pycharm-community/current \
-                   "$HOME"/.local/share/JetBrains/Toolbox/apps/pycharm*; do
-            [ -d "$p" ] && { echo "$p"; exit 0; }
-          done
     preconditions:
       - sh: '[ -n "{{.PYCHARM_PATH}}" ]'
         msg: "PyCharm not found. Pass it: task jetbrains:run-pycharm PYCHARM_PATH=/path/to/pycharm"
@@ -399,8 +480,7 @@ tasks:
       - ./gradlew runPyCharm -PpycharmPath="{{.PYCHARM_PATH}}"
 
   jetbrains:install:
-    desc: "Install the plugin into your newest PyCharm (IDE=IntelliJIdea for another IDE), then restart the IDE"
-    deps: [jetbrains:build]
+    desc: "Install the plugin into your newest PyCharm (IDE=IntelliJIdea for another IDE; FLAVOR=dev: may look ahead), then restart it"
     vars:
       IDE: '{{.IDE | default "PyCharm"}}'
       PLUGINS_DIR:
@@ -409,9 +489,11 @@ tasks:
       - sh: '[ -n "{{.PLUGINS_DIR}}" ]'
         msg: "No {{.IDE}} plugin folder in ~/.local/share/JetBrains. Start {{.IDE}} once, or install the zip via Settings > Plugins > Install Plugin from Disk."
     cmds:
+      - task: jetbrains:build
+        vars: { FLAVOR: "{{.FLAVOR}}" }
       - rm -rf "{{.PLUGINS_DIR}}/{{.JB_PLUGIN_DIR_NAME}}"
       - unzip -q -o "{{.JB_ZIP}}" -d "{{.PLUGINS_DIR}}"
-      - echo "Installed into {{.PLUGINS_DIR}}. Restart {{.IDE}}."
+      - echo "Installed the {{.FLAVOR}} build {{.APP_VERSION}} into {{.PLUGINS_DIR}}. Restart {{.IDE}}."
 
   jetbrains:uninstall:
     desc: Remove the plugin from your newest PyCharm (IDE=... for another IDE)
@@ -432,6 +514,13 @@ tasks:
       - task: vscode:test
       - task: jetbrains:test
 
+  coverage:
+    desc: Coverage for everything, with what isn't covered
+    cmds:
+      - task: core:cover
+      - task: vscode:cover
+      - task: jetbrains:cover
+
   lint:
     desc: Run all linters (golangci-lint, ESLint + tsc, ktlint)
     cmds:
@@ -446,11 +535,14 @@ tasks:
       - task: jetbrains:fmt
 
   check:
-    desc: Everything CI checks; run before pushing
+    desc: Everything CI checks, including the core coverage gate; run before pushing
     cmds:
       - task: lint
       - task: core:vuln
-      - task: test
+      - task: core:cover
+      - task: routes:check
+      - task: vscode:test
+      - task: jetbrains:test
 
   build:
     desc: Build the core for all platforms and both plugins
@@ -465,14 +557,77 @@ tasks:
     cmds:
       - '"{{.GOBIN}}/goreleaser" release --snapshot --clean'
 
-  rename-module:
-    desc: "Point the Go module at your GitHub account: task rename-module OWNER=your-github-name"
-    requires:
-      vars: [OWNER]
-    dir: core
+  # ───────────────────────────── development builds ─────────────────────────────
+
+  dev:jetbrains:
+    desc: "Development build into your PyCharm: the hike view can look ahead too (IDE=... for another IDE)"
     cmds:
-      - grep -rl 'github.com/commit-hike/commit-hike' . | xargs sed -i 's#github.com/commit-hike/commit-hike#github.com/{{.OWNER}}/commit-hike#g'
-      - go build ./... && echo "Module is now github.com/{{.OWNER}}/commit-hike/core"
+      - task: jetbrains:install
+        vars: { FLAVOR: dev, IDE: '{{.IDE | default "PyCharm"}}' }
+
+  dev:vscode:
+    desc: "Development build into VS Code: the hike view can look ahead too"
+    cmds:
+      - task: vscode:install
+        vars: { FLAVOR: dev }
+
+  # ───────────────────────────── versions and releases ─────────────────────────────
+
+  version:
+    desc: Show the current version
+    silent: true
+    cmds:
+      - echo "{{.APP_VERSION}}"
+
+  version:set:
+    desc: "Set the version everywhere and turn [Unreleased] in CHANGELOG.md into its section: task version:set V=0.2.0"
+    requires:
+      vars: [V]
+    env:
+      V: "{{.V}}"
+    cmds:
+      - node scripts/version-set.mjs
+
+  release:configure:
+    desc: "One-time: who publishes. task release:configure OWNER=github-name NAME='Your Name' EMAIL=you@example.com"
+    requires:
+      vars: [OWNER, NAME, EMAIL]
+    env:
+      OWNER: "{{.OWNER}}"
+      NAME: "{{.NAME}}"
+      EMAIL: "{{.EMAIL}}"
+      PLUGIN_ID: "{{.PLUGIN_ID}}"
+      PUBLISHER: "{{.PUBLISHER}}"
+      REPO: "{{.REPO}}"
+    cmds:
+      - node scripts/configure-release.mjs
+
+  release:check:
+    desc: Check that the version, changelog, publisher and content are ready for a release
+    env:
+      FLAVOR: "{{.FLAVOR}}"
+    cmds:
+      - node scripts/release-check.mjs
+
+  release:build:
+    desc: Build exactly what the marketplaces get (prod), after every check
+    cmds:
+      - task: release:check
+      - task: check
+      - task: vscode:package
+        vars: { FLAVOR: prod }
+      - task: jetbrains:build
+        vars: { FLAVOR: prod }
+      - task: jetbrains:verify
+      - 'echo "Ready to publish {{.APP_VERSION}}: {{.VSIX}} and {{.JB_ZIP}}"' 
+
+  release:publish:
+    desc: "Build, check and publish to JetBrains Marketplace, Visual Studio Marketplace and Open VSX (needs all three tokens)"
+    cmds:
+      - task: release:build
+      - task: jetbrains:publish
+      - task: vscode:publish
+      - task: ovsx:publish
 
   clean:
     desc: Remove build output and the sandbox

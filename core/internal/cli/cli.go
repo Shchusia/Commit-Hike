@@ -10,23 +10,28 @@ import (
 	"io"
 	"strings"
 
-	"github.com/commit-hike/commit-hike/core/internal/app"
-	"github.com/commit-hike/commit-hike/core/internal/protocol"
-	"github.com/commit-hike/commit-hike/core/internal/store"
+	"github.com/Shchusia/commit-hike/core/internal/app"
+	"github.com/Shchusia/commit-hike/core/internal/protocol"
+	"github.com/Shchusia/commit-hike/core/internal/store"
 )
 
 const usage = `commit-hike: turns commits into a journey. Every command prints one JSON envelope.
 
-  commit-hike init     [--email a@x,b@y] [--mode all|selected] [--route ID] [--from-history=true] [--locale uk]
-  commit-hike scan     --repo PATH [--lang uk]
+  commit-hike init     [--difficulty easy|medium|hard] [--email a@x,b@y] [--mode all|selected] [--route ID] [--from-history=true] [--locale uk]
+  commit-hike scan     --repo PATH [--prev-head SHA] [--lang uk]
   commit-hike status   [--repo PATH] [--lang uk]
   commit-hike routes   [--lang uk]
   commit-hike route    import --path FOLDER|FILE.zip [--replace] [--lang uk]
   commit-hike route    remove --id ID
   commit-hike route    template --id ID --path FOLDER
+  commit-hike route    assets --id ID
   commit-hike avatar   get | set --path ICON.png | reset
   commit-hike journey  --scope global|project [--repo PATH] --route ID|none [--from-history]
   commit-hike project  enable|disable --repo PATH
+  commit-hike project  team-on|team-off --repo PATH
+  commit-hike team     --repo PATH
+  commit-hike locale   [--set auto|en|uk] [--lang uk]
+  commit-hike difficulty [--set easy|medium|hard]
   commit-hike verify   --repo PATH
   commit-hike render   [--scope global|project] [--repo PATH] [--format svg|scene] [--width 300] [--lang uk]
   commit-hike config
@@ -76,9 +81,9 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 	}
 
 	var (
-		emails, mode, route, locale, scope, format, id, path *string
-		fromHistory, replace                                 *bool
-		width                                                *float64
+		emails, mode, route, locale, scope, format, id, path, prevHead, setLocale, difficulty *string
+		fromHistory, replace                                                                  *bool
+		width                                                                                 *float64
 	)
 	switch cmd {
 	case "init":
@@ -87,6 +92,13 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 		route = fs.String("route", "", "route for the global journey")
 		locale = fs.String("locale", "", "fixed language; empty follows the IDE")
 		fromHistory = fs.Bool("from-history", true, "count existing history")
+		difficulty = fs.String("difficulty", "", "easy | medium | hard")
+	case "difficulty":
+		difficulty = fs.String("set", "", "easy | medium | hard: applies to commits from now on")
+	case "scan":
+		prevHead = fs.String("prev-head", "", "HEAD before this change; a rewrite triggers a full recount")
+	case "locale":
+		setLocale = fs.String("set", "", "auto | en | uk | …")
 	case "journey":
 		scope = fs.String("scope", app.ScopeGlobal, "global | project")
 		route = fs.String("route", "", "route id, or none")
@@ -121,10 +133,22 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 	case "init":
 		return svc.Init(app.InitOptions{
 			Emails: strings.Split(*emails, ","), Mode: *mode, RouteID: *route,
-			FromHistory: *fromHistory, Locale: *locale,
+			FromHistory: *fromHistory, Locale: *locale, Difficulty: *difficulty,
 		})
+	case "difficulty":
+		return svc.Difficulty(*difficulty)
 	case "scan":
-		return svc.Scan(*repo, *lang)
+		return svc.ScanWith(*repo, *lang, app.ScanOptions{PrevHead: *prevHead})
+	case "team":
+		return svc.Team(*repo)
+	case "locale":
+		var set *string
+		fs.Visit(func(f *flag.Flag) {
+			if f.Name == "set" {
+				set = setLocale
+			}
+		})
+		return svc.Locale(set, *lang)
 	case "status":
 		return svc.Status(*repo, *lang)
 	case "routes":
@@ -132,10 +156,13 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 	case "journey":
 		return svc.SetJourney(*scope, *repo, *route, *fromHistory, *lang)
 	case "project":
-		if sub != "enable" && sub != "disable" {
-			return nil, invalid("usage: commit-hike project enable|disable --repo PATH")
+		switch sub {
+		case "enable", "disable":
+			return map[string]bool{"enabled": sub == "enable"}, svc.SetProjectEnabled(*repo, sub == "enable")
+		case "team-on", "team-off":
+			return map[string]bool{"team": sub == "team-on"}, svc.SetTeam(*repo, sub == "team-on")
 		}
-		return map[string]bool{"enabled": sub == "enable"}, svc.SetProjectEnabled(*repo, sub == "enable")
+		return nil, invalid("usage: commit-hike project enable|disable|team-on|team-off --repo PATH")
 	case "route":
 		switch sub {
 		case "import":
@@ -145,8 +172,10 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 		case "template":
 			dir, err := svc.RouteTemplate(*id, *path)
 			return map[string]string{"path": dir}, err
+		case "assets":
+			return svc.RouteAssets(*id)
 		}
-		return nil, invalid("usage: commit-hike route import|remove|template, see `commit-hike help`")
+		return nil, invalid("usage: commit-hike route import|remove|template|assets, see `commit-hike help`")
 	case "avatar":
 		switch sub {
 		case "get":

@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 )
 
@@ -56,6 +57,22 @@ type Config struct {
 	GlobalJourney   *Assignment            `json:"global_journey,omitempty"`
 	ProjectJourneys map[string]*Assignment `json:"project_journeys,omitempty"` // key: project id
 	EnabledProjects map[string]bool        `json:"enabled_projects,omitempty"` // for ModeSelected
+	// Projects where the user wants to see teammates on the trail. Teammates
+	// are computed from git history on demand and never stored.
+	TeamProjects map[string]bool `json:"team_projects,omitempty"`
+	// Difficulty over time: each change applies to commits from At on, so
+	// switching never rewrites distance already walked. Empty = medium.
+	Difficulty []DifficultyChange `json:"difficulty,omitempty"`
+	// PaceFrom is when real-scale pace started to apply. Commits before it
+	// keep the distance they had (1 base point = 1 m), so upgrading never
+	// changes what was already walked. Nil = an older config, not migrated yet.
+	PaceFrom *int64 `json:"pace_from,omitempty"`
+}
+
+// DifficultyChange is one switch of the difficulty level.
+type DifficultyChange struct {
+	At    int64  `json:"at"` // unix seconds; 0 = from the very beginning
+	Level string `json:"level"`
 }
 
 // CommitRec is one counted commit. It holds no hash, path or message.
@@ -63,6 +80,10 @@ type CommitRec struct {
 	Project string  `json:"p"`
 	Time    int64   `json:"t"` // author time, unix seconds
 	Meters  float64 `json:"m"` // raw meters before the daily cap
+	// Clone that first counted it: HMAC(work tree path). Only that clone may
+	// drop the record when the commit disappears from its history, so two
+	// clones of one project with different unpushed commits don't fight.
+	Src string `json:"s,omitempty"`
 }
 
 // ProjectRec is per-project bookkeeping.
@@ -79,6 +100,9 @@ type State struct {
 	// Journey key is "global:<route>" or "<project id>:<route>", so switching
 	// routes never mixes achievements.
 	Achievements map[string]map[string]int64 `json:"achievements,omitempty"`
+	// Work trees seen so far: HMAC(path) -> project id. When a project's root
+	// commit is rewritten its id changes; this map lets progress move along.
+	Paths map[string]string `json:"paths,omitempty"`
 }
 
 // Store gives access to the data directory. Create it with Open.
@@ -159,8 +183,24 @@ func (s *Store) Lock() (func(), error) {
 				_ = os.Remove(p)
 				return nil, fmt.Errorf("writing lock file: %w", err)
 			}
+			// Heartbeat: a long-held lock never looks stale to others. If the
+			// process dies, the heartbeat stops and the lock expires.
+			stop := make(chan struct{})
+			go func() {
+				t := time.NewTicker(staleLock / 4)
+				defer t.Stop()
+				for {
+					select {
+					case <-stop:
+						return
+					case now := <-t.C:
+						_ = os.Chtimes(p, now, now)
+					}
+				}
+			}()
+			var once sync.Once
 			// If removal fails, the lock simply expires as stale after staleLock.
-			return func() { _ = os.Remove(p) }, nil
+			return func() { once.Do(func() { close(stop); _ = os.Remove(p) }) }, nil
 		}
 		if !errors.Is(err, os.ErrExist) {
 			return nil, err
@@ -191,6 +231,9 @@ func (s *Store) LoadConfig() (*Config, error) {
 	if c.EnabledProjects == nil {
 		c.EnabledProjects = map[string]bool{}
 	}
+	if c.TeamProjects == nil {
+		c.TeamProjects = map[string]bool{}
+	}
 	return &c, nil
 }
 
@@ -214,6 +257,9 @@ func (s *Store) LoadState() (*State, error) {
 	}
 	if st.Achievements == nil {
 		st.Achievements = map[string]map[string]int64{}
+	}
+	if st.Paths == nil {
+		st.Paths = map[string]string{}
 	}
 	return &st, nil
 }
@@ -239,6 +285,9 @@ func writeJSON(p string, v any) error {
 	}
 	return writeAtomic(p, b)
 }
+
+// WriteFile writes a file inside the data directory atomically.
+func (s *Store) WriteFile(name string, data []byte) error { return writeAtomic(s.path(name), data) }
 
 // writeAtomic writes to a temp file and renames it into place, so a crash or
 // power loss never leaves a half-written file behind.

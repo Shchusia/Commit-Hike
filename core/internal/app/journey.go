@@ -4,12 +4,12 @@ import (
 	"math"
 	"time"
 
-	"github.com/commit-hike/commit-hike/core/internal/achievements"
-	"github.com/commit-hike/commit-hike/core/internal/i18n"
-	"github.com/commit-hike/commit-hike/core/internal/protocol"
-	"github.com/commit-hike/commit-hike/core/internal/routes"
-	"github.com/commit-hike/commit-hike/core/internal/score"
-	"github.com/commit-hike/commit-hike/core/internal/store"
+	"github.com/Shchusia/commit-hike/core/internal/achievements"
+	"github.com/Shchusia/commit-hike/core/internal/i18n"
+	"github.com/Shchusia/commit-hike/core/internal/protocol"
+	"github.com/Shchusia/commit-hike/core/internal/routes"
+	"github.com/Shchusia/commit-hike/core/internal/score"
+	"github.com/Shchusia/commit-hike/core/internal/store"
 )
 
 const (
@@ -30,8 +30,22 @@ type journey struct {
 type journeyStats struct {
 	distance float64
 	commits  int
-	byDay    map[int64]float64 // effective meters per UTC day
+	byDay    map[int64]float64 // effective meters per local calendar day
 }
+
+// dayOf maps a unix time to a day number in the user's time zone, so "today",
+// streaks and the daily cap follow the user's calendar, not UTC. Day d
+// formatted with time.Unix(d*day, 0).UTC() gives that local date.
+func (s *Service) dayOf(t int64) int64 {
+	_, off := time.Unix(t, 0).In(s.loc).Zone()
+	v := t + int64(off)
+	if v < 0 {
+		return (v - day + 1) / day
+	}
+	return v / day
+}
+
+func (s *Service) today() int64 { return s.dayOf(s.now().Unix()) }
 
 func (s *Service) journeys(cfg *store.Config, pid string) []journey {
 	var out []journey
@@ -44,23 +58,52 @@ func (s *Service) journeys(cfg *store.Config, pid string) []journey {
 	return out
 }
 
-// effective applies the daily soft cap across all tracked projects, then
-// distributes it back to commits proportionally, so per-project journeys
-// always sum to the global one.
+// effective turns stored base points into meters (pace × the difficulty that
+// applied when each commit was made), applies the daily discount across all
+// tracked projects, then distributes it back to commits proportionally, so
+// per-project journeys always sum to the global one.
 func (s *Service) effective(cfg *store.Config, st *store.State) map[string]float64 {
-	rawByDay := map[int64]float64{}
-	for _, r := range st.Commits {
-		if s.tracked(cfg, r.Project) {
-			rawByDay[r.Time/day] += r.Meters
+	scaled := make(map[string]float64, len(st.Commits))
+	dayRaw := map[int64]float64{}
+	dayLast := map[int64]int64{} // latest commit of the day decides the day's level
+	for id, r := range st.Commits {
+		if !s.tracked(cfg, r.Project) {
+			continue
+		}
+		m := r.Meters * s.scaleAt(cfg, r.Time)
+		scaled[id] = m
+		d := s.dayOf(r.Time)
+		dayRaw[d] += m
+		if r.Time > dayLast[d] {
+			dayLast[d] = r.Time
 		}
 	}
-	out := make(map[string]float64, len(st.Commits))
-	for id, r := range st.Commits {
-		if s.tracked(cfg, r.Project) {
-			out[id] = r.Meters * s.score.DailyFactor(rawByDay[r.Time/day])
-		}
+	out := make(map[string]float64, len(scaled))
+	for id, m := range scaled {
+		d := s.dayOf(st.Commits[id].Time)
+		out[id] = m * s.score.DailyFactor(dayRaw[d], levelAt(cfg, dayLast[d]))
 	}
 	return out
+}
+
+// scaleAt is meters per base point for a commit made at t: the real pace at
+// the difficulty of that time, or 1 for commits from before the pace existed.
+func (s *Service) scaleAt(cfg *store.Config, t int64) float64 {
+	if cfg.PaceFrom == nil || t < *cfg.PaceFrom {
+		return 1
+	}
+	return s.score.Scale(levelAt(cfg, t))
+}
+
+// levelAt is the difficulty that applied at unix time t (medium by default).
+func levelAt(cfg *store.Config, t int64) string {
+	lvl := score.Medium
+	for _, c := range cfg.Difficulty {
+		if c.At <= t {
+			lvl = c.Level
+		}
+	}
+	return lvl
 }
 
 func (s *Service) stats(st *store.State, eff map[string]float64, j journey) journeyStats {
@@ -72,7 +115,7 @@ func (s *Service) stats(st *store.State, eff map[string]float64, j journey) jour
 		}
 		js.distance += m
 		js.commits++
-		js.byDay[r.Time/day] += m
+		js.byDay[s.dayOf(r.Time)] += m
 	}
 	return js
 }
@@ -97,13 +140,16 @@ func (s *Service) achievementContext(j journey, js journeyStats) achievements.Co
 	for _, m := range js.byDay {
 		best = math.Max(best, m)
 	}
+	d := math.Min(js.distance, j.route.LengthM)
 	return achievements.Context{
 		DistanceM:   js.distance,
 		LengthM:     j.route.LengthM,
 		WaypointAtM: j.route.WaypointPositions(),
 		Commits:     js.commits,
-		StreakDays:  streak(js.byDay, s.now().Unix()/day),
+		StreakDays:  streak(js.byDay, s.today()),
 		BestDayM:    best,
+		MaxElevM:    j.route.MaxElevation(d),
+		AscentM:     j.route.Ascent(d),
 	}
 }
 
@@ -132,14 +178,16 @@ func (s *Service) status(cfg *store.Config, st *store.State, pid, lang string) p
 	chain := i18n.Chain(lang)
 	eff := s.effective(cfg, st)
 	out := protocol.Status{Tracked: true, Locale: s.resolvedLocale(chain)}
-	today := s.now().Unix() / day
+	today := s.today()
 	for id, m := range eff {
 		out.TotalM += m
-		if st.Commits[id].Time/day == today {
+		if s.dayOf(st.Commits[id].Time) == today {
 			out.TodayM += m
 		}
 	}
 	out.TotalM, out.TodayM = score.Round1(out.TotalM), score.Round1(out.TodayM)
+	out.Difficulty = levelAt(cfg, s.now().Unix())
+	out.TypicalDayM = s.score.TypicalDay(out.Difficulty)
 	for _, j := range s.journeys(cfg, pid) {
 		dto := s.journeyDTO(j, s.stats(st, eff, j), st.Achievements[j.key], chain)
 		if j.scope == ScopeGlobal {
@@ -161,7 +209,14 @@ func (s *Service) journeyDTO(j journey, js journeyStats, unlocked map[string]int
 		Percent:    math.Round(d/r.LengthM*1000) / 10,
 		Finished:   js.distance >= r.LengthM,
 		Commits:    js.commits,
-		StreakDays: streak(js.byDay, s.now().Unix()/day),
+		StreakDays: streak(js.byDay, s.today()),
+	}
+	out.Underground = r.UndergroundAt(d)
+	if e, ok := r.ElevationAt(d); ok {
+		e = math.Round(e)
+		out.ElevationM = &e
+		out.AscentM = math.Round(r.Ascent(d))
+		out.MaxElevationM = math.Round(r.MaxElevation(d))
 	}
 	for i, w := range r.Waypoints {
 		if w.AtM <= js.distance {
@@ -169,6 +224,7 @@ func (s *Service) journeyDTO(j journey, js journeyStats, unlocked map[string]int
 		} else if out.NextWaypoint == nil {
 			out.NextWaypoint = &out.Route.Waypoints[i]
 			out.ToNextM = score.Round1(w.AtM - js.distance)
+			out.ToNextClimbM = math.Round(r.Ascent(w.AtM) - r.Ascent(d))
 		}
 	}
 	for _, b := range r.Story {
@@ -176,12 +232,12 @@ func (s *Service) journeyDTO(j journey, js journeyStats, unlocked map[string]int
 			out.Story = &protocol.Story{ID: b.ID, Text: r.T(chain, "story."+b.ID), AtM: b.AtM}
 		}
 	}
-	today := s.now().Unix() / day
+	today := s.today()
 	// Day 1 is the day the journey started: the assignment date, or the first
 	// counted commit when history was included.
 	start := today
 	if j.assign.Since > 0 {
-		start = j.assign.Since / day
+		start = s.dayOf(j.assign.Since)
 	} else {
 		for d := range js.byDay {
 			start = min(start, d)
@@ -230,6 +286,22 @@ func events(scope string, r *routes.Route, before, after float64, chain []string
 			})
 		}
 	}
+	for _, d := range r.Dangers {
+		if d.AtM > before && d.AtM <= after {
+			out = append(out, protocol.Event{
+				Type: protocol.EventDanger, Journey: scope,
+				Danger: &protocol.Danger{ID: d.ID, AtM: d.AtM, Text: r.T(chain, "dangers."+d.ID)},
+			})
+		}
+	}
+	for _, f := range r.Facts {
+		if f.AtM > before && f.AtM <= after {
+			out = append(out, protocol.Event{
+				Type: protocol.EventFact, Journey: scope,
+				Fact: &protocol.Fact{ID: f.ID, AtM: f.AtM, Text: r.T(chain, "facts."+f.ID)},
+			})
+		}
+	}
 	if before < r.LengthM && after >= r.LengthM {
 		out = append(out, protocol.Event{Type: protocol.EventFinished, Journey: scope})
 	}
@@ -247,12 +319,48 @@ func routeDTO(r *routes.Route, chain []string) protocol.Route {
 	for _, b := range r.Biomes {
 		out.Biomes = append(out.Biomes, protocol.Biome{AtM: b.AtM, Type: b.Type})
 	}
+	for i, p := range r.Elevations() {
+		out.Profile = append(out.Profile, protocol.ProfilePoint{AtM: p.AtM, ElevationM: p.ElevationM})
+		if i == 0 || p.ElevationM < out.MinElevationM {
+			out.MinElevationM = p.ElevationM
+		}
+		out.MaxElevationM = math.Max(out.MaxElevationM, p.ElevationM)
+	}
+	if len(out.Profile) > 0 {
+		out.AscentM = math.Round(r.Ascent(r.LengthM))
+	}
+	for _, f := range r.Facts {
+		out.Facts = append(out.Facts, protocol.Fact{ID: f.ID, AtM: f.AtM, Text: r.T(chain, "facts."+f.ID)})
+	}
+	for _, o := range r.Objects {
+		dto := protocol.Object{
+			ID: o.ID, AtM: o.AtM, Asset: o.Asset, HeightP: o.HeightP, LiftP: o.LiftP, OffsetM: o.OffsetM,
+			FadeM: o.FadeM, Layer: o.Layer, Caption: r.Tmaybe(chain, "objects."+o.ID),
+		}
+		if dto.HeightP == 0 {
+			dto.HeightP = 90
+		}
+		if dto.FadeM == 0 {
+			dto.FadeM = 350
+		}
+		if dto.Layer == "" {
+			dto.Layer = "trail"
+		}
+		out.Objects = append(out.Objects, dto)
+	}
+	out.Path, out.Track, out.MapImage = r.Path, r.Track, r.MapImage
+	for _, u := range r.Underground {
+		out.Underground = append(out.Underground, protocol.Span{FromM: u.FromM, ToM: u.ToM})
+	}
+	for _, d := range r.Dangers {
+		out.Dangers = append(out.Dangers, protocol.Danger{ID: d.ID, AtM: d.AtM, Text: r.T(chain, "dangers."+d.ID)})
+	}
 	return out
 }
 
 func waypointDTO(r *routes.Route, chain []string, w routes.Waypoint) protocol.Waypoint {
 	return protocol.Waypoint{
-		ID: w.ID, AtM: w.AtM, Kind: w.Kind, ElevationM: w.ElevationM,
+		ID: w.ID, AtM: w.AtM, Kind: w.Kind, ElevationM: w.ElevationM, Lat: w.Lat, Lon: w.Lon,
 		Name: r.T(chain, "waypoints."+w.ID+".name"),
 		Text: r.T(chain, "waypoints."+w.ID+".text"),
 	}

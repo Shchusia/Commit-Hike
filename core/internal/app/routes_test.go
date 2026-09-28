@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/commit-hike/commit-hike/core/internal/protocol"
+	"github.com/Shchusia/commit-hike/core/internal/protocol"
 )
 
 func code(err error) string {
@@ -39,7 +39,8 @@ func TestTemplateImportReplaceRemove(t *testing.T) {
 	if err != nil {
 		t.Fatalf("the template must be a valid route: %v", err)
 	}
-	if r.ID != "my-trail" || r.Builtin || r.Name != "Моя стежка" || r.Waypoints[1].Kind != "peak" || len(r.Biomes) != 3 {
+	if r.ID != "my-trail" || r.Builtin || r.Name != "Моя стежка" || r.Waypoints[1].Kind != "viewpoint" || len(r.Biomes) != 5 ||
+		len(r.Facts) != 1 || len(r.Objects) != 1 || r.Objects[0].Caption != "Вказівник" || r.AscentM != 480 {
 		t.Fatalf("imported: %+v", r)
 	}
 	if _, err := s.ImportRoute(dir, false, ""); code(err) != protocol.CodeRouteExists {
@@ -147,7 +148,7 @@ func TestImportZip(t *testing.T) {
 			"locales/en.json": `{"name":"B","description":"d"}`,
 		}),
 		"unknown kind": writeZip(t, map[string]string{
-			"route.json":      strings.Replace(strings.Replace(route, "zipped", "k", 1), `"hut"`, `"castle"`, 1),
+			"route.json":      strings.Replace(strings.Replace(route, "zipped", "k", 1), `"hut"`, `"spaceport"`, 1),
 			"locales/en.json": text,
 		}),
 		"built-in id": writeZip(t, map[string]string{

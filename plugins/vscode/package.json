@@ -1,21 +1,37 @@
 {
   "name": "commit-hike",
-  "displayName": "Commit Hike",
-  "description": "Your commits move you along a hiking trail. Local-only, never touches your repositories.",
+  "displayName": "%extension.displayName%",
+  "description": "%extension.description%",
   "version": "0.1.0",
-  "publisher": "commit-hike",
+  "publisher": "shchusia",
   "license": "MIT",
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#1f2623",
+    "theme": "dark"
+  },
+  "pricing": "Free",
   "engines": {
     "vscode": "^1.85.0"
   },
   "categories": [
+    "Visualization",
     "Other"
+  ],
+  "keywords": [
+    "git",
+    "commits",
+    "motivation",
+    "gamification",
+    "hiking",
+    "productivity",
+    "progress",
+    "streak"
   ],
   "activationEvents": [
     "onStartupFinished"
   ],
   "main": "./out/extension.js",
-  "extensionDependencies": [],
   "contributes": {
     "viewsContainers": {
       "activitybar": [
@@ -31,69 +47,84 @@
         {
           "type": "webview",
           "id": "commitHike.trail",
-          "name": "Trail"
+          "name": "%view.trail%"
         }
       ]
     },
     "commands": [
       {
         "command": "commitHike.showTrail",
-        "title": "Show Trail",
+        "title": "%command.showTrail%",
         "category": "Commit Hike"
       },
       {
         "command": "commitHike.setup",
-        "title": "Set Up",
+        "title": "%command.setup%",
         "category": "Commit Hike"
       },
       {
         "command": "commitHike.chooseRoute",
-        "title": "Choose Trail for All Projects",
+        "title": "%command.chooseRoute%",
         "category": "Commit Hike"
       },
       {
         "command": "commitHike.chooseProjectRoute",
-        "title": "Choose Trail for This Project",
+        "title": "%command.chooseProjectRoute%",
         "category": "Commit Hike"
       },
       {
         "command": "commitHike.enableProject",
-        "title": "Count This Project",
+        "title": "%command.enableProject%",
         "category": "Commit Hike"
       },
       {
         "command": "commitHike.disableProject",
-        "title": "Stop Counting This Project",
+        "title": "%command.disableProject%",
         "category": "Commit Hike"
       },
       {
         "command": "commitHike.verify",
-        "title": "Recount This Project from Git History",
+        "title": "%command.verify%",
         "category": "Commit Hike"
       },
       {
         "command": "commitHike.importRoute",
-        "title": "Import a Route…",
+        "title": "%command.importRoute%",
         "category": "Commit Hike"
       },
       {
         "command": "commitHike.createRouteTemplate",
-        "title": "Create a Route Template…",
+        "title": "%command.createRouteTemplate%",
         "category": "Commit Hike"
       },
       {
         "command": "commitHike.removeRoute",
-        "title": "Remove a Route…",
+        "title": "%command.removeRoute%",
         "category": "Commit Hike"
       },
       {
         "command": "commitHike.setHikerIcon",
-        "title": "Set Hiker Icon…",
+        "title": "%command.setHikerIcon%",
         "category": "Commit Hike"
       },
       {
         "command": "commitHike.resetHikerIcon",
-        "title": "Use Default Hiker Icon",
+        "title": "%command.resetHikerIcon%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.changeLanguage",
+        "title": "%command.changeLanguage%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.toggleTeam",
+        "title": "%command.toggleTeam%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.changeDifficulty",
+        "title": "%command.changeDifficulty%",
         "category": "Commit Hike"
       }
     ],
@@ -103,28 +134,28 @@
         "commitHike.showDistanceAfterCommit": {
           "type": "boolean",
           "default": true,
-          "description": "Briefly show the distance you gained in the status bar after each commit."
+          "description": "%config.showDistanceAfterCommit%"
         },
         "commitHike.notifyOnWaypoints": {
           "type": "boolean",
           "default": true,
-          "description": "Show a notification when you reach a new stop on your trail."
+          "description": "%config.notifyOnWaypoints%"
         },
         "commitHike.binaryPath": {
           "type": "string",
           "default": "",
-          "description": "Path to a custom commit-hike binary. Leave empty to use the bundled one."
+          "description": "%config.binaryPath%"
         }
       }
     }
   },
   "scripts": {
     "copy-core": "node scripts/copy-core.js",
-    "build": "node scripts/copy-ui.js && tsc -p .",
+    "build": "node scripts/prepare.js && tsc -p .",
     "typecheck": "tsc -p . --noEmit",
     "lint": "eslint src",
     "test": "npm run copy-core && npm run build && node --test out/test/*.test.js",
-    "package": "npm run copy-core && npm run build && vsce package --allow-missing-repository"
+    "package": "npm run copy-core && npm run build && vsce package"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
@@ -132,7 +163,18 @@
     "@types/vscode": "~1.85.0",
     "@vscode/vsce": "^3.2.0",
     "eslint": "^9.39.5",
+    "ovsx": "^1.2.0",
     "typescript": "^5.4.0",
     "typescript-eslint": "^8.70.1"
+  },
+  "extensionDependencies": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Shchusia/commit-hike.git",
+    "directory": "plugins/vscode"
+  },
+  "homepage": "https://github.com/Shchusia/commit-hike#readme",
+  "bugs": {
+    "url": "https://github.com/Shchusia/commit-hike/issues"
   }
 }

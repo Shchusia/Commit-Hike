@@ -27,10 +27,14 @@ type FileChange struct {
 // Commit is a commit with the fields the core needs.
 type Commit struct {
 	Hash        string
-	AuthorEmail string
+	AuthorEmail string // as recorded in the commit, lowercased: the dedup key uses it
 	AuthorTime  time.Time
 	Parents     int
 	Files       []FileChange
+	// Identity after .mailmap, for grouping teammates who commit under
+	// several addresses. Falls back to the raw values.
+	AuthorName  string
+	MailmapMail string
 }
 
 // Errors returned when a path can't be used as a project.
@@ -87,6 +91,25 @@ func RootCommit(repo string) (string, error) {
 	return roots[0], nil
 }
 
+// Head returns the commit HEAD points to, or "" for an empty repository.
+func Head(repo string) string {
+	out, err := run(repo, "rev-parse", "--verify", "-q", "HEAD")
+	if err != nil {
+		return ""
+	}
+	return strings.TrimSpace(string(out))
+}
+
+// IsAncestor reports whether old is still part of HEAD's history. A commit
+// git no longer knows (garbage-collected after a rewrite) is not an ancestor.
+func IsAncestor(repo, old string) bool {
+	if old == "" || strings.ContainsAny(old, " -") {
+		return true // nothing to compare with, or not a hash: assume a fast-forward
+	}
+	_, err := run(repo, "merge-base", "--is-ancestor", old, "HEAD")
+	return err == nil
+}
+
 // Log returns non-merge commits reachable from local branches, tags and
 // remote-tracking branches (stash is deliberately excluded). since==zero means
 // full history; otherwise only commits with committer date >= since.
@@ -95,7 +118,7 @@ func Log(repo string, since time.Time) ([]Commit, error) {
 		"log", "-z", "--no-merges", "--numstat",
 		"-w",             // whitespace-only changes do not count
 		"--find-renames", // pure renames show 0/0
-		"--format=%x1e%H%x1f%ae%x1f%at%x1f%P",
+		"--format=%x1e%H%x1f%ae%x1f%at%x1f%P%x1f%aN%x1f%aE",
 		"--branches", "--tags", "--remotes",
 	}
 	if !since.IsZero() {
@@ -112,7 +135,7 @@ func Log(repo string, since time.Time) ([]Commit, error) {
 //
 // Layout per commit (with -z):
 //
-//	\x1e HASH \x1f EMAIL \x1f UNIXTIME \x1f PARENTS \0 \n
+//	\x1e HASH \x1f EMAIL \x1f UNIXTIME \x1f PARENTS [\x1f NAME \x1f MAILMAP-EMAIL] \0 \n
 //	ADDED \t DELETED \t PATH \0              (regular file)
 //	ADDED \t DELETED \t \0 OLD \0 NEW \0     (rename / copy)
 func Parse(out []byte) ([]Commit, error) {
@@ -125,7 +148,7 @@ func Parse(out []byte) ([]Commit, error) {
 		if hdrEnd < 0 {
 			hdrEnd = len(rec)
 		}
-		hdr := strings.Split(strings.TrimSpace(string(rec[:hdrEnd])), "\x1f")
+		hdr := strings.Split(strings.Trim(string(rec[:hdrEnd]), "\n\r"), "\x1f")
 		if len(hdr) < 4 {
 			return nil, fmt.Errorf("bad commit header %q", rec[:hdrEnd])
 		}
@@ -138,6 +161,15 @@ func Parse(out []byte) ([]Commit, error) {
 			AuthorEmail: strings.ToLower(strings.TrimSpace(hdr[1])),
 			AuthorTime:  time.Unix(ts, 0).UTC(),
 			Parents:     len(strings.Fields(hdr[3])),
+		}
+		c.AuthorName, c.MailmapMail = c.AuthorEmail, c.AuthorEmail
+		if len(hdr) >= 6 {
+			if n := strings.TrimSpace(hdr[4]); n != "" {
+				c.AuthorName = n
+			}
+			if m := strings.ToLower(strings.TrimSpace(hdr[5])); m != "" {
+				c.MailmapMail = m
+			}
 		}
 		var body []byte
 		if hdrEnd < len(rec) {

@@ -1,0 +1,23 @@
+{
+  "command.showTrail": "Show Trail",
+  "command.setup": "Set Up",
+  "command.chooseRoute": "Choose Trail for All Projects",
+  "command.chooseProjectRoute": "Choose Trail for This Project",
+  "command.enableProject": "Count This Project",
+  "command.disableProject": "Stop Counting This Project",
+  "command.verify": "Recount This Project from Git History",
+  "command.importRoute": "Import a Route or Map…",
+  "command.createRouteTemplate": "Create a Route Template…",
+  "command.removeRoute": "Remove a Route…",
+  "command.setHikerIcon": "Set Hiker Icon…",
+  "command.resetHikerIcon": "Use Default Hiker Icon",
+  "command.changeLanguage": "Change Language…",
+  "command.toggleTeam": "Show or Hide Teammates",
+  "config.showDistanceAfterCommit": "Briefly show the distance you gained in the status bar after each commit.",
+  "config.notifyOnWaypoints": "Show a notification when you reach a new stop on your trail.",
+  "config.binaryPath": "Path to a custom commit-hike binary. Leave empty to use the bundled one.",
+  "view.trail": "Trail",
+  "extension.displayName": "Commit Hike",
+  "extension.description": "Your commits move you along a hiking trail. Local-only, never touches your repositories.",
+  "command.changeDifficulty": "Change Difficulty…"
+}

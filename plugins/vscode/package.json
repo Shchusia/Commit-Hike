@@ -1,0 +1,180 @@
+{
+  "name": "commit-hike",
+  "displayName": "%extension.displayName%",
+  "description": "%extension.description%",
+  "version": "0.1.0",
+  "publisher": "shchusia",
+  "license": "MIT",
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#1f2623",
+    "theme": "dark"
+  },
+  "pricing": "Free",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "keywords": [
+    "git",
+    "commits",
+    "motivation",
+    "gamification",
+    "hiking",
+    "productivity",
+    "progress",
+    "streak"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "commitHike",
+          "title": "Commit Hike",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "commitHike": [
+        {
+          "type": "webview",
+          "id": "commitHike.trail",
+          "name": "%view.trail%"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "commitHike.showTrail",
+        "title": "%command.showTrail%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.setup",
+        "title": "%command.setup%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.chooseRoute",
+        "title": "%command.chooseRoute%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.chooseProjectRoute",
+        "title": "%command.chooseProjectRoute%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.enableProject",
+        "title": "%command.enableProject%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.disableProject",
+        "title": "%command.disableProject%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.verify",
+        "title": "%command.verify%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.importRoute",
+        "title": "%command.importRoute%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.createRouteTemplate",
+        "title": "%command.createRouteTemplate%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.removeRoute",
+        "title": "%command.removeRoute%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.setHikerIcon",
+        "title": "%command.setHikerIcon%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.resetHikerIcon",
+        "title": "%command.resetHikerIcon%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.changeLanguage",
+        "title": "%command.changeLanguage%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.toggleTeam",
+        "title": "%command.toggleTeam%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.changeDifficulty",
+        "title": "%command.changeDifficulty%",
+        "category": "Commit Hike"
+      }
+    ],
+    "configuration": {
+      "title": "Commit Hike",
+      "properties": {
+        "commitHike.showDistanceAfterCommit": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.showDistanceAfterCommit%"
+        },
+        "commitHike.notifyOnWaypoints": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.notifyOnWaypoints%"
+        },
+        "commitHike.binaryPath": {
+          "type": "string",
+          "default": "",
+          "description": "%config.binaryPath%"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "copy-core": "node scripts/copy-core.js",
+    "build": "node scripts/prepare.js && tsc -p .",
+    "typecheck": "tsc -p . --noEmit",
+    "lint": "eslint src",
+    "test": "npm run copy-core && npm run build && node --test out/test/*.test.js",
+    "package": "npm run copy-core && npm run build && vsce package"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@types/node": "^20.11.0",
+    "@types/vscode": "~1.85.0",
+    "@vscode/vsce": "^3.2.0",
+    "eslint": "^9.39.5",
+    "ovsx": "^1.2.0",
+    "typescript": "^5.4.0",
+    "typescript-eslint": "^8.70.1"
+  },
+  "extensionDependencies": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Shchusia/commit-hike.git",
+    "directory": "plugins/vscode"
+  },
+  "homepage": "https://github.com/Shchusia/commit-hike#readme",
+  "bugs": {
+    "url": "https://github.com/Shchusia/commit-hike/issues"
+  }
+}

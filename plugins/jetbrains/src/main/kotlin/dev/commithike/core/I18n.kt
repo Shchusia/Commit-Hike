@@ -1,0 +1,256 @@
+// Plugin texts (notifications, dialogs, the status bar). The language follows
+// the core's setting (Commit Hike menu → Language), else the IDE's language.
+// Menu item names in plugin.xml stay English: the platform reads them once.
+package dev.commithike.core
+
+object I18n {
+    private val en = mapOf(
+        "showTrail" to "Show trail",
+        "chooseTrail" to "Choose trail",
+        "finished" to "You finished {0}!",
+        "finishedText" to "Pick your next trail.",
+        "reached" to "You reached {0}.",
+        "barError" to "Commit Hike: error",
+        "barErrorTip" to "Commit Hike couldn't read your progress:",
+        "unknownError" to "unknown error",
+        "barSetup" to "Set up Commit Hike to turn your commits into a journey.",
+        "barOf" to "{0} of {1}",
+        "barCompleted" to "Trail completed.",
+        "barNext" to "Next stop: {0}, in {1}",
+        "barToday" to "Today: {0}",
+        "barStreak" to "Streak: {0} days",
+        "barAltitude" to "Altitude: {0} m, climbed {1} m",
+        "barProject" to "This project: {0}, {1}",
+        "barNotCounted" to "This project isn't counted.",
+        "noJcef" to
+            "The trail view needs the IDE's embedded browser (JCEF), which isn't available here. Your progress is still shown in the status bar.",
+        "offer" to
+            "Turn your commits into a hiking journey. Commit Hike never writes to your projects and keeps everything on this computer.",
+        "setUp" to "Set up",
+        "countThis" to "Count commits in this project?",
+        "countIt" to "Count It",
+        "notNow" to "Not Now",
+        "openRepoForTrail" to "Open a file from a git repository to choose a trail for that project.",
+        "openRepoFirst" to "Open a file from a git repository first.",
+        "allCounted" to "All your projects are already counted. To choose projects one by one, run Tools | Commit Hike | Set Up.",
+        "recountTitle" to "Recount finished",
+        "recountSame" to "Everything already matched your git history.",
+        "recountDone" to "{0} added, {1} corrected, {2} removed.",
+        "importTitle" to "Import a Route",
+        "importDesc" to "Choose a route folder or a .zip file with route.json inside.",
+        "replaceQ" to "{0}. Replace it?",
+        "replace" to "Replace",
+        "cancel" to "Cancel",
+        "imported" to "Route imported",
+        "importedText" to "{0}: {1}, {2} stops.",
+        "walkNow" to "Walk it now",
+        "whereCreate" to "Where to Create the Route",
+        "routeIdPrompt" to "Route id: lowercase letters, digits and dashes.",
+        "newRoute" to "New Route",
+        "templateCreated" to "Route template created",
+        "templateText" to "Edit route.json, locales/*.json and assets/, then import the folder.",
+        "importBtn" to "Import",
+        "noCustom" to "You haven't imported any routes.",
+        "removed" to "{0} was removed.",
+        "iconTitle" to "Choose a Hiker Icon",
+        "iconDesc" to "A PNG with a transparent background, up to 512×512 px. The figure should face right.",
+        "rewritten" to "History was rewritten here, so this project was recounted from git.",
+        "langTitle" to "Commit Hike Language",
+        "langLabel" to "Language:",
+        "langAuto" to "Same as the IDE",
+        "langComment" to "Route texts, the trail view and Commit Hike messages. Applies to every IDE with Commit Hike.",
+        "ok" to "OK",
+        "teamOn" to "Teammates are now shown on this project's trail. Names are read from git history and never stored.",
+        "teamOff" to "Teammates are hidden.",
+        "teamNeedsRepo" to "Open a file from a git repository to see its teammates.",
+        // setup dialog
+        "setupTitle" to "Set Up Commit Hike",
+        "setupStart" to "Start Journey",
+        "setupIntro" to
+            "Every commit you make moves you along a hiking trail. Commit Hike never writes to your projects, and everything stays on this computer.",
+        "modeQuestion" to "Which projects should count?",
+        "modeAll" to "All my projects",
+        "modeSelected" to "Only projects I choose",
+        "histQuestion" to "Where does your journey start?",
+        "histYes" to "Include commits I already made",
+        "histToday" to "Start from today",
+        "histNow" to "Start from now",
+        "emails" to "Your author emails:",
+        "emailsComment" to "Commits with these emails count as yours. Separate several with commas.",
+        "emailsInvalid" to "Enter at least one email address.",
+        // route dialogs
+        "trailAll" to "Trail for All Projects",
+        "trailProject" to "Trail for This Project",
+        "choose" to "Choose",
+        "trail" to "Trail:",
+        "noProjectTrail" to "No trail for this project",
+        "journeyStart" to "Where does this journey start?",
+        "importLink" to "Import a route or map…",
+        "templateLink" to "Create a route template…",
+        "removeTitle" to "Remove a Route",
+        "remove" to "Remove",
+        "route" to "Route:",
+        "removeHint" to "Progress you made on this route stays; you just can't choose it anymore.",
+        // menu items (Tools | Commit Hike)
+        "action.showTrail" to "Show Trail",
+        "action.setup" to "Set Up…",
+        "action.chooseRoute" to "Choose Trail for All Projects…",
+        "action.chooseProjectRoute" to "Choose Trail for This Project…",
+        "action.importRoute" to "Import a Route or Map…",
+        "action.createRouteTemplate" to "Create a Route Template…",
+        "action.removeRoute" to "Remove a Route…",
+        "action.setHikerIcon" to "Set Hiker Icon…",
+        "action.resetHikerIcon" to "Use Default Hiker Icon",
+        "action.enableProject" to "Count This Project",
+        "action.disableProject" to "Stop Counting This Project",
+        "action.verify" to "Recount This Project from Git History",
+        "action.toggleTeam" to "Show or Hide Teammates",
+        "action.changeLanguage" to "Change Language…",
+        "action.changeDifficulty" to "Change Difficulty…",
+        "diffTitle" to "Commit Hike Difficulty",
+        "diffQuestion" to "How fast should commits move you?",
+        "diffLabel" to "Difficulty:",
+        "diffComment" to "Applies to commits from now on; distance already walked stays.",
+        "diff.easy" to "Easy (a typical day ≈ {0})",
+        "diff.medium" to "Medium (a typical day ≈ {0})",
+        "diff.hard" to "Hard (a typical day ≈ {0})",
+    )
+
+    private val uk = mapOf(
+        "showTrail" to "Показати стежку",
+        "chooseTrail" to "Вибрати стежку",
+        "finished" to "Ти пройшов маршрут «{0}»!",
+        "finishedText" to "Вибери наступну стежку.",
+        "reached" to "Ти дійшов до: {0}.",
+        "barError" to "Commit Hike: помилка",
+        "barErrorTip" to "Commit Hike не зміг прочитати прогрес:",
+        "unknownError" to "невідома помилка",
+        "barSetup" to "Налаштуй Commit Hike, щоб перетворити коміти на подорож.",
+        "barOf" to "{0} з {1}",
+        "barCompleted" to "Стежку пройдено.",
+        "barNext" to "Наступна зупинка: {0}, через {1}",
+        "barToday" to "Сьогодні: {0}",
+        "barStreak" to "Серія: {0} дн.",
+        "barAltitude" to "Висота: {0} м, набрано {1} м",
+        "barProject" to "Цей проєкт: {0}, {1}",
+        "barNotCounted" to "Цей проєкт не враховується.",
+        "noJcef" to
+            "Для перегляду стежки потрібен вбудований браузер IDE (JCEF), а він тут недоступний. Прогрес і далі видно в рядку стану.",
+        "offer" to "Перетвори коміти на похід. Commit Hike нічого не записує у твої проєкти й тримає все на цьому комп'ютері.",
+        "setUp" to "Налаштувати",
+        "countThis" to "Рахувати коміти в цьому проєкті?",
+        "countIt" to "Рахувати",
+        "notNow" to "Не зараз",
+        "openRepoForTrail" to "Відкрий файл із git-репозиторію, щоб вибрати стежку для цього проєкту.",
+        "openRepoFirst" to "Спершу відкрий файл із git-репозиторію.",
+        "allCounted" to "Усі твої проєкти вже рахуються. Щоб вибирати проєкти по одному, запусти Tools | Commit Hike | Set Up.",
+        "recountTitle" to "Перерахунок завершено",
+        "recountSame" to "Усе вже збігалося з історією git.",
+        "recountDone" to "Додано {0}, виправлено {1}, видалено {2}.",
+        "importTitle" to "Імпорт маршруту",
+        "importDesc" to "Вибери папку маршруту або .zip-файл із route.json усередині.",
+        "replaceQ" to "{0}. Замінити?",
+        "replace" to "Замінити",
+        "cancel" to "Скасувати",
+        "imported" to "Маршрут імпортовано",
+        "importedText" to "«{0}»: {1}, зупинок: {2}.",
+        "walkNow" to "Іти зараз",
+        "whereCreate" to "Де створити маршрут",
+        "routeIdPrompt" to "Id маршруту: малі літери, цифри й дефіси.",
+        "newRoute" to "Новий маршрут",
+        "templateCreated" to "Шаблон маршруту створено",
+        "templateText" to "Відредагуй route.json, locales/*.json та assets/, потім імпортуй папку.",
+        "importBtn" to "Імпортувати",
+        "noCustom" to "Ти ще не імпортував жодного маршруту.",
+        "removed" to "«{0}» видалено.",
+        "iconTitle" to "Іконка мандрівника",
+        "iconDesc" to "PNG з прозорим фоном, до 512×512 px. Фігура має дивитися праворуч.",
+        "rewritten" to "Тут переписали історію, тому проєкт перераховано з git.",
+        "langTitle" to "Мова Commit Hike",
+        "langLabel" to "Мова:",
+        "langAuto" to "Як в IDE",
+        "langComment" to "Тексти маршрутів, вигляд стежки й повідомлення Commit Hike. Діє в усіх IDE з Commit Hike.",
+        "ok" to "Гаразд",
+        "teamOn" to "Тепер на стежці цього проєкту видно команду. Імена беруться з історії git і ніде не зберігаються.",
+        "teamOff" to "Команду сховано.",
+        "teamNeedsRepo" to "Відкрий файл із git-репозиторію, щоб побачити його команду.",
+        "setupTitle" to "Налаштування Commit Hike",
+        "setupStart" to "Вирушити",
+        "setupIntro" to
+            "Кожен твій коміт просуває тебе стежкою. Commit Hike нічого не записує у твої проєкти, і все лишається на цьому комп'ютері.",
+        "modeQuestion" to "Які проєкти рахувати?",
+        "modeAll" to "Усі мої проєкти",
+        "modeSelected" to "Лише вибрані проєкти",
+        "histQuestion" to "Звідки почнеться подорож?",
+        "histYes" to "Врахувати вже зроблені коміти",
+        "histToday" to "Почати з сьогодні",
+        "histNow" to "Почати зараз",
+        "emails" to "Твої email авторів:",
+        "emailsComment" to "Коміти з цими адресами рахуються як твої. Кілька — через кому.",
+        "emailsInvalid" to "Введи хоча б одну email-адресу.",
+        "trailAll" to "Стежка для всіх проєктів",
+        "trailProject" to "Стежка для цього проєкту",
+        "choose" to "Вибрати",
+        "trail" to "Стежка:",
+        "noProjectTrail" to "Без стежки для цього проєкту",
+        "journeyStart" to "Звідки почнеться ця подорож?",
+        "importLink" to "Імпортувати маршрут або карту…",
+        "templateLink" to "Створити шаблон маршруту…",
+        "removeTitle" to "Видалити маршрут",
+        "remove" to "Видалити",
+        "route" to "Маршрут:",
+        "removeHint" to "Твій прогрес на цьому маршруті лишиться; просто його більше не можна буде вибрати.",
+        "action.showTrail" to "Показати стежку",
+        "action.setup" to "Налаштувати…",
+        "action.chooseRoute" to "Вибрати стежку для всіх проєктів…",
+        "action.chooseProjectRoute" to "Вибрати стежку для цього проєкту…",
+        "action.importRoute" to "Імпортувати маршрут або карту…",
+        "action.createRouteTemplate" to "Створити шаблон маршруту…",
+        "action.removeRoute" to "Видалити маршрут…",
+        "action.setHikerIcon" to "Іконка мандрівника…",
+        "action.resetHikerIcon" to "Стандартна іконка мандрівника",
+        "action.enableProject" to "Рахувати цей проєкт",
+        "action.disableProject" to "Не рахувати цей проєкт",
+        "action.verify" to "Перерахувати проєкт з історії git",
+        "action.toggleTeam" to "Показати чи сховати команду",
+        "action.changeLanguage" to "Змінити мову…",
+        "action.changeDifficulty" to "Змінити складність…",
+        "diffTitle" to "Складність Commit Hike",
+        "diffQuestion" to "Як швидко коміти мають тебе просувати?",
+        "diffLabel" to "Складність:",
+        "diffComment" to "Діє для комітів відтепер; уже пройдене лишається.",
+        "diff.easy" to "Легка (типовий день ≈ {0})",
+        "diff.medium" to "Середня (типовий день ≈ {0})",
+        "diff.hard" to "Складна (типовий день ≈ {0})",
+    )
+
+    private val catalogs = mapOf("en" to en, "uk" to uk)
+    val languageNames = mapOf("en" to "English", "uk" to "Українська")
+
+    @Volatile var lang: String = "en"
+        private set
+
+    fun setLanguage(tag: String?) {
+        val base = (tag ?: "en").lowercase().split('-', '_').first()
+        lang = if (catalogs.containsKey(base)) base else "en"
+    }
+
+    fun t(key: String, vararg args: Any): String {
+        var s = catalogs[lang]?.get(key) ?: en[key] ?: key
+        args.forEachIndexed { i, a -> s = s.replace("{$i}", a.toString()) }
+        return s
+    }
+
+    /** Keys missing from a translation; used by tests. */
+    fun missing(): Map<String, Set<String>> = catalogs.mapValues { (_, c) -> en.keys - c.keys }.filterValues { it.isNotEmpty() }
+
+    fun distance(m: Double) = formatDistance(m, lang)
+
+    /** A typical day of commits per level (mirrors score.TypicalDay in the core). */
+    fun levelLabel(level: String): String {
+        val factor = mapOf("easy" to 1.25, "medium" to 1.0, "hard" to 0.8)[level] ?: 1.0
+        return t("diff.$level", distance(TYPICAL_MEDIUM_DAY_M * factor))
+    }
+
+    private const val TYPICAL_MEDIUM_DAY_M = 10030.0
+}

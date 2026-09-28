@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320">
+  <defs>
+    <radialGradient id="pa" cx="50%" cy="50%" r="75%"><stop offset="0" stop-color="#f4e6c3"/><stop offset=".8" stop-color="#e6cf98"/><stop offset="1" stop-color="#b98f4f"/></radialGradient>
+    <pattern id="wv" width="18" height="10" patternUnits="userSpaceOnUse"><path d="M0 6q4.5-4 9 0t9 0" fill="none" stroke="#6f8fa3" stroke-width=".7" opacity=".55"/></pattern>
+    <pattern id="sd" width="14" height="8" patternUnits="userSpaceOnUse"><path d="M0 6q3.5-3 7 0" fill="none" stroke="#b38a48" stroke-width=".8" opacity=".6"/></pattern>
+  </defs>
+  <rect width="480" height="320" fill="#bcd3d8"/>
+  <rect width="480" height="320" fill="url(#wv)"/>
+  <g fill="url(#pa)" stroke="#6b5230" stroke-width="1.2" stroke-linejoin="round">
+    <path d="M0.0,0.0 L5.5,14.0 L9.8,26.0 L13.1,36.0 L12.0,54.0 L12.0,60.0 L22.9,60.0 L28.4,56.0 L40.4,70.0 L48.0,80.0 L50.7,77.2 L61.1,66.0 L81.8,64.0 L91.6,54.0 L99.3,48.0 L103.6,34.0 L111.3,24.0 L105.8,12.0 L110.2,0.0 L0.0,0.0 Z"/>
+    <path d="M0.0,216.0 L2.2,204.0 L4.4,192.0 L7.6,150.0 L16.4,136.0 L26.2,128.0 L34.9,120.0 L41.5,100.0 L45.8,84.0 L51.3,82.0 L62.2,96.0 L77.5,94.0 L88.4,98.0 L102.5,86.0 L122.2,70.0 L141.8,64.0 L163.6,64.0 L194.2,62.0 L216.0,54.0 L221.5,62.0 L229.1,58.0 L224.7,84.0 L230.2,96.0 L219.3,120.0 L230.2,136.0 L253.1,142.0 L273.8,152.0 L289.1,176.0 L309.8,192.0 L320.7,194.0 L328.4,180.0 L328.4,158.0 L343.6,144.0 L361.1,148.0 L370.9,158.0 L384.0,168.0 L405.8,172.0 L425.5,182.0 L435.3,176.0 L447.3,168.0 L461.5,174.0 L480.0,174.0 L480.0,320.0 L0.0,320.0 Z"/>
+    <path d="M244.4,38.0 L255.3,36.0 L279.3,34.0 L273.8,54.0 L273.8,66.0 L265.1,64.0 L246.5,48.0 Z"/><path d="M279.3,0.0 L280.4,16.0 L284.7,32.0 L280.4,40.0 L284.7,42.0 L290.2,32.0 L295.6,22.0 L296.7,12.0 L289.1,4.0 L294.5,0.0 L294.5,0.0 L279.3,0.0 Z"/>
+    <path d="M337.1,0.0 L339.3,32.0 L342.5,48.0 L345.8,64.0 L354.5,72.0 L357.8,64.0 L362.2,72.0 L361.1,54.0 L370.9,46.0 L363.3,36.0 L372.0,36.0 L360.0,22.0 L358.9,12.0 L363.3,0.0 Z"/><path d="M365.5,88.0 L373.1,90.0 L386.2,94.0 L396.0,96.0 L393.8,100.0 L378.5,102.0 L366.5,96.0 Z"/><path d="M461.5,98.0 L469.1,92.0 L486.5,88.0 L478.9,100.0 L469.1,108.0 Z"/><path d="M394.9,0.0 L393.8,12.0 L401.5,30.0 L405.8,46.0 L408.0,60.0 L417.8,66.0 L433.1,76.0 L442.9,66.0 L457.1,70.0 L466.9,80.0 L480.0,74.0 L480.0,0.0 Z"/>
+  </g>
+  <path d="M43.6,184.0 L130.9,208.0 L240.0,216.0 L349.1,212.0 L414.5,224.0 L414.5,310.0 L43.6,310.0 Z" fill="url(#sd)"/>
+  <path d="M463.6,202.0 L464.7,212.0 L474.5,248.0 L480.0,264.0 L480.0,230.0 L471.3,232.0 L466.9,210.0 Z" fill="#bcd3d8" stroke="#6b5230" stroke-width="1"/>
+  <path d="M447.3,170.0 L448.4,180.0 L449.5,196.0 L450.0,212.0 L446.2,228.0 L445.1,244.0 L449.5,256.0 L458.2,276.0 L465.8,286.0 L468.0,320.0" fill="none" stroke="#4f86a8" stroke-width="2.2" stroke-linecap="round"/>
+  <path d="M440.7,172.0 L448.4,194.0" fill="none" stroke="#4f86a8" stroke-width="1.4"/>
+  <ellipse cx="442.9" cy="210.8" rx="6" ry="2.6" fill="#7fb0cc" stroke="#4f86a8"/>
+  <g fill="none" stroke="#7a5b33" stroke-width="1.2" opacity=".8"><path d="M10.399999999999999,184.0 L16.4,175.0 L22.4,184.0"/><path d="M37.6,164.0 L43.6,155.0 L49.6,164.0"/><path d="M64.9,144.0 L70.9,135.0 L76.9,144.0"/><path d="M92.2,124.0 L98.2,115.0 L104.2,124.0"/><path d="M124.9,98.0 L130.9,89.0 L136.9,98.0"/><path d="M157.6,92.0 L163.6,83.0 L169.6,92.0"/><path d="M190.4,96.0 L196.4,87.0 L202.4,96.0"/></g>
+  <g font-family="Georgia,serif" font-style="italic" fill="#50677a" text-anchor="middle">
+    <text x="305.5" y="100.0" font-size="15" letter-spacing="3">Mare Internum</text>
+    <text x="19.6" y="130.0" font-size="10" transform="rotate(-70 19.6 130.0)">Oceanus</text>
+  </g>
+  <g font-family="Georgia,serif" fill="#7a5b33" text-anchor="middle" letter-spacing="6" opacity=".75">
+    <text x="261.8" y="276.0" font-size="16">S A H A R A</text>
+  </g>
+  <g transform="translate(40 280)" fill="#6b5230"><circle r="15" fill="none" stroke="#6b5230"/><path d="M0-21l4 17-4 4-4-4zM0 21l4-17-4-4-4 4z"/><text y="-24" text-anchor="middle" font-family="Georgia,serif" font-size="9">N</text></g>
+  <rect x="3" y="3" width="474" height="314" fill="none" stroke="#8a6431" stroke-width="5"/>
+  <rect x="9" y="9" width="462" height="302" fill="none" stroke="#8a6431" stroke-width=".8"/>
+</svg>

@@ -1,0 +1,7 @@
+# ktlint style for the plugin. It lives here, inside the Gradle project,
+# because ktlint run by Gradle doesn't read .editorconfig files above it.
+# build.gradle.kts sets the same values explicitly as well.
+[*.{kt,kts}]
+indent_size = 4
+max_line_length = 140
+ktlint_code_style = intellij_idea

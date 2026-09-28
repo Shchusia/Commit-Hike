@@ -1,0 +1,466 @@
+{
+  "id": "seven-lighthouses",
+  "version": 2,
+  "default_locale": "en",
+  "length_m": 700000,
+  "path": [
+    [
+      0.28,
+      0.9
+    ],
+    [
+      0.42,
+      0.84
+    ],
+    [
+      0.6,
+      0.78
+    ],
+    [
+      0.68,
+      0.68
+    ],
+    [
+      0.52,
+      0.6
+    ],
+    [
+      0.4,
+      0.52
+    ],
+    [
+      0.56,
+      0.46
+    ],
+    [
+      0.68,
+      0.38
+    ],
+    [
+      0.58,
+      0.3
+    ],
+    [
+      0.66,
+      0.22
+    ],
+    [
+      0.54,
+      0.16
+    ],
+    [
+      0.4,
+      0.1
+    ]
+  ],
+  "map_image": "assets/parchment-map.svg",
+  "waypoints": [
+    {
+      "id": "salt-gate",
+      "at_m": 0,
+      "kind": "start",
+      "elevation_m": 40
+    },
+    {
+      "id": "light-1",
+      "at_m": 60000,
+      "kind": "lighthouse",
+      "elevation_m": 60
+    },
+    {
+      "id": "three-wells",
+      "at_m": 130000,
+      "kind": "spring",
+      "elevation_m": 90
+    },
+    {
+      "id": "light-2",
+      "at_m": 200000,
+      "kind": "lighthouse",
+      "elevation_m": 120
+    },
+    {
+      "id": "shepherds-pass",
+      "at_m": 260000,
+      "kind": "pass",
+      "elevation_m": 860
+    },
+    {
+      "id": "light-3",
+      "at_m": 310000,
+      "kind": "lighthouse",
+      "elevation_m": 180
+    },
+    {
+      "id": "rye-valley",
+      "at_m": 370000,
+      "kind": "village",
+      "elevation_m": 70
+    },
+    {
+      "id": "light-4",
+      "at_m": 420000,
+      "kind": "lighthouse",
+      "elevation_m": 20
+    },
+    {
+      "id": "misty-fens",
+      "at_m": 480000,
+      "kind": "landmark",
+      "elevation_m": 10
+    },
+    {
+      "id": "light-5",
+      "at_m": 520000,
+      "kind": "lighthouse",
+      "elevation_m": 30
+    },
+    {
+      "id": "birch-grove",
+      "at_m": 570000,
+      "kind": "camp",
+      "elevation_m": 160
+    },
+    {
+      "id": "light-6",
+      "at_m": 620000,
+      "kind": "lighthouse",
+      "elevation_m": 240
+    },
+    {
+      "id": "light-7",
+      "at_m": 700000,
+      "kind": "lighthouse",
+      "elevation_m": 380
+    }
+  ],
+  "profile": [
+    {
+      "at_m": 30000,
+      "elevation_m": 70
+    },
+    {
+      "at_m": 95000,
+      "elevation_m": 110
+    },
+    {
+      "at_m": 165000,
+      "elevation_m": 60
+    },
+    {
+      "at_m": 230000,
+      "elevation_m": 420
+    },
+    {
+      "at_m": 290000,
+      "elevation_m": 520
+    },
+    {
+      "at_m": 340000,
+      "elevation_m": 120
+    },
+    {
+      "at_m": 450000,
+      "elevation_m": 40
+    },
+    {
+      "at_m": 500000,
+      "elevation_m": 12
+    },
+    {
+      "at_m": 550000,
+      "elevation_m": 90
+    },
+    {
+      "at_m": 600000,
+      "elevation_m": 200
+    },
+    {
+      "at_m": 660000,
+      "elevation_m": 300
+    }
+  ],
+  "biomes": [
+    {
+      "at_m": 0,
+      "type": "desert"
+    },
+    {
+      "at_m": 115000,
+      "type": "swamp"
+    },
+    {
+      "at_m": 122000,
+      "type": "desert"
+    },
+    {
+      "at_m": 150000,
+      "type": "steppe"
+    },
+    {
+      "at_m": 190000,
+      "type": "coast"
+    },
+    {
+      "at_m": 215000,
+      "type": "steppe"
+    },
+    {
+      "at_m": 280000,
+      "type": "rock"
+    },
+    {
+      "at_m": 300000,
+      "type": "steppe"
+    },
+    {
+      "at_m": 345000,
+      "type": "fields"
+    },
+    {
+      "at_m": 405000,
+      "type": "coast"
+    },
+    {
+      "at_m": 465000,
+      "type": "swamp"
+    },
+    {
+      "at_m": 535000,
+      "type": "grove"
+    },
+    {
+      "at_m": 585000,
+      "type": "forest"
+    },
+    {
+      "at_m": 605000,
+      "type": "tundra"
+    },
+    {
+      "at_m": 665000,
+      "type": "snow"
+    }
+  ],
+  "story": [
+    {
+      "id": "heat",
+      "at_m": 30000
+    },
+    {
+      "id": "caravan",
+      "at_m": 150000
+    },
+    {
+      "id": "half",
+      "at_m": 350000
+    },
+    {
+      "id": "fog",
+      "at_m": 490000
+    },
+    {
+      "id": "snow",
+      "at_m": 670000
+    }
+  ],
+  "facts": [
+    {
+      "id": "pharos",
+      "at_m": 10000
+    },
+    {
+      "id": "singing-dunes",
+      "at_m": 70000
+    },
+    {
+      "id": "fresnel",
+      "at_m": 200000
+    },
+    {
+      "id": "steppe",
+      "at_m": 240000
+    },
+    {
+      "id": "carnac",
+      "at_m": 310000
+    },
+    {
+      "id": "windmills",
+      "at_m": 370000
+    },
+    {
+      "id": "characteristic",
+      "at_m": 420000
+    },
+    {
+      "id": "peat",
+      "at_m": 485000
+    },
+    {
+      "id": "birch",
+      "at_m": 570000
+    },
+    {
+      "id": "permafrost",
+      "at_m": 630000
+    },
+    {
+      "id": "aurora",
+      "at_m": 695000
+    }
+  ],
+  "objects": [
+    {
+      "id": "tower-1",
+      "at_m": 60000,
+      "asset": "assets/lighthouse.svg",
+      "height_px": 130,
+      "fade_m": 16000
+    },
+    {
+      "id": "tower-2",
+      "at_m": 200000,
+      "asset": "assets/lighthouse.svg",
+      "height_px": 150,
+      "fade_m": 16000
+    },
+    {
+      "id": "tower-3",
+      "at_m": 310000,
+      "asset": "assets/lighthouse.svg",
+      "height_px": 140,
+      "fade_m": 16000
+    },
+    {
+      "id": "tower-4",
+      "at_m": 420000,
+      "asset": "assets/lighthouse.svg",
+      "height_px": 130,
+      "fade_m": 16000
+    },
+    {
+      "id": "tower-5",
+      "at_m": 520000,
+      "asset": "assets/lighthouse.svg",
+      "height_px": 120,
+      "fade_m": 16000
+    },
+    {
+      "id": "tower-6",
+      "at_m": 620000,
+      "asset": "assets/lighthouse.svg",
+      "height_px": 140,
+      "fade_m": 16000
+    },
+    {
+      "id": "tower-7",
+      "at_m": 700000,
+      "asset": "assets/lighthouse.svg",
+      "height_px": 170,
+      "fade_m": 16000
+    },
+    {
+      "id": "caravan",
+      "at_m": 136000,
+      "asset": "assets/caravan.png",
+      "height_px": 54,
+      "fade_m": 9000
+    },
+    {
+      "id": "sentinels",
+      "at_m": 305000,
+      "asset": "assets/standing-stones.svg",
+      "height_px": 60,
+      "fade_m": 7000
+    },
+    {
+      "id": "mill-1",
+      "at_m": 366000,
+      "asset": "assets/windmill.svg",
+      "height_px": 110,
+      "fade_m": 9000
+    },
+    {
+      "id": "mill-2",
+      "at_m": 375000,
+      "asset": "assets/windmill.svg",
+      "height_px": 80,
+      "fade_m": 9000,
+      "layer": "far"
+    },
+    {
+      "id": "wreck",
+      "at_m": 416000,
+      "asset": "assets/shipwreck.svg",
+      "height_px": 64,
+      "fade_m": 8000
+    },
+    {
+      "id": "aurora",
+      "at_m": 694000,
+      "asset": "assets/aurora.html",
+      "height_px": 110,
+      "lift_px": 120,
+      "fade_m": 25000
+    }
+  ],
+  "achievements": [
+    {
+      "id": "ember",
+      "rule": {
+        "type": "distance",
+        "min_m": 100
+      }
+    },
+    {
+      "id": "first-light",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "light-1"
+      }
+    },
+    {
+      "id": "highlands",
+      "rule": {
+        "type": "altitude",
+        "altitude_m": 800
+      }
+    },
+    {
+      "id": "halfway",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "light-4"
+      }
+    },
+    {
+      "id": "big-day",
+      "rule": {
+        "type": "day_distance",
+        "min_m": 20000
+      }
+    },
+    {
+      "id": "steady",
+      "rule": {
+        "type": "streak",
+        "days": 10
+      }
+    },
+    {
+      "id": "commits-300",
+      "rule": {
+        "type": "commits",
+        "count": 300
+      },
+      "hidden": true
+    },
+    {
+      "id": "seven",
+      "rule": {
+        "type": "finish"
+      }
+    }
+  ]
+}

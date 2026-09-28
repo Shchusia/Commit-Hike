@@ -1,0 +1,333 @@
+{
+  "id": "tongariro-crossing",
+  "version": 2,
+  "default_locale": "en",
+  "length_m": 19400,
+  "track": [
+    [
+      -39.14449,
+      175.58106
+    ],
+    [
+      -39.14467,
+      175.59664
+    ],
+    [
+      -39.14005,
+      175.62462
+    ],
+    [
+      -39.14309,
+      175.6345
+    ],
+    [
+      -39.13563,
+      175.65034
+    ],
+    [
+      -39.13266,
+      175.65628
+    ],
+    [
+      -39.1255,
+      175.6605
+    ],
+    [
+      -39.118,
+      175.66
+    ],
+    [
+      -39.10792,
+      175.65298
+    ],
+    [
+      -39.096,
+      175.6555
+    ],
+    [
+      -39.085,
+      175.6605
+    ],
+    [
+      -39.07367,
+      175.6638
+    ]
+  ],
+  "waypoints": [
+    {
+      "id": "mangatepopo",
+      "at_m": 0,
+      "kind": "start",
+      "elevation_m": 1120,
+      "lat": -39.144486,
+      "lon": 175.58106
+    },
+    {
+      "id": "soda-springs",
+      "at_m": 4300,
+      "kind": "spring",
+      "elevation_m": 1400,
+      "lat": -39.140051,
+      "lon": 175.624619
+    },
+    {
+      "id": "south-crater",
+      "at_m": 6300,
+      "kind": "landmark",
+      "elevation_m": 1660,
+      "lat": -39.14309,
+      "lon": 175.6345
+    },
+    {
+      "id": "red-crater",
+      "at_m": 8300,
+      "kind": "volcano",
+      "elevation_m": 1886,
+      "lat": -39.13563,
+      "lon": 175.65034
+    },
+    {
+      "id": "emerald-lakes",
+      "at_m": 9000,
+      "kind": "lake",
+      "elevation_m": 1730,
+      "lat": -39.132657,
+      "lon": 175.656277
+    },
+    {
+      "id": "blue-lake",
+      "at_m": 10600,
+      "kind": "lake",
+      "elevation_m": 1725
+    },
+    {
+      "id": "ketetahi-shelter",
+      "at_m": 13500,
+      "kind": "hut",
+      "elevation_m": 1440,
+      "lat": -39.107921,
+      "lon": 175.652976
+    },
+    {
+      "id": "ketetahi-end",
+      "at_m": 19400,
+      "kind": "finish",
+      "elevation_m": 760,
+      "lat": -39.073669,
+      "lon": 175.6638
+    }
+  ],
+  "profile": [
+    {
+      "at_m": 2000,
+      "elevation_m": 1200
+    },
+    {
+      "at_m": 5200,
+      "elevation_m": 1560
+    },
+    {
+      "at_m": 7400,
+      "elevation_m": 1700
+    },
+    {
+      "at_m": 9800,
+      "elevation_m": 1740
+    },
+    {
+      "at_m": 11600,
+      "elevation_m": 1640
+    },
+    {
+      "at_m": 15500,
+      "elevation_m": 1200
+    },
+    {
+      "at_m": 17200,
+      "elevation_m": 980
+    }
+  ],
+  "biomes": [
+    {
+      "at_m": 0,
+      "type": "tundra"
+    },
+    {
+      "at_m": 2600,
+      "type": "volcanic"
+    },
+    {
+      "at_m": 4000,
+      "type": "water"
+    },
+    {
+      "at_m": 4600,
+      "type": "rock"
+    },
+    {
+      "at_m": 6200,
+      "type": "volcanic"
+    },
+    {
+      "at_m": 8800,
+      "type": "water"
+    },
+    {
+      "at_m": 9400,
+      "type": "volcanic"
+    },
+    {
+      "at_m": 10300,
+      "type": "water"
+    },
+    {
+      "at_m": 11000,
+      "type": "tundra"
+    },
+    {
+      "at_m": 16000,
+      "type": "grove"
+    },
+    {
+      "at_m": 17200,
+      "type": "forest"
+    }
+  ],
+  "story": [
+    {
+      "id": "staircase",
+      "at_m": 5000
+    },
+    {
+      "id": "wind",
+      "at_m": 7800
+    },
+    {
+      "id": "scree",
+      "at_m": 8700
+    },
+    {
+      "id": "forest",
+      "at_m": 17000
+    }
+  ],
+  "facts": [
+    {
+      "id": "gift",
+      "at_m": 800
+    },
+    {
+      "id": "heritage",
+      "at_m": 3200
+    },
+    {
+      "id": "summits",
+      "at_m": 6300
+    },
+    {
+      "id": "film",
+      "at_m": 7000
+    },
+    {
+      "id": "emerald",
+      "at_m": 9000
+    },
+    {
+      "id": "blue-lake",
+      "at_m": 10600
+    },
+    {
+      "id": "te-maari",
+      "at_m": 12500
+    }
+  ],
+  "objects": [
+    {
+      "id": "boardwalk",
+      "at_m": 1400,
+      "asset": "assets/boardwalk.svg",
+      "height_px": 26,
+      "fade_m": 500
+    },
+    {
+      "id": "hazard",
+      "at_m": 5900,
+      "asset": "assets/hazard-sign.svg",
+      "height_px": 60,
+      "fade_m": 300
+    },
+    {
+      "id": "fumarole",
+      "at_m": 8250,
+      "asset": "assets/steam-vent.svg",
+      "height_px": 90,
+      "fade_m": 600
+    },
+    {
+      "id": "te-maari-steam",
+      "at_m": 12400,
+      "asset": "assets/steam-vent.svg",
+      "height_px": 70,
+      "fade_m": 1400,
+      "layer": "far"
+    },
+    {
+      "id": "shelter",
+      "at_m": 13500,
+      "asset": "assets/shelter.svg",
+      "height_px": 64,
+      "fade_m": 500
+    }
+  ],
+  "achievements": [
+    {
+      "id": "first-steps",
+      "rule": {
+        "type": "distance",
+        "min_m": 100
+      }
+    },
+    {
+      "id": "staircase",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "south-crater"
+      }
+    },
+    {
+      "id": "crater-rim",
+      "rule": {
+        "type": "altitude",
+        "altitude_m": 1850
+      }
+    },
+    {
+      "id": "emeralds",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "emerald-lakes"
+      }
+    },
+    {
+      "id": "up-and-over",
+      "rule": {
+        "type": "climb",
+        "min_m": 700
+      }
+    },
+    {
+      "id": "steam",
+      "rule": {
+        "type": "day_distance",
+        "min_m": 15000
+      },
+      "hidden": true
+    },
+    {
+      "id": "crossed",
+      "rule": {
+        "type": "finish"
+      }
+    }
+  ]
+}

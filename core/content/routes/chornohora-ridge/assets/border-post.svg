@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 70">
+  <path d="M10 70V16l10-10 10 10v54z" fill="#e6e2d6"/>
+  <path d="M20 6l10 10v54h-6V16z" fill="#c8c3b4"/>
+  <path d="M10 16h20" stroke="#b3ad9c" stroke-width="1.5"/>
+  <text x="15" y="40" font-family="Georgia,serif" font-size="9" fill="#6b6454" transform="rotate(-90 15 40)">No 29</text>
+  <path d="M6 70c4-4 24-4 28 0z" fill="#6d8a4f"/>
+</svg>

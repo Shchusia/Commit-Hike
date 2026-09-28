@@ -1,0 +1,460 @@
+{
+  "id": "bilbo-journey",
+  "version": 3,
+  "default_locale": "en",
+  "length_m": 2977286,
+  "waypoints": [
+    {
+      "id": "bag-end",
+      "at_m": 0,
+      "kind": "start",
+      "elevation_m": 150
+    },
+    {
+      "id": "trollshaws",
+      "at_m": 627644,
+      "kind": "landmark",
+      "elevation_m": 300
+    },
+    {
+      "id": "rivendell",
+      "at_m": 675924,
+      "kind": "village",
+      "elevation_m": 450
+    },
+    {
+      "id": "misty-mountains",
+      "at_m": 756392,
+      "kind": "pass",
+      "elevation_m": 1600
+    },
+    {
+      "id": "goblin-town",
+      "at_m": 764438,
+      "kind": "cave",
+      "elevation_m": 1200
+    },
+    {
+      "id": "gollum-lake",
+      "at_m": 774094,
+      "kind": "cave",
+      "elevation_m": 900
+    },
+    {
+      "id": "eagles-eyrie",
+      "at_m": 796625,
+      "kind": "peak",
+      "elevation_m": 1500
+    },
+    {
+      "id": "beorn",
+      "at_m": 860999,
+      "kind": "hut",
+      "elevation_m": 400
+    },
+    {
+      "id": "mirkwood",
+      "at_m": 949513,
+      "kind": "landmark",
+      "elevation_m": 350
+    },
+    {
+      "id": "elvenking-halls",
+      "at_m": 1239195,
+      "kind": "castle",
+      "elevation_m": 300
+    },
+    {
+      "id": "forest-river",
+      "at_m": 1255288,
+      "kind": "river",
+      "elevation_m": 150
+    },
+    {
+      "id": "lake-town",
+      "at_m": 1335756,
+      "kind": "harbor",
+      "elevation_m": 100
+    },
+    {
+      "id": "lonely-mountain",
+      "at_m": 1416223,
+      "kind": "peak",
+      "elevation_m": 1300
+    },
+    {
+      "id": "beorn-return",
+      "at_m": 1850746,
+      "kind": "hut",
+      "elevation_m": 400
+    },
+    {
+      "id": "rivendell-return",
+      "at_m": 2301362,
+      "kind": "village",
+      "elevation_m": 450
+    },
+    {
+      "id": "home-again",
+      "at_m": 2977286,
+      "kind": "finish",
+      "elevation_m": 150
+    }
+  ],
+  "profile": [
+    {
+      "at_m": 321869,
+      "elevation_m": 250
+    },
+    {
+      "at_m": 643738,
+      "elevation_m": 380
+    },
+    {
+      "at_m": 708111,
+      "elevation_m": 900
+    },
+    {
+      "at_m": 785360,
+      "elevation_m": 1000
+    },
+    {
+      "at_m": 820765,
+      "elevation_m": 700
+    },
+    {
+      "at_m": 901233,
+      "elevation_m": 380
+    },
+    {
+      "at_m": 1126541,
+      "elevation_m": 330
+    },
+    {
+      "at_m": 1384036,
+      "elevation_m": 400
+    },
+    {
+      "at_m": 1609344,
+      "elevation_m": 350
+    },
+    {
+      "at_m": 2092147,
+      "elevation_m": 500
+    },
+    {
+      "at_m": 2220895,
+      "elevation_m": 900
+    },
+    {
+      "at_m": 2574950,
+      "elevation_m": 250
+    }
+  ],
+  "biomes": [
+    {
+      "at_m": 0,
+      "type": "village"
+    },
+    {
+      "at_m": 16093,
+      "type": "fields"
+    },
+    {
+      "at_m": 96561,
+      "type": "meadow"
+    },
+    {
+      "at_m": 241402,
+      "type": "steppe"
+    },
+    {
+      "at_m": 563270,
+      "type": "forest"
+    },
+    {
+      "at_m": 651784,
+      "type": "grove"
+    },
+    {
+      "at_m": 708111,
+      "type": "rock"
+    },
+    {
+      "at_m": 740298,
+      "type": "snow"
+    },
+    {
+      "at_m": 785360,
+      "type": "rock"
+    },
+    {
+      "at_m": 804672,
+      "type": "forest"
+    },
+    {
+      "at_m": 836859,
+      "type": "meadow"
+    },
+    {
+      "at_m": 941466,
+      "type": "forest"
+    },
+    {
+      "at_m": 1247242,
+      "type": "water"
+    },
+    {
+      "at_m": 1327709,
+      "type": "village"
+    },
+    {
+      "at_m": 1351849,
+      "type": "steppe"
+    },
+    {
+      "at_m": 1400129,
+      "type": "rock"
+    },
+    {
+      "at_m": 1464503,
+      "type": "steppe"
+    },
+    {
+      "at_m": 1609344,
+      "type": "forest"
+    },
+    {
+      "at_m": 1802465,
+      "type": "meadow"
+    },
+    {
+      "at_m": 2092147,
+      "type": "rock"
+    },
+    {
+      "at_m": 2188708,
+      "type": "snow"
+    },
+    {
+      "at_m": 2253082,
+      "type": "grove"
+    },
+    {
+      "at_m": 2349642,
+      "type": "steppe"
+    },
+    {
+      "at_m": 2735885,
+      "type": "fields"
+    },
+    {
+      "at_m": 2945100,
+      "type": "village"
+    }
+  ],
+  "story": [
+    {
+      "id": "contract",
+      "at_m": 8047
+    },
+    {
+      "id": "ponies",
+      "at_m": 160934
+    },
+    {
+      "id": "dark-forest",
+      "at_m": 1046074
+    },
+    {
+      "id": "arkenstone",
+      "at_m": 1440363
+    },
+    {
+      "id": "homeward",
+      "at_m": 1609344
+    }
+  ],
+  "facts": [
+    {
+      "id": "exam-paper",
+      "at_m": 3219
+    },
+    {
+      "id": "rayner",
+      "at_m": 241402
+    },
+    {
+      "id": "published",
+      "at_m": 677534
+    },
+    {
+      "id": "dwarf-names",
+      "at_m": 740298
+    },
+    {
+      "id": "gollum-rewrite",
+      "at_m": 775704
+    },
+    {
+      "id": "beorn-name",
+      "at_m": 862608
+    },
+    {
+      "id": "mirkwood-name",
+      "at_m": 952732
+    },
+    {
+      "id": "smaug-name",
+      "at_m": 1419441
+    },
+    {
+      "id": "duration",
+      "at_m": 1931213
+    },
+    {
+      "id": "sales",
+      "at_m": 2896819
+    }
+  ],
+  "objects": [
+    {
+      "id": "troll-fire",
+      "at_m": 627644,
+      "asset": "assets/campfire.png",
+      "height_px": 42,
+      "fade_m": 10000
+    },
+    {
+      "id": "eagles",
+      "at_m": 796625,
+      "asset": "assets/eagle.svg",
+      "height_px": 50,
+      "lift_px": 110,
+      "fade_m": 20000
+    },
+    {
+      "id": "hives",
+      "at_m": 860999,
+      "asset": "assets/beehives.svg",
+      "height_px": 46,
+      "fade_m": 10000
+    },
+    {
+      "id": "webs",
+      "at_m": 1158728,
+      "asset": "assets/spider-web.svg",
+      "height_px": 80,
+      "lift_px": 40,
+      "fade_m": 15000
+    },
+    {
+      "id": "barrels",
+      "at_m": 1255288,
+      "asset": "assets/barrels.svg",
+      "height_px": 44,
+      "fade_m": 12000
+    },
+    {
+      "id": "hoard",
+      "at_m": 1420246,
+      "asset": "assets/treasure.svg",
+      "height_px": 60,
+      "fade_m": 6000
+    }
+  ],
+  "underground": [
+    {
+      "from_m": 762829,
+      "to_m": 783751
+    },
+    {
+      "from_m": 1417832,
+      "to_m": 1422660
+    }
+  ],
+  "dangers": [
+    {
+      "id": "troll-fire",
+      "at_m": 626035
+    },
+    {
+      "id": "goblins",
+      "at_m": 764438
+    },
+    {
+      "id": "wargs",
+      "at_m": 791797
+    },
+    {
+      "id": "spiders",
+      "at_m": 1158728
+    },
+    {
+      "id": "dragon-wakes",
+      "at_m": 1424269
+    },
+    {
+      "id": "five-armies",
+      "at_m": 1448410
+    }
+  ],
+  "achievements": [
+    {
+      "id": "adventure",
+      "rule": {
+        "type": "distance",
+        "min_m": 100
+      }
+    },
+    {
+      "id": "riddles",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "gollum-lake"
+      }
+    },
+    {
+      "id": "eyrie",
+      "rule": {
+        "type": "altitude",
+        "altitude_m": 1450
+      }
+    },
+    {
+      "id": "barrel-rider",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "forest-river"
+      }
+    },
+    {
+      "id": "mountain",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "lonely-mountain"
+      }
+    },
+    {
+      "id": "big-day",
+      "rule": {
+        "type": "day_distance",
+        "min_m": 25000
+      }
+    },
+    {
+      "id": "steady",
+      "rule": {
+        "type": "streak",
+        "days": 21
+      },
+      "hidden": true
+    },
+    {
+      "id": "home",
+      "rule": {
+        "type": "finish"
+      }
+    }
+  ]
+}

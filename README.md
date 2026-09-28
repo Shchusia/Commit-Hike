@@ -1,8 +1,13 @@
 # Commit Hike
 
-*[Українською](README.uk.md)*
+[![JetBrains Plugin](https://img.shields.io/jetbrains/plugin/v/34595?label=JetBrains&logo=jetbrains)](https://plugins.jetbrains.com/plugin/34595)
+[![JetBrains Downloads](https://img.shields.io/jetbrains/plugin/d/34595?label=downloads)](https://plugins.jetbrains.com/plugin/34595)
+[![Open VSX](https://img.shields.io/open-vsx/v/shchusia/commit-hike?label=Open%20VSX&logo=eclipseide)](https://open-vsx.org/extension/shchusia/commit-hike)
+[![Open VSX Downloads](https://img.shields.io/open-vsx/dt/shchusia/commit-hike?label=downloads)](https://open-vsx.org/extension/shchusia/commit-hike)
+[![GitHub stars](https://img.shields.io/github/stars/Shchusia/commit-hike?style=flat&logo=github)](https://github.com/Shchusia/commit-hike)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-**Version:** 0.1.0 — see [CHANGELOG.md](CHANGELOG.md)
+*[Українською](README.uk.md) · [What's new](CHANGELOG.md)*
 
 Every commit you make moves you along a hiking trail, right inside your IDE.
 A day of steady work takes you about ten kilometers along a real mountain
@@ -37,24 +42,30 @@ a map, stories, facts and achievements.
 
 ## Supported IDEs
 
-| IDE | Status |
+| IDE | Where to get it |
 |---|---|
-| JetBrains IDEs 2024.3+ (PyCharm, IntelliJ IDEA, GoLand, WebStorm…) | getting ready for JetBrains Marketplace |
-| VS Code 1.85+, VSCodium, Cursor | getting ready for the Visual Studio Marketplace and Open VSX |
+| JetBrains IDEs 2024.3+: PyCharm, IntelliJ IDEA, GoLand, WebStorm, PhpStorm, RubyMine, CLion, Rider… | [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/34595) |
+| VSCodium, Cursor, Windsurf and other editors that use Open VSX | [Open VSX](https://open-vsx.org/extension/shchusia/commit-hike) |
+| VS Code 1.85+ | coming to the Visual Studio Marketplace; until then, install the `.vsix` from Open VSX |
 
 ## Install
 
-Until the plugin is on the marketplaces, build it from source (see
-[Development](#development)):
+**JetBrains IDEs.** Open **Settings → Plugins → Marketplace**, search for
+*Commit Hike* and click **Install**. Or open the
+[plugin page](https://plugins.jetbrains.com/plugin/34595) and click
+**Install to IDE**.
 
-```bash
-task jetbrains:install   # into your newest PyCharm; IDE=IntelliJIdea for another IDE. Restart the IDE.
-task vscode:install      # into VS Code
-```
+**VSCodium, Cursor, Windsurf.** Open the Extensions view, search for
+*Commit Hike* and click **Install**. Or use the
+[Open VSX page](https://open-vsx.org/extension/shchusia/commit-hike).
 
-A built JetBrains plugin can also be installed by hand: **Settings → Plugins →
-⚙ → Install Plugin from Disk** and pick the zip from
-`plugins/jetbrains/build/distributions/`.
+**VS Code.** Until Commit Hike is on the Visual Studio Marketplace, download
+the `.vsix` from the [Open VSX page](https://open-vsx.org/extension/shchusia/commit-hike)
+(**Download**), then in VS Code open the Extensions view, **⋯ → Install from VSIX…**
+and pick the file.
+
+**From source.** See [Development](#development): `task jetbrains:install` or
+`task vscode:install`.
 
 ## Using it
 
@@ -171,6 +182,15 @@ in one small Go binary that plugins call and that answers in versioned JSON.
 Details: [docs/architecture.md](docs/architecture.md),
 [docs/protocol.md](docs/protocol.md).
 
+## Support the project
+
+Commit Hike is free and open source. If you enjoy the walk:
+
+- ⭐ star the repository: it helps other developers find it;
+- rate it on [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/34595) or [Open VSX](https://open-vsx.org/extension/shchusia/commit-hike/reviews);
+- report bugs and share ideas in [issues](https://github.com/Shchusia/commit-hike/issues);
+- make a route and share it: see [docs/routes.md](docs/routes.md).
+
 ## License
 
-MIT
+[MIT](LICENSE)

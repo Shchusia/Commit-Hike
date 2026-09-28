@@ -1,0 +1,635 @@
+# Commit Hike: every command for developing, testing and packaging.
+#
+#   Install Task:   sudo snap install task --classic     (https://taskfile.dev/installation)
+#   List tasks:     task
+#   Run a task:     task core:test
+#   Pass arguments: task core:run -- status --lang uk
+#   Set variables:  task core:demo REPO=~/projects/my-app HIKE_LANG=en
+#
+# Experiments use a sandbox data dir (.sandbox/), so your real progress in the
+# IDE is never touched unless a task says so.
+version: "3"
+
+vars:
+  # One version for everything: the VERSION file (change it with task version:set).
+  APP_VERSION:
+    sh: cat VERSION
+  # Build flavor. prod (default): what the marketplaces get, the hike view only
+  # looks back from where you are. dev: it can look ahead too.
+  #   task dev:jetbrains      (= task jetbrains:install FLAVOR=dev)
+  FLAVOR: '{{.FLAVOR | default "prod"}}'
+  LDFLAGS: -s -w -X main.version={{.APP_VERSION}}
+  GO_TARGETS: linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64 windows/arm64
+  GOBIN:
+    sh: echo "$(go env GOPATH 2>/dev/null || echo "$HOME/go")/bin"
+  SANDBOX: "{{.ROOT_DIR}}/.sandbox"
+  SANDBOX_BIN: "{{.SANDBOX}}/bin/commit-hike"
+  VSIX_NAME: commit-hike-{{.APP_VERSION}}.vsix
+  VSIX: plugins/vscode/{{.VSIX_NAME}}
+  JB_ZIP: plugins/jetbrains/build/distributions/commit-hike-jetbrains-{{.APP_VERSION}}.zip
+  VSCODE_ID:
+    sh: node -p "const p = require('./plugins/vscode/package.json'); p.publisher + '.' + p.name" 2>/dev/null || echo commit-hike.commit-hike
+  JB_PLUGIN_DIR_NAME: commit-hike-jetbrains
+  # Your installed PyCharm (snap, Toolbox or /opt); override with PYCHARM_PATH=...
+  PYCHARM_PATH:
+    sh: |
+      for p in /snap/pycharm-professional/current /snap/pycharm/current /snap/pycharm-community/current \
+               "$HOME"/.local/share/JetBrains/Toolbox/apps/pycharm* /opt/pycharm*; do
+        [ -f "$p/product-info.json" ] && { echo "$p"; exit 0; }
+      done
+      true # not found is fine: tasks that need PyCharm say so themselves
+  # Pinned so everyone (and CI) lints with the same rules. Bump deliberately.
+  GOLANGCI_VERSION: v2.14.0
+
+tasks:
+  default:
+    desc: List all tasks
+    silent: true
+    cmds:
+      - task --list
+
+  # ───────────────────────────── setup ─────────────────────────────
+
+  setup:
+    desc: Install everything needed for development (checks, tools, dependencies)
+    cmds:
+      - task: doctor
+      - task: tools:install
+      - task: deps:install
+
+  doctor:
+    desc: Check that the required programs are installed
+    silent: true
+    cmds:
+      - |
+        missing=0
+        check() {
+          if command -v "$1" >/dev/null 2>&1; then
+            printf "  ok       %-6s %s\n" "$1" "$($2 2>&1 | head -1)"
+          else
+            printf "  MISSING  %-6s install: %s\n" "$1" "$3"; missing=1
+          fi
+        }
+        check go   "go version"     "sudo snap install go --classic"
+        check git  "git --version"  "sudo apt install git"
+        check node "node --version" "sudo snap install node --classic --channel=22"
+        check java "java -version"  "sudo apt install openjdk-21-jdk"
+        [ $missing = 0 ] || { echo "Install the missing programs, then run: task setup"; exit 1; }
+
+  tools:install:
+    desc: Install Go dev tools (golangci-lint, govulncheck, goreleaser) into GOPATH/bin
+    cmds:
+      - task: tools:golangci-lint
+      - task: tools:govulncheck
+      - task: tools:goreleaser
+      - echo "Tools are in {{.GOBIN}}. Add it to PATH to call them directly."
+
+  tools:golangci-lint:
+    desc: Install golangci-lint {{.GOLANGCI_VERSION}}, built with a Go at least as new as yours
+    # golangci-lint can only read packages compiled by a Go no newer than the
+    # one it was built with ("export data version N is greater than maximum
+    # supported"), so the check covers both the version and the build Go.
+    status:
+      - |
+        v=$("{{.GOBIN}}/golangci-lint" version 2>/dev/null) || exit 1
+        echo "$v" | grep -q "version {{trimPrefix "v" .GOLANGCI_VERSION}} " || exit 1
+        built=$(echo "$v" | sed -n 's/.*built with go\([0-9]*\.[0-9]*\).*/\1/p')
+        mine=$(go env GOVERSION | sed -n 's/^go\([0-9]*\.[0-9]*\).*/\1/p')
+        [ "$(printf '%s\n%s\n' "$mine" "$built" | sort -V | tail -1)" = "$built" ]
+    cmds:
+      - |
+        mkdir -p "{{.GOBIN}}"
+        if command -v curl >/dev/null 2>&1; then
+          curl -sSfL https://golangci-lint.run/install.sh | sh -s -- -b "{{.GOBIN}}" {{.GOLANGCI_VERSION}}
+        fi
+        built=$("{{.GOBIN}}/golangci-lint" version 2>/dev/null | sed -n 's/.*built with go\([0-9]*\.[0-9]*\).*/\1/p')
+        mine=$(go env GOVERSION | sed -n 's/^go\([0-9]*\.[0-9]*\).*/\1/p')
+        if [ -z "$built" ] || [ "$(printf '%s\n%s\n' "$mine" "$built" | sort -V | tail -1)" != "$built" ]; then
+          echo "Building golangci-lint {{.GOLANGCI_VERSION}} with your Go $mine (the release binary uses Go ${built:-?}); this takes a minute..."
+          go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@{{.GOLANGCI_VERSION}}
+        fi
+        "{{.GOBIN}}/golangci-lint" version
+
+  tools:govulncheck:
+    desc: Install govulncheck (skipped when already installed)
+    status:
+      - test -x "{{.GOBIN}}/govulncheck"
+    cmds:
+      - go install golang.org/x/vuln/cmd/govulncheck@latest
+
+  tools:goreleaser:
+    desc: Install goreleaser (skipped when already installed)
+    status:
+      - test -x "{{.GOBIN}}/goreleaser"
+    cmds:
+      - go install github.com/goreleaser/goreleaser/v2@latest
+
+  deps:install:
+    desc: Download all dependencies (Go modules, npm packages)
+    cmds:
+      - task: core:deps
+      - task: vscode:deps
+
+  deps:outdated:
+    desc: Show dependencies that have newer versions
+    cmds:
+      - echo "== Go (entries with [brackets] can be updated)"
+      - cd core && go list -u -m all
+      - echo "== npm"
+      - cd plugins/vscode && npm outdated || true
+      - echo "== Gradle/JetBrains - check versions in plugins/jetbrains/build.gradle.kts by hand"
+
+  deps:update:
+    desc: Update dependencies to the newest compatible versions, then run all checks
+    cmds:
+      - cd core && go get -u ./... && go mod tidy
+      - cd plugins/vscode && npm update
+      - task: check
+
+  # ───────────────────────────── core (Go) ─────────────────────────────
+
+  core:deps:
+    desc: Download Go modules
+    dir: core
+    cmds:
+      - go mod download
+
+  core:build:
+    desc: Build the core for this computer into .sandbox/bin
+    dir: core
+    sources: ["**/*.go", "content/**/*", "go.mod", "../VERSION"]
+    generates: ["{{.SANDBOX_BIN}}"]
+    cmds:
+      - go build -ldflags="{{.LDFLAGS}}" -o "{{.SANDBOX_BIN}}" ./cmd/commit-hike
+
+  core:run:
+    desc: "Run the core with sandbox data, e.g. task core:run -- status --lang uk"
+    deps: [core:build]
+    env:
+      COMMIT_HIKE_HOME: "{{.SANDBOX}}/data"
+    cmds:
+      - "{{.SANDBOX_BIN}} {{.CLI_ARGS}}"
+
+  core:demo:
+    desc: "Try the core on a repository: task core:demo REPO=path [ROUTE=chornohora-ridge] [HIKE_LANG=uk] [EMAIL=you@x]"
+    deps: [core:build]
+    vars:
+      REPO: '{{.REPO | default "."}}'
+      ROUTE: '{{.ROUTE | default "chornohora-ridge"}}'
+      HIKE_LANG: '{{.HIKE_LANG | default "uk"}}'
+      EMAIL:
+        sh: '{{if .EMAIL}}echo "{{.EMAIL}}"{{else}}git -C "{{.REPO}}" config user.email || echo "you@example.com"{{end}}'
+    env:
+      COMMIT_HIKE_HOME: "{{.SANDBOX}}/data"
+    cmds:
+      - "{{.SANDBOX_BIN}} init --email '{{.EMAIL}}' --route {{.ROUTE}} > /dev/null"
+      - "{{.SANDBOX_BIN}} scan --repo '{{.REPO}}' --lang {{.HIKE_LANG}}"
+
+  core:render:
+    desc: Draw your sandbox trail as SVG into .sandbox/trail.svg
+    deps: [core:build]
+    env:
+      COMMIT_HIKE_HOME: "{{.SANDBOX}}/data"
+    cmds:
+      - >-
+        {{.SANDBOX_BIN}} render --lang {{.HIKE_LANG | default "uk"}}
+        | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const r=JSON.parse(s);if(!r.ok){console.error(r.error.message);process.exit(1)}process.stdout.write(r.data.svg)})'
+        > "{{.SANDBOX}}/trail.svg"
+      - echo "Open {{.SANDBOX}}/trail.svg in a browser"
+
+  core:test:
+    desc: Run core tests with the race detector and coverage
+    dir: core
+    cmds:
+      - go test -race -cover ./...
+
+  core:cover:
+    desc: "Core coverage: summary, every uncovered line with its function, HTML report; fails below MIN% (default 80)"
+    dir: core
+    vars:
+      MIN: '{{.MIN | default "80"}}'
+    cmds:
+      - mkdir -p "{{.SANDBOX}}/cover"
+      # -coverpkg: a test in one package counts toward the packages it exercises
+      - go test -race -covermode=atomic -coverpkg=./internal/... -coverprofile="{{.SANDBOX}}/cover/core.out" ./... > /dev/null
+      - go tool cover -html="{{.SANDBOX}}/cover/core.out" -o "{{.SANDBOX}}/cover/core.html"
+      - go run ./tools/uncovered -profile "{{.SANDBOX}}/cover/core.out" -min {{.MIN}}
+      - 'echo "HTML report (uncovered code in red): {{.SANDBOX}}/cover/core.html"'
+
+  core:vet:
+    desc: Run go vet
+    dir: core
+    cmds:
+      - go vet ./...
+
+  core:lint:
+    desc: Run golangci-lint (config in core/.golangci.yml)
+    dir: core
+    deps: [tools:golangci-lint]
+    cmds:
+      - '"{{.GOBIN}}/golangci-lint" run'
+
+  core:fmt:
+    desc: Format Go code (gofumpt + goimports)
+    dir: core
+    deps: [tools:golangci-lint]
+    cmds:
+      - '"{{.GOBIN}}/golangci-lint" fmt'
+
+  core:vuln:
+    desc: Check Go dependencies for known vulnerabilities
+    dir: core
+    deps: [tools:govulncheck]
+    cmds:
+      - '"{{.GOBIN}}/govulncheck" ./...'
+
+  core:tidy:
+    desc: Add missing and remove unused Go modules
+    dir: core
+    cmds:
+      - go mod tidy
+
+  core:dist:
+    desc: Cross-compile the core for all platforms into core/dist (used by both plugins)
+    dir: core
+    sources: ["**/*.go", "content/**/*", "go.mod", "../VERSION"]
+    generates: ["dist/commit-hike-*"]
+    cmds:
+      - |
+        mkdir -p dist
+        for t in {{.GO_TARGETS}}; do
+          os=${t%/*}; arch=${t#*/}; ext=""; [ "$os" = windows ] && ext=".exe"
+          GOOS=$os GOARCH=$arch CGO_ENABLED=0 go build -trimpath -ldflags="{{.LDFLAGS}}" \
+            -o "dist/commit-hike-$os-$arch$ext" ./cmd/commit-hike
+          echo "built core/dist/commit-hike-$os-$arch$ext"
+        done
+
+  routes:check:
+    desc: Validate every route pack and check that all translations are complete
+    dir: core
+    cmds:
+      - go test -count=1 -v -run 'TestBuiltinRoutes|TestLoadRejects' ./internal/routes
+
+  route:new:
+    desc: "Start a new built-in route from a template: task route:new ID=my-trail"
+    requires:
+      vars: [ID]
+    deps: [core:build]
+    env:
+      COMMIT_HIKE_HOME: "{{.SANDBOX}}/data"
+    cmds:
+      - "{{.SANDBOX_BIN}} route template --id {{.ID}} --path core/content/routes"
+      - echo "Edit core/content/routes/{{.ID}}/, then run task routes:check"
+
+  route:try:
+    desc: "Import a route pack into the sandbox to check it: task route:try SRC=path/to/folder-or.zip"
+    requires:
+      vars: [SRC]
+    deps: [core:build]
+    env:
+      COMMIT_HIKE_HOME: "{{.SANDBOX}}/data"
+    cmds:
+      - "{{.SANDBOX_BIN}} route import --path '{{.SRC}}' --replace"
+
+  # ───────────────────────────── data ─────────────────────────────
+
+  data:where:
+    desc: Show where the IDE plugins keep your real progress
+    silent: true
+    cmds:
+      - 'echo "Real data:    ${COMMIT_HIKE_HOME:-${XDG_CONFIG_HOME:-$HOME/.config}/commit-hike}"'
+      - 'echo "Sandbox data: {{.SANDBOX}}/data"'
+
+  data:reset:
+    desc: Delete sandbox data (your real progress stays)
+    cmds:
+      - rm -rf "{{.SANDBOX}}/data"
+
+  data:reset-real:
+    desc: Delete your REAL progress used by the IDE plugins
+    prompt: This deletes all your real Commit Hike progress. Continue?
+    cmds:
+      - 'rm -rf "${COMMIT_HIKE_HOME:-${XDG_CONFIG_HOME:-$HOME/.config}/commit-hike}"'
+
+  # ───────────────────────────── VS Code ─────────────────────────────
+
+  vscode:deps:
+    desc: Install npm packages for the VS Code extension (skipped when up to date)
+    dir: plugins/vscode
+    sources: [package.json, package-lock.json]
+    generates: [node_modules/.package-lock.json]
+    cmds:
+      - npm ci
+
+  vscode:test:
+    desc: Run VS Code extension tests (against the real core)
+    deps: [vscode:deps, core:dist]
+    dir: plugins/vscode
+    cmds:
+      - npm test
+
+  vscode:lint:
+    desc: Run ESLint and the TypeScript type check
+    dir: plugins/vscode
+    deps: [vscode:deps]
+    cmds:
+      - npm run lint
+      - npm run typecheck
+
+  vscode:cover:
+    desc: "VS Code extension coverage with uncovered lines (trust branch/funcs %: imports and types count as lines)"
+    deps: [vscode:deps, core:dist]
+    dir: plugins/vscode
+    cmds:
+      - npm run copy-core && npm run build
+      - >-
+        node --test --enable-source-maps --experimental-test-coverage
+        --test-coverage-exclude='out/test/**' --test-coverage-exclude='node_modules/**'
+        out/test/*.test.js
+
+  vscode:package:
+    desc: "Build the .vsix package (FLAVOR=dev for a development build)"
+    deps: [vscode:deps, core:dist]
+    dir: plugins/vscode
+    preconditions: &flavor
+      - sh: '[ "{{.FLAVOR}}" = prod ] || [ "{{.FLAVOR}}" = dev ]'
+        msg: "FLAVOR must be prod or dev"
+    env:
+      COMMIT_HIKE_FLAVOR: "{{.FLAVOR}}"
+    cmds:
+      - npm run package
+
+  vscode:install:
+    desc: "Install the extension into VS Code for testing (FLAVOR=dev: may look ahead)"
+    preconditions:
+      - sh: command -v code
+        msg: "The 'code' command was not found. Install VS Code first."
+    cmds:
+      - task: vscode:package
+        vars: { FLAVOR: "{{.FLAVOR}}" }
+      - code --install-extension "{{.VSIX}}" --force
+      - echo "Installed the {{.FLAVOR}} build {{.APP_VERSION}}. Reload VS Code (Ctrl+Shift+P > Developer - Reload Window)."
+
+  vscode:uninstall:
+    desc: Remove the extension from VS Code
+    cmds:
+      - code --uninstall-extension {{.VSCODE_ID}}
+
+  vscode:publish:
+    desc: "Publish the prod .vsix to the Visual Studio Marketplace (needs VSCE_PAT; see docs/publishing.md)"
+    dir: plugins/vscode
+    preconditions:
+      - sh: '[ -n "$VSCE_PAT" ]'
+        msg: "Set VSCE_PAT (an Azure DevOps token with Marketplace > Manage). See docs/publishing.md"
+      - sh: test -f "{{.VSIX_NAME}}"
+        msg: "{{.VSIX_NAME}} not found: run task release:build first"
+    cmds:
+      - npx vsce publish --packagePath "{{.VSIX_NAME}}"
+
+  ovsx:publish:
+    desc: "Publish the prod .vsix to Open VSX, for VSCodium, Cursor and others (needs OVSX_PAT)"
+    dir: plugins/vscode
+    preconditions:
+      - sh: '[ -n "$OVSX_PAT" ]'
+        msg: "Set OVSX_PAT (an access token from open-vsx.org). See docs/publishing.md"
+      - sh: test -f "{{.VSIX_NAME}}"
+        msg: "{{.VSIX_NAME}} not found: run task release:build first"
+    cmds:
+      - npx ovsx publish "{{.VSIX_NAME}}" -p "$OVSX_PAT"
+
+  # ───────────────────────────── JetBrains ─────────────────────────────
+
+  jetbrains:build:
+    desc: "Build the plugin zip for JetBrains IDEs (FLAVOR=dev for a development build)"
+    deps: [core:dist]
+    dir: plugins/jetbrains
+    preconditions: *flavor
+    cmds:
+      - ./gradlew buildPlugin -PcommitHikeFlavor={{.FLAVOR}}
+      - echo "Plugin zip ({{.FLAVOR}} build {{.APP_VERSION}}) in {{.JB_ZIP}}"
+
+  jetbrains:publish:
+    desc: "Sign and publish the prod plugin to JetBrains Marketplace (needs JETBRAINS_TOKEN; see docs/publishing.md)"
+    dir: plugins/jetbrains
+    preconditions:
+      - sh: '[ -n "$JETBRAINS_TOKEN" ]'
+        msg: "Set JETBRAINS_TOKEN (Marketplace profile > My Tokens). The first upload must be manual: see docs/publishing.md"
+    cmds:
+      - ./gradlew publishPlugin -PcommitHikeFlavor=prod
+      - '[ -n "$CERTIFICATE_CHAIN" ] || echo "Note: published unsigned (CERTIFICATE_CHAIN/PRIVATE_KEY not set); the IDE will warn users."' 
+
+  jetbrains:test:
+    desc: Run JetBrains plugin tests (against the real core)
+    deps: [core:dist]
+    dir: plugins/jetbrains
+    cmds:
+      - ./gradlew test
+
+  jetbrains:lint:
+    desc: Run ktlint on the Kotlin code
+    dir: plugins/jetbrains
+    cmds:
+      - ./gradlew ktlintCheck
+
+  jetbrains:cover:
+    desc: JetBrains plugin coverage (Kover), per class, plus an HTML report with uncovered lines
+    deps: [core:dist]
+    dir: plugins/jetbrains
+    cmds:
+      - ./gradlew test koverLog koverHtmlReport
+      - 'echo "HTML report: plugins/jetbrains/build/reports/kover/html/index.html"'
+
+  jetbrains:fmt:
+    desc: Auto-format the Kotlin code with ktlint
+    dir: plugins/jetbrains
+    cmds:
+      - ./gradlew ktlintFormat
+
+  jetbrains:verify:
+    desc: Check compatibility with the IDE we build against and your installed PyCharm (no big downloads)
+    deps: [jetbrains:build]
+    dir: plugins/jetbrains
+    cmds:
+      - ./gradlew verifyPlugin {{if .PYCHARM_PATH}}-PpycharmPath="{{.PYCHARM_PATH}}"{{end}}
+      - '{{if not .PYCHARM_PATH}}echo "PyCharm not found, checked only IntelliJ IDEA {{.PLATFORM_HINT}}. Pass PYCHARM_PATH=... to include it."{{end}}'
+    vars:
+      PLATFORM_HINT: 2024.3.5
+
+  jetbrains:verify-all:
+    desc: Check compatibility with every recent IDE release (downloads several IDEs, slow; for CI before a release)
+    deps: [jetbrains:build]
+    dir: plugins/jetbrains
+    cmds:
+      - ./gradlew verifyPlugin -PverifyRecommended {{if .PYCHARM_PATH}}-PpycharmPath="{{.PYCHARM_PATH}}"{{end}}
+
+  jetbrains:run:
+    desc: Start a separate test IDE (IntelliJ IDEA Community) with the plugin
+    deps: [core:dist]
+    dir: plugins/jetbrains
+    cmds:
+      - ./gradlew runIde
+
+  jetbrains:run-pycharm:
+    desc: "Start your installed PyCharm with the plugin in a separate profile (PYCHARM_PATH=... to choose)"
+    deps: [core:dist]
+    dir: plugins/jetbrains
+    preconditions:
+      - sh: '[ -n "{{.PYCHARM_PATH}}" ]'
+        msg: "PyCharm not found. Pass it: task jetbrains:run-pycharm PYCHARM_PATH=/path/to/pycharm"
+    cmds:
+      - ./gradlew runPyCharm -PpycharmPath="{{.PYCHARM_PATH}}"
+
+  jetbrains:install:
+    desc: "Install the plugin into your newest PyCharm (IDE=IntelliJIdea for another IDE; FLAVOR=dev: may look ahead), then restart it"
+    vars:
+      IDE: '{{.IDE | default "PyCharm"}}'
+      PLUGINS_DIR:
+        sh: ls -d "$HOME"/.local/share/JetBrains/{{.IDE | default "PyCharm"}}* 2>/dev/null | sort -V | tail -1
+    preconditions:
+      - sh: '[ -n "{{.PLUGINS_DIR}}" ]'
+        msg: "No {{.IDE}} plugin folder in ~/.local/share/JetBrains. Start {{.IDE}} once, or install the zip via Settings > Plugins > Install Plugin from Disk."
+    cmds:
+      - task: jetbrains:build
+        vars: { FLAVOR: "{{.FLAVOR}}" }
+      - rm -rf "{{.PLUGINS_DIR}}/{{.JB_PLUGIN_DIR_NAME}}"
+      - unzip -q -o "{{.JB_ZIP}}" -d "{{.PLUGINS_DIR}}"
+      - echo "Installed the {{.FLAVOR}} build {{.APP_VERSION}} into {{.PLUGINS_DIR}}. Restart {{.IDE}}."
+
+  jetbrains:uninstall:
+    desc: Remove the plugin from your newest PyCharm (IDE=... for another IDE)
+    vars:
+      PLUGINS_DIR:
+        sh: ls -d "$HOME"/.local/share/JetBrains/{{.IDE | default "PyCharm"}}* 2>/dev/null | sort -V | tail -1
+    cmds:
+      - rm -rf "{{.PLUGINS_DIR}}/{{.JB_PLUGIN_DIR_NAME}}"
+      - echo "Removed. Restart the IDE."
+
+  # ───────────────────────────── everything ─────────────────────────────
+
+  test:
+    desc: Run all tests (core, VS Code, JetBrains)
+    cmds:
+      - task: core:test
+      - task: routes:check
+      - task: vscode:test
+      - task: jetbrains:test
+
+  coverage:
+    desc: Coverage for everything, with what isn't covered
+    cmds:
+      - task: core:cover
+      - task: vscode:cover
+      - task: jetbrains:cover
+
+  lint:
+    desc: Run all linters (golangci-lint, ESLint + tsc, ktlint)
+    cmds:
+      - task: core:lint
+      - task: vscode:lint
+      - task: jetbrains:lint
+
+  fmt:
+    desc: Format all code
+    cmds:
+      - task: core:fmt
+      - task: jetbrains:fmt
+
+  check:
+    desc: Everything CI checks, including the core coverage gate; run before pushing
+    cmds:
+      - task: lint
+      - task: core:vuln
+      - task: core:cover
+      - task: routes:check
+      - task: vscode:test
+      - task: jetbrains:test
+
+  build:
+    desc: Build the core for all platforms and both plugins
+    cmds:
+      - task: core:dist
+      - task: vscode:package
+      - task: jetbrains:build
+
+  release:snapshot:
+    desc: Try a local release build with GoReleaser (nothing is published)
+    deps: [tools:goreleaser]
+    cmds:
+      - '"{{.GOBIN}}/goreleaser" release --snapshot --clean'
+
+  # ───────────────────────────── development builds ─────────────────────────────
+
+  dev:jetbrains:
+    desc: "Development build into your PyCharm: the hike view can look ahead too (IDE=... for another IDE)"
+    cmds:
+      - task: jetbrains:install
+        vars: { FLAVOR: dev, IDE: '{{.IDE | default "PyCharm"}}' }
+
+  dev:vscode:
+    desc: "Development build into VS Code: the hike view can look ahead too"
+    cmds:
+      - task: vscode:install
+        vars: { FLAVOR: dev }
+
+  # ───────────────────────────── versions and releases ─────────────────────────────
+
+  version:
+    desc: Show the current version
+    silent: true
+    cmds:
+      - echo "{{.APP_VERSION}}"
+
+  version:set:
+    desc: "Set the version everywhere and turn [Unreleased] in CHANGELOG.md into its section: task version:set V=0.2.0"
+    requires:
+      vars: [V]
+    env:
+      V: "{{.V}}"
+    cmds:
+      - node scripts/version-set.mjs
+
+  release:configure:
+    desc: "One-time: who publishes. task release:configure OWNER=github-name NAME='Your Name' EMAIL=you@example.com"
+    requires:
+      vars: [OWNER, NAME, EMAIL]
+    env:
+      OWNER: "{{.OWNER}}"
+      NAME: "{{.NAME}}"
+      EMAIL: "{{.EMAIL}}"
+      PLUGIN_ID: "{{.PLUGIN_ID}}"
+      PUBLISHER: "{{.PUBLISHER}}"
+      REPO: "{{.REPO}}"
+    cmds:
+      - node scripts/configure-release.mjs
+
+  release:check:
+    desc: Check that the version, changelog, publisher and content are ready for a release
+    env:
+      FLAVOR: "{{.FLAVOR}}"
+    cmds:
+      - node scripts/release-check.mjs
+
+  release:build:
+    desc: Build exactly what the marketplaces get (prod), after every check
+    cmds:
+      - task: release:check
+      - task: check
+      - task: vscode:package
+        vars: { FLAVOR: prod }
+      - task: jetbrains:build
+        vars: { FLAVOR: prod }
+      - task: jetbrains:verify
+      - 'echo "Ready to publish {{.APP_VERSION}}: {{.VSIX}} and {{.JB_ZIP}}"' 
+
+  release:publish:
+    desc: "Build, check and publish to JetBrains Marketplace, Visual Studio Marketplace and Open VSX (needs all three tokens)"
+    cmds:
+      - task: release:build
+      - task: jetbrains:publish
+      - task: vscode:publish
+      - task: ovsx:publish
+
+  clean:
+    desc: Remove build output and the sandbox
+    cmds:
+      - rm -rf .sandbox core/dist plugins/vscode/out plugins/vscode/bin plugins/vscode/*.vsix plugins/jetbrains/build

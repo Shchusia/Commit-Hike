@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 440">
+  <defs>
+    <radialGradient id="p" cx="50%" cy="45%" r="75%"><stop offset="0" stop-color="#f3e3bd"/><stop offset=".75" stop-color="#e3c98f"/><stop offset="1" stop-color="#b8904f"/></radialGradient>
+    <pattern id="w" width="16" height="10" patternUnits="userSpaceOnUse"><path d="M0 6q4-4 8 0t8 0" fill="none" stroke="#6f8fa3" stroke-width=".8" opacity=".6"/></pattern>
+  </defs>
+  <rect width="320" height="440" fill="url(#p)"/>
+  <path d="M0 0h320v440H0z" fill="none" stroke="#8a6431" stroke-width="6"/>
+  <path d="M8 8h304v424H8z" fill="none" stroke="#8a6431" stroke-width="1"/>
+  <path d="M320 0v440H250c10-40-20-70 0-110s-24-60-8-100 30-60 6-110 10-70 12-120z" fill="#bcd3d8"/>
+  <path d="M320 0v440H250c10-40-20-70 0-110s-24-60-8-100 30-60 6-110 10-70 12-120z" fill="url(#w)"/>
+  <path d="M250 440c10-40-20-70 0-110s-24-60-8-100 30-60 6-110 10-70 12-120" fill="none" stroke="#6b5230" stroke-width="1.6"/>
+  <g fill="#c9a86a" opacity=".7"><path d="M40 360q30-20 60 0t60 0q-30 30-60 20t-60-20z"/><path d="M30 330q20-10 40 0"/></g>
+  <g stroke="#7a5b33" stroke-width="1.3" fill="none" opacity=".75">
+    <path d="M60 230l14-22 14 22M86 232l12-18 12 18M110 228l10-16 10 16"/>
+    <path d="M70 110l10-12 10 12M92 106l8-10 8 10"/>
+  </g>
+  <path d="M24 22q36-10 70 2t64-6 70 8q14 12-6 24-30 10-60 4t-58 8-56-6q-22-14-24-34z" fill="#eef4f6" stroke="#7a8f99" stroke-width=".9" opacity=".9"/><path d="M60 40l10 6M120 36l12 4M170 44l8 5" stroke="#9fb3bb" stroke-width="1"/>
+  <g transform="translate(62 392)" fill="#6b5230"><circle r="16" fill="none" stroke="#6b5230"/><path d="M0-22l4 18-4 4-4-4zM0 22l4-18-4-4-4 4z"/><text y="-26" text-anchor="middle" font-family="Georgia,serif" font-size="10">N</text></g>
+  <text x="120" y="414" font-family="Georgia,serif" font-size="13" fill="#6b5230" font-style="italic">Mare Silentium</text>
+</svg>

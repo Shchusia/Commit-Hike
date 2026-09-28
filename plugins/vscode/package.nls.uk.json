@@ -1,0 +1,23 @@
+{
+  "command.showTrail": "Показати стежку",
+  "command.setup": "Налаштувати",
+  "command.chooseRoute": "Вибрати стежку для всіх проєктів",
+  "command.chooseProjectRoute": "Вибрати стежку для цього проєкту",
+  "command.enableProject": "Рахувати цей проєкт",
+  "command.disableProject": "Не рахувати цей проєкт",
+  "command.verify": "Перерахувати проєкт з історії git",
+  "command.importRoute": "Імпортувати маршрут або карту…",
+  "command.createRouteTemplate": "Створити шаблон маршруту…",
+  "command.removeRoute": "Видалити маршрут…",
+  "command.setHikerIcon": "Іконка мандрівника…",
+  "command.resetHikerIcon": "Стандартна іконка мандрівника",
+  "command.changeLanguage": "Змінити мову…",
+  "command.toggleTeam": "Показати чи сховати команду",
+  "config.showDistanceAfterCommit": "Ненадовго показувати в рядку стану пройдену після коміту відстань.",
+  "config.notifyOnWaypoints": "Показувати сповіщення, коли ти доходиш до нової зупинки.",
+  "config.binaryPath": "Шлях до власного бінарника commit-hike. Порожньо — використовувати вбудований.",
+  "view.trail": "Стежка",
+  "extension.displayName": "Commit Hike",
+  "extension.description": "Твої коміти ведуть тебе туристичною стежкою. Працює локально й ніколи не змінює твої репозиторії.",
+  "command.changeDifficulty": "Змінити складність…"
+}

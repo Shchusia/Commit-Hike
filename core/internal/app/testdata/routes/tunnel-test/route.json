@@ -1,0 +1,77 @@
+{
+  "id": "tunnel-test",
+  "version": 1,
+  "default_locale": "en",
+  "length_m": 10000,
+  "waypoints": [
+    {
+      "id": "a",
+      "at_m": 0,
+      "kind": "start"
+    },
+    {
+      "id": "b",
+      "at_m": 5000,
+      "kind": "cave"
+    },
+    {
+      "id": "c",
+      "at_m": 10000,
+      "kind": "finish"
+    }
+  ],
+  "biomes": [
+    {
+      "at_m": 0,
+      "type": "meadow"
+    },
+    {
+      "at_m": 2800,
+      "type": "rock"
+    }
+  ],
+  "underground": [
+    {
+      "from_m": 3000,
+      "to_m": 4500
+    },
+    {
+      "from_m": 6000,
+      "to_m": 6500
+    }
+  ],
+  "dangers": [
+    {
+      "id": "d0",
+      "at_m": 500
+    },
+    {
+      "id": "d1",
+      "at_m": 900
+    },
+    {
+      "id": "d2",
+      "at_m": 1400
+    },
+    {
+      "id": "d3",
+      "at_m": 2100
+    },
+    {
+      "id": "d4",
+      "at_m": 2600
+    },
+    {
+      "id": "d5",
+      "at_m": 5200
+    },
+    {
+      "id": "d6",
+      "at_m": 7000
+    },
+    {
+      "id": "d7",
+      "at_m": 8800
+    }
+  ]
+}

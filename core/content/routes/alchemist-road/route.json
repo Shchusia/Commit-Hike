@@ -1,0 +1,477 @@
+{
+  "id": "alchemist-road",
+  "version": 3,
+  "default_locale": "en",
+  "length_m": 4369619,
+  "path": [
+    [
+      0.0932,
+      0.2325
+    ],
+    [
+      0.0955,
+      0.2375
+    ],
+    [
+      0.0966,
+      0.24
+    ],
+    [
+      0.0977,
+      0.27
+    ],
+    [
+      0.1,
+      0.2995
+    ],
+    [
+      0.0977,
+      0.305
+    ],
+    [
+      0.0955,
+      0.3115
+    ],
+    [
+      0.0957,
+      0.312
+    ],
+    [
+      0.1068,
+      0.37
+    ],
+    [
+      0.1182,
+      0.44
+    ],
+    [
+      0.1295,
+      0.52
+    ],
+    [
+      0.1818,
+      0.57
+    ],
+    [
+      0.2727,
+      0.62
+    ],
+    [
+      0.3636,
+      0.66
+    ],
+    [
+      0.4545,
+      0.69
+    ],
+    [
+      0.5682,
+      0.71
+    ],
+    [
+      0.6818,
+      0.69
+    ],
+    [
+      0.7955,
+      0.66
+    ],
+    [
+      0.875,
+      0.64
+    ],
+    [
+      0.9282,
+      0.6345
+    ],
+    [
+      0.925,
+      0.6375
+    ],
+    [
+      0.9182,
+      0.6475
+    ],
+    [
+      0.9136,
+      0.6275
+    ],
+    [
+      0.925,
+      0.61
+    ],
+    [
+      0.9348,
+      0.601
+    ]
+  ],
+  "map_image": "assets/mediterranean-relief.jpg",
+  "waypoints": [
+    {
+      "id": "andalusia",
+      "at_m": 0,
+      "kind": "start",
+      "elevation_m": 150
+    },
+    {
+      "id": "old-church",
+      "at_m": 21316,
+      "kind": "ruin",
+      "elevation_m": 200
+    },
+    {
+      "id": "tarifa",
+      "at_m": 154395,
+      "kind": "village",
+      "elevation_m": 20
+    },
+    {
+      "id": "strait",
+      "at_m": 169581,
+      "kind": "harbor",
+      "elevation_m": 0
+    },
+    {
+      "id": "tangier",
+      "at_m": 186617,
+      "kind": "village",
+      "elevation_m": 80
+    },
+    {
+      "id": "crystal-shop",
+      "at_m": 188049,
+      "kind": "landmark",
+      "elevation_m": 120
+    },
+    {
+      "id": "sahara-edge",
+      "at_m": 670873,
+      "kind": "landmark",
+      "elevation_m": 900
+    },
+    {
+      "id": "deep-sahara",
+      "at_m": 2111790,
+      "kind": "camp",
+      "elevation_m": 500
+    },
+    {
+      "id": "al-fayoum",
+      "at_m": 4161228,
+      "kind": "spring",
+      "elevation_m": 20
+    },
+    {
+      "id": "alchemist-tent",
+      "at_m": 4176357,
+      "kind": "hut",
+      "elevation_m": 60
+    },
+    {
+      "id": "wind-rock",
+      "at_m": 4261535,
+      "kind": "viewpoint",
+      "elevation_m": 250
+    },
+    {
+      "id": "giza",
+      "at_m": 4369619,
+      "kind": "finish",
+      "elevation_m": 60
+    }
+  ],
+  "profile": [
+    {
+      "at_m": 51316,
+      "elevation_m": 250
+    },
+    {
+      "at_m": 134395,
+      "elevation_m": 60
+    },
+    {
+      "at_m": 248049,
+      "elevation_m": 300
+    },
+    {
+      "at_m": 438049,
+      "elevation_m": 1400
+    },
+    {
+      "at_m": 870873,
+      "elevation_m": 700
+    },
+    {
+      "at_m": 1711790,
+      "elevation_m": 450
+    },
+    {
+      "at_m": 2611790,
+      "elevation_m": 600
+    },
+    {
+      "at_m": 3861228,
+      "elevation_m": 250
+    },
+    {
+      "at_m": 4241535,
+      "elevation_m": 120
+    }
+  ],
+  "biomes": [
+    {
+      "at_m": 0,
+      "type": "fields"
+    },
+    {
+      "at_m": 8000,
+      "type": "meadow"
+    },
+    {
+      "at_m": 139395,
+      "type": "village"
+    },
+    {
+      "at_m": 166581,
+      "type": "coast"
+    },
+    {
+      "at_m": 184617,
+      "type": "village"
+    },
+    {
+      "at_m": 208049,
+      "type": "steppe"
+    },
+    {
+      "at_m": 338049,
+      "type": "rock"
+    },
+    {
+      "at_m": 620873,
+      "type": "steppe"
+    },
+    {
+      "at_m": 700873,
+      "type": "desert"
+    },
+    {
+      "at_m": 4121228,
+      "type": "grove"
+    },
+    {
+      "at_m": 4153228,
+      "type": "water"
+    },
+    {
+      "at_m": 4171228,
+      "type": "desert"
+    },
+    {
+      "at_m": 4246535,
+      "type": "rock"
+    },
+    {
+      "at_m": 4276535,
+      "type": "desert"
+    },
+    {
+      "at_m": 4339619,
+      "type": "village"
+    },
+    {
+      "at_m": 4363619,
+      "type": "desert"
+    }
+  ],
+  "story": [
+    {
+      "id": "reading",
+      "at_m": 3000
+    },
+    {
+      "id": "omens",
+      "at_m": 228049
+    },
+    {
+      "id": "war",
+      "at_m": 2411790
+    },
+    {
+      "id": "lead",
+      "at_m": 4196357
+    }
+  ],
+  "facts": [
+    {
+      "id": "first-print",
+      "at_m": 2000
+    },
+    {
+      "id": "camino",
+      "at_m": 20000
+    },
+    {
+      "id": "tarifa-point",
+      "at_m": 154895
+    },
+    {
+      "id": "strait-width",
+      "at_m": 170081
+    },
+    {
+      "id": "ibn-battuta",
+      "at_m": 186917
+    },
+    {
+      "id": "alchemy-word",
+      "at_m": 193049
+    },
+    {
+      "id": "sahara-size",
+      "at_m": 690873
+    },
+    {
+      "id": "not-all-sand",
+      "at_m": 1070873
+    },
+    {
+      "id": "camel-drink",
+      "at_m": 2111790
+    },
+    {
+      "id": "fayoum",
+      "at_m": 4161428
+    },
+    {
+      "id": "emerald-tablet",
+      "at_m": 4181357
+    },
+    {
+      "id": "great-pyramid",
+      "at_m": 4367619
+    },
+    {
+      "id": "translations",
+      "at_m": 4369119
+    }
+  ],
+  "objects": [
+    {
+      "id": "flock",
+      "at_m": 1500,
+      "asset": "assets/sheep.svg",
+      "height_px": 38,
+      "fade_m": 5000
+    },
+    {
+      "id": "church",
+      "at_m": 21316,
+      "asset": "assets/ruined-church.svg",
+      "height_px": 110,
+      "fade_m": 6000
+    },
+    {
+      "id": "crystal",
+      "at_m": 188049,
+      "asset": "assets/crystal-shop.svg",
+      "height_px": 80,
+      "fade_m": 4000
+    },
+    {
+      "id": "caravan",
+      "at_m": 675873,
+      "asset": "assets/caravan.png",
+      "height_px": 56,
+      "fade_m": 30000
+    },
+    {
+      "id": "caravan-deep",
+      "at_m": 2111790,
+      "asset": "assets/caravan.png",
+      "height_px": 40,
+      "fade_m": 60000,
+      "layer": "far"
+    },
+    {
+      "id": "oasis-palms",
+      "at_m": 4161228,
+      "asset": "assets/palms.svg",
+      "height_px": 110,
+      "fade_m": 20000
+    },
+    {
+      "id": "hawks",
+      "at_m": 4162728,
+      "asset": "assets/eagle.svg",
+      "height_px": 34,
+      "lift_px": 120,
+      "fade_m": 6000
+    },
+    {
+      "id": "pyramids",
+      "at_m": 4369619,
+      "asset": "assets/pyramids.svg",
+      "height_px": 110,
+      "fade_m": 40000
+    }
+  ],
+  "achievements": [
+    {
+      "id": "dream",
+      "rule": {
+        "type": "distance",
+        "min_m": 100
+      }
+    },
+    {
+      "id": "africa",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "tangier"
+      }
+    },
+    {
+      "id": "crystal",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "crystal-shop"
+      }
+    },
+    {
+      "id": "desert-day",
+      "rule": {
+        "type": "day_distance",
+        "min_m": 20000
+      }
+    },
+    {
+      "id": "oasis",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "al-fayoum"
+      }
+    },
+    {
+      "id": "wind",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "wind-rock"
+      },
+      "hidden": true
+    },
+    {
+      "id": "steady",
+      "rule": {
+        "type": "streak",
+        "days": 30
+      }
+    },
+    {
+      "id": "treasure",
+      "rule": {
+        "type": "finish"
+      }
+    }
+  ]
+}

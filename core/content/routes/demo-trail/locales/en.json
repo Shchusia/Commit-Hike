@@ -1,0 +1,60 @@
+{
+  "name": "Demo Trail",
+  "description": "A short practice route for trying things out.",
+  "waypoints": {
+    "trailhead": {
+      "name": "Trailhead",
+      "text": "Your journey begins."
+    },
+    "old-bridge": {
+      "name": "Old Bridge",
+      "text": "First kilometer behind you."
+    },
+    "pine-forest": {
+      "name": "Pine Forest",
+      "text": "A quarter of the way."
+    },
+    "mountain-lake": {
+      "name": "Mountain Lake",
+      "text": "Halfway there."
+    },
+    "summit": {
+      "name": "Summit",
+      "text": "You made it!"
+    }
+  },
+  "story": {
+    "birdsong": "The path grows quiet except for birdsong.",
+    "clouds": "You are walking above the clouds now."
+  },
+  "facts": {
+    "lapse-rate": "Air cools by roughly 6.5 °C for every 1000 m you climb, so the summit can be winter while the valley is spring.",
+    "naismith": "Naismith's rule (1892) for planning hikes: an hour for every 5 km of distance, plus an hour for every 600 m of climb."
+  },
+  "objects": {
+    "bridge": "The old bridge",
+    "bench": "A bench with a view"
+  },
+  "achievements": {
+    "first-steps": {
+      "name": "First Steps",
+      "description": "Walk your first 100 m."
+    },
+    "bridge": {
+      "name": "Across the River",
+      "description": "Reach the Old Bridge."
+    },
+    "halfway": {
+      "name": "Halfway",
+      "description": "Reach the Mountain Lake."
+    },
+    "big-day": {
+      "name": "Big Day",
+      "description": "Walk 15 km in a single day."
+    },
+    "summit": {
+      "name": "On Top",
+      "description": "Finish the Demo Trail."
+    }
+  }
+}

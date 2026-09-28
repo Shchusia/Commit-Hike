@@ -1,0 +1,138 @@
+{
+  "name": "Bilbo's Journey",
+  "description": "There and back again at real scale: about 1,850 miles (≈3,000 km) from Bag End to the Lonely Mountain and home, an estimate from the maps; exact figures vary. Heights are invented.",
+  "waypoints": {
+    "bag-end": {
+      "name": "Bag End",
+      "text": "Thirteen dwarves, one wizard and far too many dishes. Bilbo runs out without a handkerchief."
+    },
+    "trollshaws": {
+      "name": "The Trollshaws",
+      "text": "Three trolls argue over how to cook dwarves until the sun comes up."
+    },
+    "rivendell": {
+      "name": "Rivendell",
+      "text": "A rest, a good supper and moon-letters read on an old map."
+    },
+    "misty-mountains": {
+      "name": "The Misty Mountains",
+      "text": "Stone giants toss rocks in the storm. You shelter in a cave that isn't empty."
+    },
+    "goblin-town": {
+      "name": "Goblin-town",
+      "text": "Tunnels, drums and a very angry Great Goblin."
+    },
+    "gollum-lake": {
+      "name": "The Underground Lake",
+      "text": "A game of riddles in the dark, and a ring found on the tunnel floor."
+    },
+    "eagles-eyrie": {
+      "name": "The Eagles' Eyrie",
+      "text": "Wolves below, fire in the trees, and then great wings."
+    },
+    "beorn": {
+      "name": "Beorn's House",
+      "text": "Honey, cream and a host who is sometimes a bear."
+    },
+    "mirkwood": {
+      "name": "Mirkwood",
+      "text": "Don't leave the path. Everybody leaves the path."
+    },
+    "elvenking-halls": {
+      "name": "The Elvenking's Halls",
+      "text": "The dwarves are locked up. Bilbo, invisible, finds the keys."
+    },
+    "forest-river": {
+      "name": "The Forest River",
+      "text": "Out of the cellars in barrels, bumping down the river."
+    },
+    "lake-town": {
+      "name": "Lake-town",
+      "text": "A town on stilts cheers for the King under the Mountain."
+    },
+    "lonely-mountain": {
+      "name": "The Lonely Mountain",
+      "text": "A secret door, a sleeping dragon, and more gold than anyone can count."
+    },
+    "beorn-return": {
+      "name": "Yule at Beorn's",
+      "text": "The way home starts slowly: a long rest by Beorn's fire."
+    },
+    "rivendell-return": {
+      "name": "Rivendell Again",
+      "text": "Songs and a soft bed on the way home."
+    },
+    "home-again": {
+      "name": "Home Again",
+      "text": "Your furniture is being auctioned. You buy most of it back."
+    }
+  },
+  "story": {
+    "contract": "A contract for a burglar, with a share of the treasure and funeral costs covered.",
+    "ponies": "Rain, ponies and no second breakfast.",
+    "dark-forest": "Weeks under the trees. Food runs low and nobody has seen the sun.",
+    "arkenstone": "Armies gather at the mountain, and Bilbo makes a brave, difficult choice.",
+    "homeward": "The way home is quiet. You are not the same hobbit who left."
+  },
+  "facts": {
+    "exam-paper": "Tolkien wrote the book's famous first sentence on a blank page of a student's exam paper while marking.",
+    "rayner": "Before publishing, Stanley Unwin paid his ten-year-old son Rayner a shilling to review the manuscript. Rayner liked it.",
+    "published": "The Hobbit was published on 21 September 1937, with illustrations and a dust jacket designed by Tolkien himself.",
+    "dwarf-names": "The dwarves' names, and Gandalf's, come from a list of dwarves in the Old Norse poem Völuspá.",
+    "gollum-rewrite": "In the first edition Gollum was ready to give up his ring. Tolkien rewrote the chapter in 1951 to fit The Lord of the Rings.",
+    "beorn-name": "Beorn's name means \"man\" or \"warrior\" in Old English and is related to the Old Norse word for bear.",
+    "mirkwood-name": "Mirkwood is an old name: a dark forest called Myrkviðr appears in Norse legends.",
+    "smaug-name": "Tolkien called the dragon's name a low philological joke, from an old Germanic verb meaning to squeeze through a hole.",
+    "duration": "By the book's calendar the adventure took more than a year: Bilbo left in spring and came home the next summer.",
+    "sales": "The Hobbit has sold over 100 million copies and has been translated into dozens of languages, Ukrainian among them."
+  },
+  "objects": {
+    "troll-fire": "The trolls' fire",
+    "eagles": "The eagles",
+    "hives": "Beorn's bees",
+    "barrels": "Barrels on the river",
+    "hoard": "The treasure"
+  },
+  "dangers": {
+    "troll-fire": "Firelight in the woods, and big voices arguing about dinner.",
+    "goblins": "The cave floor opens in the night and goblins pour out.",
+    "wargs": "Wolves gather in a clearing below, and goblins set the trees alight.",
+    "spiders": "Webs across the path, and many eyes in the dark.",
+    "dragon-wakes": "The dragon wakes. The whole mountain shakes with its anger.",
+    "five-armies": "Five armies meet beneath the mountain."
+  },
+  "achievements": {
+    "adventure": {
+      "name": "Off on an Adventure",
+      "description": "Walk your first 100 m."
+    },
+    "riddles": {
+      "name": "Riddles in the Dark",
+      "description": "Reach the Underground Lake."
+    },
+    "eyrie": {
+      "name": "On Eagles' Wings",
+      "description": "Stand higher than 1450 m."
+    },
+    "barrel-rider": {
+      "name": "Barrel Rider",
+      "description": "Escape down the Forest River."
+    },
+    "mountain": {
+      "name": "Burglar",
+      "description": "Reach the Lonely Mountain."
+    },
+    "big-day": {
+      "name": "Long Day on the Road",
+      "description": "Walk 25 km in a single day."
+    },
+    "steady": {
+      "name": "Eleven O'Clocks",
+      "description": "Commit 21 days in a row."
+    },
+    "home": {
+      "name": "There and Back Again",
+      "description": "Come home to Bag End."
+    }
+  }
+}

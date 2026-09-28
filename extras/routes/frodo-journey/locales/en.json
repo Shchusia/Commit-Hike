@@ -1,0 +1,233 @@
+{
+  "name": "Frodo's Journey",
+  "description": "From Bag End to Mount Doom at real scale: 1,779 miles (about 2,863 km), with mileposts from the Éowyn Challenge, based on Karen Wynn Fonstad's The Atlas of Middle-earth. Heights are invented for the game.",
+  "waypoints": {
+    "bag-end": {
+      "name": "Bag End",
+      "text": "The party is over, the house is sold, and a small, heavy thing rides in Frodo's pocket."
+    },
+    "farmer-maggot": {
+      "name": "Farmer Maggot's Farm",
+      "text": "A gruff farmer, fierce dogs, and a basket of mushrooms for the road."
+    },
+    "bucklebury-ferry": {
+      "name": "Bucklebury Ferry",
+      "text": "Across the Brandywine by raft in the fog."
+    },
+    "crickhollow": {
+      "name": "Crickhollow",
+      "text": "A snug house and a conspiracy unmasked: your friends are coming with you."
+    },
+    "old-forest": {
+      "name": "The Old Forest",
+      "text": "The trees here remember and do not like hobbits much."
+    },
+    "bombadil": {
+      "name": "Tom Bombadil's House",
+      "text": "A cheerful singer, a golden-haired lady and a day of rain."
+    },
+    "barrow-downs": {
+      "name": "The Barrow-downs",
+      "text": "Fog, standing stones and a cold voice in the dark."
+    },
+    "bree": {
+      "name": "Bree",
+      "text": "A crowded inn, a careless song, a ranger watching from the corner."
+    },
+    "midgewater": {
+      "name": "Midgewater Marshes",
+      "text": "Days of midges, reeds and wet feet."
+    },
+    "weathertop": {
+      "name": "Weathertop",
+      "text": "Old ruins on a bare hill, and a night you won't forget."
+    },
+    "last-bridge": {
+      "name": "The Last Bridge",
+      "text": "A green elf-stone on the bridge: a sign that friends are near."
+    },
+    "stone-trolls": {
+      "name": "The Stone Trolls",
+      "text": "Three trolls turned to stone long ago. Sam makes up a song about them."
+    },
+    "ford-of-bruinen": {
+      "name": "Ford of Bruinen",
+      "text": "The river rises in white horses."
+    },
+    "rivendell": {
+      "name": "Rivendell",
+      "text": "A hidden valley of music and long councils. Nine walkers set out from here."
+    },
+    "hollin": {
+      "name": "Hollin",
+      "text": "Holly trees and silent ruins. No birds sing here."
+    },
+    "caradhras": {
+      "name": "Caradhras",
+      "text": "The mountain throws snow at you until you turn back."
+    },
+    "moria-gate": {
+      "name": "The Doors of Durin",
+      "text": "A riddle on the doors, a lake that stirs, and then the long dark."
+    },
+    "khazad-dum-bridge": {
+      "name": "Bridge of Khazad-dûm",
+      "text": "A narrow stone bridge over a bottomless drop. Not everyone crosses it."
+    },
+    "dimrill-dale": {
+      "name": "Dimrill Dale",
+      "text": "Daylight at last, and a still lake that holds the stars."
+    },
+    "lothlorien": {
+      "name": "Lothlórien",
+      "text": "Golden trees and grey cloaks. Time here seems to stand still."
+    },
+    "argonath": {
+      "name": "The Argonath",
+      "text": "Two stone kings stand over the river, their hands raised in warning."
+    },
+    "amon-hen": {
+      "name": "Amon Hen",
+      "text": "The fellowship breaks. Frodo and Sam go on alone."
+    },
+    "emyn-muil": {
+      "name": "Emyn Muil",
+      "text": "A maze of sharp rock, and someone following at night."
+    },
+    "dead-marshes": {
+      "name": "The Dead Marshes",
+      "text": "Pale lights in the water. Don't follow them."
+    },
+    "morannon": {
+      "name": "The Black Gate",
+      "text": "Too well guarded. There must be another way in."
+    },
+    "ithilien": {
+      "name": "Ithilien",
+      "text": "Herbs, pines and fresh air: a garden land on the edge of darkness."
+    },
+    "henneth-annun": {
+      "name": "Henneth Annûn",
+      "text": "A cave behind a waterfall and a hard choice for a captain."
+    },
+    "crossroads": {
+      "name": "The Cross-roads",
+      "text": "A broken statue of a king, crowned again with little white flowers."
+    },
+    "minas-morgul": {
+      "name": "Minas Morgul",
+      "text": "A pale, cold city across the valley. Don't look at it too long."
+    },
+    "cirith-ungol-stairs": {
+      "name": "Stairs of Cirith Ungol",
+      "text": "Endless steps up into the mountains. Your guide is smiling too much."
+    },
+    "shelobs-lair": {
+      "name": "Shelob's Lair",
+      "text": "A tunnel that smells wrong. A small light from a phial is all you have."
+    },
+    "cirith-ungol-tower": {
+      "name": "Tower of Cirith Ungol",
+      "text": "Sam climbs the tower alone, singing in the dark."
+    },
+    "isenmouthe": {
+      "name": "The Isenmouthe",
+      "text": "Roads full of soldiers. You crawl away in the confusion."
+    },
+    "mount-doom": {
+      "name": "Mount Doom",
+      "text": "The end of the road. The quest is done."
+    }
+  },
+  "story": {
+    "road-goes-on": "The road starts at your own door, and it's hard to know where it will sweep you.",
+    "strider": "The ranger leads you off the road, through bogs and midges.",
+    "rivendell-rest": "Two months of rest in Rivendell are behind you. Nine companions: hobbits, a wizard, an elf, a dwarf and two men.",
+    "boats": "Elven boats carry you down the great river for days.",
+    "gollum": "A strange guide joins you. He talks to himself, and he knows the way.",
+    "burden": "Every step is heavier than the last. Sam doesn't let go."
+  },
+  "facts": {
+    "bag-end-farm": "Tolkien named Bag End after his aunt's farm in Worcestershire, which really was called Bag End.",
+    "distance": "This route is at real scale: by the Éowyn Challenge's reckoning, 1,779 miles (about 2,863 km) from Bag End to Mount Doom.",
+    "one-novel": "Tolkien wrote one long novel. The publisher split it into three volumes (1954–1955) to keep the price down.",
+    "bombadil": "Tom Bombadil began as a Dutch doll that belonged to Tolkien's son Michael.",
+    "timeline": "Frodo left Bag End on 23 September and reached Mount Doom on 25 March, about six months, with two months' rest in Rivendell and one in Lórien.",
+    "languages": "Tolkien said the stories grew out of his invented Elvish languages: the world was made so the languages would have somewhere to live.",
+    "professor": "Tolkien was an Oxford professor of Anglo-Saxon and knew many old languages, from Old Norse to Finnish.",
+    "moria-name": "In Sindarin, one of the Elvish languages, Moria means \"black pit\". The dwarves called their city Khazad-dûm. The walk through it is about 42 miles underground.",
+    "inklings": "Tolkien read chapters aloud to the Inklings, a circle of Oxford friends that included C. S. Lewis.",
+    "boat-miles": "Of the whole journey, 389 miles were travelled by boat, from Lórien down the Anduin to Rauros.",
+    "somme": "Tolkien fought in the Battle of the Somme in 1916. He later wrote that the Dead Marshes owe something to northern France after that battle.",
+    "sam": "Tolkien said Sam Gamgee was a reflection of the English soldiers and batmen he had known in the First World War.",
+    "spider": "Tolkien was born in Bloemfontein, South Africa, and was bitten by a tarantula as a toddler, though he said it gave him no special fear of spiders.",
+    "maps": "The maps in the first edition of The Lord of the Rings were drawn by Tolkien's son Christopher.",
+    "film-volcano": "In the films, Mount Doom was played by Ngauruhoe in New Zealand; you can walk past it on the Tongariro Crossing route."
+  },
+  "objects": {
+    "ferry": "The ferry",
+    "weathertop-ruins": "Ruins of Amon Sûl",
+    "doom-fire": "The Cracks of Doom"
+  },
+  "dangers": {
+    "rider-road": "A Black Rider stops on the road and sniffs the air. You hide under the roots, and the Ring tugs at your hand.",
+    "rider-dusk": "Hoofbeats again at dusk. A company of Elves comes singing through the trees, and the Rider slips away.",
+    "rider-hill": "Looking back, you see a dark shape on the hill where you slept.",
+    "rider-cry": "A long, cold cry from far off cuts your song short.",
+    "rider-ferry": "As the ferry pulls away, a dark shape searches the landing on the far bank.",
+    "bree-night": "At night the room you were meant to sleep in is torn apart.",
+    "weathertop-five": "Five dark figures climb towards your fire. A cold blade finds Frodo's shoulder.",
+    "ford-nine": "Nine Riders burst from the trees behind you as you race for the Ford.",
+    "wargs": "Wolves howl around the camp at night, and the wizard's fire answers them.",
+    "shadow-flame": "Drums in the deep, and a shadow of flame. The wizard holds the bridge.",
+    "winged-anduin": "Somewhere over the river a winged shadow blots out the stars, until an elven arrow brings it down.",
+    "marsh-shadow": "A winged shadow crosses the moon above the marshes, and every pale light goes out.",
+    "gate-shadow": "A winged Rider circles over the Desolation. You lie flat in the dust.",
+    "morgul-host": "The gates of Minas Morgul open and the Witch-king rides out at the head of an army.",
+    "in-the-dark": "Something enormous moves in the tunnel ahead.",
+    "rider-overhead": "Frodo feels a Rider pass high overhead, fleeing back towards the Dark Tower.",
+    "orc-march": "An orc company takes you for deserters and drives you along the road."
+  },
+  "achievements": {
+    "first-step": {
+      "name": "Out of the Door",
+      "description": "Walk your first 100 m."
+    },
+    "bree": {
+      "name": "A Pint at the Inn",
+      "description": "Reach Bree."
+    },
+    "weathertop": {
+      "name": "Night on Weathertop",
+      "description": "Survive Weathertop."
+    },
+    "rivendell": {
+      "name": "The Last Homely House",
+      "description": "Reach Rivendell."
+    },
+    "moria": {
+      "name": "Through the Dark",
+      "description": "Come out of Moria."
+    },
+    "high-pass": {
+      "name": "Snow on Caradhras",
+      "description": "Stand higher than 1600 m."
+    },
+    "thousand-km": {
+      "name": "A Thousand Kilometres",
+      "description": "Walk 1,000 km."
+    },
+    "steady": {
+      "name": "Second Breakfast Every Day",
+      "description": "Commit 30 days in a row."
+    },
+    "many-commits": {
+      "name": "There Is Always More Road",
+      "description": "Make 1,500 commits on this route."
+    },
+    "doom": {
+      "name": "Ring-bearer",
+      "description": "Reach Mount Doom."
+    }
+  }
+}

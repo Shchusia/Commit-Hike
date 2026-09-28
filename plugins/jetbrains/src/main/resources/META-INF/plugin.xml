@@ -1,0 +1,53 @@
+<idea-plugin>
+  <id>io.github.shchusia.commithike</id>
+  <name>Commit Hike</name>
+  <vendor email="denisshchutskyi@gmail.com" url="https://github.com/Shchusia/commit-hike">Denis Shchutskyi</vendor>
+  <description><![CDATA[
+    <p>Every commit you make moves you along a hiking trail.</p>
+    <ul>
+      <li><b>Nothing touches your projects.</b> No git hooks, no files in your repository: Commit Hike only reads git history.</li>
+      <li><b>Everything stays on this computer.</b> No accounts, no network requests.</li>
+      <li><b>Real work counts.</b> Lock files, generated code, whitespace-only changes and other people's commits don't.</li>
+    </ul>
+    <p>Open the Commit Hike tool window to see your trail. The status bar shows how far you've walked.</p>
+  ]]></description>
+
+  <depends>com.intellij.modules.platform</depends>
+  <depends>Git4Idea</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <postStartupActivity implementation="dev.commithike.CommitHikeStartup"/>
+    <statusBarWidgetFactory id="CommitHike" implementation="dev.commithike.ui.TrailWidgetFactory"/>
+    <toolWindow id="Commit Hike" anchor="right" icon="/icons/commit-hike.svg"
+                factoryClass="dev.commithike.ui.TrailToolWindowFactory"/>
+    <notificationGroup id="Commit Hike" displayType="BALLOON"/>
+  </extensions>
+
+  <actions>
+    <group id="CommitHike.Menu" text="Commit Hike" popup="true">
+      <add-to-group group-id="ToolsMenu" anchor="last"/>
+      <action id="CommitHike.ShowTrail" class="dev.commithike.actions.ShowTrailAction" text="Show Trail"/>
+      <action id="CommitHike.Setup" class="dev.commithike.actions.SetupAction" text="Set Up…"/>
+      <separator/>
+      <action id="CommitHike.ChooseRoute" class="dev.commithike.actions.ChooseRouteAction" text="Choose Trail for All Projects…"/>
+      <action id="CommitHike.ChooseProjectRoute" class="dev.commithike.actions.ChooseProjectRouteAction" text="Choose Trail for This Project…"/>
+      <separator/>
+      <action id="CommitHike.ImportRoute" class="dev.commithike.actions.ImportRouteAction" text="Import a Route or Map…"/>
+      <action id="CommitHike.CreateRouteTemplate" class="dev.commithike.actions.CreateRouteTemplateAction" text="Create a Route Template…"/>
+      <action id="CommitHike.RemoveRoute" class="dev.commithike.actions.RemoveRouteAction" text="Remove a Route…"/>
+      <action id="CommitHike.SetHikerIcon" class="dev.commithike.actions.SetHikerIconAction" text="Set Hiker Icon…"/>
+      <action id="CommitHike.ResetHikerIcon" class="dev.commithike.actions.ResetHikerIconAction" text="Use Default Hiker Icon"/>
+      <separator/>
+      <action id="CommitHike.EnableProject" class="dev.commithike.actions.EnableProjectAction" text="Count This Project"/>
+      <action id="CommitHike.DisableProject" class="dev.commithike.actions.DisableProjectAction" text="Stop Counting This Project"/>
+      <action id="CommitHike.Verify" class="dev.commithike.actions.VerifyAction" text="Recount This Project from Git History"/>
+      <action id="CommitHike.ToggleTeam" class="dev.commithike.actions.ToggleTeamAction" text="Show or Hide Teammates"
+              description="Put everyone who commits to this project on the same trail. Names come from git history and are never stored."/>
+      <separator/>
+      <action id="CommitHike.ChangeDifficulty" class="dev.commithike.actions.ChangeDifficultyAction" text="Change Difficulty…"
+              description="How far a typical day of commits takes you; applies to commits from now on"/>
+      <action id="CommitHike.ChangeLanguage" class="dev.commithike.actions.ChangeLanguageAction" text="Change Language…"
+              description="Language of route texts, the trail view and Commit Hike messages"/>
+    </group>
+  </actions>
+</idea-plugin>

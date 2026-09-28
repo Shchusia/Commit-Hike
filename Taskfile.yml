@@ -281,6 +281,21 @@ tasks:
       - "{{.SANDBOX_BIN}} route template --id {{.ID}} --path core/content/routes"
       - echo "Edit core/content/routes/{{.ID}}/, then run task routes:check"
 
+  routes:install-extras:
+    desc: "Import the personal routes from extras/routes into your real Commit Hike data (they are never published). Restart the IDE afterwards."
+    deps: [core:build]
+    cmds:
+      - |
+        for d in extras/routes/*/; do
+          [ -f "$d/route.json" ] || continue
+          if "{{.SANDBOX_BIN}}" route import --path "$d" --replace > /dev/null; then
+            echo "installed $(basename "$d")"
+          else
+            echo "could not install $(basename "$d"): run {{.SANDBOX_BIN}} route import --path $d to see why"; exit 1
+          fi
+        done
+      - echo "Restart your IDE (or reopen the trail list) to see them."
+
   route:try:
     desc: "Import a route pack into the sandbox to check it: task route:try SRC=path/to/folder-or.zip"
     requires:

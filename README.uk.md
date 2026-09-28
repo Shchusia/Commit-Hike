@@ -121,6 +121,7 @@ task core:demo REPO=~/projects/my-app    # спробувати ядро на с
 task core:run -- status --lang uk         # викликати будь-яку команду ядра
 task route:new ID=my-trail                # почати новий вбудований маршрут
 task route:try SRC=path/to/route          # перевірити пакет маршруту в пісочниці
+task routes:install-extras                # додати особисті маршрути з extras/ у свій плагін
 
 task deps:outdated       # що можна оновити
 task deps:update         # оновити залежності й перезапустити всі перевірки

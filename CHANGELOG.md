@@ -10,6 +10,12 @@ turns them into the section of the new version; the JetBrains Marketplace
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-28
+
+### Added
+- A request to rate Commit Hike, shown only to people who really use it: a week after install, after commits on at least 3 days, right after a commit that moved you along. It opens the right catalog for your editor: JetBrains Marketplace in JetBrains IDEs, Open VSX in VS Code, VSCodium, Cursor and Windsurf. "Rate it" or "Don't ask again" end it for good; "Later" asks again in a week, at most three times.
+- `task routes:install-extras` imports the personal routes from `extras/routes` into your own Commit Hike data, so they work with the plugin installed from a marketplace too.
+
 ## [0.1.1] - 2026-09-28
 
 ### Fixed
@@ -28,4 +34,3 @@ turns them into the section of the new version; the JetBrains Marketplace
 - Difficulty levels, tunnels, encounters, facts to discover and a custom hiker icon.
 - English and Ukrainian, including route texts, notifications, dialogs and menus.
 - Privacy by design: nothing is written to your repositories and nothing leaves your computer.
-

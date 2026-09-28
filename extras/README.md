@@ -11,5 +11,6 @@ use only.
 
 Use them on your own computer, like any user route:
 
+- all at once: `task routes:install-extras`, then restart the IDE;
 - in the IDE: **Tools → Commit Hike → Import a Route…** and choose a folder here;
 - to try one without touching your real progress: `task route:try SRC=extras/routes/frodo-journey`.

@@ -5,6 +5,8 @@
 
 const en = {
   cantStart: "Commit Hike can't start: {0}",
+  rateAsk: "Enjoying Commit Hike? A rating on {0} helps other developers find it. It takes a minute.",
+  rateYes: "Rate it", rateLater: "Later", rateNever: "Don't ask again",
   showTrail: "Show trail", chooseTrail: "Choose trail",
   finished: "You finished {0}! Pick your next trail.",
   reached: "You reached {0}.",
@@ -55,6 +57,8 @@ const en = {
 type Key = keyof typeof en;
 
 const uk: Record<Key, string> = {
+  rateAsk: "Подобається Commit Hike? Оцінка на {0} допоможе іншим розробникам його знайти. Це займе хвилину.",
+  rateYes: "Оцінити", rateLater: "Пізніше", rateNever: "Більше не питати",
   cantStart: "Commit Hike не може запуститися: {0}",
   showTrail: "Показати стежку", chooseTrail: "Вибрати стежку",
   finished: "Ти пройшов маршрут «{0}»! Вибери наступну стежку.",

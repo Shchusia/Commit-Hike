@@ -121,6 +121,7 @@ task core:demo REPO=~/projects/my-app    # try the core on a real repository (sa
 task core:run -- status --lang uk         # call any core command
 task route:new ID=my-trail                # start a new built-in route
 task route:try SRC=path/to/route          # check a route pack in the sandbox
+task routes:install-extras                # add the personal routes from extras/ to your own plugin
 
 task deps:outdated       # what can be updated
 task deps:update         # update dependencies and re-run all checks

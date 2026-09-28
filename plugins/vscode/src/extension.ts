@@ -6,6 +6,7 @@ import {
 } from "./cli";
 import { LANGUAGE_NAMES, formatDistanceL as formatDistance, language, setLanguage, t } from "./i18n";
 import { PanelMessage, TrailPanel } from "./panel";
+import * as rating from "./rating";
 import { RepoTracker } from "./repos";
 
 export async function activate(ctx: vscode.ExtensionContext): Promise<void> {
@@ -126,6 +127,7 @@ class App {
       this.flashTimer = setTimeout(() => { this.flashTimer = undefined; this.renderStatusBar(); }, 4000);
     }
     if (res.rewritten && (res.removed_commits ?? 0) > 0) this.log.appendLine(t("rewritten"));
+    if (res.added_m > 0) this.maybeAskForRating();
     if (!cfg.get<boolean>("notifyOnWaypoints", true)) return;
     const events = res.events ?? [];
     // Achievements are always worth a notification of their own.
@@ -153,6 +155,32 @@ class App {
           .then(a => { if (a) this.showTrail(); });
       }
     }
+  }
+
+  /**
+   * After a commit that moved the user along: once they've used Commit Hike for
+   * a while, ask for a rating (see rating.ts for when and how often).
+   */
+  private maybeAskForRating(): void {
+    const key = "commitHike.rating";
+    const now = Date.now();
+    let st = rating.recordProgress(rating.load(this.ctx.globalState.get(key), now), now);
+    if (!rating.shouldAsk(st, now)) {
+      void this.ctx.globalState.update(key, st);
+      return;
+    }
+    st = rating.asked(st, now); // closing the message without an answer counts as "later"
+    void this.ctx.globalState.update(key, st);
+    const target = rating.reviewTarget(vscode.env.appName);
+    // A few seconds later, so it doesn't pile onto the distance/waypoint notifications.
+    setTimeout(() => {
+      void vscode.window.showInformationMessage(t("rateAsk", target.store), t("rateYes"), t("rateLater"), t("rateNever"))
+        .then(async choice => {
+          const answer = choice === t("rateYes") ? "rate" : choice === t("rateNever") ? "never" : "later";
+          await this.ctx.globalState.update(key, rating.answered(st, answer));
+          if (answer === "rate") await vscode.env.openExternal(vscode.Uri.parse(target.url));
+        });
+    }, 4000);
   }
 
   private async refresh(): Promise<void> {

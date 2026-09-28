@@ -87,13 +87,14 @@ task release:build                # prod packages, after every check and verific
 git commit -am "Release 0.2.0" && git tag v0.2.0 && git push --follow-tags
 ```
 
-The tag starts `.github/workflows/release.yml`: it checks that the tag matches
-`VERSION`, builds, publishes to all three catalogs and creates a GitHub release
-with the notes from `CHANGELOG.md`, the plugin packages and the core binaries.
+Then upload by hand: the signed JetBrains zip (`./gradlew signPlugin` in
+`plugins/jetbrains`, see above) on plugins.jetbrains.com → **Upload Update**,
+the `.vsix` with `task ovsx:publish` and on the Visual Studio Marketplace
+publisher page. A GitHub release with `gh release create` and the notes from
+`node scripts/release-notes.mjs` is optional.
 
-From your own machine instead: `task release:publish` (all three tokens set),
-or one at a time: `task jetbrains:publish`, `task vscode:publish`,
-`task ovsx:publish`.
+To publish from CI later, add a workflow that runs `task release:build` and the
+`*:publish` tasks on version tags, with the secrets from section 2.
 
 **Pre-releases.** A version like `0.3.0-beta` goes to the JetBrains `beta`
 channel (users opt in to it) and is marked as a pre-release on GitHub.

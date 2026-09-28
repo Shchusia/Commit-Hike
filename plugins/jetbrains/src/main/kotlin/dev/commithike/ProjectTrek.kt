@@ -1,5 +1,6 @@
 package dev.commithike
 
+import com.intellij.ide.BrowserUtil
 import com.intellij.ide.util.PropertiesComponent
 import com.intellij.notification.NotificationAction
 import com.intellij.notification.NotificationGroupManager
@@ -21,6 +22,7 @@ import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.util.messages.Topic
 import dev.commithike.core.CoreException
 import dev.commithike.core.I18n
+import dev.commithike.core.RatingPrompt
 import dev.commithike.core.ScanResult
 import dev.commithike.core.Scope
 import dev.commithike.core.Status
@@ -255,6 +257,7 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
             }
         }
         if (res.rewritten && res.removedCommits > 0) LOG.info(I18n.t("rewritten"))
+        if (res.addedM > 0) maybeAskForRating()
         val events = res.events.orEmpty()
         // An encounter on the road is announced when it's the only news of this commit.
         events.lastOrNull { it.type == "danger" }?.danger?.let { d ->
@@ -521,6 +524,39 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
         showTrail()
     }
 
+    /**
+     * After a commit that moved the user along: once they've used Commit Hike for
+     * a while, ask for a rating (see RatingPrompt for when and how often).
+     * Stored app-wide, so several open projects don't ask separately.
+     */
+    private fun maybeAskForRating() {
+        val props = PropertiesComponent.getInstance()
+        val now = System.currentTimeMillis()
+        var st = RatingPrompt.recordProgress(RatingPrompt.load(props.getValue(RATING_KEY), now), now)
+        if (!RatingPrompt.shouldAsk(st, now)) {
+            props.setValue(RATING_KEY, RatingPrompt.save(st))
+            return
+        }
+        st = RatingPrompt.asked(st, now) // closing the balloon without an answer counts as "later"
+        props.setValue(RATING_KEY, RatingPrompt.save(st))
+        val asked = st
+        cs.launch {
+            delay(4000) // don't pile onto the distance and waypoint notifications
+            val answer = { a: String -> props.setValue(RATING_KEY, RatingPrompt.save(RatingPrompt.answered(asked, a))) }
+            NotificationGroupManager.getInstance().getNotificationGroup(NOTIFICATION_GROUP)
+                .createNotification("Commit Hike", I18n.t("rateAsk"), NotificationType.INFORMATION)
+                .addAction(
+                    NotificationAction.createSimpleExpiring(I18n.t("rateYes")) {
+                        answer("rate")
+                        BrowserUtil.browse(RatingPrompt.REVIEWS_URL)
+                    },
+                )
+                .addAction(NotificationAction.createSimpleExpiring(I18n.t("rateLater")) { answer("later") })
+                .addAction(NotificationAction.createSimpleExpiring(I18n.t("rateNever")) { answer("never") })
+                .notify(project)
+        }
+    }
+
     private suspend fun offerSetupOnce() {
         val props = PropertiesComponent.getInstance()
         if (props.getBoolean(SETUP_OFFERED_KEY)) return
@@ -561,6 +597,7 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
         const val TOOL_WINDOW_ID = "Commit Hike"
         const val NOTIFICATION_GROUP = "Commit Hike"
         private const val SETUP_OFFERED_KEY = "commit-hike.setupOffered"
+        private const val RATING_KEY = "commit-hike.rating"
         private const val HEAD_KEY = "commit-hike.head:"
     }
 }

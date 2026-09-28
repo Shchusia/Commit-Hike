@@ -6,6 +6,10 @@ package dev.commithike.core
 object I18n {
     private val en = mapOf(
         "showTrail" to "Show trail",
+        "rateAsk" to "Enjoying Commit Hike? A rating on JetBrains Marketplace helps other developers find it. It takes a minute.",
+        "rateYes" to "Rate It",
+        "rateLater" to "Later",
+        "rateNever" to "Don't Ask Again",
         "chooseTrail" to "Choose trail",
         "finished" to "You finished {0}!",
         "finishedText" to "Pick your next trail.",
@@ -118,6 +122,10 @@ object I18n {
 
     private val uk = mapOf(
         "showTrail" to "Показати стежку",
+        "rateAsk" to "Подобається Commit Hike? Оцінка на JetBrains Marketplace допоможе іншим розробникам його знайти. Це займе хвилину.",
+        "rateYes" to "Оцінити",
+        "rateLater" to "Пізніше",
+        "rateNever" to "Більше не питати",
         "chooseTrail" to "Вибрати стежку",
         "finished" to "Ти пройшов маршрут «{0}»!",
         "finishedText" to "Вибери наступну стежку.",

@@ -2,13 +2,13 @@ package dev.commithike.ui
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
-import com.intellij.ui.SimpleListCellRenderer
 import com.intellij.ui.dsl.builder.COLUMNS_LARGE
 import com.intellij.ui.dsl.builder.bind
 import com.intellij.ui.dsl.builder.bindItem
 import com.intellij.ui.dsl.builder.bindText
 import com.intellij.ui.dsl.builder.columns
 import com.intellij.ui.dsl.builder.panel
+import com.intellij.ui.dsl.listCellRenderer.textListCellRenderer
 import dev.commithike.core.I18n
 import dev.commithike.core.LocaleInfo
 import dev.commithike.core.Route
@@ -87,13 +87,11 @@ class RouteDialog(
         row(I18n.t("trail")) {
             comboBox(
                 choices,
-                SimpleListCellRenderer.create<Choice?> { label, value, _ ->
-                    label.text = if (value == null) {
-                        ""
-                    } else if (value.detail.isEmpty()) {
-                        value.label
-                    } else {
-                        "${value.label}  (${value.detail})"
+                textListCellRenderer<Choice?> { value ->
+                    when {
+                        value == null -> ""
+                        value.detail.isEmpty() -> value.label
+                        else -> "${value.label}  (${value.detail})"
                     }
                 },
             ).bindItem(::selected)
@@ -136,8 +134,8 @@ class RemoveRouteDialog(project: Project, private val routes: List<Route>) : Dia
         row(I18n.t("route")) {
             comboBox(
                 routes,
-                SimpleListCellRenderer.create<Route?> { label, value, _ ->
-                    label.text = value?.let { "${it.name}  (${I18n.distance(it.lengthM)})" } ?: ""
+                textListCellRenderer<Route?> { value ->
+                    value?.let { "${it.name}  (${I18n.distance(it.lengthM)})" } ?: ""
                 },
             ).bindItem(::selected)
         }
@@ -163,7 +161,7 @@ class LanguageDialog(project: Project, info: LocaleInfo) : DialogWrapper(project
 
     override fun createCenterPanel(): JComponent = panel {
         row(I18n.t("langLabel")) {
-            comboBox(choices, SimpleListCellRenderer.create<Choice?> { label, value, _ -> label.text = value?.label ?: "" })
+            comboBox(choices, textListCellRenderer<Choice?> { it?.label ?: "" })
                 .bindItem(::chosen)
         }
         row { comment(I18n.t("langComment")) }

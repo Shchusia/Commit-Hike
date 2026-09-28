@@ -10,6 +10,9 @@ turns them into the section of the new version; the JetBrains Marketplace
 
 ## [Unreleased]
 
+### Fixed
+- JetBrains: dialogs no longer use `SimpleListCellRenderer.create`, which the platform has scheduled for removal.
+
 ## [0.1.0] - 2026-09-28
 
 ### Added

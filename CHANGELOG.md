@@ -13,6 +13,7 @@ turns them into the section of the new version; the JetBrains Marketplace
 ## [0.2.2] - 2026-09-29
 
 ### Fixed
+- `task release:check` refused to release from any branch but `master`: it wanted the README screenshots to point to the current branch, which is deleted after the merge. Now they must point to the default branch (`BRANCH` in `release.env`, `master` by default), and if the checkout knows `origin/master`, each picture must already be there.
 - Extras: Frodo's and Bilbo's journeys no longer walk a made-up winding trail on the map. Both carry a schematic map of Middle-earth drawn for this project and a path along the real road, with every stop pinned to its place. Bilbo comes home a different way than he went: round the north of Mirkwood to Beorn's, then over the High Pass. Re-import them with `task routes:install-extras`.
 
 ## [0.2.1] - 2026-09-29

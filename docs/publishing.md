@@ -32,7 +32,7 @@ where the user is. `task release:check` refuses anything else.
    and the Go module path, and writes `release.env` (public information only).
 5. **Publish the repository** on GitHub: the plugin ships native binaries, and
    open source is what lets moderators and users trust them.
-6. **Screenshots.** Add a few to the README and to both marketplace pages.
+6. **Screenshots.** Add a few to the README and to both marketplace pages. Images in `plugins/vscode/README.md` are absolute links to the default branch (`https://raw.githubusercontent.com/OWNER/REPO/master/...`, or `BRANCH` from `release.env`), never to a feature branch: the marketplace page keeps them after that branch is deleted. `task release:check` checks this, and that every picture is already on `origin/master`.
 
 ## 2. Accounts and tokens
 

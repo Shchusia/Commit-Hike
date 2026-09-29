@@ -2,7 +2,7 @@
   "name": "commit-hike",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publisher": "shchusia",
   "license": "MIT",
   "icon": "media/icon.png",
@@ -170,11 +170,11 @@
   "extensionDependencies": [],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Shchusia/commit-hike.git",
+    "url": "https://github.com/Shchusia/Commit-Hike.git",
     "directory": "plugins/vscode"
   },
-  "homepage": "https://github.com/Shchusia/commit-hike#readme",
+  "homepage": "https://github.com/Shchusia/Commit-Hike#readme",
   "bugs": {
-    "url": "https://github.com/Shchusia/commit-hike/issues"
+    "url": "https://github.com/Shchusia/Commit-Hike/issues"
   }
 }

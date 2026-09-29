@@ -4,7 +4,7 @@
 [![JetBrains Downloads](https://img.shields.io/jetbrains/plugin/d/34595?label=downloads)](https://plugins.jetbrains.com/plugin/34595)
 [![Open VSX](https://img.shields.io/open-vsx/v/shchusia/commit-hike?label=Open%20VSX&logo=eclipseide)](https://open-vsx.org/extension/shchusia/commit-hike)
 [![Open VSX Downloads](https://img.shields.io/open-vsx/dt/shchusia/commit-hike?label=downloads)](https://open-vsx.org/extension/shchusia/commit-hike)
-[![GitHub stars](https://img.shields.io/github/stars/Shchusia/commit-hike?style=flat&logo=github)](https://github.com/Shchusia/commit-hike)
+[![GitHub stars](https://img.shields.io/github/stars/Shchusia/Commit-Hike?style=flat&logo=github)](https://github.com/Shchusia/Commit-Hike)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 *[English](README.md) · [Що нового](CHANGELOG.md)*
@@ -15,12 +15,12 @@
 фактами й досягненнями.
 
 <p align="center">
-  <img src="docs/screenshots/uk-hike.png" width="49%" alt="Вкладка «Похід»: сцена стежки збоку">
-  <img src="docs/screenshots/uk-map.png" width="49%" alt="Вкладка «Карта»: справжній GPS-трек Чорногірського хребта">
+  <img src="https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/docs/screenshots/uk-hike.png" width="49%" alt="Вкладка «Похід»: сцена стежки збоку">
+  <img src="https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/docs/screenshots/uk-map.png" width="49%" alt="Вкладка «Карта»: справжній GPS-трек Чорногірського хребта">
 </p>
 <p align="center">
-  <img src="docs/screenshots/uk-places.png" width="49%" alt="Вкладка «Місця»: кожна зупинка та її історія">
-  <img src="docs/screenshots/uk-stats.png" width="49%" alt="Вкладка «Статистика»: серії, відстань і досягнення">
+  <img src="https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/docs/screenshots/uk-places.png" width="49%" alt="Вкладка «Місця»: кожна зупинка та її історія">
+  <img src="https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/docs/screenshots/uk-stats.png" width="49%" alt="Вкладка «Статистика»: серії, відстань і досягнення">
 </p>
 
 ## Можливості
@@ -189,7 +189,7 @@ Commit Hike безкоштовний і з відкритим кодом. Якщ
 
 - ⭐ постав зірку репозиторію: так його легше знайти іншим розробникам;
 - оціни плагін на [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/34595) або [Open VSX](https://open-vsx.org/extension/shchusia/commit-hike/reviews);
-- повідомляй про помилки і ділися ідеями в [issues](https://github.com/Shchusia/commit-hike/issues);
+- повідомляй про помилки і ділися ідеями в [issues](https://github.com/Shchusia/Commit-Hike/issues);
 - створи маршрут і поділись ним: див. [docs/routes.md](docs/routes.md).
 
 ## Ліцензія

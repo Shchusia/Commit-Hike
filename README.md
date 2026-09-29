@@ -4,7 +4,7 @@
 [![JetBrains Downloads](https://img.shields.io/jetbrains/plugin/d/34595?label=downloads)](https://plugins.jetbrains.com/plugin/34595)
 [![Open VSX](https://img.shields.io/open-vsx/v/shchusia/commit-hike?label=Open%20VSX&logo=eclipseide)](https://open-vsx.org/extension/shchusia/commit-hike)
 [![Open VSX Downloads](https://img.shields.io/open-vsx/dt/shchusia/commit-hike?label=downloads)](https://open-vsx.org/extension/shchusia/commit-hike)
-[![GitHub stars](https://img.shields.io/github/stars/Shchusia/commit-hike?style=flat&logo=github)](https://github.com/Shchusia/commit-hike)
+[![GitHub stars](https://img.shields.io/github/stars/Shchusia/Commit-Hike?style=flat&logo=github)](https://github.com/Shchusia/Commit-Hike)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 *[Українською](README.uk.md) · [What's new](CHANGELOG.md)*
@@ -15,12 +15,12 @@ ridge, a desert crossing or a fairy tale, with a scene that changes as you go,
 a map, stories, facts and achievements.
 
 <p align="center">
-  <img src="docs/screenshots/en-hike.png" width="49%" alt="Hike view: a side-on scene of the trail">
-  <img src="docs/screenshots/en-map.png" width="49%" alt="Map view: the real GPS track of the Chornohora ridge">
+  <img src="https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/docs/screenshots/en-hike.png" width="49%" alt="Hike view: a side-on scene of the trail">
+  <img src="https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/docs/screenshots/en-map.png" width="49%" alt="Map view: the real GPS track of the Chornohora ridge">
 </p>
 <p align="center">
-  <img src="docs/screenshots/en-places.png" width="49%" alt="Places view: every stop and its story">
-  <img src="docs/screenshots/en-stats.png" width="49%" alt="Stats view: streaks, daily distance and achievements">
+  <img src="https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/docs/screenshots/en-places.png" width="49%" alt="Places view: every stop and its story">
+  <img src="https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/docs/screenshots/en-stats.png" width="49%" alt="Stats view: streaks, daily distance and achievements">
 </p>
 
 ## Features
@@ -189,7 +189,7 @@ Commit Hike is free and open source. If you enjoy the walk:
 
 - ⭐ star the repository: it helps other developers find it;
 - rate it on [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/34595) or [Open VSX](https://open-vsx.org/extension/shchusia/commit-hike/reviews);
-- report bugs and share ideas in [issues](https://github.com/Shchusia/commit-hike/issues);
+- report bugs and share ideas in [issues](https://github.com/Shchusia/Commit-Hike/issues);
 - make a route and share it: see [docs/routes.md](docs/routes.md).
 
 ## License

@@ -10,6 +10,12 @@ turns them into the section of the new version; the JetBrains Marketplace
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-09-29
+
+### Fixed
+- Screenshots on the Open VSX and Visual Studio Marketplace pages: they pointed to a branch that doesn't exist.
+- `task release:check` now makes sure every picture on the marketplace page points to this repository and branch and exists.
+
 ## [0.2.0] - 2026-09-28
 
 ### Added

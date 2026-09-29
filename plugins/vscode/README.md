@@ -5,12 +5,12 @@ A day of steady work takes you about ten kilometers along a real mountain
 ridge, a desert crossing or a folk tale.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Shchusia/commit-hike/main/docs/screenshots/en-hike.png" width="49%" alt="Hike view: a side-on scene of the trail">
-  <img src="https://raw.githubusercontent.com/Shchusia/commit-hike/main/docs/screenshots/en-map.png" width="49%" alt="Map view: the real GPS track of the Chornohora ridge">
+  <img src="https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/docs/screenshots/en-hike.png" width="49%" alt="Hike view: a side-on scene of the trail">
+  <img src="https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/docs/screenshots/en-map.png" width="49%" alt="Map view: the real GPS track of the Chornohora ridge">
 </p>
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Shchusia/commit-hike/main/docs/screenshots/en-places.png" width="49%" alt="Places view: every stop and its story">
-  <img src="https://raw.githubusercontent.com/Shchusia/commit-hike/main/docs/screenshots/en-stats.png" width="49%" alt="Stats view: streaks, daily distance and achievements">
+  <img src="https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/docs/screenshots/en-places.png" width="49%" alt="Places view: every stop and its story">
+  <img src="https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/docs/screenshots/en-stats.png" width="49%" alt="Stats view: streaks, daily distance and achievements">
 </p>
 
 - **Real trails.** The Chornohora ridge over Hoverla and the Tongariro Alpine Crossing on their real GPS tracks, plus original stories.
@@ -38,5 +38,5 @@ importing your own route, the hiker icon, difficulty, language and more.
 ## Open source
 
 Commit Hike is free and open source (MIT). If you enjoy the walk, a star on
-[GitHub](https://github.com/Shchusia/commit-hike) helps other developers find it. Bugs and ideas:
-[issues](https://github.com/Shchusia/commit-hike/issues).
+[GitHub](https://github.com/Shchusia/Commit-Hike) helps other developers find it. Bugs and ideas:
+[issues](https://github.com/Shchusia/Commit-Hike/issues).

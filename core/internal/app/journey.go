@@ -348,7 +348,7 @@ func routeDTO(r *routes.Route, chain []string) protocol.Route {
 		}
 		out.Objects = append(out.Objects, dto)
 	}
-	out.Path, out.Track, out.MapImage = r.Path, r.Track, r.MapImage
+	out.Path, out.Track, out.MapImage, out.Loop = r.Path, r.Track, r.MapImage, r.Loop
 	for _, u := range r.Underground {
 		out.Underground = append(out.Underground, protocol.Span{FromM: u.FromM, ToM: u.ToM})
 	}
@@ -360,7 +360,7 @@ func routeDTO(r *routes.Route, chain []string) protocol.Route {
 
 func waypointDTO(r *routes.Route, chain []string, w routes.Waypoint) protocol.Waypoint {
 	return protocol.Waypoint{
-		ID: w.ID, AtM: w.AtM, Kind: w.Kind, ElevationM: w.ElevationM, Lat: w.Lat, Lon: w.Lon,
+		ID: w.ID, AtM: w.AtM, Kind: w.Kind, ElevationM: w.ElevationM, Lat: w.Lat, Lon: w.Lon, X: w.X, Y: w.Y,
 		Name: r.T(chain, "waypoints."+w.ID+".name"),
 		Text: r.T(chain, "waypoints."+w.ID+".text"),
 	}

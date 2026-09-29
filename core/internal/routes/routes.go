@@ -36,6 +36,9 @@ type Waypoint struct {
 	// Real position, for routes with a track: the map pins the stop exactly here.
 	Lat *float64 `json:"lat,omitempty"`
 	Lon *float64 `json:"lon,omitempty"`
+	// Position on a drawn map (0..1), for routes with a path: pinned the same way.
+	X *float64 `json:"x,omitempty"`
+	Y *float64 `json:"y,omitempty"`
 }
 
 // Biome sets the terrain drawn from AtM until the next biome starts.
@@ -143,6 +146,7 @@ type Route struct {
 	LengthM       float64            `json:"length_m"`
 	Path          [][2]float64       `json:"path,omitempty"`      // optional hand-drawn shape, points in 0..1
 	Track         [][2]float64       `json:"track,omitempty"`     // optional real trail: [latitude, longitude] points in walking order
+	Loop          bool               `json:"loop,omitempty"`      // a round trip: the finish is back at the start
 	MapImage      string             `json:"map_image,omitempty"` // optional asset drawn under the path on the map
 	Waypoints     []Waypoint         `json:"waypoints"`
 	Profile       []ProfilePoint     `json:"profile,omitempty"` // extra elevations between waypoints
@@ -490,6 +494,17 @@ func (r *Route) Validate() error {
 		}
 		if w.Lat != nil && (*w.Lat < -90 || *w.Lat > 90 || *w.Lon < -180 || *w.Lon > 180) {
 			return fmt.Errorf("waypoint %q: lat/lon out of range", w.ID)
+		}
+	}
+	for _, w := range r.Waypoints {
+		if (w.X == nil) != (w.Y == nil) {
+			return fmt.Errorf("waypoint %q needs both x and y", w.ID)
+		}
+		if w.X != nil && len(r.Path) == 0 {
+			return fmt.Errorf("waypoint %q has map coordinates x/y but the route has no path", w.ID)
+		}
+		if w.X != nil && (*w.X < 0 || *w.X > 1 || *w.Y < 0 || *w.Y > 1) {
+			return fmt.Errorf("waypoint %q: x and y must be within 0..1", w.ID)
 		}
 	}
 	if len(r.Track) > 0 && len(r.Path) > 0 {

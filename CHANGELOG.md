@@ -10,11 +10,23 @@ turns them into the section of the new version; the JetBrains Marketplace
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-09-29
+
+### Fixed
+- Extras: Frodo's and Bilbo's journeys no longer walk a made-up winding trail on the map. Both carry a schematic map of Middle-earth drawn for this project and a path along the real road, with every stop pinned to its place. Bilbo comes home a different way than he went: round the north of Mirkwood to Beorn's, then over the High Pass. Re-import them with `task routes:install-extras`.
+
 ## [0.2.1] - 2026-09-29
 
 ### Fixed
 - Screenshots on the Open VSX and Visual Studio Marketplace pages: they pointed to a branch that doesn't exist.
 - `task release:check` now makes sure every picture on the marketplace page points to this repository and branch and exists.
+- JetBrains: the map drew a made-up winding path instead of the real GPS track of Chornohora Ridge and Tongariro. The trail panel now gets the core's answer untouched, so new route data can't get lost on the way again.
+- A JetBrains plugin test failed between 00:00 and 06:00 UTC because it expected the journey to start today.
+- The Seven Lighthouses: every lighthouse stands on the coast of its map again, the pass sits between the peaks and the oasis among the dunes.
+
+### Added
+- Stops can be pinned to a drawn map with `x`/`y`, like `lat`/`lon` on real tracks.
+- `"loop": true` for round-trip routes: the map draws them coming back to the start.
 
 ## [0.2.0] - 2026-09-28
 

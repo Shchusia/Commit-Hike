@@ -7,6 +7,8 @@
 // Gson keeps the defaults. Lists the core may omit are nullable.
 package dev.commithike.core
 
+import com.google.gson.JsonElement
+
 const val API_VERSION = 1
 
 data class Waypoint(
@@ -16,6 +18,10 @@ data class Waypoint(
     val atM: Double = 0.0,
     val kind: String? = null, // map symbol: peak, lake, bridge, hut…
     val elevationM: Double = 0.0,
+    val lat: Double? = null, // real position, on routes with a GPS track
+    val lon: Double? = null,
+    val x: Double? = null, // position on a drawn map (0..1), on routes with a path
+    val y: Double? = null,
 )
 
 data class Biome(val atM: Double = 0.0, val type: String = "")
@@ -72,6 +78,8 @@ data class Route(
     val facts: List<Fact>? = null,
     val objects: List<RouteObject>? = null,
     val path: List<List<Double>>? = null,
+    val track: List<List<Double>>? = null, // real trail, [latitude, longitude] points
+    val loop: Boolean = false, // round trip: the finish is back at the start
     val mapImage: String? = null,
     val underground: List<Span>? = null,
     val dangers: List<Danger>? = null,
@@ -111,6 +119,9 @@ data class Status(
     val project: Journey? = null,
     val todayM: Double = 0.0,
     val totalM: Double = 0.0,
+    // The core's answer exactly as it came, for the trail panel. Transient: Gson
+    // neither fills nor writes it, so it never goes out of sync with the fields above.
+    @Transient val raw: JsonElement? = null,
 )
 
 data class JourneyEvent(

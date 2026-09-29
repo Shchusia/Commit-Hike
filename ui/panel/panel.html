@@ -1518,8 +1518,19 @@ button:focus-visible, [role="tab"]:focus-visible, [tabindex]:focus-visible { out
     out.push(pts[pts.length - 1].slice());
     return out;
   }
-  function generatedPath(id, W, H) {
+  function generatedPath(id, W, H, loop) {
     const rnd = (() => { let s = strSeed(id + ":path"); return () => { s = Math.imul(s ^ (s >>> 15), 2246822507); s ^= s >>> 13; return ((s >>> 0) % 10000) / 10000; }; })();
+    if (loop) {
+      // A round trip: out along one side, back along the other, ending beside
+      // the start (a few pixels apart so both markers stay readable).
+      const n = 10, pts = [], cx = W / 2, cy = H / 2 + 6, rx = W * 0.34, ry = H * 0.38;
+      for (let i = 0; i <= n; i++) {
+        const a = Math.PI / 2 + (i / n) * Math.PI * 2 * 0.985; // start at the bottom, go clockwise
+        const wob = 1 + (i === 0 || i === n ? 0 : (rnd() - 0.5) * 0.22);
+        pts.push([cx - Math.cos(a) * rx * wob, cy + Math.sin(a) * ry * wob]);
+      }
+      return pts;
+    }
     const n = 7, pts = [];
     for (let i = 0; i <= n; i++) {
       const y = H - 34 - (H - 76) * (i / n), side = i % 2 === 0 ? -1 : 1;
@@ -1640,8 +1651,9 @@ button:focus-visible, [role="tab"]:focus-visible, [tabindex]:focus-visible { out
       mPerUnit = EARTH_M_PER_DEG / sc; // real meters per map unit
     } else {
       const custom = route.path && route.path.length >= 2;
-      const knots = custom ? route.path.map(q => [q[0] * W, q[1] * H]) : generatedPath(route.id, W, H);
+      const knots = custom ? route.path.map(q => [q[0] * W, q[1] * H]) : generatedPath(route.id, W, H, !!route.loop);
       poly = catmull(knots, custom ? 12 : 16);
+      if (custom) proj = (x, y) => [x * W, y * H]; // drawn maps pin stops by their x/y
     }
     const cum = [0]; for (let i = 1; i < poly.length; i++) cum.push(cum[i - 1] + Math.hypot(poly[i][0] - poly[i - 1][0], poly[i][1] - poly[i - 1][1]));
     const plen = cum[cum.length - 1] || 1;
@@ -1651,8 +1663,9 @@ button:focus-visible, [role="tab"]:focus-visible, [tabindex]:focus-visible { out
     // anchors; between anchors the mapping is linear.
     const anchors = [[0, 0]];
     if (proj) {
-      for (const w of (route.waypoints || []).filter(w => w.lat != null && w.lon != null).sort((a, b) => a.at_m - b.at_m)) {
-        const [x, y] = proj(w.lat, w.lon);
+      const pinned = w => (track ? w.lat != null && w.lon != null : w.x != null && w.y != null);
+      for (const w of (route.waypoints || []).filter(pinned).sort((a, b) => a.at_m - b.at_m)) {
+        const [x, y] = track ? proj(w.lat, w.lon) : proj(w.x, w.y);
         let best = 0, bd = Infinity;
         for (let i = 0; i < poly.length; i++) { const dd = (poly[i][0] - x) ** 2 + (poly[i][1] - y) ** 2; if (dd < bd) { bd = dd; best = i; } }
         const last = anchors[anchors.length - 1];

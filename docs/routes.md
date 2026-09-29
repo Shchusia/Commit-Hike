@@ -129,14 +129,15 @@ key by key.
 | `tongariro-crossing` | 19.4 km | New Zealand's volcanic day hike, with real facts |
 | `molfar-path` | 36 km | an original tale on Hutsul folklore; shows PNG and HTML objects |
 | `seven-lighthouses` | 70 km | an original fantasy journey from desert to ice; shows almost every biome and a hand-drawn `map_image` |
-| `frodo-journey` | 2,863 km | Frodo's road in The Lord of the Rings at real scale: 1,779 miles with mileposts from the Éowyn Challenge (after Karen Wynn Fonstad's atlas), the Black Riders and other encounters at their mileposts, Moria and Shelob's lair underground |
-| `bilbo-journey` | ≈2,977 km | Bilbo's road in The Hobbit, there and back again; an estimate from the maps, as no milepost table exists |
+| `frodo-journey` | 2,863 km | Frodo's road in The Lord of the Rings at real scale: 1,779 miles with mileposts from the Éowyn Challenge (after Karen Wynn Fonstad's atlas), the Black Riders and other encounters at their mileposts, Moria and Shelob's lair underground; the map follows the real road: the Old Forest, south along the Misty Mountains, down the Anduin, the Black Gate, Ithilien, Cirith Ungol and north through the Morgai |
+| `bilbo-journey` | ≈2,977 km | Bilbo's road in The Hobbit, there and back again; an estimate from the maps, as no milepost table exists; the map shows the way there (High Pass, Beorn, the Elf-path through Mirkwood, the Forest River, Lake-town) and the different way back, round the north of Mirkwood |
 | `alchemist-road` | 4,370 km | Santiago's road in Paulo Coelho's The Alchemist through real places, measured along real coordinates, on real terrain (Natural Earth, public domain) |
 
 Routes use real-world lengths (see "Pace" in architecture.md for how commits
 become meters). Heights on the book routes are invented. The book routes retell events in their own words and quote
 nothing. Their maps are generated from the route, not copied from the books'
-maps (the Alchemist map shows real geography). Names like Rivendell, Mordor or
+maps (the two Tolkien routes in `extras` carry a simple schematic map of their
+own, drawn for this project, so the trail follows the real geography) (the Alchemist map shows real geography). Names like Rivendell, Mordor or
 Hobbit are trademarks of Middle-earth Enterprises: if you publish the plugin,
 consider shipping those two routes as a separate pack. Each route is one folder
 and can be removed before a release.
@@ -190,3 +191,27 @@ or generated shape:
   coordinates only on routes with a track.
 - Use coordinates you are allowed to use: your own GPS recording, OpenStreetMap
   (ODbL: credit it in the route description) or public sources.
+
+## Drawn maps: pinning stops
+
+A route with its own picture (`map_image`) and a drawn `path` can pin stops to
+the picture, like `lat`/`lon` on real tracks. `x` and `y` are fractions of the
+picture's width and height (0..1, from the top left):
+
+```json
+"path": [[0.65, 0.9], [0.74, 0.86], [0.46, 0.8]],
+"waypoints": [
+  { "id": "gate", "at_m": 0, "kind": "start", "x": 0.65, "y": 0.9 },
+  { "id": "light", "at_m": 60000, "kind": "lighthouse", "x": 0.74, "y": 0.86 }
+]
+```
+
+Put the path's points on the stops (and a few in between if the trail must go
+around something): the map then places every stop exactly where it's drawn,
+and the walker moves along the path between them.
+
+## Round trips
+
+`"loop": true` marks a route that ends where it started ("there and back
+again"). Without a track or path of its own, the map then draws the trail as a
+round trip instead of a one-way line.

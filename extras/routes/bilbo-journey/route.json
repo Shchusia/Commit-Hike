@@ -1,104 +1,304 @@
 {
   "id": "bilbo-journey",
-  "version": 3,
+  "version": 4,
   "default_locale": "en",
   "length_m": 2977286,
+  "map_image": "assets/middle-earth-map.svg",
+  "path": [
+    [
+      0.0769,
+      0.7231
+    ],
+    [
+      0.1308,
+      0.7
+    ],
+    [
+      0.2,
+      0.6923
+    ],
+    [
+      0.2808,
+      0.7077
+    ],
+    [
+      0.3769,
+      0.6769
+    ],
+    [
+      0.4308,
+      0.6769
+    ],
+    [
+      0.4577,
+      0.6462
+    ],
+    [
+      0.4962,
+      0.6462
+    ],
+    [
+      0.5231,
+      0.6154
+    ],
+    [
+      0.5423,
+      0.5923
+    ],
+    [
+      0.5538,
+      0.5846
+    ],
+    [
+      0.5615,
+      0.6
+    ],
+    [
+      0.5731,
+      0.5769
+    ],
+    [
+      0.5846,
+      0.5462
+    ],
+    [
+      0.6077,
+      0.5538
+    ],
+    [
+      0.6385,
+      0.5615
+    ],
+    [
+      0.6538,
+      0.5077
+    ],
+    [
+      0.6769,
+      0.4769
+    ],
+    [
+      0.7308,
+      0.4692
+    ],
+    [
+      0.7808,
+      0.4538
+    ],
+    [
+      0.8154,
+      0.4154
+    ],
+    [
+      0.8385,
+      0.4308
+    ],
+    [
+      0.8731,
+      0.4385
+    ],
+    [
+      0.8885,
+      0.3769
+    ],
+    [
+      0.8962,
+      0.2923
+    ],
+    [
+      0.8615,
+      0.2615
+    ],
+    [
+      0.7885,
+      0.2615
+    ],
+    [
+      0.7115,
+      0.2692
+    ],
+    [
+      0.65,
+      0.3
+    ],
+    [
+      0.6308,
+      0.4
+    ],
+    [
+      0.6269,
+      0.5231
+    ],
+    [
+      0.6269,
+      0.6
+    ],
+    [
+      0.5923,
+      0.6308
+    ],
+    [
+      0.55,
+      0.6538
+    ],
+    [
+      0.5,
+      0.6846
+    ],
+    [
+      0.4538,
+      0.6846
+    ],
+    [
+      0.3846,
+      0.7077
+    ],
+    [
+      0.2846,
+      0.7385
+    ],
+    [
+      0.2,
+      0.7308
+    ],
+    [
+      0.1346,
+      0.7385
+    ],
+    [
+      0.0808,
+      0.7538
+    ]
+  ],
+  "loop": true,
   "waypoints": [
     {
       "id": "bag-end",
       "at_m": 0,
       "kind": "start",
-      "elevation_m": 150
+      "elevation_m": 150,
+      "x": 0.0769,
+      "y": 0.7231
     },
     {
       "id": "trollshaws",
       "at_m": 627644,
       "kind": "landmark",
-      "elevation_m": 300
+      "elevation_m": 300,
+      "x": 0.4577,
+      "y": 0.6462
     },
     {
       "id": "rivendell",
       "at_m": 675924,
       "kind": "village",
-      "elevation_m": 450
+      "elevation_m": 450,
+      "x": 0.4962,
+      "y": 0.6462
     },
     {
       "id": "misty-mountains",
       "at_m": 756392,
       "kind": "pass",
-      "elevation_m": 1600
+      "elevation_m": 1600,
+      "x": 0.5423,
+      "y": 0.5923
     },
     {
       "id": "goblin-town",
       "at_m": 764438,
       "kind": "cave",
-      "elevation_m": 1200
+      "elevation_m": 1200,
+      "x": 0.5538,
+      "y": 0.5846
     },
     {
       "id": "gollum-lake",
       "at_m": 774094,
       "kind": "cave",
-      "elevation_m": 900
+      "elevation_m": 900,
+      "x": 0.5615,
+      "y": 0.6
     },
     {
       "id": "eagles-eyrie",
       "at_m": 796625,
       "kind": "peak",
-      "elevation_m": 1500
+      "elevation_m": 1500,
+      "x": 0.5846,
+      "y": 0.5462
     },
     {
       "id": "beorn",
       "at_m": 860999,
       "kind": "hut",
-      "elevation_m": 400
+      "elevation_m": 400,
+      "x": 0.6385,
+      "y": 0.5615
     },
     {
       "id": "mirkwood",
       "at_m": 949513,
       "kind": "landmark",
-      "elevation_m": 350
+      "elevation_m": 350,
+      "x": 0.6769,
+      "y": 0.4769
     },
     {
       "id": "elvenking-halls",
       "at_m": 1239195,
       "kind": "castle",
-      "elevation_m": 300
+      "elevation_m": 300,
+      "x": 0.8154,
+      "y": 0.4154
     },
     {
       "id": "forest-river",
       "at_m": 1255288,
       "kind": "river",
-      "elevation_m": 150
+      "elevation_m": 150,
+      "x": 0.8385,
+      "y": 0.4308
     },
     {
       "id": "lake-town",
       "at_m": 1335756,
       "kind": "harbor",
-      "elevation_m": 100
+      "elevation_m": 100,
+      "x": 0.8731,
+      "y": 0.4385
     },
     {
       "id": "lonely-mountain",
       "at_m": 1416223,
       "kind": "peak",
-      "elevation_m": 1300
+      "elevation_m": 1300,
+      "x": 0.8962,
+      "y": 0.2923
     },
     {
       "id": "beorn-return",
       "at_m": 1850746,
       "kind": "hut",
-      "elevation_m": 400
+      "elevation_m": 400,
+      "x": 0.6269,
+      "y": 0.6
     },
     {
       "id": "rivendell-return",
       "at_m": 2301362,
       "kind": "village",
-      "elevation_m": 450
+      "elevation_m": 450,
+      "x": 0.5,
+      "y": 0.6846
     },
     {
       "id": "home-again",
       "at_m": 2977286,
       "kind": "finish",
-      "elevation_m": 150
+      "elevation_m": 150,
+      "x": 0.0808,
+      "y": 0.7538
     }
   ],
   "profile": [

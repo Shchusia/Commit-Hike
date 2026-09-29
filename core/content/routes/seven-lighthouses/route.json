@@ -5,52 +5,56 @@
   "length_m": 700000,
   "path": [
     [
-      0.28,
+      0.65,
       0.9
     ],
     [
-      0.42,
-      0.84
+      0.7402,
+      0.8591
     ],
     [
-      0.6,
-      0.78
+      0.4625,
+      0.7955
     ],
     [
-      0.68,
-      0.68
+      0.772,
+      0.6909
     ],
     [
-      0.52,
-      0.6
+      0.3094,
+      0.5182
     ],
     [
-      0.4,
-      0.52
+      0.7516,
+      0.4864
     ],
     [
-      0.56,
-      0.46
+      0.5188,
+      0.4227
     ],
     [
-      0.68,
-      0.38
+      0.7902,
+      0.3773
     ],
     [
-      0.58,
-      0.3
+      0.5563,
+      0.3136
     ],
     [
-      0.66,
-      0.22
+      0.7467,
+      0.2682
     ],
     [
-      0.54,
-      0.16
+      0.4688,
+      0.2091
     ],
     [
-      0.4,
-      0.1
+      0.7258,
+      0.1727
+    ],
+    [
+      0.7406,
+      0.1136
     ]
   ],
   "map_image": "assets/parchment-map.svg",
@@ -59,79 +63,105 @@
       "id": "salt-gate",
       "at_m": 0,
       "kind": "start",
-      "elevation_m": 40
+      "elevation_m": 40,
+      "x": 0.65,
+      "y": 0.9
     },
     {
       "id": "light-1",
       "at_m": 60000,
       "kind": "lighthouse",
-      "elevation_m": 60
+      "elevation_m": 60,
+      "x": 0.7402,
+      "y": 0.8591
     },
     {
       "id": "three-wells",
       "at_m": 130000,
       "kind": "spring",
-      "elevation_m": 90
+      "elevation_m": 90,
+      "x": 0.4625,
+      "y": 0.7955
     },
     {
       "id": "light-2",
       "at_m": 200000,
       "kind": "lighthouse",
-      "elevation_m": 120
+      "elevation_m": 120,
+      "x": 0.772,
+      "y": 0.6909
     },
     {
       "id": "shepherds-pass",
       "at_m": 260000,
       "kind": "pass",
-      "elevation_m": 860
+      "elevation_m": 860,
+      "x": 0.3094,
+      "y": 0.5182
     },
     {
       "id": "light-3",
       "at_m": 310000,
       "kind": "lighthouse",
-      "elevation_m": 180
+      "elevation_m": 180,
+      "x": 0.7516,
+      "y": 0.4864
     },
     {
       "id": "rye-valley",
       "at_m": 370000,
       "kind": "village",
-      "elevation_m": 70
+      "elevation_m": 70,
+      "x": 0.5188,
+      "y": 0.4227
     },
     {
       "id": "light-4",
       "at_m": 420000,
       "kind": "lighthouse",
-      "elevation_m": 20
+      "elevation_m": 20,
+      "x": 0.7902,
+      "y": 0.3773
     },
     {
       "id": "misty-fens",
       "at_m": 480000,
       "kind": "landmark",
-      "elevation_m": 10
+      "elevation_m": 10,
+      "x": 0.5563,
+      "y": 0.3136
     },
     {
       "id": "light-5",
       "at_m": 520000,
       "kind": "lighthouse",
-      "elevation_m": 30
+      "elevation_m": 30,
+      "x": 0.7467,
+      "y": 0.2682
     },
     {
       "id": "birch-grove",
       "at_m": 570000,
       "kind": "camp",
-      "elevation_m": 160
+      "elevation_m": 160,
+      "x": 0.4688,
+      "y": 0.2091
     },
     {
       "id": "light-6",
       "at_m": 620000,
       "kind": "lighthouse",
-      "elevation_m": 240
+      "elevation_m": 240,
+      "x": 0.7258,
+      "y": 0.1727
     },
     {
       "id": "light-7",
       "at_m": 700000,
       "kind": "lighthouse",
-      "elevation_m": 380
+      "elevation_m": 380,
+      "x": 0.7406,
+      "y": 0.1136
     }
   ],
   "profile": [

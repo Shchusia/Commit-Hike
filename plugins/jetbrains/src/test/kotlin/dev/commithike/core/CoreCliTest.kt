@@ -86,13 +86,24 @@ class CoreCliTest {
         val notRepo = cli.scan(Files.createTempDirectory("ch-plain").toString())
         assertFalse(notRepo.tracked)
 
+        // The panel gets the core's JSON untouched: the GPS track and stop coordinates
+        // must reach it even though the widget doesn't need them.
+        val raw = cli.status(repo.path).raw!!.asJsonObject
+        val rawRoute = raw.getAsJsonObject("project").getAsJsonObject("route")
+        assertTrue(rawRoute.getAsJsonArray("track").size() > 10)
+        assertTrue(rawRoute.getAsJsonArray("waypoints").any { it.asJsonObject.has("lat") })
+
         // Map data and daily stats survive the round trip through the Kotlin models.
         val hoverla = proj.project!!.route.waypoints!!.first { it.id == "hoverla" }
         assertEquals("peak", hoverla.kind)
         assertEquals(2061.0, hoverla.elevationM, 0.001)
         assertTrue(proj.project!!.route.biomes!!.isNotEmpty())
         assertEquals(14, proj.project!!.daily!!.size)
-        assertEquals(1, proj.project!!.day)
+        // Day 1 is the day of the first commit (UTC). Test commits are dated a few
+        // hours back, so early in the UTC morning that is already yesterday.
+        val firstCommitDay = gitOut(repo, "log", "--reverse", "--format=%at").lines().first().trim().toLong() / 86_400
+        val today = System.currentTimeMillis() / 1000 / 86_400
+        assertEquals((today - firstCommitDay + 1).toInt(), proj.project!!.day)
 
         // Custom routes: template -> import -> remove.
         val work = Files.createTempDirectory("ch-routes").toString()

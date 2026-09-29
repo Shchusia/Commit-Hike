@@ -3,7 +3,8 @@
 //   task release:configure OWNER=your-github-name NAME="Your Name" EMAIL=you@example.com
 //
 // Optional: PLUGIN_ID (default io.github.<owner>.commithike), PUBLISHER (VS Code
-// publisher id, default <owner>), REPO (default commit-hike).
+// publisher id, default <owner>), REPO (default commit-hike), BRANCH (the default
+// branch the marketplace README images point to, default master).
 // Safe to run again: it rewrites the same fields with the new values.
 import fs from "node:fs";
 import path from "node:path";
@@ -16,6 +17,8 @@ const owner = (env.OWNER || "").trim();
 const name = (env.NAME || "").trim();
 const email = (env.EMAIL || "").trim();
 const repo = (env.REPO || "commit-hike").trim();
+const branch = (env.BRANCH || "master").trim();
+if (!/^[A-Za-z0-9._\/-]+$/.test(branch)) fail("BRANCH must be a git branch name");
 if (!/^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/.test(owner)) fail("OWNER must be your GitHub user or organisation name");
 if (!name) fail("NAME is required (shown as the vendor on JetBrains Marketplace)");
 if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) fail("EMAIL must be an email address");
@@ -65,5 +68,5 @@ if (oldPrefix !== newPrefix) {
 // Remember the answers for the release tasks.
 fs.writeFileSync(path.join(root, "release.env"),
   `# Written by task release:configure. Public information only: never put tokens here.\n` +
-  `OWNER=${owner}\nREPO=${repo}\nPLUGIN_ID=${pluginId}\nPUBLISHER=${publisher}\n`);
+  `OWNER=${owner}\nREPO=${repo}\nBRANCH=${branch}\nPLUGIN_ID=${pluginId}\nPUBLISHER=${publisher}\n`);
 console.log(`\nConfigured: JetBrains plugin ${pluginId} by ${name}, VS Code publisher ${publisher}, ${repoUrl}`);

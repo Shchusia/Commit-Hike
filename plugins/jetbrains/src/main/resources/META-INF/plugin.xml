@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>io.github.shchusia.commithike</id>
   <name>Commit Hike</name>
-  <vendor email="denisshchutskyi@gmail.com" url="https://github.com/Shchusia/commit-hike">Denis Shchutskyi</vendor>
+  <vendor email="denisshchutskyi@gmail.com" url="https://github.com/Shchusia/Commit-Hike">Denis Shchutskyi</vendor>
   <description><![CDATA[
     <p>Every commit you make moves you along a hiking trail.</p>
     <ul>

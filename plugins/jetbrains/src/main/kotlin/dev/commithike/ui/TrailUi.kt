@@ -2,6 +2,7 @@ package dev.commithike.ui
 
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 import com.intellij.DynamicBundle
 import com.intellij.ide.ui.LafManagerListener
@@ -234,7 +235,7 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
         val error: String?,
         val repo: String?,
         val locale: String,
-        val status: Status?,
+        val status: JsonElement?, // the core's own JSON, so every field reaches the panel
         val avatar: String?, // custom hiker PNG as a data URL; null = the panel's default
         val avatarCustom: Boolean,
         val assets: Map<String, RouteAssets>, // pictures for route objects and custom maps, per route id
@@ -260,7 +261,7 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
             error = v.error,
             repo = v.repo,
             locale = locale,
-            status = v.status,
+            status = v.status?.raw ?: v.status?.let { gson.toJsonTree(it) },
             avatar = avatar.dataUrl,
             avatarCustom = avatar.custom,
             assets = app.assetsFor(v.status),

@@ -614,6 +614,7 @@ tasks:
       PLUGIN_ID: "{{.PLUGIN_ID}}"
       PUBLISHER: "{{.PUBLISHER}}"
       REPO: "{{.REPO}}"
+      BRANCH: "{{.BRANCH}}"
     cmds:
       - node scripts/configure-release.mjs
 

@@ -8,7 +8,11 @@ import * as path from "path";
 // so newer cores with extra fields keep working.
 export const API_VERSION = 1;
 
-export interface Waypoint { id: string; name: string; text?: string; at_m: number; kind?: string; elevation_m?: number }
+export interface Waypoint {
+  id: string; name: string; text?: string; at_m: number; kind?: string; elevation_m?: number;
+  lat?: number; lon?: number; // real position, on routes with a GPS track
+  x?: number; y?: number;     // position on a drawn map (0..1), on routes with a path
+}
 export interface Biome { at_m: number; type: string }
 export interface Day { date: string; m: number }
 export interface Story { id: string; text: string; at_m: number }
@@ -28,7 +32,7 @@ export interface Route {
   locales: string[]; builtin: boolean; waypoints: Waypoint[]; biomes?: Biome[]; achievements: number;
   profile?: ProfilePoint[]; ascent_m?: number; min_elevation_m?: number; max_elevation_m?: number;
   facts?: Fact[]; objects?: RouteObject[]; path?: [number, number][]; map_image?: string;
-  underground?: Span[]; dangers?: Danger[];
+  underground?: Span[]; dangers?: Danger[]; track?: number[][]; loop?: boolean;
 }
 export interface Journey {
   scope: "global" | "project"; route: Route; distance_m: number; percent: number; finished: boolean;

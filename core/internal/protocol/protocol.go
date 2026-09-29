@@ -61,6 +61,8 @@ type Waypoint struct {
 	ElevationM float64  `json:"elevation_m,omitempty"`
 	Lat        *float64 `json:"lat,omitempty"` // real position, on routes with a track
 	Lon        *float64 `json:"lon,omitempty"`
+	X          *float64 `json:"x,omitempty"` // position on the drawn map (0..1), on routes with a path
+	Y          *float64 `json:"y,omitempty"`
 }
 
 // Biome is the terrain from AtM until the next biome.
@@ -147,6 +149,7 @@ type Route struct {
 	Objects       []Object       `json:"objects,omitempty"`
 	Path          [][2]float64   `json:"path,omitempty"`      // hand-drawn trail shape, points in 0..1
 	Track         [][2]float64   `json:"track,omitempty"`     // real trail, [latitude, longitude] points; maps draw it to scale
+	Loop          bool           `json:"loop,omitempty"`      // round trip: the finish is back at the start
 	MapImage      string         `json:"map_image,omitempty"` // asset drawn under the path on the map
 	Underground   []Span         `json:"underground,omitempty"`
 	Dangers       []Danger       `json:"dangers,omitempty"`

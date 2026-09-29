@@ -22,18 +22,29 @@ if (/<id>dev\.commithike<\/id>/.test(read("plugins/jetbrains/src/main/resources/
   problems.push("the JetBrains plugin still has the placeholder id dev.commithike");
 }
 // README images on the marketplace pages must be absolute URLs to this
-// repository and branch, and the files must exist (a wrong branch = broken images).
+// repository's default branch (BRANCH in release.env, master if unset), and
+// the files must exist. Not the current branch: the marketplace page keeps
+// these links long after a release, and a feature branch is deleted after the
+// merge (a wrong branch = broken images).
 if (fs.existsSync(path.join(root, "release.env"))) {
-  const env = Object.fromEntries(read("release.env").split("\n").filter(l => l.includes("=") && !l.startsWith("#")).map(l => l.split("=")));
-  let branch = "";
-  try { branch = execSync("git rev-parse --abbrev-ref HEAD", { cwd: root, stdio: ["ignore", "pipe", "ignore"] }).toString().trim(); } catch { /* not a git checkout */ }
+  const env = Object.fromEntries(read("release.env").split("\n").filter(l => l.includes("=") && !l.startsWith("#")).map(l => l.split("=").map(x => x.trim())));
+  const branch = env.BRANCH || "master";
+  const git = args => execSync("git " + args, { cwd: root, stdio: ["ignore", "pipe", "ignore"] }).toString().trim();
+  let remote = ""; // origin/<branch> if this checkout knows it: then the image must already be there
+  try { git(`rev-parse --verify --quiet refs/remotes/origin/${branch}`); remote = `origin/${branch}`; } catch { /* no remote ref: check the working tree only */ }
   const prefix = `https://raw.githubusercontent.com/${env.OWNER}/${env.REPO}/${branch}/`;
   for (const src of [...read("plugins/vscode/README.md").matchAll(/src="([^"]+)"/g)].map(m => m[1])) {
     if (!src.startsWith("https://")) problems.push(`plugins/vscode/README.md: image ${src} must be an absolute https URL (marketplaces can't show relative ones)`);
-    else if (branch && branch !== "HEAD" && src.startsWith("https://raw.githubusercontent.com/") && !src.startsWith(prefix)) {
-      problems.push(`plugins/vscode/README.md: image ${src} doesn't point to ${prefix} (repository or branch "${branch}" differ)`);
-    } else if (src.startsWith(prefix) && !fs.existsSync(path.join(root, src.slice(prefix.length)))) {
-      problems.push(`plugins/vscode/README.md: image ${src.slice(prefix.length)} doesn't exist in the repository`);
+    else if (src.startsWith("https://raw.githubusercontent.com/") && !src.startsWith(prefix)) {
+      problems.push(`plugins/vscode/README.md: image ${src} doesn't point to ${prefix} (the repository or the default branch "${branch}" differ; set BRANCH in release.env if your default branch has another name)`);
+    } else if (src.startsWith(prefix)) {
+      const file = src.slice(prefix.length);
+      if (!fs.existsSync(path.join(root, file))) problems.push(`plugins/vscode/README.md: image ${file} doesn't exist in the repository`);
+      else if (remote) {
+        try { git(`cat-file -e ${remote}:${file}`); } catch {
+          problems.push(`plugins/vscode/README.md: image ${file} isn't on ${remote} yet: merge (or push) it first, or the marketplace page shows a broken image`);
+        }
+      }
     }
   }
 }

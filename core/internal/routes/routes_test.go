@@ -173,3 +173,29 @@ func TestTrackValidation(t *testing.T) {
 		}
 	}
 }
+
+func TestMapCoordinatesAndLoop(t *testing.T) {
+	text := `{"name":"X","description":"d","waypoints":{"a":{"name":"A"},"b":{"name":"B"}}}`
+	pack := func(route string) fstest.MapFS {
+		return fstest.MapFS{"r/x/route.json": {Data: []byte(route)}, "r/x/locales/en.json": {Data: []byte(text)}}
+	}
+	good := `{"id":"x","length_m":1000,"loop":true,"path":[[0.1,0.9],[0.5,0.1],[0.9,0.9]],
+		"waypoints":[{"id":"a","at_m":0,"x":0.1,"y":0.9},{"id":"b","at_m":1000}]}`
+	rs, err := Load(pack(good), "r", false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !rs["x"].Loop || *rs["x"].Waypoints[0].X != 0.1 {
+		t.Fatalf("loaded: %+v", rs["x"])
+	}
+	bad := map[string]string{
+		"x only":       `{"id":"x","length_m":1000,"path":[[0,0],[1,1]],"waypoints":[{"id":"a","at_m":0,"x":0.5},{"id":"b","at_m":1000}]}`,
+		"out of range": `{"id":"x","length_m":1000,"path":[[0,0],[1,1]],"waypoints":[{"id":"a","at_m":0,"x":1.5,"y":0.5},{"id":"b","at_m":1000}]}`,
+		"xy, no path":  `{"id":"x","length_m":1000,"waypoints":[{"id":"a","at_m":0,"x":0.5,"y":0.5},{"id":"b","at_m":1000}]}`,
+	}
+	for name, route := range bad {
+		if _, err := Load(pack(route), "r", false); err == nil {
+			t.Errorf("%s: expected an error", name)
+		}
+	}
+}

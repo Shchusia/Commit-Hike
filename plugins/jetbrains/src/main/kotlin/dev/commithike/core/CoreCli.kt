@@ -33,7 +33,14 @@ class CoreCli(
 
     fun routes(): List<Route> = call(listOf("routes") + langArgs(), object : TypeToken<List<Route>>() {}.type)
 
-    fun status(repo: String? = null): Status = call(listOf("status") + repoArgs(repo) + langArgs(), Status::class.java)
+    /**
+     * Status for the plugin's own use, plus the untouched JSON in [Status.raw] for
+     * the trail panel: fields the Kotlin models don't know about still reach it.
+     */
+    fun status(repo: String? = null): Status {
+        val raw = callRaw(listOf("status") + repoArgs(repo) + langArgs())
+        return gson.fromJson(raw, Status::class.java).copy(raw = raw)
+    }
 
     /** [prevHead]: the HEAD seen before this change; if it's no longer an ancestor the core recounts in full. */
     fun scan(repo: String, prevHead: String? = null): ScanResult = call(
@@ -102,7 +109,10 @@ class CoreCli(
 
     private fun langArgs() = listOf("--lang", lang)
 
-    private fun <T> call(args: List<String>, type: Type): T {
+    private fun <T> call(args: List<String>, type: Type): T = gson.fromJson(callRaw(args), type)
+
+    /** Runs the core and returns the "data" of its envelope, or throws [CoreException]. */
+    private fun callRaw(args: List<String>): JsonElement {
         val pb = ProcessBuilder(listOf(binary.toString()) + args)
         pb.environment().putAll(extraEnv)
         val process = pb.start()
@@ -134,8 +144,7 @@ class CoreCli(
             val err = env.getAsJsonObject("error")
             throw CoreException(err?.get("message")?.asString ?: "Unknown error", err?.get("code")?.asString)
         }
-        val json: JsonElement = env.get("data") ?: com.google.gson.JsonNull.INSTANCE
-        return gson.fromJson(json, type)
+        return env.get("data") ?: com.google.gson.JsonNull.INSTANCE
     }
 }
 

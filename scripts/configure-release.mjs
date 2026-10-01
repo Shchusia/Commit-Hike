@@ -40,8 +40,6 @@ const edit = (rel, fn) => {
 edit("plugins/jetbrains/src/main/resources/META-INF/plugin.xml", s => s
   .replace(/<id>[^<]*<\/id>/, `<id>${pluginId}</id>`)
   .replace(/<vendor[^>]*>[^<]*<\/vendor>/, `<vendor email="${esc(email)}" url="${esc(repoUrl)}">${esc(name)}</vendor>`));
-edit("plugins/jetbrains/src/main/kotlin/dev/commithike/CommitHikeApp.kt", s =>
-  s.replace(/private const val PLUGIN_ID = "[^"]*"/, `private const val PLUGIN_ID = "${pluginId}"`));
 
 // VS Code: publisher and links.
 edit("plugins/vscode/package.json", s => {

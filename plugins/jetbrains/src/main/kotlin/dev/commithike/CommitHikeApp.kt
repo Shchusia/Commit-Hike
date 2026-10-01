@@ -1,13 +1,12 @@
 package dev.commithike
 
 import com.intellij.DynamicBundle
-import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.openapi.application.PathManager
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.service
-import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.project.ProjectManager
 import dev.commithike.core.Avatar
+import dev.commithike.core.BuildInfo
 import dev.commithike.core.CoreCli
 import dev.commithike.core.CoreException
 import dev.commithike.core.CorePlatform
@@ -134,14 +133,12 @@ class CommitHikeApp {
  * version into the IDE's system directory.
  */
 internal object BinaryLocator {
-    private const val PLUGIN_ID = "io.github.shchusia.commithike"
-
     fun locate(): Path {
         System.getenv("COMMIT_HIKE_BINARY")?.let { return Paths.get(it) } // for development
         val name = CorePlatform.binaryName()
         val bytes = BinaryLocator::class.java.getResourceAsStream("/bin/$name")?.use { it.readBytes() }
             ?: throw CoreException("This build of Commit Hike doesn't include $name.")
-        val version = PluginManagerCore.getPlugin(PluginId.getId(PLUGIN_ID))?.version ?: "dev"
+        val version = BuildInfo.current.version // one copy per plugin version
         val target = Paths.get(PathManager.getSystemPath(), "commit-hike", version, name)
 
         val upToDate = Files.isRegularFile(target) &&

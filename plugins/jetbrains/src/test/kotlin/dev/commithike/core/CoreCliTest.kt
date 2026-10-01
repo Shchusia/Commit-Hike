@@ -27,6 +27,15 @@ class CoreCliTest {
     }
 
     @Test
+    fun readsBuildInfo() {
+        fun load(text: String?) = BuildInfo.load(text?.byteInputStream())
+        assertEquals(BuildInfo("0.3.0", "prod"), load("version=0.3.0\nflavor=prod\n"))
+        assertEquals(BuildInfo("0.3.0", "dev"), load("version=0.3.0\nflavor=dev\n"))
+        assertEquals(BuildInfo("dev", "prod"), load(null)) // no resource, e.g. running from sources
+        assertEquals(BuildInfo("dev", "prod"), load("flavor=weird\nversion=\n"))
+    }
+
+    @Test
     fun formatsDistances() {
         assertEquals("42 m", formatDistance(42.4))
         assertEquals("8.4 km", formatDistance(8400.0))

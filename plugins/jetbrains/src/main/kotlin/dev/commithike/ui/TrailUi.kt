@@ -32,6 +32,7 @@ import dev.commithike.CommitHikeApp
 import dev.commithike.CommitHikeIcons
 import dev.commithike.ProjectTrek
 import dev.commithike.TrailListener
+import dev.commithike.core.BuildInfo
 import dev.commithike.core.I18n
 import dev.commithike.core.LocaleInfo
 import dev.commithike.core.RouteAssets
@@ -264,9 +265,6 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
         val openToken: Int,
     )
 
-    /** Version and flavor baked in by the Gradle build (see writeBuildInfo). */
-    private data class BuildInfo(val version: String, val flavor: String)
-
     private fun push() {
         if (!ready) return
         val trek = project.service<ProjectTrek>()
@@ -300,10 +298,7 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
     override fun dispose() {}
 
     private companion object {
-        val buildInfo: BuildInfo = java.util.Properties().let { p ->
-            TrailBrowser::class.java.getResourceAsStream("/commit-hike-build.properties")?.use { p.load(it) }
-            BuildInfo(p.getProperty("version", "dev"), p.getProperty("flavor", "prod"))
-        }
+        val buildInfo: BuildInfo = BuildInfo.current
 
         // A dev build (task ... FLAVOR=dev), runIde/runPyCharm, or COMMIT_HIKE_DEV=1 may look ahead.
         val isDevBuild: Boolean =

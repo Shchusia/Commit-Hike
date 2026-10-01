@@ -10,6 +10,10 @@ turns them into the section of the new version; the JetBrains Marketplace
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-10-01
+
+- No notable changes.
+
 ## [0.3.0] - 2026-10-01
 
 ### Added

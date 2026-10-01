@@ -530,7 +530,7 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
                 .save(null as VirtualFile?, if (file.endsWith(".png")) file else "$file.png")
         } ?: return@guarded
         withContext(Dispatchers.IO) { target.file.writeBytes(png) }
-        notify("Commit Hike", I18n.t("postcardSaved", target.file.path), I18n.t("openBtn")) { BrowserUtil.browse(target.file) }
+        notify("Commit Hike", I18n.t("postcardSaved", target.file.path), I18n.t("openBtn")) { BrowserUtil.browse(target.file.toPath()) }
     }
 
     // ---------- days off & backups ----------

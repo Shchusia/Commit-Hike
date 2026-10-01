@@ -10,6 +10,13 @@ turns them into the section of the new version; the JetBrains Marketplace
 
 ## [Unreleased]
 
+
+## [0.3.1] - 2026-10-01
+
+### Fixed
+- JetBrains: no more use of API the platform plans to remove (`BrowserUtil.browse(File)`) or keeps internal (`PluginManagerCore.getPlugin`)
+
+
 ## [0.3.0] - 2026-10-01
 
 ### Added

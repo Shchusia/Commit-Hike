@@ -46,6 +46,20 @@ body {
 button { font: inherit; color: inherit; }
 button:focus-visible, [role="tab"]:focus-visible, [tabindex]:focus-visible { outline: 1px solid var(--ct-focus); outline-offset: 2px; }
 [hidden] { display: none !important; }
+/* less motion: every CSS animation and transition, route scenes included */
+html.reduce-motion *, html.reduce-motion *::before, html.reduce-motion *::after {
+  animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; scroll-behavior: auto !important; }
+/* more contrast: solid text, visible borders, thicker focus */
+html.hc { --ct-muted: var(--ct-fg); --ct-line: var(--ct-fg); --ct-card: var(--ct-bg); --ct-card-2: color-mix(in srgb, var(--ct-fg) 16%, var(--ct-bg)); }
+/* outlines as inset shadows: as visible as a border, but they don't change any size */
+html.hc .stat, html.hc .chip-btn, html.hc [role="tab"], html.hc .chart-tip, html.hc .card, html.hc .mapbox, html.hc .scene, html.hc .menu {
+  box-shadow: inset 0 0 0 1px var(--ct-fg) !important; }
+html.hc [role="tab"][aria-selected="true"] { box-shadow: inset 0 0 0 2px var(--ct-fg) !important; }
+html.hc button:focus-visible, html.hc [role="tab"]:focus-visible, html.hc [tabindex]:focus-visible { outline: 2px solid var(--ct-focus); outline-offset: 2px; }
+html.hc .chart .bar-d { fill: var(--ct-fg); }
+html.hc .chart .bar-d.today, html.hc .cal-d.l4 { fill: var(--ct-blaze); }
+html.hc .cal-d { stroke: var(--ct-fg); stroke-width: .35; }
+html.hc .hint, html.hc .flavor { opacity: 1; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
 /* ---------------------------------------------------------------- header */
@@ -82,7 +96,7 @@ button:focus-visible, [role="tab"]:focus-visible, [tabindex]:focus-visible { out
 
 /* ---------------------------------------------------------------- tabs */
 .tabs { display: flex; gap: 2px; margin: 12px 0 10px; padding: 2px; border-radius: 6px; background: var(--ct-card); overflow-x: auto; scrollbar-width: none; }
-.tabs button { flex: 1 0 auto; background: none; border: 0; border-radius: 4px; padding: 4px 9px; color: var(--ct-muted); cursor: pointer; }
+.tabs button { flex: 1 0 auto; background: none; border: 0; border-radius: 4px; padding: 4px 6px; white-space: nowrap; color: var(--ct-muted); cursor: pointer; }
 .tabs button[aria-selected="true"] { background: var(--ct-bg); color: var(--ct-fg); box-shadow: 0 0 0 1px var(--ct-line); }
 .tabs .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--ct-blaze); margin-left: 4px; vertical-align: 2px; }
 
@@ -261,6 +275,51 @@ button:focus-visible, [role="tab"]:focus-visible, [tabindex]:focus-visible { out
 .chart { display: block; width: 100%; height: auto; margin-top: 8px; }
 .chart .bar-d { fill: color-mix(in srgb, var(--ct-fg) 28%, transparent); }
 .chart .bar-d.today { fill: var(--ct-blaze); }
+.chart .bar-d.active { fill: color-mix(in srgb, var(--ct-fg) 55%, transparent); }
+.chart .bar-d.today.active { fill: color-mix(in srgb, var(--ct-blaze) 80%, white); }
+.chart .bar-hit { fill: transparent; cursor: default; outline: none; }
+.chart .bar-hit:focus-visible { stroke: var(--ct-blaze); stroke-width: 1.5; }
+.chart-box { position: relative; }
+.chart-tip { position: absolute; z-index: 2; pointer-events: none; white-space: nowrap; padding: 4px 8px; border-radius: 6px; font-size: 12px; line-height: 1.35;
+  background: var(--ct-card, #2b2d30); color: var(--ct-fg); border: 1px solid var(--ct-line); box-shadow: 0 4px 14px rgba(0,0,0,.25); display: flex; gap: 8px; align-items: baseline; }
+.chart-tip .d { color: var(--ct-muted); }
+.settings .set-head { display: flex; align-items: center; gap: 12px; margin: 10px 0 6px; }
+.settings .set-head h2 { margin: 0; font-size: 1.1em; }
+.set-row { margin: 14px 0; padding-bottom: 12px; border-bottom: 1px solid var(--ct-line); }
+.set-row:last-child { border-bottom: 0; }
+.set-row h3 { margin: 0 0 4px; font-size: 1em; }
+.set-h { margin: 0 0 8px; color: var(--ct-muted); font-size: .9em; }
+.seg { display: flex; flex-wrap: wrap; gap: 4px; }
+.seg button { background: var(--ct-card-2); border: 1px solid transparent; border-radius: 6px; padding: 4px 10px; cursor: pointer; color: var(--ct-fg); }
+.seg button.on { border-color: var(--ct-blaze); background: color-mix(in srgb, var(--ct-blaze) 18%, var(--ct-bg)); }
+.seg button[disabled] { opacity: .45; cursor: not-allowed; }
+.seg.days button { min-width: 42px; }
+.set-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+html.hc .seg button { box-shadow: inset 0 0 0 1px var(--ct-fg); }
+html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
+.hike-actions { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.hike-actions .hint { margin: 8px 0 0; }
+.hike-actions .share { flex: none; margin-top: 6px; }
+.year { margin-top: 14px; }
+.year-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.year-head .section-title { margin: 0; }
+.year-head .chip-btn[disabled] { opacity: .35; cursor: default; }
+.cal { display: block; width: 100%; height: auto; margin-top: 8px; }
+.cal text { fill: var(--ct-muted); font-size: 6px; }
+.cal-d { fill: var(--ct-card-2); }
+.cal-d.l1 { fill: color-mix(in srgb, var(--ct-blaze) 30%, var(--ct-card-2)); }
+.cal-d.l2 { fill: color-mix(in srgb, var(--ct-blaze) 55%, var(--ct-card-2)); }
+.cal-d.l3 { fill: color-mix(in srgb, var(--ct-blaze) 78%, var(--ct-card-2)); }
+.cal-d.l4 { fill: var(--ct-blaze); }
+.cal-d.future { opacity: .35; }
+.cal rect.cal-d:not(.future):hover { stroke: var(--ct-fg); stroke-width: .7; }
+.cal-legend { display: flex; align-items: center; justify-content: flex-end; gap: 3px; margin-top: 4px; font-size: .8em; color: var(--ct-muted); }
+.cal-legend i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; background: var(--ct-card-2); }
+.cal-legend i.l1 { background: color-mix(in srgb, var(--ct-blaze) 30%, var(--ct-card-2)); }
+.cal-legend i.l2 { background: color-mix(in srgb, var(--ct-blaze) 55%, var(--ct-card-2)); }
+.cal-legend i.l3 { background: color-mix(in srgb, var(--ct-blaze) 78%, var(--ct-card-2)); }
+.cal-legend i.l4 { background: var(--ct-blaze); }
+.cal-legend span { margin: 0 3px; }
 .chart .base { stroke: var(--ct-line); }
 .chart text { fill: var(--ct-muted); font-size: 10px; }
 .section-title { margin: 16px 0 4px; font-weight: 600; display: flex; justify-content: space-between; }
@@ -320,6 +379,20 @@ button:focus-visible, [role="tab"]:focus-visible, [tabindex]:focus-visible { out
       altitude: "Altitude", grade: "grade", climbed: "Climbed", highest: "Highest point", today: "Today", streak: "Streak",
       onTrail: "On this trail", commits: "Commits", toNextClimb: "Climb to next stop",
       days: { one: "{n} day", other: "{n} days" }, lastDays: "Last 14 days", noActivity: "No commits in the last two weeks yet.",
+      yearTitle: "{y} on the trail", yearDistance: "Walked", yearCommits: "Commits", yearActive: "Active days", yearBest: "Best day",
+      yearStreak: "Longest streak", yearPrev: "Previous year", yearNext: "Next year", yearEmpty: "No commits in {y}.",
+      restShort: "days off: {d}", calLess: "Less", calMore: "More",
+      share: "Postcard", shareTitle: "Save a picture of where you are, to share", ofTotal: "{a} of {b}",
+      settings: "Settings", back: "Back", optAuto: "Like the system", optOn: "On", optOff: "Off",
+      setRest: "Days off", setRestHint: "A day off without commits doesn't break your streak; one with commits still counts.",
+      restAllDays: "At least one day has to be a working day.",
+      setNotif: "Notifications", notifAll: "All", notifMilestones: "Only milestones", notifOff: "Off",
+      setNotifHint: "Milestones are stops, achievements and the finish; All adds how far each commit took you.",
+      setMotion: "Less motion", setMotionHint: "Turns off the walk after a commit and every animation, route scenes included.",
+      setContrast: "More contrast", setContrastHint: "Solid text, visible outlines and stronger focus marks.",
+      setHiker: "Your hiker", setBackup: "Backup",
+      setBackupHint: "One file with your progress, settings, hiker and routes, to move to another computer. It holds your private key: keep it to yourself.",
+      backupExport: "Export…", backupImport: "Import…",
       achievements: "Achievements", achCount: "{n} of {m}", secret: "Secret achievement", secretDesc: "Keep walking to find out.",
       factTitle: "Did you know?", factLocked: "A fact waits {d} ahead.", storyTitle: "On the trail",
       factsFound: "{n} of {m} facts found",
@@ -374,6 +447,20 @@ button:focus-visible, [role="tab"]:focus-visible, [tabindex]:focus-visible { out
       altitude: "Висота", grade: "ухил", climbed: "Набрано висоти", highest: "Найвища точка", today: "Сьогодні", streak: "Серія",
       onTrail: "На цій стежці", commits: "Комітів", toNextClimb: "Підйом до зупинки",
       days: { one: "{n} день", few: "{n} дні", many: "{n} днів", other: "{n} дня" },
+      yearTitle: "{y} рік у поході", yearDistance: "Пройдено", yearCommits: "Комітів", yearActive: "Активних днів", yearBest: "Найкращий день",
+      yearStreak: "Найдовша серія", yearPrev: "Попередній рік", yearNext: "Наступний рік", yearEmpty: "У {y} році комітів не було.",
+      restShort: "вихідні: {d}", calLess: "Менше", calMore: "Більше",
+      share: "Листівка", shareTitle: "Зберегти картинку з місцем, де ти зараз, щоб поділитися", ofTotal: "{a} з {b}",
+      settings: "Налаштування", back: "Назад", optAuto: "Як у системі", optOn: "Увімк.", optOff: "Вимк.",
+      setRest: "Вихідні дні", setRestHint: "Вихідний без комітів не перериває серію, а з комітами — зараховується.",
+      restAllDays: "Хоча б один день має бути робочим.",
+      setNotif: "Сповіщення", notifAll: "Усі", notifMilestones: "Лише важливі", notifOff: "Вимк.",
+      setNotifHint: "Важливі — це зупинки, досягнення й фініш; «Усі» додають, скільки пройдено за кожен коміт.",
+      setMotion: "Менше руху", setMotionHint: "Вимикає прогулянку після коміту й усі анімації, зокрема сцени маршрутів.",
+      setContrast: "Більше контрасту", setContrastHint: "Суцільний текст, помітні рамки й виразніший фокус.",
+      setHiker: "Твій мандрівник", setBackup: "Резервна копія",
+      setBackupHint: "Один файл із прогресом, налаштуваннями, мандрівником і маршрутами — щоб перенести на інший комп'ютер. У ньому твій особистий ключ: не передавай його іншим.",
+      backupExport: "Експортувати…", backupImport: "Імпортувати…",
       lastDays: "Останні 14 днів", noActivity: "За останні два тижні комітів ще не було.",
       achievements: "Досягнення", achCount: "{n} з {m}", secret: "Таємне досягнення", secretDesc: "Іди далі, щоб дізнатися.",
       factTitle: "А ти знав?", factLocked: "Факт чекає за {d}.", storyTitle: "На стежці",
@@ -446,7 +533,19 @@ button:focus-visible, [role="tab"]:focus-visible, [tabindex]:focus-visible { out
   const saved = (vscode && vscode.getState && vscode.getState()) || {};
   function remember(patch) { Object.assign(saved, patch); if (vscode && vscode.setState) vscode.setState(saved); }
 
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Less motion and more contrast: the system/IDE setting by default, or what
+  // the user chose in the plugin (data.reduce_motion / data.high_contrast).
+  let reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function applyPrefs() {
+    const sys = q => window.matchMedia(q).matches;
+    const set = (data && data.status && data.status.settings) || {};
+    const pick = (override, choice, auto) => (override != null ? !!override : choice === "on" ? true : choice === "off" ? false : auto());
+    reduceMotion = pick(data && data.reduce_motion, set.reduce_motion, () => sys("(prefers-reduced-motion: reduce)"));
+    const hc = pick(data && data.high_contrast, set.high_contrast,
+      () => sys("(prefers-contrast: more)") || sys("(forced-colors: active)") || document.body.classList.contains("vscode-high-contrast"));
+    document.documentElement.classList.toggle("reduce-motion", reduceMotion);
+    document.documentElement.classList.toggle("hc", hc);
+  }
   const root = document.getElementById("root");
 
   const SVG_NS = "http://www.w3.org/2000/svg";
@@ -1412,7 +1511,7 @@ button:focus-visible, [role="tab"]:focus-visible, [tabindex]:focus-visible { out
     }
 
     function resize() {
-      W = host.clientWidth || 300; dpr = window.devicePixelRatio || 1;
+      W = host.clientWidth || 300; dpr = opts.dpr || window.devicePixelRatio || 1;
       for (const [cv, c] of [[bg, b], [fg, f]]) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); c.setTransform(dpr, 0, 0, dpr, 0, 0); }
       camX = target = clampCam(camX === 0 ? hikerCam(hikerM) : camX);
       draw();
@@ -2083,7 +2182,9 @@ button:focus-visible, [role="tab"]:focus-visible, [tabindex]:focus-visible { out
     const ls = data.locale_setting || {};
     const fixed = ls.locale || "";
     const langs = [...new Set(["en", "uk", ...(ls.available || [])])].filter(l => STRINGS[l] || LANG_NAMES[l]);
-    const items = [el("div", { class: "label", text: t("language") }), act(t("langAuto"), { command: "setLocale", locale: "auto" }, fixed === "")];
+    const items = [el("button", { role: "menuitem", onclick: () => { menuOpen = false; viewBeforeSettings = view; view = "settings"; render(); } },
+      [el("span", { class: "ck", text: "⚙" }), t("settings")]), el("div", { class: "sep" }),
+    el("div", { class: "label", text: t("language") }), act(t("langAuto"), { command: "setLocale", locale: "auto" }, fixed === "")];
     for (const l of langs) items.push(act(LANG_NAMES[l] || l, { command: "setLocale", locale: l }, fixed === l));
     const st = data.status || {};
     if (st.difficulty) {
@@ -2133,6 +2234,54 @@ button:focus-visible, [role="tab"]:focus-visible, [tabindex]:focus-visible { out
   }
 
   // ================================================================ hike
+  // A postcard to share: the real hike scene, drawn off screen at double
+  // density, with the place on top and the route, day and distance below.
+  // 1200×630 is the size social networks use for link previews.
+  async function postcard(j) {
+    const PW = 1200, PH = 630, SH = 540;
+    const host = el("div", { class: "scene", style: "position:fixed;left:-10000px;top:0;width:600px;height:270px" });
+    document.body.append(host);
+    try {
+      HikeScene(host, j, { from: j.distance_m, avatar: data.avatar, team: [], assets: assetsFor(j.route.id), lockAhead: true, dpr: 2, onView: () => {} });
+      for (let k = 0; k < 3; k++) await new Promise(r => requestAnimationFrame(r));
+      await new Promise(r => setTimeout(r, 250)); // the hiker sprite and pictures load asynchronously
+      const out = el("canvas"); out.width = PW; out.height = PH;
+      const c = out.getContext("2d");
+      c.fillStyle = "#16191c"; c.fillRect(0, 0, PW, PH);
+      for (const cv of host.querySelectorAll("canvas")) c.drawImage(cv, 0, 0, PW, SH);
+      const font = (w, px) => `${w} ${px}px ${getComputedStyle(document.body).fontFamily || "sans-serif"}`;
+      // where you are
+      const w = j.last_waypoint;
+      const place = w ? w.name : t("startPlace"); // the last stop passed; the current altitude goes below
+      c.font = font(600, 26);
+      const pw = c.measureText(place).width + 36;
+      c.fillStyle = "rgba(14,16,18,.62)";
+      c.beginPath(); c.roundRect(28, 28, pw, 48, 24); c.fill();
+      c.fillStyle = "#f3efe4"; c.textBaseline = "middle"; c.fillText(place, 46, 53);
+      // the band: progress, route, day and distance, brand
+      c.fillStyle = "#1b1f22"; c.fillRect(0, SH, PW, PH - SH);
+      c.fillStyle = "#2c3236"; c.fillRect(0, SH, PW, 6);
+      c.fillStyle = "#e8b53d"; c.fillRect(0, SH, PW * Math.min(1, j.distance_m / j.route.length_m), 6);
+      c.textBaseline = "alphabetic";
+      c.fillStyle = "#f3efe4"; c.font = font(700, 30); c.fillText(j.route.name, 40, SH + 46);
+      c.fillStyle = "#aab1b3"; c.font = font(400, 22);
+      c.fillText([t("dayN", { n: j.day || 1 }), t("ofTotal", { a: fmt(j.distance_m), b: fmt(j.route.length_m) }),
+        j.elevation_m != null ? "⛰ " + fmtElev(j.elevation_m) : null].filter(Boolean).join(" · "), 40, SH + 78);
+      c.font = font(700, 24);
+      const brand = "Commit Hike", bw = c.measureText(brand).width;
+      c.fillStyle = "#e8b53d"; c.fillRect(PW - 40 - bw - 18, SH + 40, 8, 26);
+      c.fillStyle = "#f3efe4"; c.fillText(brand, PW - 40 - bw, SH + 62);
+      return out.toDataURL("image/png");
+    } finally {
+      host.remove();
+    }
+  }
+  function savePostcard(dataUrl, j) {
+    const name = `commit-hike-${j.route.id}-day-${j.day || 1}.png`;
+    if (vscode || window.commitHikeHost) send({ command: "savePostcard", name, data: dataUrl });
+    else el("a", { href: dataUrl, download: name }).click(); // a plain browser, e.g. while developing the panel
+  }
+
   function hikeView(j, s) {
     const key = scope + ":" + j.route.id;
     const from = lastDrawn[key] != null ? Math.min(lastDrawn[key], j.distance_m) : j.distance_m;
@@ -2179,7 +2328,12 @@ button:focus-visible, [role="tab"]:focus-visible, [tabindex]:focus-visible { out
     const lock = !data.dev;
     const strip = ProfileStrip(j, team, m => sceneApi && sceneApi.lookAt(m), lock ? j.distance_m : null);
     const card = el("div", { class: "hike" }, [scene, strip.node, info]);
-    root.append(card, el("p", { class: "hint", text: lock ? t("scrollHintLocked") : t("scrollHint") }));
+    const share = el("button", { class: "chip-btn share", text: "✉ " + t("share"), title: t("shareTitle"),
+      onclick: async () => {
+        share.disabled = true;
+        try { savePostcard(await postcard(j), j); } finally { share.disabled = false; }
+      } });
+    root.append(card, el("div", { class: "hike-actions" }, [el("p", { class: "hint", text: lock ? t("scrollHintLocked") : t("scrollHint") }), share]));
     const mini = MiniMap(j, { team, assets: assetsFor(j.route.id), width: root.clientWidth < 320 ? 70 : 84,
       onOpen: () => { view = "map"; remember({ view }); render(); } });
     scene.style.setProperty("--mm-h", mini.height + "px");
@@ -2306,22 +2460,151 @@ button:focus-visible, [role="tab"]:focus-visible, [tabindex]:focus-visible { out
   }
 
   // ================================================================ stats
+  // Last 14 days. Hovering (or focusing, or tapping) a day shows its date and
+  // distance in a tooltip of our own: SVG <title> tooltips don't appear in the
+  // JetBrains browser at all and only after a long delay in VS Code.
   function chartView(daily) {
     const W = 300, H = 110, top = 14, bottom = 18, n = daily.length;
     const max = Math.max(...daily.map(d => d.m), 0);
-    const svg = el("svg", { class: "chart", viewBox: `0 0 ${W} ${H}`, role: "img" });
-    const bw = W / n;
+    const svg = el("svg", { class: "chart", viewBox: `0 0 ${W} ${H}`, role: "group", "aria-label": t("lastDays") });
+    const tip = el("div", { class: "chart-tip", role: "status", "aria-live": "polite" });
+    tip.hidden = true;
+    const box = el("div", { class: "chart-box" }, [svg, tip]);
+    const bw = W / n, cols = [];
+    const show = i => {
+      cols.forEach((c, k) => c.bar.classList.toggle("active", k === i));
+      const { d, date } = cols[i];
+      const day = date.toLocaleDateString(lang, { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" });
+      tip.replaceChildren(...[el("span", { class: "d", text: (i === n - 1 ? t("today") + " · " : "") + day }), el("b", { text: fmt(d.m) }),
+        d.commits ? el("span", { class: "d", text: plural("commitsN", d.commits) }) : null].filter(Boolean));
+      tip.hidden = false;
+      // above the column, kept inside the chart
+      const r = box.getBoundingClientRect(), k = r.width / W;
+      const barTop = (H - bottom - cols[i].h) * k;
+      const x = Math.max(0, Math.min(r.width - tip.offsetWidth, (i + 0.5) * bw * k - tip.offsetWidth / 2));
+      tip.style.left = x + "px";
+      tip.style.top = Math.max(0, barTop - tip.offsetHeight - 6) + "px";
+    };
+    const hide = () => { tip.hidden = true; cols.forEach(c => c.bar.classList.remove("active")); };
     daily.forEach((d, i) => {
       const h = max > 0 ? (d.m / max) * (H - top - bottom) : 0;
       const date = new Date(d.date + "T00:00:00Z");
-      const label = date.toLocaleDateString(lang, { day: "numeric", month: "short", timeZone: "UTC" });
-      svg.append(el("rect", { class: "bar-d" + (i === n - 1 ? " today" : ""), x: i * bw + 2, y: H - bottom - h, width: bw - 4, height: Math.max(h, d.m > 0 ? 2 : 0), rx: 2 },
-        [el("title", { text: label + ": " + fmt(d.m) })]));
+      const label = date.toLocaleDateString(lang, { day: "numeric", month: "long", timeZone: "UTC" }) + ": " + fmt(d.m) + (d.commits ? ", " + plural("commitsN", d.commits) : "");
+      const bar = el("rect", { class: "bar-d" + (i === n - 1 ? " today" : ""), x: i * bw + 2, y: H - bottom - h, width: bw - 4, height: Math.max(h, d.m > 0 ? 2 : 0), rx: 2 });
+      // the whole column reacts, so days with a tiny bar (or none) can be pointed at too
+      const hit = el("rect", { class: "bar-hit", x: i * bw, y: 0, width: bw, height: H - bottom, tabindex: "0", role: "img", "aria-label": label });
+      hit.addEventListener("pointerenter", () => show(i));
+      hit.addEventListener("pointerdown", () => show(i)); // touch
+      hit.addEventListener("focus", () => show(i));
+      hit.addEventListener("blur", hide);
+      hit.addEventListener("keydown", e => {
+        const to = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : -1;
+        if (to >= 0 && to < n) { e.preventDefault(); cols[to].hit.focus(); }
+      });
+      cols.push({ d, date, h, bar, hit });
+      svg.append(bar);
       if (i % 2 === (n - 1) % 2) svg.append(el("text", { x: i * bw + bw / 2, y: H - 4, "text-anchor": "middle", text: String(date.getUTCDate()) }));
     });
     svg.append(el("line", { class: "base", x1: 0, y1: H - bottom + 0.5, x2: W, y2: H - bottom + 0.5 }));
     if (max > 0) svg.append(el("text", { x: 0, y: 10, text: fmt(max) }));
-    return svg;
+    cols.forEach(c => svg.append(c.hit)); // on top, so they get the pointer
+    svg.addEventListener("pointerleave", e => { if (e.pointerType === "mouse") hide(); });
+    return box;
+  }
+  // Weekday names for 0 = Sunday … 6 = Saturday, in the panel's language.
+  const weekdayName = (d, style) => new Date(Date.UTC(2026, 9, 4 + d)).toLocaleDateString(lang, { weekday: style || "short", timeZone: "UTC" }); // 2026-10-04 is a Sunday
+  function restNote(rest) {
+    if (!rest || !rest.length) return "";
+    const order = [1, 2, 3, 4, 5, 6, 0]; // Monday first
+    return " · " + t("restShort", { d: order.filter(d => rest.includes(d)).map(d => weekdayName(d)).join(", ") });
+  }
+
+  // The year on the trail: totals, best day, longest streak (days off don't
+  // break it, as in the core) and an activity calendar with a tooltip per day.
+  let shownYear = null;
+  function yearView(history, rest, todayStr) {
+    const byDate = new Map(history.map(d => [d.date, d]));
+    const today = todayStr ? new Date(todayStr + "T00:00:00Z") : new Date(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
+    const years = [...new Set(history.map(d => +d.date.slice(0, 4)).concat(today.getUTCFullYear()))].sort((a, b) => a - b);
+    if (shownYear == null || !years.includes(shownYear)) shownYear = today.getUTCFullYear();
+    const box = el("div", { class: "year" });
+
+    const render = () => {
+      const y = shownYear, DAY = 86400000;
+      const start = Date.UTC(y, 0, 1), end = Date.UTC(y + 1, 0, 1), last = Math.min(end - DAY, today.getTime());
+      const days = [];
+      for (let t0 = start; t0 < end; t0 += DAY) {
+        const date = new Date(t0).toISOString().slice(0, 10), h = byDate.get(date);
+        days.push({ t: t0, date, m: h ? h.m : 0, commits: h ? h.commits || 0 : 0, future: t0 > today.getTime() });
+      }
+      const active = days.filter(d => d.m > 0);
+      const total = active.reduce((a, d) => a + d.m, 0), commits = active.reduce((a, d) => a + d.commits, 0);
+      const best = active.reduce((a, d) => (!a || d.m > a.m ? d : a), null);
+      let run = 0, longest = 0;
+      for (const d of days) {
+        if (d.t > last) break;
+        if (d.m > 0) longest = Math.max(longest, ++run);
+        else if (!rest.includes(new Date(d.t).getUTCDay())) run = 0;
+      }
+
+      const head = el("div", { class: "year-head" }, [
+        el("button", { class: "chip-btn", text: "‹", title: t("yearPrev"), "aria-label": t("yearPrev"), disabled: y <= years[0] ? "" : null, onclick: () => { shownYear--; render(); } }),
+        el("div", { class: "section-title", text: t("yearTitle", { y }) }),
+        el("button", { class: "chip-btn", text: "›", title: t("yearNext"), "aria-label": t("yearNext"), disabled: y >= years[years.length - 1] ? "" : null, onclick: () => { shownYear++; render(); } }),
+      ]);
+      const stat = (v, k) => el("div", { class: "stat" }, [el("div", { class: "v", text: v }), el("div", { class: "k", text: k })]);
+      const bestText = best ? fmt(best.m) + " · " + new Date(best.t).toLocaleDateString(lang, { day: "numeric", month: "short", timeZone: "UTC" }) : "—";
+      const summary = active.length
+        ? el("div", { class: "stats" }, [stat(fmt(total), t("yearDistance")), stat(String(commits), t("yearCommits")),
+            stat(String(active.length), t("yearActive")), stat(plural("days", longest), t("yearStreak")), stat(bestText, t("yearBest"))])
+        : el("p", { class: "hint", text: t("yearEmpty", { y }) });
+      box.replaceChildren(head, summary, calendar(days, active));
+    };
+
+    function calendar(days, active) {
+      const cell = 5, gap = 1.2, step = cell + gap, left = 0, top = 11;
+      const offset = (new Date(days[0].t).getUTCDay() + 6) % 7; // weeks start on Monday
+      const weeks = Math.ceil((days.length + offset) / 7), W = left + weeks * step, H = top + 7 * step;
+      const svg = el("svg", { class: "cal", viewBox: `0 0 ${W} ${H}`, role: "img",
+        "aria-label": t("yearTitle", { y: shownYear }) + ": " + plural("days", active.length) + ", " + fmt(active.reduce((a, d) => a + d.m, 0)) });
+      // four shades by quartile of this year's active days
+      const sorted = active.map(d => d.m).sort((a, b) => a - b), q = k => sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * k))] || 0;
+      const levels = [q(0.25), q(0.5), q(0.75)];
+      const level = m => (m <= 0 ? 0 : m <= levels[0] ? 1 : m <= levels[1] ? 2 : m <= levels[2] ? 3 : 4);
+      const tip = el("div", { class: "chart-tip" });
+      tip.hidden = true;
+      const wrap = el("div", { class: "chart-box" }, [svg, tip]);
+      let month = -1;
+      days.forEach((d, i) => {
+        const col = Math.floor((i + offset) / 7), row = (i + offset) % 7, x = left + col * step, y = top + row * step;
+        const mo = new Date(d.t).getUTCMonth();
+        if (mo !== month && row < 3) {
+          month = mo;
+          svg.append(el("text", { x, y: 7, text: new Date(d.t).toLocaleDateString(lang, { month: "short", timeZone: "UTC" }) }));
+        }
+        const r = el("rect", { class: "cal-d l" + level(d.m) + (d.future ? " future" : ""), x, y, width: cell, height: cell, rx: 1 });
+        if (!d.future) {
+          r.addEventListener("pointerenter", () => {
+            tip.replaceChildren(...[
+              el("span", { class: "d", text: new Date(d.t).toLocaleDateString(lang, { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" }) }),
+              el("b", { text: fmt(d.m) }), d.commits ? el("span", { class: "d", text: plural("commitsN", d.commits) }) : null].filter(Boolean));
+            tip.hidden = false;
+            const b = wrap.getBoundingClientRect(), k = b.width / W;
+            tip.style.left = Math.max(0, Math.min(b.width - tip.offsetWidth, (x + cell / 2) * k - tip.offsetWidth / 2)) + "px";
+            tip.style.top = Math.max(0, y * k - tip.offsetHeight - 4) + "px";
+          });
+          r.addEventListener("pointerdown", () => r.dispatchEvent(new Event("pointerenter")));
+        }
+        svg.append(r);
+      });
+      svg.addEventListener("pointerleave", () => { tip.hidden = true; });
+      const legend = el("div", { class: "cal-legend" }, [el("span", { text: t("calLess") }),
+        ...[0, 1, 2, 3, 4].map(l => el("i", { class: "cal-d l" + l })), el("span", { text: t("calMore") })]);
+      return el("div", {}, [wrap, legend]);
+    }
+
+    render();
+    return box;
   }
   function medal(got) {
     const c = got ? "#e8b53d" : "#8c8f96";
@@ -2334,7 +2617,7 @@ button:focus-visible, [role="tab"]:focus-visible, [tabindex]:focus-visible { out
   function statsView(j, s) {
     const stat = (v, k) => el("div", { class: "stat" }, [el("div", { class: "v", text: v }), el("div", { class: "k", text: k })]);
     const cells = [
-      stat(fmt(s.today_m || 0), t("today")), stat(plural("days", j.streak_days || 0), t("streak")),
+      stat(fmt(s.today_m || 0), t("today")), stat(plural("days", j.streak_days || 0), t("streak") + restNote(s.rest_days)),
       stat(fmt(j.distance_m), t("onTrail")), stat(String(j.commits || 0), t("commits")),
     ];
     if (!j.finished && s.typical_day_m) cells.push(stat(t("daysLeftShort", { n: daysLeft(j, s) }), t("daysLeftLabel")),
@@ -2345,6 +2628,7 @@ button:focus-visible, [role="tab"]:focus-visible, [tabindex]:focus-visible { out
     const daily = j.daily || [];
     root.append(el("div", { class: "section-title" }, [t("lastDays")]));
     if (daily.some(d => d.m > 0)) root.append(chartView(daily));
+    if ((s.history || []).length) root.append(yearView(s.history, s.rest_days || [], daily.length ? daily[daily.length - 1].date : null));
     else root.append(el("p", { class: "hint", text: t("noActivity") }));
     const list = j.achievements || [];
     if (list.length) {
@@ -2367,6 +2651,52 @@ button:focus-visible, [role="tab"]:focus-visible, [tabindex]:focus-visible { out
     ]));
   }
 
+  // ================================================================ settings
+  // One page for every IDE: changes go straight to the core, which sends back
+  // a fresh status, so the page always shows what's really stored.
+  function settingsView() {
+    const s = data.status || {}, set = s.settings || {};
+    const ls = data.locale_setting || {};
+    const seg = (label, options, current, onPick) => el("div", { class: "seg", role: "radiogroup", "aria-label": label },
+      options.map(([v, text]) => el("button", { role: "radio", "aria-checked": String(v === current), class: v === current ? "on" : null,
+        onclick: () => { if (v !== current) onPick(v); } }, [text])));
+    const row = (title, hint, ...controls) => el("section", { class: "set-row" },
+      [el("h3", { text: title }), hint ? el("p", { class: "set-h", text: hint }) : null, ...controls]);
+    const auto3 = [["auto", t("optAuto")], ["on", t("optOn")], ["off", t("optOff")]];
+
+    const langs = [...new Set(["en", "uk", ...(ls.available || [])])].filter(l => STRINGS[l] || LANG_NAMES[l]);
+    const perLevel = lvl => (s.typical_day_m || 0) / (LEVEL_FACTOR[s.difficulty] || 1) * LEVEL_FACTOR[lvl];
+    const rest = s.rest_days || [];
+    const restBtns = [1, 2, 3, 4, 5, 6, 0].map(d => {
+      const on = rest.includes(d), lastWorking = !on && rest.length === 6;
+      return el("button", { class: on ? "on" : null, "aria-pressed": String(on), disabled: lastWorking ? "" : null,
+        title: lastWorking ? t("restAllDays") : weekdayName(d, "long"),
+        onclick: () => send({ command: "setRestDays", days: on ? rest.filter(x => x !== d) : [...rest, d] }) }, [weekdayName(d)]);
+    });
+
+    root.append(el("div", { class: "settings" }, [
+      el("div", { class: "set-head" }, [
+        el("button", { class: "link", text: "← " + t("back"), onclick: () => { view = viewBeforeSettings && viewBeforeSettings !== "settings" ? viewBeforeSettings : "hike"; render(); } }),
+        el("h2", { text: t("settings") })]),
+      row(t("language"), null, seg(t("language"), [["auto", t("langAuto")], ...langs.map(l => [l, LANG_NAMES[l] || l])], ls.locale || "auto",
+        v => send({ command: "setLocale", locale: v }))),
+      s.difficulty ? row(t("difficulty"), t("diffHint"), seg(t("difficulty"), ["easy", "medium", "hard"].map(l =>
+        [l, (STRINGS[lang].diff || STRINGS.en.diff)[l] + " · " + t("perDay", { d: fmt(perLevel(l)) })]), s.difficulty,
+        v => send({ command: "setDifficulty", level: v }))) : null,
+      row(t("setRest"), t("setRestHint"), el("div", { class: "seg days", role: "group", "aria-label": t("setRest") }, restBtns)),
+      row(t("setNotif"), t("setNotifHint"), seg(t("setNotif"), [["all", t("notifAll")], ["milestones", t("notifMilestones")], ["off", t("notifOff")]],
+        set.notifications || "all", v => send({ command: "setSettings", notifications: v }))),
+      row(t("setMotion"), t("setMotionHint"), seg(t("setMotion"), auto3, set.reduce_motion || "auto", v => send({ command: "setSettings", reduce_motion: v }))),
+      row(t("setContrast"), t("setContrastHint"), seg(t("setContrast"), auto3, set.high_contrast || "auto", v => send({ command: "setSettings", high_contrast: v }))),
+      row(t("setHiker"), null, el("div", { class: "set-btns" }, [
+        el("button", { class: "chip-btn", text: t("changeIcon"), onclick: () => send({ command: "setAvatar" }) }),
+        data.avatar_custom ? el("button", { class: "chip-btn", text: t("resetIcon"), onclick: () => send({ command: "resetAvatar" }) }) : null])),
+      row(t("setBackup"), t("setBackupHint"), el("div", { class: "set-btns" }, [
+        el("button", { class: "chip-btn", text: t("backupExport"), onclick: () => send({ command: "exportProgress" }) }),
+        el("button", { class: "chip-btn", text: t("backupImport"), onclick: () => send({ command: "importProgress" }) })])),
+    ]));
+  }
+
   function render() {
     if (!data) return;
     lang = pickLang((data.locale_setting && data.locale_setting.effective) || data.locale || (data.status && data.status.locale));
@@ -2380,6 +2710,7 @@ button:focus-visible, [role="tab"]:focus-visible, [tabindex]:focus-visible { out
     const j = scope === "project" ? s.project : s.global;
     root.append(header(j));
     if (menuOpen) root.append(menu(j));
+    if (view === "settings") return settingsView();
     if (scope === "project" && !s.tracked) return emptyView(t("notCountedTitle"), t("notCountedText"), t("countBtn"), { command: "enableProject" });
     if (scope === "project" && !s.project) return emptyView(t("noProjectTitle"), t("noProjectText"), t("chooseTrail"), { command: "chooseRoute", scope: "project" });
     if (!j || !j.route) return emptyView(t("noTrailTitle"), t("noTrailText"), t("chooseTrail"), { command: "chooseRoute", scope });
@@ -2402,7 +2733,16 @@ button:focus-visible, [role="tab"]:focus-visible, [tabindex]:focus-visible { out
   document.addEventListener("click", () => { if (menuOpen) { menuOpen = false; render(); } });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && menuOpen) { menuOpen = false; render(); } });
 
-  function update(next) { data = next; render(); }
+  let openToken = null, viewBeforeSettings = null;
+  function update(next) {
+    data = next;
+    if (next && next.open_view && next.open_token !== openToken) {
+      openToken = next.open_token;
+      if (next.open_view === "settings" && view !== "settings") viewBeforeSettings = view;
+      view = next.open_view;
+    }
+    applyPrefs(); render();
+  }
   window.commitHike = { update: d => update(typeof d === "string" ? JSON.parse(d) : d) };
   window.addEventListener("message", e => { if (e.data && e.data.type === "update") update(e.data); });
   send({ command: "ready" });

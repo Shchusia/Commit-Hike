@@ -4,6 +4,13 @@
 // VS Code's own display language.
 
 const en = {
+  postcardSaveTitle: "Save the postcard", postcardSaved: "Postcard saved to {0}.", openBtn: "Open",
+  restTitle: "Days off: days without commits on these days don't break your streak",
+  restNone: "No days off", restAllDays: "At least one day has to be a working day.",
+  backupSaveTitle: "Export Commit Hike progress", backupSaved: "Progress saved to {0}. The file holds your private key: keep it to yourself.",
+  backupOpenTitle: "Import Commit Hike progress", backupFile: "Commit Hike backup",
+  backupReplaceQ: "This computer already has Commit Hike progress. Replace it with the backup? The current progress will be lost.",
+  backupRestored: "Progress restored: {0} commits.", replaceBtn: "Replace",
   cantStart: "Commit Hike can't start: {0}",
   rateAsk: "Enjoying Commit Hike? A rating on {0} helps other developers find it. It takes a minute.",
   rateYes: "Rate it", rateLater: "Later", rateNever: "Don't ask again",
@@ -57,6 +64,13 @@ const en = {
 type Key = keyof typeof en;
 
 const uk: Record<Key, string> = {
+  postcardSaveTitle: "Зберегти листівку", postcardSaved: "Листівку збережено в {0}.", openBtn: "Відкрити",
+  restTitle: "Вихідні дні: дні без комітів у ці дні не переривають серію",
+  restNone: "Без вихідних", restAllDays: "Хоча б один день має бути робочим.",
+  backupSaveTitle: "Експорт прогресу Commit Hike", backupSaved: "Прогрес збережено в {0}. Файл містить ваш особистий ключ: не передавайте його іншим.",
+  backupOpenTitle: "Імпорт прогресу Commit Hike", backupFile: "Резервна копія Commit Hike",
+  backupReplaceQ: "На цьому комп'ютері вже є прогрес Commit Hike. Замінити його резервною копією? Поточний прогрес буде втрачено.",
+  backupRestored: "Прогрес відновлено: комітів — {0}.", replaceBtn: "Замінити",
   rateAsk: "Подобається Commit Hike? Оцінка на {0} допоможе іншим розробникам його знайти. Це займе хвилину.",
   rateYes: "Оцінити", rateLater: "Пізніше", rateNever: "Більше не питати",
   cantStart: "Commit Hike не може запуститися: {0}",

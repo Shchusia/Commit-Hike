@@ -32,6 +32,9 @@ const usage = `commit-hike: turns commits into a journey. Every command prints o
   commit-hike team     --repo PATH
   commit-hike locale   [--set auto|en|uk] [--lang uk]
   commit-hike difficulty [--set easy|medium|hard]
+  commit-hike rest-days [--set sat,sun|none]
+  commit-hike settings [--reduce-motion auto|on|off] [--high-contrast auto|on|off] [--notifications all|milestones|off]
+  commit-hike backup   export --path FILE.json | import --path FILE.json [--replace]
   commit-hike verify   --repo PATH
   commit-hike render   [--scope global|project] [--repo PATH] [--format svg|scene] [--width 300] [--lang uk]
   commit-hike config
@@ -76,14 +79,15 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 
 	// "project" and "route" have a positional sub-command before flags.
 	sub := ""
-	if (cmd == "project" || cmd == "route" || cmd == "avatar") && len(args) > 0 {
+	if (cmd == "project" || cmd == "route" || cmd == "avatar" || cmd == "backup") && len(args) > 0 {
 		sub, args = args[0], args[1:]
 	}
 
 	var (
-		emails, mode, route, locale, scope, format, id, path, prevHead, setLocale, difficulty *string
-		fromHistory, replace                                                                  *bool
-		width                                                                                 *float64
+		emails, mode, route, locale, scope, format, id, path, prevHead, setLocale, difficulty, restDays *string
+		reduceMotion, highContrast, notifications                                                       *string
+		fromHistory, replace                                                                            *bool
+		width                                                                                           *float64
 	)
 	switch cmd {
 	case "init":
@@ -95,6 +99,15 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 		difficulty = fs.String("difficulty", "", "easy | medium | hard")
 	case "difficulty":
 		difficulty = fs.String("set", "", "easy | medium | hard: applies to commits from now on")
+	case "rest-days":
+		restDays = fs.String("set", "", "weekdays off, e.g. sat,sun; none for no days off")
+	case "settings":
+		reduceMotion = fs.String("reduce-motion", "", "auto | on | off")
+		highContrast = fs.String("high-contrast", "", "auto | on | off")
+		notifications = fs.String("notifications", "", "all | milestones | off")
+	case "backup":
+		path = fs.String("path", "", "backup file")
+		replace = fs.Bool("replace", false, "import: replace the progress already on this computer")
 	case "scan":
 		prevHead = fs.String("prev-head", "", "HEAD before this change; a rewrite triggers a full recount")
 	case "locale":
@@ -137,6 +150,18 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 		})
 	case "difficulty":
 		return svc.Difficulty(*difficulty)
+	case "rest-days":
+		return svc.RestDays(*restDays)
+	case "settings":
+		return svc.Settings(app.SettingsChange{ReduceMotion: *reduceMotion, HighContrast: *highContrast, Notifications: *notifications})
+	case "backup":
+		switch sub {
+		case "export":
+			return svc.ExportBackup(*path, version)
+		case "import":
+			return svc.ImportBackup(*path, *replace)
+		}
+		return nil, invalid("usage: commit-hike backup export|import --path FILE")
 	case "scan":
 		return svc.ScanWith(*repo, *lang, app.ScanOptions{PrevHead: *prevHead})
 	case "team":

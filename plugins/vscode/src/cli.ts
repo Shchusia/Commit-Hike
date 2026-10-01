@@ -19,6 +19,11 @@ export interface Story { id: string; text: string; at_m: number }
 export interface Achievement { id: string; name?: string; description?: string; hidden?: boolean; unlocked_at?: number }
 export type Level = "easy" | "medium" | "hard";
 export interface DifficultyInfo { level: Level; levels: Level[]; typical_day_m: Record<Level, number> }
+export interface RestDaysInfo { days: number[] } // 0 = Sunday … 6 = Saturday
+export type AutoOnOff = "auto" | "on" | "off";
+/** Panel and notification choices, shared by every IDE on this computer. */
+export interface Settings { reduce_motion: AutoOnOff; high_contrast: AutoOnOff; notifications: "all" | "milestones" | "off" }
+export interface BackupResult { path: string; created_at: number; commits: number; routes: number; avatar: boolean }
 export interface Span { from_m: number; to_m: number }
 export interface Danger { id: string; at_m: number; text: string }
 export interface ProfilePoint { at_m: number; elevation_m: number }
@@ -44,6 +49,7 @@ export interface Status {
   tracked: boolean; reason?: string; reason_code?: "not_a_repo" | "not_enabled"; team?: boolean;
   difficulty?: Level; typical_day_m?: number;
   locale: string; global?: Journey; project?: Journey; today_m: number; total_m: number;
+  settings?: Settings;
 }
 export type EventType = "waypoint" | "story" | "achievement" | "finished" | "fact" | "danger";
 export interface JourneyEvent {
@@ -142,6 +148,18 @@ export class Cli {
   routeAssets(id: string) { return this.run<RouteAssets>(["route", "assets", "--id", id]); }
   /** Reads the difficulty; with set, changes it for commits from now on. */
   difficulty(set?: Level) { return this.run<DifficultyInfo>(set ? ["difficulty", "--set", set] : ["difficulty"]); }
+  /** Weekdays off; set is like "sat,sun" or "none". */
+  restDays(set?: string) { return this.run<RestDaysInfo>(set ? ["rest-days", "--set", set] : ["rest-days"]); }
+  /** Changes the given settings and returns them all. */
+  settings(change: Partial<Settings> = {}) {
+    const args = Object.entries(change).filter(([, v]) => v).map(([k, v]) => `--${k.replace(/_/g, "-")}=${v}`);
+    return this.run<Settings>(["settings", ...args]);
+  }
+  exportBackup(path: string) { return this.run<BackupResult>(["backup", "export", "--path", path]); }
+  /** Rejects with CliError code "data_exists" when there is progress and replace is false. */
+  importBackup(path: string, replace: boolean) {
+    return this.run<BackupResult>(["backup", "import", "--path", path, ...(replace ? ["--replace"] : [])]);
+  }
   verify(repo: string) { return this.run<VerifyResult>(["verify", "--repo", repo]); }
 
   init(o: { emails: string[]; mode: "all" | "selected"; fromHistory: boolean; difficulty?: Level }) {

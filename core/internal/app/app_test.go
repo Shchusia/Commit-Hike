@@ -239,14 +239,14 @@ func TestHiddenAchievementStaysSecret(t *testing.T) {
 func TestStreak(t *testing.T) {
 	today := int64(100)
 	days := map[int64]float64{97: 1, 98: 1, 99: 1}
-	if got := streak(days, today); got != 3 { // today empty: counting from yesterday
+	if got := streak(days, today, restDays{}); got != 3 { // today empty: counting from yesterday
 		t.Errorf("streak = %d", got)
 	}
 	days[100] = 1
-	if got := streak(days, today); got != 4 {
+	if got := streak(days, today, restDays{}); got != 4 {
 		t.Errorf("streak = %d", got)
 	}
-	if got := streak(map[int64]float64{90: 1}, today); got != 0 {
+	if got := streak(map[int64]float64{90: 1}, today, restDays{}); got != 0 {
 		t.Errorf("streak = %d", got)
 	}
 }
@@ -353,4 +353,38 @@ func legacyScore() score.Config {
 	c := score.Default()
 	c.Pace, c.DailySoftCapM, c.OverCapFactor, c.FarCapFactor, c.FarFactor = 1, 3000, 0.25, 1e9, 0.25
 	return c
+}
+
+func TestStreakWithRestDays(t *testing.T) {
+	// Day numbers count from 1970-01-01, a Thursday. Find a Monday to anchor on.
+	mon := int64(4) // 1970-01-05
+	if weekdayOf(mon) != time.Monday {
+		t.Fatalf("day %d is %v", mon, weekdayOf(mon))
+	}
+	weekend := restDays{}
+	weekend[time.Saturday], weekend[time.Sunday] = true, true
+	thu, fri, sat, sun, nextMon := mon+3, mon+4, mon+5, mon+6, mon+7
+	days := map[int64]float64{thu: 1, fri: 1, nextMon: 1}
+	if got := streak(days, nextMon, weekend); got != 3 {
+		t.Errorf("a weekend off keeps the streak: got %d, want 3", got)
+	}
+	if got := streak(days, nextMon, restDays{}); got != 1 {
+		t.Errorf("without rest days the weekend breaks it: got %d, want 1", got)
+	}
+	days[sat] = 1
+	if got := streak(days, nextMon, weekend); got != 4 {
+		t.Errorf("working on a day off still counts: got %d, want 4", got)
+	}
+	// Monday morning, nothing yet today: Friday's streak is still alive.
+	if got := streak(map[int64]float64{thu: 1, fri: 1}, nextMon, weekend); got != 2 {
+		t.Errorf("Monday morning after a weekend off: got %d, want 2", got)
+	}
+	_ = sun
+	var all restDays
+	for i := range all {
+		all[i] = true
+	}
+	if got := streak(map[int64]float64{fri: 1}, nextMon+100, all); got != 1 {
+		t.Errorf("every day off must not loop forever: got %d", got)
+	}
 }

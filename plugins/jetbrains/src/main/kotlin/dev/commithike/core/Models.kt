@@ -42,6 +42,23 @@ data class Span(val fromM: Double = 0.0, val toM: Double = 0.0)
 
 data class Danger(val id: String = "", val atM: Double = 0.0, val text: String = "")
 
+data class RestDaysInfo(val days: List<Int> = emptyList())
+
+/** Panel and notification choices, shared by every IDE on this computer. */
+data class Settings(
+    val reduceMotion: String = "auto", // auto | on | off
+    val highContrast: String = "auto", // auto | on | off
+    val notifications: String = "all", // all | milestones | off
+)
+
+data class BackupResult(
+    val path: String = "",
+    val createdAt: Long = 0,
+    val commits: Int = 0,
+    val routes: Int = 0,
+    val avatar: Boolean = false,
+)
+
 data class DifficultyInfo(val level: String = "medium", val levels: List<String>? = null, val typicalDayM: Map<String, Double>? = null)
 
 data class ProfilePoint(val atM: Double = 0.0, val elevationM: Double = 0.0)
@@ -121,6 +138,7 @@ data class Status(
     val totalM: Double = 0.0,
     // The core's answer exactly as it came, for the trail panel. Transient: Gson
     // neither fills nor writes it, so it never goes out of sync with the fields above.
+    val settings: Settings? = null, // panel and notification choices
     @Transient val raw: JsonElement? = null,
 )
 

@@ -38,6 +38,14 @@ class DisableProjectAction : TrekAction("disableProject", { setProjectEnabled(fa
 class VerifyAction : TrekAction("verify", { verify() })
 class ImportRouteAction : TrekAction("importRoute", { importRoute() })
 class CreateRouteTemplateAction : TrekAction("createRouteTemplate", { createRouteTemplate() })
+
+class SetRestDaysAction : TrekAction("setRestDays", { setRestDays() })
+
+class OpenSettingsAction : TrekAction("openSettings", { openSettings() })
+
+class ExportProgressAction : TrekAction("exportProgress", { exportProgress() })
+
+class ImportProgressAction : TrekAction("importProgress", { importProgress() })
 class RemoveRouteAction : TrekAction("removeRoute", { removeRoute() })
 class SetHikerIconAction : TrekAction("setHikerIcon", { setHikerIcon() })
 class ResetHikerIconAction : TrekAction("resetHikerIcon", { resetHikerIcon() })

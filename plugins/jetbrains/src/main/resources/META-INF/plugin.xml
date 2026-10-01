@@ -14,6 +14,11 @@
 
   <depends>com.intellij.modules.platform</depends>
   <depends>Git4Idea</depends>
+  <!-- Since 2026.2 (build 262) the embedded browser is a separate bundled plugin,
+       "Web Browser (JCEF)", and its classes reach only plugins that depend on it.
+       Optional, because IDEs before 2025.3.1 don't know this id: there JCEF is
+       part of the core and the dependency is simply ignored. -->
+  <depends optional="true" config-file="commit-hike-jcef.xml">com.intellij.modules.jcef</depends>
 
   <extensions defaultExtensionNs="com.intellij">
     <postStartupActivity implementation="dev.commithike.CommitHikeStartup"/>
@@ -37,6 +42,11 @@
       <action id="CommitHike.RemoveRoute" class="dev.commithike.actions.RemoveRouteAction" text="Remove a Route…"/>
       <action id="CommitHike.SetHikerIcon" class="dev.commithike.actions.SetHikerIconAction" text="Set Hiker Icon…"/>
       <action id="CommitHike.ResetHikerIcon" class="dev.commithike.actions.ResetHikerIconAction" text="Use Default Hiker Icon"/>
+      <action id="CommitHike.SetRestDays" class="dev.commithike.actions.SetRestDaysAction" text="Days Off…"/>
+      <action id="CommitHike.OpenSettings" class="dev.commithike.actions.OpenSettingsAction" text="Settings…"/>
+      <separator/>
+      <action id="CommitHike.ExportProgress" class="dev.commithike.actions.ExportProgressAction" text="Export Progress…"/>
+      <action id="CommitHike.ImportProgress" class="dev.commithike.actions.ImportProgressAction" text="Import Progress…"/>
       <separator/>
       <action id="CommitHike.EnableProject" class="dev.commithike.actions.EnableProjectAction" text="Count This Project"/>
       <action id="CommitHike.DisableProject" class="dev.commithike.actions.DisableProjectAction" text="Stop Counting This Project"/>

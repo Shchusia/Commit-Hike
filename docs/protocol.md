@@ -97,3 +97,62 @@ The panel sends `{command}`: `ready`, `setup`, `refresh`, `enableProject`,
 `createRouteTemplate`, `verify`.
 
 Compatibility: new fields may appear at any time, so ignore unknown fields. Renaming or removing a field bumps `api`.
+
+## Days off, history and backups
+
+```
+commit-hike rest-days [--set sat,sun|none]     -> {"days": [0, 6]}    # 0 = Sunday … 6 = Saturday
+commit-hike backup export --path FILE.json     -> BackupResult
+commit-hike backup import --path FILE.json [--replace] -> BackupResult
+```
+
+`status` also returns:
+
+- `history`: every day with counted commits, all time, oldest first:
+  `[{"date": "2026-09-28", "m": 1290.5, "commits": 3}, …]`. The panel draws the
+  activity calendar and the year in review from it.
+- `rest_days`: the weekdays off. A day off without commits neither breaks nor
+  extends a streak; with commits it counts as usual.
+- `daily[].commits`: commits on each of the last 14 days.
+
+A backup is one JSON file (`"format": "commit-hike-backup"`, version 1) with
+the settings, the counted commits, achievements, the hiker icon, user routes
+and the local key. The key is needed because commits and projects are stored
+under ids keyed with it: without it, the same commits would count again on
+the new computer. That makes the file private; it's written with 0600
+permissions. Importing over existing progress fails with `data_exists` unless
+`--replace` is given; a file that isn't a valid backup fails with
+`invalid_backup`.
+
+## Panel preferences and postcards
+
+The host may add to the data it sends to the panel:
+
+- `reduce_motion`: `true`/`false` overrides the system's reduced-motion setting
+  (left out: follow the system). On, every animation and transition is off,
+  including animated HTML scenes in route packs.
+- `high_contrast`: `true`/`false` overrides the automatic choice (left out:
+  on with a VS Code high-contrast theme, `prefers-contrast: more` or forced colors).
+
+The panel sends `{"command": "savePostcard", "name": "commit-hike-<route>-day-<n>.png",
+"data": "data:image/png;base64,…"}` when the user saves a postcard. Hosts accept
+only PNG data URLs under 20 MB, keep only the file name part of `name`, and
+ask where to save.
+
+## Settings
+
+```
+commit-hike settings [--reduce-motion auto|on|off] [--high-contrast auto|on|off] [--notifications all|milestones|off]
+  -> {"reduce_motion": "auto", "high_contrast": "on", "notifications": "milestones"}
+```
+
+Every status carries them as `settings`. The panel follows `reduce_motion` and
+`high_contrast` (`auto` = the system or IDE theme); hosts follow `notifications`:
+`milestones` drops the per-commit distance and road encounters but keeps stops,
+achievements and the finish, `off` shows no pop-ups at all.
+
+The settings page lives in the panel. It sends `setLocale`, `setDifficulty`,
+`setRestDays {days: [0..6]}`, `setSettings {reduce_motion?, high_contrast?, notifications?}`,
+`setAvatar`, `resetAvatar`, `exportProgress` and `importProgress`. A host opens
+it by adding `open_view: "settings"` and a new `open_token` to the data it
+sends; the panel opens a page once per token.

@@ -1,0 +1,159 @@
+package app
+
+import (
+	"encoding/json"
+	"os"
+	"path/filepath"
+	"testing"
+	"time"
+
+	"github.com/Shchusia/commit-hike/core/internal/protocol"
+)
+
+func TestBackupMovesProgressToAnotherComputer(t *testing.T) {
+	s, r := setup(t, "demo-trail")
+	r.commit("", "a.go", 40)
+	r.commit("", "b.go", 25)
+	scan(t, s, r.dir, "en")
+	if _, err := s.RestDays("sat,sun"); err != nil {
+		t.Fatal(err)
+	}
+	before, _ := s.Status(r.dir, "en")
+	// A link in the routes folder must not pull other files into the backup.
+	secret := filepath.Join(t.TempDir(), "secret.txt")
+	if err := os.WriteFile(secret, []byte("do not copy"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.MkdirAll(s.st.UserRoutesDir(), 0o700); err != nil {
+		t.Fatal(err)
+	}
+	if !isWindowsTest() {
+		if err := os.Symlink(secret, filepath.Join(s.st.UserRoutesDir(), "link.txt")); err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	file := filepath.Join(t.TempDir(), "backup.json")
+	res, err := s.ExportBackup(file, "1.2.3")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if res.Commits != 2 || res.Routes != 0 {
+		t.Fatalf("export: %+v (a symlinked file must be skipped)", res)
+	}
+	if info, _ := os.Stat(file); info.Mode().Perm()&0o077 != 0 && !isWindowsTest() {
+		t.Errorf("the backup holds the key, it must be private: %v", info.Mode())
+	}
+
+	// A new computer: a fresh data directory with its own key.
+	s2, err := New(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	s2.now, s2.loc, s2.score = s.now, s.loc, s.score
+	if _, err := s2.ImportBackup(file, false); err != nil {
+		t.Fatal(err)
+	}
+	after, _ := s2.Status(r.dir, "en")
+	if after.Global.DistanceM != before.Global.DistanceM || len(after.RestDays) != 2 {
+		t.Fatalf("restored: %v m, rest %v; want %v m", after.Global.DistanceM, after.RestDays, before.Global.DistanceM)
+	}
+	// The same commits scanned again on the new computer must not count twice.
+	if res := scan(t, s2, r.dir, "en"); res.NewCommits != 0 {
+		t.Fatalf("restored commits counted again: %d new", res.NewCommits)
+	}
+	// Restoring over existing progress needs an explicit replace.
+	if _, err := s2.ImportBackup(file, false); code(err) != protocol.CodeDataExists {
+		t.Fatalf("import over existing progress: %v", err)
+	}
+	if _, err := s2.ImportBackup(file, true); err != nil {
+		t.Fatalf("replace: %v", err)
+	}
+}
+
+func TestBackupRejectsDamagedFiles(t *testing.T) {
+	s, _ := setup(t, "demo-trail")
+	dir := t.TempDir()
+	write := func(name string, v any) string {
+		p := filepath.Join(dir, name)
+		data, _ := json.Marshal(v)
+		if err := os.WriteFile(p, data, 0o600); err != nil {
+			t.Fatal(err)
+		}
+		return p
+	}
+	key := make([]byte, 32)
+	cases := map[string]string{
+		"not a backup":  write("a.json", map[string]any{"format": "zip"}),
+		"newer format":  write("b.json", map[string]any{"format": backupFormat, "version": 99, "key": key}),
+		"no key":        write("c.json", map[string]any{"format": backupFormat, "version": 1}),
+		"escaping path": write("d.json", map[string]any{"format": backupFormat, "version": 1, "key": key, "config": map[string]any{"version": 1}, "state": map[string]any{}, "routes": map[string][]byte{"../../evil": []byte("x")}}),
+	}
+	for name, p := range cases {
+		if _, err := s.ImportBackup(p, true); code(err) != protocol.CodeInvalidBackup {
+			t.Errorf("%s: got %v", name, err)
+		}
+	}
+	if _, err := os.Stat(filepath.Join(filepath.Dir(s.st.Dir), "evil")); err == nil {
+		t.Fatal("a damaged backup wrote outside the data directory")
+	}
+}
+
+func TestRestDaysAndHistory(t *testing.T) {
+	s, r := setup(t, "demo-trail")
+	if _, err := s.RestDays("sat,sunday"); err != nil {
+		t.Fatal(err)
+	}
+	info, _ := s.RestDays("")
+	if len(info.Days) != 2 || info.Days[0] != int(time.Sunday) || info.Days[1] != int(time.Saturday) {
+		t.Fatalf("rest days: %v", info.Days)
+	}
+	for _, bad := range []string{"funday", "mon,tue,wed,thu,fri,sat,sun"} {
+		if _, err := s.RestDays(bad); code(err) != protocol.CodeInvalidArgument {
+			t.Errorf("%q: %v", bad, err)
+		}
+	}
+	if info, _ := s.RestDays("none"); len(info.Days) != 0 {
+		t.Fatalf("none: %v", info.Days)
+	}
+
+	r.commit("", "a.go", 40)
+	r.commit("", "b.go", 25)
+	scan(t, s, r.dir, "en")
+	st, _ := s.Status(r.dir, "en")
+	total, commits := 0.0, 0
+	for _, d := range st.History {
+		total += d.M
+		commits += d.Commits
+	}
+	if len(st.History) == 0 || commits != 2 || total < st.TotalM-0.5 || total > st.TotalM+0.5 {
+		t.Fatalf("history %+v doesn't add up to %v m / 2 commits", st.History, st.TotalM)
+	}
+}
+
+func isWindowsTest() bool { return os.PathSeparator == '\\' }
+
+func TestSettings(t *testing.T) {
+	s, r := setup(t, "demo-trail")
+	got, err := s.Settings(SettingsChange{})
+	if err != nil || *got != (protocol.Settings{ReduceMotion: "auto", HighContrast: "auto", Notifications: "all"}) {
+		t.Fatalf("defaults: %+v %v", got, err)
+	}
+	if got, _ = s.Settings(SettingsChange{ReduceMotion: "on", Notifications: "milestones"}); got.ReduceMotion != "on" || got.HighContrast != "auto" || got.Notifications != "milestones" {
+		t.Fatalf("partial change: %+v", got)
+	}
+	if _, err := s.Settings(SettingsChange{HighContrast: "maybe"}); code(err) != protocol.CodeInvalidArgument {
+		t.Fatalf("bad value: %v", err)
+	}
+	st, _ := s.Status(r.dir, "en")
+	if st.Settings.ReduceMotion != "on" || st.Settings.Notifications != "milestones" {
+		t.Fatalf("status carries the settings: %+v", st.Settings)
+	}
+	if got, _ = s.Settings(SettingsChange{ReduceMotion: "auto"}); got.ReduceMotion != "auto" {
+		t.Fatalf("back to auto: %+v", got)
+	}
+	cfg, _ := s.st.LoadConfig()
+	if cfg.Prefs.ReduceMotion != "" {
+		t.Fatalf("defaults aren't stored: %+v", cfg.Prefs)
+	}
+}

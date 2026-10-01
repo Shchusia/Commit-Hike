@@ -71,6 +71,29 @@ class CoreCli(
     )
 
     /** Reads the difficulty; with [set] (easy, medium, hard) changes it for commits from now on. */
+    /** Weekdays off (0 = Sunday … 6 = Saturday); [set] like "sat,sun" or "none" changes them. */
+    fun restDays(set: String? = null): RestDaysInfo =
+        call(listOf("rest-days") + (if (set == null) emptyList() else listOf("--set", set)), RestDaysInfo::class.java)
+
+    /** Changes the given settings (null = keep) and returns them all. */
+    fun settings(reduceMotion: String? = null, highContrast: String? = null, notifications: String? = null): Settings = call(
+        listOf("settings") +
+            listOfNotNull(
+                reduceMotion?.let {
+                    "--reduce-motion=$it"
+                },
+                highContrast?.let { "--high-contrast=$it" },
+                notifications?.let { "--notifications=$it" },
+            ),
+        Settings::class.java,
+    )
+
+    fun exportBackup(path: String): BackupResult = call(listOf("backup", "export", "--path", path), BackupResult::class.java)
+
+    /** Throws [CoreException] with code "data_exists" when there is progress and [replace] is false. */
+    fun importBackup(path: String, replace: Boolean): BackupResult =
+        call(listOf("backup", "import", "--path", path) + (if (replace) listOf("--replace") else emptyList()), BackupResult::class.java)
+
     fun difficulty(set: String? = null): DifficultyInfo =
         call(listOf("difficulty") + (if (set == null) emptyList() else listOf("--set", set)), DifficultyInfo::class.java)
 

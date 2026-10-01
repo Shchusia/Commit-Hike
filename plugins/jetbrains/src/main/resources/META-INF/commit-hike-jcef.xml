@@ -1,0 +1,3 @@
+<!-- Intentionally empty: the optional dependency on com.intellij.modules.jcef in
+     plugin.xml exists only to make the JCEF classes visible to this plugin. -->
+<idea-plugin/>

@@ -2,7 +2,7 @@
   "name": "commit-hike",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "publisher": "shchusia",
   "license": "MIT",
   "icon": "media/icon.png",
@@ -125,6 +125,26 @@
       {
         "command": "commitHike.changeDifficulty",
         "title": "%command.changeDifficulty%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.setRestDays",
+        "title": "%command.setRestDays%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.exportProgress",
+        "title": "%command.exportProgress%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.importProgress",
+        "title": "%command.importProgress%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.openSettings",
+        "title": "%command.openSettings%",
         "category": "Commit Hike"
       }
     ],

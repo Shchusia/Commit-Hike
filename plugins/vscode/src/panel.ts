@@ -20,6 +20,7 @@ export interface PanelData {
   locale_setting?: LocaleInfo;
   dev?: boolean; // development build: the trail view may look ahead
   build?: { version: string; flavor: "dev" | "prod" }; // shown at the bottom of the stats tab
+  open_view?: string; open_token?: number; // a page the panel opens once per token, e.g. "settings"
 }
 
 export type PanelMessage =
@@ -28,7 +29,11 @@ export type PanelMessage =
   | { command: "chooseRoute"; scope: "global" | "project" }
   | { command: "setLocale"; locale: string }
   | { command: "setTeam"; on: boolean }
-  | { command: "setDifficulty"; level: "easy" | "medium" | "hard" };
+  | { command: "setDifficulty"; level: "easy" | "medium" | "hard" }
+  | { command: "savePostcard"; name: string; data: string }
+  | { command: "setRestDays"; days: number[] }
+  | { command: "setSettings"; reduce_motion?: string; high_contrast?: string; notifications?: string }
+  | { command: "exportProgress" | "importProgress" };
 
 export class TrailPanel implements vscode.WebviewViewProvider {
   static readonly viewId = "commitHike.trail";

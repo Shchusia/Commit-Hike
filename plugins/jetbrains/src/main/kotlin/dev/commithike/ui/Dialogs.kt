@@ -187,3 +187,30 @@ class DifficultyDialog(project: Project, current: String) : DialogWrapper(projec
         row { comment(I18n.t("diffComment")) }
     }
 }
+
+/** Weekdays off (0 = Sunday … 6 = Saturday), shown Monday first in the IDE's language. */
+class RestDaysDialog(project: Project, current: List<Int>) : DialogWrapper(project) {
+    private val order = listOf(1, 2, 3, 4, 5, 6, 0)
+    private val checked = order.associateWith { it in current }.toMutableMap()
+
+    val selected: List<Int> get() = order.filter { checked[it] == true }
+
+    init {
+        title = I18n.t("restTitle")
+        setOKButtonText(I18n.t("ok"))
+        init()
+    }
+
+    override fun createCenterPanel(): JComponent = panel {
+        row { label(I18n.t("restLabel")) }
+        for (d in order) {
+            val name = java.time.DayOfWeek.of(if (d == 0) 7 else d)
+                .getDisplayName(java.time.format.TextStyle.FULL_STANDALONE, java.util.Locale.forLanguageTag(I18n.lang))
+                .replaceFirstChar { it.titlecase() }
+            row { checkBox(name).applyToComponent { isSelected = checked[d] == true }.onChanged { checked[d] = it.isSelected } }
+        }
+    }
+
+    override fun doValidate(): com.intellij.openapi.ui.ValidationInfo? =
+        if (selected.size == 7) com.intellij.openapi.ui.ValidationInfo(I18n.t("restAllDays")) else null
+}

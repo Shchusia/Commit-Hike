@@ -1,8 +1,9 @@
 import * as fs from "fs";
+import * as os from "os";
 import * as path from "path";
 import * as vscode from "vscode";
 import {
-  Avatar, Cli, CliError, Level, LocaleInfo, Route, RouteAssets, ScanResult, Status, Team, bundledBinary, ensureExecutable, gitGlobalEmail,
+  Avatar, Cli, CliError, Level, LocaleInfo, Route, RouteAssets, ScanResult, Settings, Status, Team, bundledBinary, ensureExecutable, gitGlobalEmail,
 } from "./cli";
 import { LANGUAGE_NAMES, formatDistanceL as formatDistance, language, setLanguage, t } from "./i18n";
 import { PanelMessage, TrailPanel } from "./panel";
@@ -77,6 +78,10 @@ class App {
       vscode.commands.registerCommand("commitHike.resetHikerIcon", () => this.guard(() => this.resetHikerIcon())),
       vscode.commands.registerCommand("commitHike.changeLanguage", () => this.guard(() => this.changeLanguage())),
       vscode.commands.registerCommand("commitHike.changeDifficulty", () => this.guard(() => this.changeDifficulty())),
+      vscode.commands.registerCommand("commitHike.setRestDays", () => this.guard(() => this.setRestDays())),
+      vscode.commands.registerCommand("commitHike.openSettings", () => this.openSettings()),
+      vscode.commands.registerCommand("commitHike.exportProgress", () => this.guard(() => this.exportProgress())),
+      vscode.commands.registerCommand("commitHike.importProgress", () => this.guard(() => this.importProgress())),
       vscode.commands.registerCommand("commitHike.toggleTeam", () => this.guard(() => this.setTeam(!this.lastStatus?.team))),
       vscode.window.onDidChangeActiveTextEditor(() => this.followActiveRepo()),
       this.tracker.onDidChangeRepos(() => this.followActiveRepo(true)),
@@ -121,14 +126,16 @@ class App {
 
   private celebrate(res: ScanResult): void {
     const cfg = vscode.workspace.getConfiguration("commitHike");
-    if (res.added_m > 0 && cfg.get<boolean>("showDistanceAfterCommit", true)) {
+    // all | milestones (stops, achievements, the finish) | off: chosen on the settings page
+    const notifications = this.lastStatus?.settings?.notifications ?? "all";
+    if (res.added_m > 0 && notifications === "all" && cfg.get<boolean>("showDistanceAfterCommit", true)) {
       clearTimeout(this.flashTimer);
       this.statusItem.text = `🥾 +${formatDistance(res.added_m)}`;
       this.flashTimer = setTimeout(() => { this.flashTimer = undefined; this.renderStatusBar(); }, 4000);
     }
     if (res.rewritten && (res.removed_commits ?? 0) > 0) this.log.appendLine(t("rewritten"));
     if (res.added_m > 0) this.maybeAskForRating();
-    if (!cfg.get<boolean>("notifyOnWaypoints", true)) return;
+    if (notifications === "off" || !cfg.get<boolean>("notifyOnWaypoints", true)) return;
     const events = res.events ?? [];
     // Achievements are always worth a notification of their own.
     for (const e of events.filter(e => e.type === "achievement" && e.achievement)) {
@@ -146,7 +153,7 @@ class App {
       }
       // An encounter on the road is announced when it's the only news of this commit.
       const danger = evs.filter(e => e.type === "danger").pop()?.danger;
-      if (danger && evs.length <= 3) {
+      if (danger && evs.length <= 3 && notifications === "all") {
         void vscode.window.showWarningMessage(`⚠ ${danger.text}`, t("showTrail")).then(a => { if (a) this.showTrail(); });
       }
       const w = evs.filter(e => e.type === "waypoint").pop()?.waypoint;
@@ -207,6 +214,15 @@ class App {
   private buildInfo?: BuildInfo;
   private get build(): BuildInfo { return (this.buildInfo ??= readBuildInfo(this.ctx.extensionPath)); }
 
+  private openView?: { view: string; token: number };
+
+  /** Commit Hike: Settings…: show the trail view on its settings page. */
+  private openSettings(): void {
+    this.openView = { view: "settings", token: Date.now() };
+    this.showTrail();
+    this.postPanel();
+  }
+
   private postPanel(): void {
     const s = this.lastStatus;
     if (!s) return;
@@ -221,6 +237,7 @@ class App {
       // A dev build (task ... FLAVOR=dev), F5/tests or COMMIT_HIKE_DEV=1 may look ahead along the trail.
       dev: this.build.flavor === "dev" || this.ctx.extensionMode !== vscode.ExtensionMode.Production || process.env.COMMIT_HIKE_DEV === "1",
       build: this.build,
+      open_view: this.openView?.view, open_token: this.openView?.token,
     });
   }
 
@@ -537,6 +554,53 @@ class App {
     if (pick) await this.setDifficulty(pick.value);
   }
 
+  private async setRestDays(): Promise<void> {
+    const current = (await this.cli.restDays()).days;
+    const names = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+    const items = [1, 2, 3, 4, 5, 6, 0].map(d => ({
+      // 2026-10-04 is a Sunday: day d of that week, named in the user's language
+      label: new Date(Date.UTC(2026, 9, 4 + d)).toLocaleDateString(language(), { weekday: "long", timeZone: "UTC" }),
+      picked: current.includes(d), day: d,
+    }));
+    items.forEach(i => { i.label = i.label.charAt(0).toUpperCase() + i.label.slice(1); });
+    const picked = await vscode.window.showQuickPick(items, { canPickMany: true, title: t("restTitle"), placeHolder: t("restNone") });
+    if (!picked) return;
+    if (picked.length === 7) {
+      void vscode.window.showWarningMessage(t("restAllDays"));
+      return;
+    }
+    await this.cli.restDays(picked.length ? picked.map(p => names[p.day]).join(",") : "none");
+    await this.refresh();
+  }
+
+  private async exportProgress(): Promise<void> {
+    const target = await vscode.window.showSaveDialog({
+      title: t("backupSaveTitle"), filters: { [t("backupFile")]: ["json"] },
+      defaultUri: vscode.Uri.file(path.join(os.homedir(), `commit-hike-backup-${new Date().toISOString().slice(0, 10)}.json`)),
+    });
+    if (!target) return;
+    const res = await this.cli.exportBackup(target.fsPath);
+    void vscode.window.showInformationMessage(t("backupSaved", res.path));
+  }
+
+  private async importProgress(): Promise<void> {
+    const picked = await vscode.window.showOpenDialog({ title: t("backupOpenTitle"), canSelectMany: false, filters: { [t("backupFile")]: ["json"] } });
+    if (!picked?.[0]) return;
+    let res;
+    try {
+      res = await this.cli.importBackup(picked[0].fsPath, false);
+    } catch (e) {
+      if (!(e instanceof CliError) || e.code !== "data_exists") throw e;
+      const ok = await vscode.window.showWarningMessage(t("backupReplaceQ"), { modal: true }, t("replaceBtn"));
+      if (ok !== t("replaceBtn")) return;
+      res = await this.cli.importBackup(picked[0].fsPath, true);
+    }
+    await this.reloadRoutes();
+    this.avatar = await this.cli.avatar();
+    await this.refresh();
+    void vscode.window.showInformationMessage(t("backupRestored", res.commits));
+  }
+
   private async setDifficulty(level: Level): Promise<void> {
     await this.cli.difficulty(level);
     await this.refresh();
@@ -569,7 +633,34 @@ class App {
       case "importRoute": return this.guard(() => this.importRoute());
       case "createRouteTemplate": return this.guard(() => this.createRouteTemplate());
       case "verify": return this.guard(() => this.verify());
+      case "savePostcard": return this.guard(() => this.savePostcard(m.name, m.data));
+      case "setRestDays": return this.guard(async () => {
+        const names = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+        const days = [...new Set((m.days ?? []).filter(d => Number.isInteger(d) && d >= 0 && d <= 6))];
+        await this.cli.restDays(days.length ? days.map(d => names[d]).join(",") : "none");
+        await this.refresh();
+      });
+      case "setSettings": return this.guard(async () => {
+        await this.cli.settings({ reduce_motion: m.reduce_motion, high_contrast: m.high_contrast, notifications: m.notifications } as Partial<Settings>);
+        await this.refresh();
+      });
+      case "exportProgress": return this.guard(() => this.exportProgress());
+      case "importProgress": return this.guard(() => this.importProgress());
     }
+  }
+
+  /** Saves the postcard the panel drew (a PNG data URL) where the user chooses. */
+  private async savePostcard(name: string, dataUrl: string): Promise<void> {
+    const png = /^data:image\/png;base64,([A-Za-z0-9+/=]+)$/.exec(typeof dataUrl === "string" && dataUrl.length < 20_000_000 ? dataUrl : "");
+    if (!png) return;
+    const file = path.basename(String(name || "commit-hike.png")).replace(/[^\w.-]/g, "-");
+    const target = await vscode.window.showSaveDialog({
+      title: t("postcardSaveTitle"), filters: { PNG: ["png"] },
+      defaultUri: vscode.Uri.file(path.join(os.homedir(), file.endsWith(".png") ? file : file + ".png")),
+    });
+    if (!target) return;
+    await fs.promises.writeFile(target.fsPath, Buffer.from(png[1], "base64"));
+    if (await vscode.window.showInformationMessage(t("postcardSaved", target.fsPath), t("openBtn"))) await vscode.env.openExternal(target);
   }
 
   // ---------- errors ----------

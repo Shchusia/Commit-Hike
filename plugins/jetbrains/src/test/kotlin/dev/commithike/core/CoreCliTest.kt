@@ -34,6 +34,31 @@ class CoreCliTest {
     }
 
     @Test
+    fun daysOffAndBackups() {
+        val bin = coreBinary()
+        val home = Files.createTempDirectory("ct-home-b")
+        val cli = CoreCli(bin, extraEnv = mapOf("COMMIT_HIKE_HOME" to home.toString()))
+        cli.init(listOf("me@x.io"), "all", fromHistory = true)
+        assertEquals(listOf(0, 6), cli.restDays("sat,sun").days)
+        assertEquals(listOf(0, 6), cli.status().raw!!.asJsonObject.getAsJsonArray("rest_days").map { it.asInt })
+        assertEquals("milestones", cli.settings(notifications = "milestones").notifications)
+        assertEquals("on", cli.settings(reduceMotion = "on").reduceMotion)
+        assertEquals(Settings("on", "auto", "milestones"), cli.status().settings)
+
+        val file = Files.createTempDirectory("ct-backup").resolve("backup.json").toString()
+        assertEquals(file, cli.exportBackup(file).path)
+        try {
+            cli.importBackup(file, replace = false)
+            fail("importing over existing progress needs replace")
+        } catch (e: CoreException) {
+            assertEquals("data_exists", e.code)
+        }
+        val fresh = CoreCli(bin, extraEnv = mapOf("COMMIT_HIKE_HOME" to Files.createTempDirectory("ct-home-c").toString()))
+        fresh.importBackup(file, replace = false)
+        assertEquals(listOf(0, 6), fresh.restDays().days)
+    }
+
+    @Test
     fun talksToTheRealCore() {
         val bin = coreBinary()
         val home = Files.createTempDirectory("ct-home")

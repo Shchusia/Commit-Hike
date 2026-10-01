@@ -34,6 +34,12 @@ a map, stories, facts and achievements.
 - **Real distances, your difficulty.** Routes have their real lengths: Santiago's road is about 4,370 km. A typical day of commits takes you about 10 km on medium (12.5 on easy, 8 on hard), about half a hiker's day, so a long route is a months-long goal. A difficulty change applies from then on, and you see how many typical days are left.
 - **Tunnels and encounters.** Walk through mines and caves by torchlight, and feel the world go cold and dark where danger crossed the road.
 - **No spoilers.** You can look back along the way you've walked, but what lies ahead stays hidden until you get there.
+- **Your year on the trail.** An activity calendar for every year you've walked, with the distance, commits, active days, best day and longest streak. Hover any day, or any bar of the last two weeks, to see its distance and commits.
+- **Days off.** Choose weekdays off (say, Saturday and Sunday): a day off without commits doesn't break your streak, and one with commits still counts.
+- **Postcards.** Save a picture of where you are — the real scene, your hiker, the route, day and distance — and share it.
+- **One settings page.** Language, difficulty, days off, notifications, motion, contrast, your hiker and backups in one place, the same in every IDE.
+- **Comfortable for everyone.** Reduced motion and high-contrast themes are respected, down to animated scenes in route packs.
+- **Take it with you.** Export your progress, settings, hiker and routes to one file and import it on another computer: nothing is counted twice.
 - **Fair distance.** Meters grow with the size of a commit, but slowly: tiny commits count, huge ones can't be farmed. Lock files, generated code, whitespace-only changes and other people's commits don't count. Squashed, rebased or amended history is recounted, never counted twice.
 - **Your own routes and maps.** Create a route from a template, add pictures and a map, then import it as a folder or a `.zip`, right from the IDE. See [docs/routes.md](docs/routes.md).
 - **Your own hiker.** Replace the default figure with any PNG with a transparent background. The default, [`ui/panel/hiker-default.png`](ui/panel/hiker-default.png), shows the expected format: facing right, feet at the bottom edge.

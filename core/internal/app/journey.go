@@ -2,6 +2,7 @@ package app
 
 import (
 	"math"
+	"slices"
 	"time"
 
 	"github.com/Shchusia/commit-hike/core/internal/achievements"
@@ -24,6 +25,7 @@ type journey struct {
 	pid    string // "" for global
 	assign *store.Assignment
 	route  *routes.Route
+	rest   restDays
 }
 
 // journeyStats is everything computed from counted commits.
@@ -31,6 +33,7 @@ type journeyStats struct {
 	distance float64
 	commits  int
 	byDay    map[int64]float64 // effective meters per local calendar day
+	byDayN   map[int64]int     // counted commits per local calendar day
 }
 
 // dayOf maps a unix time to a day number in the user's time zone, so "today",
@@ -50,10 +53,10 @@ func (s *Service) today() int64 { return s.dayOf(s.now().Unix()) }
 func (s *Service) journeys(cfg *store.Config, pid string) []journey {
 	var out []journey
 	if a := cfg.GlobalJourney; a != nil && s.routes[a.RouteID] != nil {
-		out = append(out, journey{ScopeGlobal, "global:" + a.RouteID, "", a, s.routes[a.RouteID]})
+		out = append(out, journey{ScopeGlobal, "global:" + a.RouteID, "", a, s.routes[a.RouteID], restOf(cfg)})
 	}
 	if a := cfg.ProjectJourneys[pid]; pid != "" && a != nil && s.routes[a.RouteID] != nil {
-		out = append(out, journey{ScopeProject, pid + ":" + a.RouteID, pid, a, s.routes[a.RouteID]})
+		out = append(out, journey{ScopeProject, pid + ":" + a.RouteID, pid, a, s.routes[a.RouteID], restOf(cfg)})
 	}
 	return out
 }
@@ -107,7 +110,7 @@ func levelAt(cfg *store.Config, t int64) string {
 }
 
 func (s *Service) stats(st *store.State, eff map[string]float64, j journey) journeyStats {
-	js := journeyStats{byDay: map[int64]float64{}}
+	js := journeyStats{byDay: map[int64]float64{}, byDayN: map[int64]int{}}
 	for id, m := range eff {
 		r := st.Commits[id]
 		if r.Time < j.assign.Since || (j.pid != "" && r.Project != j.pid) {
@@ -116,23 +119,45 @@ func (s *Service) stats(st *store.State, eff map[string]float64, j journey) jour
 		js.distance += m
 		js.commits++
 		js.byDay[s.dayOf(r.Time)] += m
+		js.byDayN[s.dayOf(r.Time)]++
 	}
 	return js
 }
 
-// streak counts consecutive days with commits, ending today or yesterday
-// (so the streak doesn't look broken first thing in the morning).
-func streak(byDay map[int64]float64, today int64) int {
+// restDays marks weekdays off, indexed by time.Weekday.
+type restDays [7]bool
+
+func restOf(cfg *store.Config) restDays {
+	var r restDays
+	for _, d := range cfg.RestDays {
+		if d >= 0 && d <= 6 {
+			r[d] = true
+		}
+	}
+	return r
+}
+
+// weekdayOf is the weekday of local day number d.
+func weekdayOf(d int64) time.Weekday { return time.Unix(d*day, 0).UTC().Weekday() }
+
+// streak counts days with commits, going back from today (or yesterday, so
+// the streak doesn't look broken first thing in the morning). A day off
+// without commits is skipped: it neither breaks the streak nor adds to it.
+func streak(byDay map[int64]float64, today int64, rest restDays) int {
 	d := today
 	if byDay[d] == 0 {
 		d--
 	}
 	n := 0
-	for byDay[d] > 0 {
-		n++
-		d--
+	for ; ; d-- {
+		switch {
+		case byDay[d] > 0:
+			n++
+		case rest[weekdayOf(d)] && n+int(today-d) < 3660: // a day off; bounded in case every day is off
+		default:
+			return n
+		}
 	}
-	return n
 }
 
 func (s *Service) achievementContext(j journey, js journeyStats) achievements.Context {
@@ -146,7 +171,7 @@ func (s *Service) achievementContext(j journey, js journeyStats) achievements.Co
 		LengthM:     j.route.LengthM,
 		WaypointAtM: j.route.WaypointPositions(),
 		Commits:     js.commits,
-		StreakDays:  streak(js.byDay, s.today()),
+		StreakDays:  streak(js.byDay, s.today(), j.rest),
 		BestDayM:    best,
 		MaxElevM:    j.route.MaxElevation(d),
 		AscentM:     j.route.Ascent(d),
@@ -186,6 +211,9 @@ func (s *Service) status(cfg *store.Config, st *store.State, pid, lang string) p
 		}
 	}
 	out.TotalM, out.TodayM = score.Round1(out.TotalM), score.Round1(out.TodayM)
+	out.History = s.history(st, eff)
+	out.RestDays = append([]int(nil), cfg.RestDays...)
+	out.Settings = settingsOf(cfg)
 	out.Difficulty = levelAt(cfg, s.now().Unix())
 	out.TypicalDayM = s.score.TypicalDay(out.Difficulty)
 	for _, j := range s.journeys(cfg, pid) {
@@ -209,7 +237,7 @@ func (s *Service) journeyDTO(j journey, js journeyStats, unlocked map[string]int
 		Percent:    math.Round(d/r.LengthM*1000) / 10,
 		Finished:   js.distance >= r.LengthM,
 		Commits:    js.commits,
-		StreakDays: streak(js.byDay, s.today()),
+		StreakDays: streak(js.byDay, s.today(), j.rest),
 	}
 	out.Underground = r.UndergroundAt(d)
 	if e, ok := r.ElevationAt(d); ok {
@@ -246,8 +274,9 @@ func (s *Service) journeyDTO(j journey, js journeyStats, unlocked map[string]int
 	out.Day = int(today-start) + 1
 	for d := today - dailyDays + 1; d <= today; d++ {
 		out.Daily = append(out.Daily, protocol.Day{
-			Date: time.Unix(d*day, 0).UTC().Format(time.DateOnly),
-			M:    score.Round1(js.byDay[d]),
+			Date:    time.Unix(d*day, 0).UTC().Format(time.DateOnly),
+			M:       score.Round1(js.byDay[d]),
+			Commits: js.byDayN[d],
 		})
 	}
 	out.Achievements = make([]protocol.Achievement, 0, len(r.Achievements))
@@ -373,4 +402,24 @@ func achievementDTO(r *routes.Route, chain []string, id string, hidden bool, unl
 		a.Description = r.T(chain, "achievements."+id+".description")
 	}
 	return a
+}
+
+// history is every local day with counted commits, oldest first.
+func (s *Service) history(st *store.State, eff map[string]float64) []protocol.Day {
+	m, n := map[int64]float64{}, map[int64]int{}
+	for id, v := range eff {
+		d := s.dayOf(st.Commits[id].Time)
+		m[d] += v
+		n[d]++
+	}
+	days := make([]int64, 0, len(m))
+	for d := range m {
+		days = append(days, d)
+	}
+	slices.Sort(days)
+	out := make([]protocol.Day, 0, len(days))
+	for _, d := range days {
+		out = append(out, protocol.Day{Date: time.Unix(d*day, 0).UTC().Format(time.DateOnly), M: score.Round1(m[d]), Commits: n[d]})
+	}
+	return out
 }

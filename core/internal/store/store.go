@@ -67,6 +67,18 @@ type Config struct {
 	// keep the distance they had (1 base point = 1 m), so upgrading never
 	// changes what was already walked. Nil = an older config, not migrated yet.
 	PaceFrom *int64 `json:"pace_from,omitempty"`
+	// RestDays are weekdays off (0 = Sunday … 6 = Saturday): a day off without
+	// commits doesn't break a streak, a day off with commits still counts.
+	RestDays []int `json:"rest_days,omitempty"`
+	// Prefs are panel and notification choices, shared by every IDE on this computer.
+	Prefs Prefs `json:"prefs,omitempty"`
+}
+
+// Prefs are the panel and notification choices; "" means the default (auto, auto, all).
+type Prefs struct {
+	ReduceMotion  string `json:"reduce_motion,omitempty"` // auto | on | off
+	HighContrast  string `json:"high_contrast,omitempty"` // auto | on | off
+	Notifications string `json:"notifications,omitempty"` // all | milestones | off
 }
 
 // DifficultyChange is one switch of the difficulty level.
@@ -288,6 +300,27 @@ func writeJSON(p string, v any) error {
 
 // WriteFile writes a file inside the data directory atomically.
 func (s *Store) WriteFile(name string, data []byte) error { return writeAtomic(s.path(name), data) }
+
+// ReadFile reads a file from the data directory.
+func (s *Store) ReadFile(name string) ([]byte, error) { return os.ReadFile(s.path(name)) }
+
+// Key returns a copy of the local secret key (for backups only).
+func (s *Store) Key() []byte { return append([]byte(nil), s.key...) }
+
+// ReplaceKey installs a key from a backup, so the ids stored with it match.
+func (s *Store) ReplaceKey(key []byte) error {
+	if len(key) != 32 {
+		return fmt.Errorf("key must be 32 bytes, got %d", len(key))
+	}
+	if err := writeAtomic(s.path("key"), key); err != nil {
+		return err
+	}
+	s.key = append([]byte(nil), key...)
+	return nil
+}
+
+// WriteFileAt writes a private file anywhere (a backup the user exported).
+func WriteFileAt(path string, data []byte) error { return writeAtomic(path, data) }
 
 // writeAtomic writes to a temp file and renames it into place, so a crash or
 // power loss never leaves a half-written file behind.

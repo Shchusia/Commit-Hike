@@ -151,3 +151,31 @@ void test("Cli: difficulty", async () => {
   assert.equal((await cli.difficulty("easy")).level, "easy");
   assert.equal((await cli.status()).difficulty, "easy");
 });
+
+void test("Cli: days off, history and backups", async () => {
+  process.env.COMMIT_HIKE_HOME = fs.mkdtempSync(path.join(os.tmpdir(), "ct-home4-"));
+  const cli = new Cli(bundledBinary(ext));
+  await cli.init({ emails: ["me@x.io"], mode: "all", fromHistory: true });
+  assert.deepEqual((await cli.restDays("sat,sun")).days, [0, 6]);
+  const st = await cli.status() as { rest_days?: number[]; history?: unknown[] };
+  assert.deepEqual(st.rest_days, [0, 6]);
+  assert.ok(Array.isArray(st.history ?? []));
+
+  const file = path.join(fs.mkdtempSync(path.join(os.tmpdir(), "ct-backup-")), "backup.json");
+  assert.equal((await cli.exportBackup(file)).path, file);
+  await assert.rejects(cli.importBackup(file, false), (e: unknown) => e instanceof CliError && e.code === "data_exists");
+  process.env.COMMIT_HIKE_HOME = fs.mkdtempSync(path.join(os.tmpdir(), "ct-home5-"));
+  const fresh = new Cli(bundledBinary(ext));
+  await fresh.importBackup(file, false);
+  assert.deepEqual((await fresh.restDays()).days, [0, 6]);
+});
+
+void test("Cli: settings", async () => {
+  process.env.COMMIT_HIKE_HOME = fs.mkdtempSync(path.join(os.tmpdir(), "ct-home6-"));
+  const cli = new Cli(bundledBinary(ext));
+  await cli.init({ emails: ["me@x.io"], mode: "all", fromHistory: true });
+  assert.deepEqual(await cli.settings(), { reduce_motion: "auto", high_contrast: "auto", notifications: "all" });
+  assert.equal((await cli.settings({ notifications: "off", high_contrast: "on" })).notifications, "off");
+  assert.deepEqual((await cli.status()).settings, { reduce_motion: "auto", high_contrast: "on", notifications: "off" });
+  await assert.rejects(cli.settings({ reduce_motion: "sometimes" as never }), (e: unknown) => e instanceof CliError && e.code === "invalid_argument");
+});

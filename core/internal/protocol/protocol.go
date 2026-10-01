@@ -28,6 +28,8 @@ const (
 	CodeRouteInUse      = "route_in_use"
 	CodeInvalidImage    = "invalid_image" // a hiker icon that isn't a usable PNG
 	CodeInternal        = "internal"
+	CodeDataExists      = "data_exists"    // importing a backup over existing progress without --replace
+	CodeInvalidBackup   = "invalid_backup" // not a Commit Hike backup, or a damaged one; message says why
 )
 
 // Envelope wraps every response the core prints.
@@ -109,8 +111,9 @@ type RouteAssets struct {
 
 // Day is the distance walked on one day (the user's local calendar day).
 type Day struct {
-	Date string  `json:"date"` // YYYY-MM-DD
-	M    float64 `json:"m"`
+	Date    string  `json:"date"` // YYYY-MM-DD
+	M       float64 `json:"m"`
+	Commits int     `json:"commits,omitempty"`
 }
 
 // Story is a piece of narration between waypoints.
@@ -215,6 +218,25 @@ type Status struct {
 	Project     *Journey `json:"project,omitempty"`
 	TodayM      float64  `json:"today_m"`
 	TotalM      float64  `json:"total_m"`
+	// History is every day with counted commits, all time, oldest first: the
+	// activity calendar and the year in review are drawn from it.
+	History []Day `json:"history,omitempty"`
+	// RestDays are the weekdays off (0 = Sunday … 6 = Saturday).
+	RestDays []int `json:"rest_days,omitempty"`
+	// Settings are the panel and notification choices.
+	Settings Settings `json:"settings"`
+}
+
+// Settings answers `settings` and is part of every status.
+type Settings struct {
+	ReduceMotion  string `json:"reduce_motion"` // auto | on | off
+	HighContrast  string `json:"high_contrast"` // auto | on | off
+	Notifications string `json:"notifications"` // all | milestones | off
+}
+
+// RestDaysInfo answers `rest-days`.
+type RestDaysInfo struct {
+	Days []int `json:"days"` // 0 = Sunday … 6 = Saturday
 }
 
 // Event types reported by scan.
@@ -305,4 +327,13 @@ type DifficultyInfo struct {
 	Level       string             `json:"level"`
 	Levels      []string           `json:"levels"`
 	TypicalDayM map[string]float64 `json:"typical_day_m"` // per level
+}
+
+// BackupResult answers `backup export` and `backup import`.
+type BackupResult struct {
+	Path      string `json:"path"`
+	CreatedAt int64  `json:"created_at"` // when the backup was made, unix seconds
+	Commits   int    `json:"commits"`    // counted commits it holds
+	Routes    int    `json:"routes"`     // user route files it holds
+	Avatar    bool   `json:"avatar"`     // a custom hiker icon is included
 }

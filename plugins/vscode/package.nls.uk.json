@@ -19,5 +19,9 @@
   "view.trail": "Стежка",
   "extension.displayName": "Commit Hike",
   "extension.description": "Твої коміти ведуть тебе туристичною стежкою. Працює локально й ніколи не змінює твої репозиторії.",
-  "command.changeDifficulty": "Змінити складність…"
+  "command.changeDifficulty": "Змінити складність…",
+  "command.setRestDays": "Вихідні дні…",
+  "command.exportProgress": "Експортувати прогрес…",
+  "command.importProgress": "Імпортувати прогрес…",
+  "command.openSettings": "Налаштування…"
 }

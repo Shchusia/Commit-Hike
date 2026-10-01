@@ -124,7 +124,14 @@ class TrailToolWindowFactory :
     ToolWindowFactory,
     DumbAware {
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        val component: JComponent = if (JBCefApp.isSupported()) {
+        // LinkageError: on 2026.2+ the "Web Browser (JCEF)" plugin can be disabled, and
+        // then the JCEF classes don't exist at all. Show the explanation instead of failing.
+        val jcef = try {
+            JBCefApp.isSupported()
+        } catch (_: LinkageError) {
+            false
+        }
+        val component: JComponent = if (jcef) {
             TrailBrowser(project, toolWindow.disposable).component
         } else {
             JBLabel("<html>${I18n.t("noJcef")}</html>").apply { border = JBUI.Borders.empty(12) }
@@ -218,6 +225,15 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
             "enableProject" -> trek.setProjectEnabled(true)
             "setAvatar" -> trek.setHikerIcon()
             "resetAvatar" -> trek.resetHikerIcon()
+            "savePostcard" -> trek.savePostcard(msg.get("name")?.asString, msg.get("data")?.asString)
+            "setRestDays" -> trek.setRestDaysTo(msg.getAsJsonArray("days")?.map { it.asInt }.orEmpty())
+            "setSettings" -> trek.setSettings(
+                msg.get("reduce_motion")?.asString,
+                msg.get("high_contrast")?.asString,
+                msg.get("notifications")?.asString,
+            )
+            "exportProgress" -> trek.exportProgress()
+            "importProgress" -> trek.importProgress()
             "chooseRoute" -> trek.chooseRoute(if (msg.get("scope")?.asString == "project") Scope.PROJECT else Scope.GLOBAL)
             "setLocale" -> msg.get("locale")?.asString?.let { trek.setLocale(it) }
             "setTeam" -> trek.setTeam(msg.get("on")?.asBoolean == true)
@@ -244,6 +260,8 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
         val localeSetting: LocaleInfo?,
         val dev: Boolean, // development build (runIde, COMMIT_HIKE_DEV=1): the trail view may look ahead
         val build: BuildInfo,
+        val openView: String?, // a page to open once per openToken, e.g. "settings"
+        val openToken: Int,
     )
 
     /** Version and flavor baked in by the Gradle build (see writeBuildInfo). */
@@ -251,7 +269,8 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
 
     private fun push() {
         if (!ready) return
-        val v = project.service<ProjectTrek>().view
+        val trek = project.service<ProjectTrek>()
+        val v = trek.view
         if (v.state == "loading") return
         val locale = v.status?.locale ?: DynamicBundle.getLocale().toLanguageTag()
         val app = CommitHikeApp.getInstance()
@@ -270,6 +289,8 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
             localeSetting = app.localeInfo,
             dev = isDevBuild,
             build = buildInfo,
+            openView = trek.openView,
+            openToken = trek.openToken,
         )
         // Gson escapes <, >, & and quotes, so its output is a safe JS literal.
         val js = "window.commitHike && window.commitHike.update(${gson.toJson(data)});"

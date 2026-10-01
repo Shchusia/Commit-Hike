@@ -10,6 +10,8 @@ import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.fileChooser.FileChooser
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
+import com.intellij.openapi.fileChooser.FileChooserFactory
+import com.intellij.openapi.fileChooser.FileSaverDescriptor
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent
 import com.intellij.openapi.fileEditor.FileEditorManagerListener
@@ -18,6 +20,7 @@ import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.util.messages.Topic
 import dev.commithike.core.CoreException
@@ -31,6 +34,7 @@ import dev.commithike.core.gitGlobalEmail
 import dev.commithike.ui.DifficultyDialog
 import dev.commithike.ui.LanguageDialog
 import dev.commithike.ui.RemoveRouteDialog
+import dev.commithike.ui.RestDaysDialog
 import dev.commithike.ui.RouteDialog
 import dev.commithike.ui.SetupDialog
 import git4idea.repo.GitRepository
@@ -85,6 +89,11 @@ class CommitHikeStartup : ProjectActivity {
 @Service(Service.Level.PROJECT)
 class ProjectTrek(private val project: Project, private val cs: CoroutineScope) {
     @Volatile var view = TrailView("loading")
+
+    // A page the panel should open (once per token), e.g. the settings page.
+    @Volatile var openView: String? = null
+
+    @Volatile var openToken = 0
         private set
 
     private val app get() = CommitHikeApp.getInstance()
@@ -247,7 +256,9 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
     }
 
     private suspend fun celebrate(res: ScanResult) {
-        if (res.addedM > 0) {
+        // all | milestones (stops, achievements, the finish) | off: chosen on the settings page
+        val notifications = view.status?.settings?.notifications ?: "all"
+        if (res.addedM > 0 && notifications == "all") {
             flash = "+" + I18n.distance(res.addedM)
             flashJob?.cancel()
             flashJob = cs.launch {
@@ -258,10 +269,11 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
         }
         if (res.rewritten && res.removedCommits > 0) LOG.info(I18n.t("rewritten"))
         if (res.addedM > 0) maybeAskForRating()
+        if (notifications == "off") return
         val events = res.events.orEmpty()
         // An encounter on the road is announced when it's the only news of this commit.
         events.lastOrNull { it.type == "danger" }?.danger?.let { d ->
-            if (events.size <= 3) notify("⚠", d.text, I18n.t("showTrail")) { showTrail() }
+            if (events.size <= 3 && notifications == "all") notify("⚠", d.text, I18n.t("showTrail")) { showTrail() }
         }
         // Achievements always get a notification of their own.
         for (e in events.filter { it.type == "achievement" }) {
@@ -499,6 +511,103 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
     }
 
     fun toggleTeam() = setTeam(view.status?.team != true)
+
+    // ---------- postcard ----------
+
+    /** Saves the postcard the panel drew (a PNG data URL) where the user chooses. */
+    fun savePostcard(name: String?, dataUrl: String?) = guarded {
+        val prefix = "data:image/png;base64,"
+        if (dataUrl == null || !dataUrl.startsWith(prefix) || dataUrl.length > 20_000_000) return@guarded
+        val png = try {
+            java.util.Base64.getDecoder().decode(dataUrl.substring(prefix.length))
+        } catch (_: IllegalArgumentException) {
+            return@guarded
+        }
+        val file = java.io.File(name ?: "commit-hike.png").name.replace(Regex("[^\\w.-]"), "-")
+        val target = withContext(Dispatchers.EDT) {
+            val descriptor = FileSaverDescriptor(I18n.t("postcardSaveTitle"), I18n.t("postcardSaveDesc"), "png")
+            FileChooserFactory.getInstance().createSaveFileDialog(descriptor, project)
+                .save(null as VirtualFile?, if (file.endsWith(".png")) file else "$file.png")
+        } ?: return@guarded
+        withContext(Dispatchers.IO) { target.file.writeBytes(png) }
+        notify("Commit Hike", I18n.t("postcardSaved", target.file.path), I18n.t("openBtn")) { BrowserUtil.browse(target.file) }
+    }
+
+    // ---------- days off & backups ----------
+
+    fun setRestDays() = guarded {
+        if (!app.initialized) {
+            setup()
+            return@guarded
+        }
+        val current = app.call { it.restDays() }.days
+        val chosen = withContext(Dispatchers.EDT) {
+            val dialog = RestDaysDialog(project, current)
+            if (dialog.showAndGet()) dialog.selected else null
+        } ?: return@guarded
+        val names = listOf("sun", "mon", "tue", "wed", "thu", "fri", "sat")
+        app.call { it.restDays(if (chosen.isEmpty()) "none" else chosen.joinToString(",") { d -> names[d] }) }
+        app.refreshAllProjects()
+    }
+
+    /** Days off from the settings page: 0 = Sunday … 6 = Saturday. */
+    fun setRestDaysTo(days: List<Int>) = guarded {
+        val names = listOf("sun", "mon", "tue", "wed", "thu", "fri", "sat")
+        val valid = days.filter { it in 0..6 }.distinct()
+        app.call { it.restDays(if (valid.isEmpty()) "none" else valid.joinToString(",") { d -> names[d] }) }
+        app.refreshAllProjects()
+    }
+
+    fun setSettings(reduceMotion: String?, highContrast: String?, notifications: String?) = guarded {
+        app.call { it.settings(reduceMotion, highContrast, notifications) }
+        app.refreshAllProjects()
+    }
+
+    /** Tools → Commit Hike → Settings…: show the tool window on its settings page. */
+    fun openSettings() {
+        openView = "settings"
+        openToken++
+        showTrail()
+        cs.launch { publish(view) }
+    }
+
+    fun exportProgress() = guarded {
+        if (!app.initialized) {
+            setup()
+            return@guarded
+        }
+        val target = withContext(Dispatchers.EDT) {
+            val descriptor = FileSaverDescriptor(I18n.t("backupSaveTitle"), I18n.t("backupSaveDesc"), "json")
+            FileChooserFactory.getInstance().createSaveFileDialog(descriptor, project)
+                .save(null as VirtualFile?, "commit-hike-backup-${java.time.LocalDate.now()}.json")
+        } ?: return@guarded
+        val res = app.call { it.exportBackup(target.file.path) }
+        notify("Commit Hike", I18n.t("backupSaved", res.path))
+    }
+
+    fun importProgress() = guarded {
+        val file = withContext(Dispatchers.EDT) {
+            val descriptor = FileChooserDescriptorFactory.createSingleFileDescriptor("json")
+                .withTitle(I18n.t("backupOpenTitle"))
+                .withDescription(I18n.t("backupOpenDesc"))
+            FileChooser.chooseFile(descriptor, project, null)
+        } ?: return@guarded
+        val res = try {
+            app.call { it.importBackup(file.path, replace = false) }
+        } catch (e: CoreException) {
+            if (e.code != "data_exists") throw e
+            val replace = withContext(Dispatchers.EDT) {
+                Messages.showYesNoDialog(project, I18n.t("backupReplaceQ"), "Commit Hike", I18n.t("replace"), I18n.t("cancel"), null) ==
+                    Messages.YES
+            }
+            if (!replace) return@guarded
+            app.call { it.importBackup(file.path, replace = true) }
+        }
+        app.reloadRoutes()
+        app.reloadAvatar()
+        app.refreshAllProjects()
+        notify("Commit Hike", I18n.t("backupRestored", res.commits))
+    }
 
     fun changeDifficulty() = guarded {
         if (!app.initialized) {

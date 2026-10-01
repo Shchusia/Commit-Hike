@@ -11,6 +11,7 @@ import (
 	"github.com/Shchusia/commit-hike/core/internal/gitlog"
 	"github.com/Shchusia/commit-hike/core/internal/protocol"
 	"github.com/Shchusia/commit-hike/core/internal/score"
+	"github.com/Shchusia/commit-hike/core/internal/store"
 )
 
 const maxTeam = 40
@@ -124,6 +125,9 @@ func (s *Service) Team(repo string) (*protocol.Team, error) {
 		}
 		out.Members = append(out.Members, mb)
 	}
+	if err := s.useOwnProgress(cfg, j, out); err != nil {
+		return nil, err
+	}
 	sort.Slice(out.Members, func(a, b int) bool {
 		ma, mb := out.Members[a], out.Members[b]
 		if ma.DistanceM != mb.DistanceM {
@@ -146,6 +150,55 @@ func (s *Service) Team(repo string) (*protocol.Team, error) {
 		out.Members = []protocol.Member{}
 	}
 	return out, nil
+}
+
+// useOwnProgress puts the user's own numbers into the team: the same
+// distance, commits and today's meters as on the trail. Recounting them from
+// git would disagree with it: commits from before the current pace keep their
+// old distance, only the user's own addresses count (not .mailmap aliases),
+// and the daily limit is shared with the user's other projects.
+func (s *Service) useOwnProgress(cfg *store.Config, j journey, out *protocol.Team) error {
+	st, err := s.st.LoadState()
+	if err != nil {
+		return err
+	}
+	eff := s.effective(cfg, st)
+	js := s.stats(st, eff, j)
+	var last int64
+	for id := range eff {
+		r := st.Commits[id]
+		if r.Time >= j.assign.Since && (j.pid == "" || r.Project == j.pid) && r.Time > last {
+			last = r.Time
+		}
+	}
+	idx := -1
+	for i, m := range out.Members {
+		if m.Me {
+			idx = i
+		}
+	}
+	if idx < 0 && js.commits == 0 {
+		return nil // nothing of the user's on this trail and nothing in this repository
+	}
+	if idx < 0 {
+		name := ""
+		if len(cfg.Emails) > 0 {
+			name, _, _ = strings.Cut(cfg.Emails[0], "@")
+		}
+		out.Members = append(out.Members, protocol.Member{ID: s.st.ID("member", "\x00me")[:12], Name: name, Me: true})
+		idx = len(out.Members) - 1
+	}
+	r := j.route
+	d := math.Min(js.distance, r.LengthM)
+	m := &out.Members[idx]
+	m.DistanceM, m.Percent, m.Finished = score.Round1(d), math.Round(d/r.LengthM*1000)/10, js.distance >= r.LengthM
+	m.Commits, m.TodayM, m.LastCommitAt = js.commits, score.Round1(js.byDay[s.today()]), last
+	m.ElevationM = nil
+	if e, ok := r.ElevationAt(d); ok {
+		e = math.Round(e)
+		m.ElevationM = &e
+	}
+	return nil
 }
 
 // isBot skips automated committers (dependency updaters, CI).

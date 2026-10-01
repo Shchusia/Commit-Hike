@@ -199,8 +199,22 @@ func TestTeam(t *testing.T) {
 	if top.Name != "Anna Koval" || top.DistanceM != 80 || top.Commits != 2 || top.Me || top.ElevationM == nil {
 		t.Fatalf("anna: %+v", top)
 	}
-	if me := team.Members[1]; !me.Me || me.DistanceM != 50 { // a.go + the two .mailmap lines
-		t.Fatalf("me: %+v", me)
+	// The user's row is their trail, not a recount from git: before a scan the
+	// trail is empty, so is the row.
+	if me := team.Members[1]; !me.Me || me.DistanceM != 0 || me.Commits != 0 {
+		t.Fatalf("me before a scan: %+v", me)
+	}
+	scan(t, s, r.dir, "en")
+	st, _ := s.Status(r.dir, "en")
+	team, _ = s.Team(r.dir)
+	var me protocol.Member
+	for _, m := range team.Members {
+		if m.Me {
+			me = m
+		}
+	}
+	if me.DistanceM != st.Global.DistanceM || me.Commits != st.Global.Commits || me.DistanceM == 0 {
+		t.Fatalf("the team shows %v m / %d commits, the trail %v m / %d", me.DistanceM, me.Commits, st.Global.DistanceM, st.Global.Commits)
 	}
 	if strings.Contains(top.ID, "@") {
 		t.Fatal("member id must not be an email")

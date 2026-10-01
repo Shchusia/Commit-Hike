@@ -10,6 +10,10 @@ turns them into the section of the new version; the JetBrains Marketplace
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-10-01
+
+### Fixed
+- Team: your own row shows the same distance and commits as your trail. It used to recount them from git, which could give much more: older commits at today's pace, `.mailmap` aliases and a daily limit per repository.
 
 ## [0.3.1] - 2026-10-01
 

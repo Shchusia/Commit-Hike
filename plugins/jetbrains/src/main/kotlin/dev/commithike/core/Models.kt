@@ -44,6 +44,8 @@ data class Danger(val id: String = "", val atM: Double = 0.0, val text: String =
 
 data class RestDaysInfo(val days: List<Int> = emptyList())
 
+data class BadgeResult(val svg: String = "", val fileName: String = "", val markdown: String = "")
+
 /** Panel and notification choices, shared by every IDE on this computer. */
 data class Settings(
     val reduceMotion: String = "auto", // auto | on | off

@@ -234,6 +234,9 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
                 msg.get("notifications")?.asString,
             )
             "exportProgress" -> trek.exportProgress()
+            "copyDiagnostics" -> trek.copyDiagnostics()
+            "saveBadge" -> trek.saveBadge()
+            "panelError" -> service<CommitHikeApp>().noteError("panel: " + msg.get("message")?.asString.orEmpty().take(500))
             "importProgress" -> trek.importProgress()
             "chooseRoute" -> trek.chooseRoute(if (msg.get("scope")?.asString == "project") Scope.PROJECT else Scope.GLOBAL)
             "setLocale" -> msg.get("locale")?.asString?.let { trek.setLocale(it) }

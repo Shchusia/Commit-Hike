@@ -33,6 +33,8 @@ const usage = `commit-hike: turns commits into a journey. Every command prints o
   commit-hike locale   [--set auto|en|uk] [--lang uk]
   commit-hike difficulty [--set easy|medium|hard]
   commit-hike rest-days [--set sat,sun|none]
+  commit-hike diagnostics                  # for bug reports: versions, counts, settings; nothing personal
+  commit-hike badge    [--repo PATH] [--lang uk]   # an SVG badge for a README
   commit-hike settings [--reduce-motion auto|on|off] [--high-contrast auto|on|off] [--notifications all|milestones|off]
   commit-hike backup   export --path FILE.json | import --path FILE.json [--replace]
   commit-hike verify   --repo PATH
@@ -152,6 +154,10 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 		return svc.Difficulty(*difficulty)
 	case "rest-days":
 		return svc.RestDays(*restDays)
+	case "diagnostics":
+		return svc.Diagnostics(version)
+	case "badge":
+		return svc.Badge(*repo, *lang)
 	case "settings":
 		return svc.Settings(app.SettingsChange{ReduceMotion: *reduceMotion, HighContrast: *highContrast, Notifications: *notifications})
 	case "backup":

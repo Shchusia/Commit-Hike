@@ -156,3 +156,17 @@ The settings page lives in the panel. It sends `setLocale`, `setDifficulty`,
 `setAvatar`, `resetAvatar`, `exportProgress` and `importProgress`. A host opens
 it by adding `open_view: "settings"` and a new `open_token` to the data it
 sends; the panel opens a page once per token.
+
+## Diagnostics and badges
+
+```
+commit-hike diagnostics                -> versions, OS, counts and settings for a bug report
+commit-hike badge [--repo PATH] [--lang uk] -> {"svg": "<svg…>", "file_name": "commit-hike-badge.svg", "markdown": "…"}
+```
+
+`diagnostics` never includes e-mail addresses, paths, or project and repository
+names (a test checks it). Hosts add their own versions and recent errors, with
+the home folder and any e-mail address taken out, and copy it all for a GitHub
+issue. The panel sends `{"command": "panelError", "message": …}` for its own
+errors (at most 20 per session), `copyDiagnostics` for the report and
+`saveBadge` for the badge, which shows the journey the panel shows.

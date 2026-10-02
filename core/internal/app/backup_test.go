@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -155,5 +156,50 @@ func TestSettings(t *testing.T) {
 	cfg, _ := s.st.LoadConfig()
 	if cfg.Prefs.ReduceMotion != "" {
 		t.Fatalf("defaults aren't stored: %+v", cfg.Prefs)
+	}
+}
+
+func TestDiagnosticsHoldNothingPersonal(t *testing.T) {
+	s, r := setup(t, "demo-trail")
+	r.commit("", "a.go", 40)
+	scan(t, s, r.dir, "en")
+	d, err := s.Diagnostics("1.2.3")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !d.Initialized || d.Commits != 1 || d.Projects != 1 || d.Emails != 1 || len(d.Journeys) == 0 || d.CoreVersion != "1.2.3" {
+		t.Fatalf("diagnostics: %+v", d)
+	}
+	raw, _ := json.Marshal(d)
+	for _, private := range []string{"me@x.io", "x.io", r.dir, s.st.Dir, filepath.Base(r.dir)} {
+		if strings.Contains(strings.ToLower(string(raw)), strings.ToLower(private)) {
+			t.Fatalf("diagnostics leak %q: %s", private, raw)
+		}
+	}
+	fresh, _ := New(t.TempDir())
+	if d, err := fresh.Diagnostics("1.2.3"); err != nil || d.Initialized {
+		t.Fatalf("before setup: %+v %v", d, err)
+	}
+}
+
+func TestBadge(t *testing.T) {
+	s, r := setup(t, "demo-trail")
+	r.commit("", "a.go", 40)
+	scan(t, s, r.dir, "en")
+	b, err := s.Badge(r.dir, "en")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(b.SVG, "Commit Hike") || !strings.Contains(b.SVG, " km · ") || b.FileName != "commit-hike-badge.svg" || !strings.Contains(b.Markdown, b.FileName) {
+		t.Fatalf("badge: %+v", b)
+	}
+	for _, c := range []struct {
+		m    float64
+		lang string
+		want string
+	}{{34800, "en", "34.8 km"}, {342400, "en", "342 km"}, {34800, "uk", "34,8 км"}} {
+		if got := badgeDistance(c.m, c.lang); got != c.want {
+			t.Errorf("badgeDistance(%v, %s) = %q, want %q", c.m, c.lang, got, c.want)
+		}
 	}
 }

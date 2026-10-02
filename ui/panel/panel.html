@@ -297,6 +297,8 @@ html.hc .hint, html.hc .flavor { opacity: 1; }
 .set-btns { display: flex; flex-wrap: wrap; gap: 6px; }
 html.hc .seg button { box-shadow: inset 0 0 0 1px var(--ct-fg); }
 html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
+.year-actions, .badge-row { display: flex; justify-content: flex-end; margin-top: 8px; }
+.badge-row { justify-content: flex-start; margin-top: 16px; }
 .hike-actions { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
 .hike-actions .hint { margin: 8px 0 0; }
 .hike-actions .share { flex: none; margin-top: 6px; }
@@ -393,6 +395,9 @@ html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
       setHiker: "Your hiker", setBackup: "Backup",
       setBackupHint: "One file with your progress, settings, hiker and routes, to move to another computer. It holds your private key: keep it to yourself.",
       backupExport: "Export…", backupImport: "Import…",
+      setHelp: "Something wrong?", copyReport: "Copy a report for the developer",
+      yearPostcard: "Year postcard", badge: "Badge for your GitHub profile…", badgeTitle: "An SVG badge with your trail, for a README",
+      setHelpHint: "Versions, your IDE and recent errors, without your name, e-mail, projects or code. Paste it into an issue on GitHub.",
       achievements: "Achievements", achCount: "{n} of {m}", secret: "Secret achievement", secretDesc: "Keep walking to find out.",
       factTitle: "Did you know?", factLocked: "A fact waits {d} ahead.", storyTitle: "On the trail",
       factsFound: "{n} of {m} facts found",
@@ -461,6 +466,9 @@ html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
       setHiker: "Твій мандрівник", setBackup: "Резервна копія",
       setBackupHint: "Один файл із прогресом, налаштуваннями, мандрівником і маршрутами — щоб перенести на інший комп'ютер. У ньому твій особистий ключ: не передавай його іншим.",
       backupExport: "Експортувати…", backupImport: "Імпортувати…",
+      setHelp: "Щось не так?", copyReport: "Скопіювати звіт для розробника",
+      yearPostcard: "Листівка року", badge: "Бейдж для профілю GitHub…", badgeTitle: "SVG-бейдж із твоєю стежкою для README",
+      setHelpHint: "Версії, твоя IDE й останні помилки — без імені, пошти, проєктів і коду. Встав його в issue на GitHub.",
       lastDays: "Останні 14 днів", noActivity: "За останні два тижні комітів ще не було.",
       achievements: "Досягнення", achCount: "{n} з {m}", secret: "Таємне досягнення", secretDesc: "Іди далі, щоб дізнатися.",
       factTitle: "А ти знав?", factLocked: "Факт чекає за {d}.", storyTitle: "На стежці",
@@ -529,7 +537,13 @@ html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
   function send(msg) {
     if (vscode) vscode.postMessage(msg);
     else if (window.commitHikeHost) window.commitHikeHost.send(JSON.stringify(msg));
-  }
+  }  // The panel's own errors go to the host, for "Copy a report for the developer"
+  // (at most 20 per session, so a loop can't flood it).
+  let reportedErrors = 0;
+  const reportError = msg => { if (reportedErrors++ < 20) send({ command: "panelError", message: String(msg).slice(0, 500) }); };
+  window.addEventListener("error", e => reportError(`${e.message} @ ${e.lineno}:${e.colno}`));
+  window.addEventListener("unhandledrejection", e => reportError("unhandled: " + ((e.reason && e.reason.message) || e.reason)));
+
   const saved = (vscode && vscode.getState && vscode.getState()) || {};
   function remember(patch) { Object.assign(saved, patch); if (vscode && vscode.setState) vscode.setState(saved); }
 
@@ -2055,6 +2069,7 @@ html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
     let s = 1, tx = 0, ty = 0;
     const apply = () => {
       const bw = box.clientWidth, bh = box.clientHeight;
+      if (!bw || !bh) return; // the map was just taken off the page (another tab): nothing to lay out
       tx = clamp(tx, bw - bw * s, 0); ty = clamp(ty, bh - bh * s, 0);
       world.style.transform = `translate(${tx}px, ${ty}px) scale(${s})`;
       // the same view for the vector layer, through its viewBox
@@ -2558,8 +2573,59 @@ html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
         ? el("div", { class: "stats" }, [stat(fmt(total), t("yearDistance")), stat(String(commits), t("yearCommits")),
             stat(String(active.length), t("yearActive")), stat(plural("days", longest), t("yearStreak")), stat(bestText, t("yearBest"))])
         : el("p", { class: "hint", text: t("yearEmpty", { y }) });
-      box.replaceChildren(head, summary, calendar(days, active));
+      const share = active.length ? el("button", { class: "chip-btn share", text: "✉ " + t("yearPostcard"), title: t("shareTitle"),
+        onclick: () => {
+          const url = yearPostcard(y, days, { total, commits, activeDays: active.length, longest, best, bestText });
+          if (vscode || window.commitHikeHost) send({ command: "savePostcard", name: `commit-hike-year-${y}.png`, data: url });
+          else el("a", { href: url, download: `commit-hike-year-${y}.png` }).click();
+        } }) : null;
+      box.replaceChildren(...[head, summary, calendar(days, active), share ? el("div", { class: "year-actions" }, [share]) : null].filter(Boolean));
     };
+
+    // The year on one picture, 1200×630 like the trail postcard: totals on top,
+    // the whole calendar below.
+    function yearPostcard(y, days, sum) {
+      const PW = 1200, PH = 630, out = el("canvas");
+      out.width = PW; out.height = PH;
+      const c = out.getContext("2d"), fam = getComputedStyle(document.body).fontFamily || "sans-serif";
+      const font = (w, px) => `${w} ${px}px ${fam}`;
+      c.fillStyle = "#16191c"; c.fillRect(0, 0, PW, PH);
+      c.fillStyle = "#e8b53d"; c.fillRect(60, 64, 10, 40);
+      c.fillStyle = "#f3efe4"; c.font = font(700, 40); c.textBaseline = "middle"; c.fillText(t("yearTitle", { y }), 86, 86);
+      const cells = [[fmt(sum.total), t("yearDistance")], [String(sum.commits), t("yearCommits")], [String(sum.activeDays), t("yearActive")],
+        [plural("days", sum.longest), t("yearStreak")], [sum.bestText, t("yearBest")]];
+      cells.forEach(([v, k], i) => {
+        const x = 60 + i * 218, yv = 186;
+        c.fillStyle = "#23282b"; c.beginPath(); c.roundRect(x, yv - 46, 202, 108, 12); c.fill();
+        let px = 30; // shrink until it fits the card
+        do { c.font = font(700, px); } while (c.measureText(v).width > 202 - 36 && --px > 14);
+        c.fillStyle = "#f3efe4"; c.textBaseline = "alphabetic"; c.fillText(v, x + 18, yv + 6);
+        c.fillStyle = "#aab1b3"; c.font = font(400, 18); c.fillText(k, x + 18, yv + 40);
+      });
+      // the calendar: weeks from Monday, four shades by quartile of active days
+      const offset = (new Date(days[0].t).getUTCDay() + 6) % 7, step = 20, cell = 16, cx = 60, cy = 340;
+      const act = days.filter(d => d.m > 0).map(d => d.m).sort((a, b) => a - b);
+      const q = k => act[Math.min(act.length - 1, Math.floor(act.length * k))] || 0, lv = [q(0.25), q(0.5), q(0.75)];
+      const shade = ["#2c3236", "#5c5232", "#8c7438", "#bb943b", "#e8b53d"];
+      let month = -1;
+      days.forEach((d, i) => {
+        const col = Math.floor((i + offset) / 7), row = (i + offset) % 7, x = cx + col * step, yy = cy + row * step;
+        const mo = new Date(d.t).getUTCMonth();
+        if (mo !== month && row < 3) {
+          month = mo;
+          c.fillStyle = "#aab1b3"; c.font = font(400, 15); c.fillText(new Date(d.t).toLocaleDateString(lang, { month: "short", timeZone: "UTC" }), x, cy - 10);
+        }
+        const l = d.m <= 0 ? 0 : d.m <= lv[0] ? 1 : d.m <= lv[1] ? 2 : d.m <= lv[2] ? 3 : 4;
+        c.globalAlpha = d.future ? 0.35 : 1;
+        c.fillStyle = shade[l]; c.beginPath(); c.roundRect(x, yy, cell, cell, 3); c.fill();
+      });
+      c.globalAlpha = 1;
+      c.font = font(700, 26);
+      const brand = "Commit Hike", bw = c.measureText(brand).width;
+      c.fillStyle = "#e8b53d"; c.fillRect(PW - 60 - bw - 20, 556, 8, 28);
+      c.fillStyle = "#f3efe4"; c.fillText(brand, PW - 60 - bw, 580);
+      return out.toDataURL("image/png");
+    }
 
     function calendar(days, active) {
       const cell = 5, gap = 1.2, step = cell + gap, left = 0, top = 11;
@@ -2628,8 +2694,10 @@ html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
     const daily = j.daily || [];
     root.append(el("div", { class: "section-title" }, [t("lastDays")]));
     if (daily.some(d => d.m > 0)) root.append(chartView(daily));
-    if ((s.history || []).length) root.append(yearView(s.history, s.rest_days || [], daily.length ? daily[daily.length - 1].date : null));
     else root.append(el("p", { class: "hint", text: t("noActivity") }));
+    if ((s.history || []).length) root.append(yearView(s.history, s.rest_days || [], daily.length ? daily[daily.length - 1].date : null));
+    root.append(el("div", { class: "badge-row" }, [
+      el("button", { class: "chip-btn", text: "🏷 " + t("badge"), title: t("badgeTitle"), onclick: () => send({ command: "saveBadge" }) })]));
     const list = j.achievements || [];
     if (list.length) {
       const got = list.filter(a => a.unlocked_at);
@@ -2694,6 +2762,8 @@ html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
       row(t("setBackup"), t("setBackupHint"), el("div", { class: "set-btns" }, [
         el("button", { class: "chip-btn", text: t("backupExport"), onclick: () => send({ command: "exportProgress" }) }),
         el("button", { class: "chip-btn", text: t("backupImport"), onclick: () => send({ command: "importProgress" }) })])),
+      row(t("setHelp"), t("setHelpHint"), el("div", { class: "set-btns" }, [
+        el("button", { class: "chip-btn", text: t("copyReport"), onclick: () => send({ command: "copyDiagnostics" }) })])),
     ]));
   }
 

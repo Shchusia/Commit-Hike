@@ -23,9 +23,11 @@ import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.util.messages.Topic
+import dev.commithike.core.BuildInfo
 import dev.commithike.core.CoreException
 import dev.commithike.core.I18n
 import dev.commithike.core.RatingPrompt
+import dev.commithike.core.Report
 import dev.commithike.core.ScanResult
 import dev.commithike.core.Scope
 import dev.commithike.core.Status
@@ -512,6 +514,61 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
 
     fun toggleTeam() = setTeam(view.status?.team != true)
 
+    // ---------- badge ----------
+
+    /** Saves an SVG badge with the trail, for a README such as a GitHub profile. */
+    fun saveBadge() = guarded {
+        val badge = app.call { it.badge(currentRepo) }
+        val target = withContext(Dispatchers.EDT) {
+            val descriptor = FileSaverDescriptor(I18n.t("badgeSaveTitle"), I18n.t("badgeSaveDesc"), "svg")
+            FileChooserFactory.getInstance().createSaveFileDialog(descriptor, project).save(null as VirtualFile?, badge.fileName)
+        } ?: return@guarded
+        withContext(Dispatchers.IO) { target.file.writeText(badge.svg) }
+        val markdown = badge.markdown.replace(badge.fileName, target.file.name)
+        notify("Commit Hike", I18n.t("badgeSaved", target.file.path), I18n.t("copyMarkdown")) {
+            com.intellij.openapi.ide.CopyPasteManager.getInstance().setContents(java.awt.datatransfer.StringSelection(markdown))
+        }
+    }
+
+    // ---------- developer report ----------
+
+    /** "Copy a report for the developer": versions, settings and recent errors, nothing personal. */
+    fun copyDiagnostics() = guarded {
+        val core = try {
+            app.call { it.diagnosticsJson() }
+        } catch (e: CoreException) {
+            "{ \"error\": \"${e.message}\" }"
+        }
+        val info = com.intellij.openapi.application.ApplicationInfo.getInstance()
+        val build = BuildInfo.current
+        val errors = app.recentErrors()
+        val report = Report.scrub(
+            listOf(
+                "Commit Hike: report for the developer",
+                "Plugin: ${build.version} (${build.flavor}), JetBrains plugin",
+                "IDE: ${info.fullApplicationName} (${info.build.asString()})",
+                "OS: ${com.intellij.openapi.util.SystemInfo.OS_NAME} ${com.intellij.openapi.util.SystemInfo.OS_VERSION} ${com.intellij.openapi.util.SystemInfo.OS_ARCH}",
+                "",
+                "Core:",
+                "```json",
+                core,
+                "```",
+                "",
+                "Recent errors:",
+            ).plus(if (errors.isEmpty()) listOf("- none") else errors.map { "- $it" }).joinToString("\n"),
+            System.getProperty("user.home"),
+        )
+        withContext(Dispatchers.EDT) {
+            com.intellij.openapi.ide.CopyPasteManager.getInstance().setContents(java.awt.datatransfer.StringSelection(report))
+        }
+        val issues = build.repo.takeIf { it.isNotBlank() }?.let { "$it/issues" }
+        if (issues != null) {
+            notify("Commit Hike", I18n.t("reportCopied"), I18n.t("openIssues")) { BrowserUtil.browse(issues) }
+        } else {
+            notify("Commit Hike", I18n.t("reportCopied"))
+        }
+    }
+
     // ---------- postcard ----------
 
     /** Saves the postcard the panel drew (a PNG data URL) where the user chooses. */
@@ -685,6 +742,7 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
         } catch (e: Exception) {
             if (e is kotlinx.coroutines.CancellationException) throw e
             LOG.warn("Commit Hike action failed", e)
+            app.noteError(e.message ?: e.toString())
             notify("Commit Hike", e.message ?: e.toString(), type = NotificationType.ERROR)
         }
     }

@@ -5,7 +5,7 @@ import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "2.0.21"
-    id("org.jetbrains.intellij.platform") version "2.5.0"
+    id("org.jetbrains.intellij.platform") version "2.11.0" // the newest that runs on Gradle 8 (2.12+ needs Gradle 9)
     id("org.jlleitschuh.gradle.ktlint") version "12.1.2" // `./gradlew ktlintCheck` / `ktlintFormat`
     id("org.jetbrains.kotlinx.kover") version "0.9.1" // coverage: `./gradlew koverLog koverHtmlReport`
 }
@@ -66,12 +66,15 @@ intellijPlatform {
     }
     pluginVerification {
         ides {
-            // The IDE we compile against (already downloaded for the build).
-            ide(IntelliJPlatformType.IntellijIdeaCommunity, platformVersion)
-            // Your installed IDE, no download: -PpycharmPath=/snap/pycharm-professional/current
-            providers.gradleProperty("pycharmPath").orNull?.let { local(it) }
-            // Every recent release (downloads several IDEs, for CI): -PverifyRecommended
-            if (providers.gradleProperty("verifyRecommended").isPresent) recommended()
+            if (providers.gradleProperty("verifyRecommended").isPresent) {
+                // every recent release in our range: task jetbrains:verify-all (slow, downloads several IDEs)
+                recommended()
+            } else {
+                // Fast: the IDE we compile against (already downloaded for the build)…
+                create(IntelliJPlatformType.IntellijIdeaCommunity, platformVersion)
+                // …and your installed IDE, no download: -PpycharmPath=/snap/pycharm-professional/current
+                providers.gradleProperty("pycharmPath").orNull?.let { local(it) }
+            }
         }
     }
 }
@@ -98,7 +101,10 @@ val copyShared by tasks.registering(Copy::class) {
 val buildInfoDir = layout.buildDirectory.dir("generated/build-info")
 val writeBuildInfo by tasks.registering {
     val out = buildInfoDir.map { it.file("commit-hike-build.properties") }
-    val text = "version=$version\nflavor=$flavor\n"
+    // the repository, from the vendor link in plugin.xml (task release:configure sets it)
+    val repo =
+        Regex("""<vendor[^>]*url="([^"]+)"""").find(file("src/main/resources/META-INF/plugin.xml").readText())?.groupValues?.get(1) ?: ""
+    val text = "version=$version\nflavor=$flavor\nrepo=$repo\n"
     inputs.property("text", text)
     outputs.file(out)
     doLast { out.get().asFile.apply { parentFile.mkdirs() }.writeText(text) }

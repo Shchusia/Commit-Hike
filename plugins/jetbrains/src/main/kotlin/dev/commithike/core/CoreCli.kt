@@ -88,6 +88,12 @@ class CoreCli(
         Settings::class.java,
     )
 
+    /** An SVG badge for a README, for the journey the panel shows. */
+    fun badge(repo: String? = null): BadgeResult = call(listOf("badge") + repoArgs(repo) + langArgs(), BadgeResult::class.java)
+
+    /** Versions and counts for a bug report, pretty-printed: nothing personal. */
+    fun diagnosticsJson(): String = GsonBuilder().setPrettyPrinting().create().toJson(callRaw(listOf("diagnostics")))
+
     fun exportBackup(path: String): BackupResult = call(listOf("backup", "export", "--path", path), BackupResult::class.java)
 
     /** Throws [CoreException] with code "data_exists" when there is progress and [replace] is false. */

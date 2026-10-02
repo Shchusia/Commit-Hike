@@ -10,6 +10,20 @@ turns them into the section of the new version; the JetBrains Marketplace
 
 ## [Unreleased]
 
+### Added
+- Browser tests for the trail panel (Playwright), run by `task check` and in CI: tabs, map and zoom, the charts, the year, settings, postcards, motion and contrast. `task check` ends with a coverage table for the core, the panel, the VS Code extension and the JetBrains plugin.
+- "Copy a report for the developer" in the settings: versions, your IDE and recent errors (the panel's too), without your name, e-mail, projects or code, ready to paste into a GitHub issue.
+- A badge for your GitHub profile: Stats → *Badge for your GitHub profile…* saves an SVG like "🥾 Commit Hike | 342 km · Chornohora Ridge" and copies the Markdown to show it.
+- A year postcard: the year's totals and the whole activity calendar on one 1200×630 picture, from the year on the Stats tab.
+
+### Changed
+- The panel tests use a Chrome or Chromium already on the computer when there is one, and download Playwright's at most once, never waiting for it forever.
+- The IntelliJ Platform Gradle plugin is 2.11.0 (from 2.5.0), the newest that runs on Gradle 8; 2.12 and later need Gradle 9.
+
+### Fixed
+- "No commits in the last two weeks yet" showed only when there was no history at all; it now shows after two quiet weeks.
+- The map no longer logs an error when you switch tabs quickly.
+
 ## [0.3.2] - 2026-10-01
 
 ### Fixed
@@ -18,8 +32,7 @@ turns them into the section of the new version; the JetBrains Marketplace
 ## [0.3.1] - 2026-10-01
 
 ### Fixed
-- JetBrains: no more use of API the platform plans to remove (`BrowserUtil.browse(File)`) or keeps internal (`PluginManagerCore.getPlugin`)
-
+- JetBrains: no more use of API the platform plans to remove (`BrowserUtil.browse(File)`) or keeps internal (`PluginManagerCore.getPlugin`).
 
 ## [0.3.0] - 2026-10-01
 

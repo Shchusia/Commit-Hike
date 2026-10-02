@@ -33,6 +33,14 @@ class CoreCliTest {
         assertEquals(BuildInfo("0.3.0", "dev"), load("version=0.3.0\nflavor=dev\n"))
         assertEquals(BuildInfo("dev", "prod"), load(null)) // no resource, e.g. running from sources
         assertEquals(BuildInfo("dev", "prod"), load("flavor=weird\nversion=\n"))
+        assertEquals("https://github.com/o/r", load("version=1\nrepo=https://github.com/o/r\n").repo)
+    }
+
+    @Test
+    fun scrubsTheReport() {
+        val raw = "open /home/denis/MyProjects/x failed for denis.s+git@mail.example.com and me@x.io; /home/denis again"
+        assertEquals("open ~/MyProjects/x failed for <email> and <email>; ~ again", Report.scrub(raw, "/home/denis"))
+        assertEquals("nothing personal", Report.scrub("nothing personal", null))
     }
 
     @Test
@@ -53,6 +61,9 @@ class CoreCliTest {
         assertEquals("milestones", cli.settings(notifications = "milestones").notifications)
         assertEquals("on", cli.settings(reduceMotion = "on").reduceMotion)
         assertEquals(Settings("on", "auto", "milestones"), cli.status().settings)
+        val badge = cli.badge()
+        assertTrue(badge.svg.startsWith("<svg") && badge.fileName == "commit-hike-badge.svg")
+        assertTrue(!cli.diagnosticsJson().contains("me@x.io"))
 
         val file = Files.createTempDirectory("ct-backup").resolve("backup.json").toString()
         assertEquals(file, cli.exportBackup(file).path)

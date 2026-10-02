@@ -33,6 +33,16 @@ import java.util.concurrent.ConcurrentHashMap
 @Service(Service.Level.APP)
 class CommitHikeApp {
     private val mutex = Mutex()
+
+    // The last errors from any project and from the panel, for the developer report.
+    private val errors = ArrayDeque<String>()
+
+    fun noteError(message: String) = synchronized(errors) {
+        errors.addLast("${java.time.Instant.now()} $message".take(600))
+        while (errors.size > 10) errors.removeFirst()
+    }
+
+    fun recentErrors(): List<String> = synchronized(errors) { errors.toList() }
     private var cli: CoreCli? = null
 
     @Volatile var loaded = false

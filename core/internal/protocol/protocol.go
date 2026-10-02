@@ -337,3 +337,38 @@ type BackupResult struct {
 	Routes    int    `json:"routes"`     // user route files it holds
 	Avatar    bool   `json:"avatar"`     // a custom hiker icon is included
 }
+
+// Diagnostics answers `diagnostics`: what a bug report needs, nothing personal
+// (no e-mail addresses, paths, project or repository names).
+type Diagnostics struct {
+	CoreVersion string           `json:"core_version"`
+	OS          string           `json:"os"`
+	Arch        string           `json:"arch"`
+	GoVersion   string           `json:"go_version"`
+	Initialized bool             `json:"initialized"`
+	Emails      int              `json:"emails,omitempty"` // how many, not which
+	Mode        string           `json:"mode,omitempty"`
+	Locale      string           `json:"locale,omitempty"`
+	Difficulty  string           `json:"difficulty,omitempty"`
+	RestDays    []int            `json:"rest_days,omitempty"`
+	Settings    *Settings        `json:"settings,omitempty"`
+	Commits     int              `json:"commits"`
+	Projects    int              `json:"projects"`
+	UserRoutes  []string         `json:"user_routes,omitempty"`
+	Journeys    []DiagnosticTrip `json:"journeys,omitempty"`
+	AvatarSet   bool             `json:"avatar_set"`
+}
+
+// DiagnosticTrip is one journey in a diagnostics report.
+type DiagnosticTrip struct {
+	Scope     string  `json:"scope"`
+	RouteID   string  `json:"route_id"`
+	DistanceM float64 `json:"distance_m"`
+}
+
+// BadgeResult answers `badge`: an SVG for a README, e.g. a GitHub profile.
+type BadgeResult struct {
+	SVG      string `json:"svg"`
+	FileName string `json:"file_name"`
+	Markdown string `json:"markdown"` // how to show it in a README next to the file
+}

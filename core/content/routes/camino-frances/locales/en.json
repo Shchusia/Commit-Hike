@@ -1,0 +1,103 @@
+{
+  "name": "Camino Francés",
+  "description": "The French Way of St James, 772 km from Saint-Jean-Pied-de-Port over the Pyrenees and across Spain to Santiago de Compostela. The track links the stops; the Cruz de Ferro is placed along it.",
+  "waypoints": {
+    "sjpp": {
+      "name": "Saint-Jean-Pied-de-Port",
+      "text": "Pilgrims get their first stamp here, at the foot of the Pyrenees."
+    },
+    "roncesvalles": {
+      "name": "Roncesvalles",
+      "text": "Over the Pyrenees into Spain, an abbey and a pilgrim hostel."
+    },
+    "pamplona": {
+      "name": "Pamplona",
+      "text": "The city of the running of the bulls."
+    },
+    "puente-la-reina": {
+      "name": "Puente la Reina",
+      "text": "An eleventh-century bridge built for pilgrims."
+    },
+    "estella": {
+      "name": "Estella",
+      "text": "Near here a fountain pours wine for pilgrims."
+    },
+    "logrono": {
+      "name": "Logroño",
+      "text": "The capital of Rioja wine."
+    },
+    "burgos": {
+      "name": "Burgos",
+      "text": "A Gothic cathedral on the edge of the Meseta."
+    },
+    "leon": {
+      "name": "León",
+      "text": "Across the wide Meseta to the cathedral of light."
+    },
+    "astorga": {
+      "name": "Astorga",
+      "text": "Gaudí built a palace here."
+    },
+    "cruz-de-ferro": {
+      "name": "Cruz de Ferro",
+      "text": "The highest point: pilgrims leave a stone brought from home."
+    },
+    "ponferrada": {
+      "name": "Ponferrada",
+      "text": "A Templar castle."
+    },
+    "o-cebreiro": {
+      "name": "O Cebreiro",
+      "text": "Stone huts with thatched roofs at the gate of Galicia."
+    },
+    "sarria": {
+      "name": "Sarria",
+      "text": "Many start here: 100 km is the least for the Compostela."
+    },
+    "portomarin": {
+      "name": "Portomarín",
+      "text": "A church moved stone by stone when the valley was flooded."
+    },
+    "santiago": {
+      "name": "Santiago de Compostela",
+      "text": "The cathedral square, the end of the Way."
+    }
+  },
+  "story": {
+    "meseta": "The Meseta: wheat to the horizon, and your own thoughts for company.",
+    "stone": "At the iron cross you put down the stone you carried all this way.",
+    "galicia": "Galicia: green hills, rain and eucalyptus, and yellow arrows at every turn."
+  },
+  "facts": {
+    "shell": "The scallop shell has marked the Way of St James for a thousand years.",
+    "compostela": "Walk the last 100 km and the cathedral gives you a Compostela, the pilgrim's certificate.",
+    "unesco": "The routes to Santiago are a UNESCO World Heritage Site.",
+    "km-zero": "Many walk on to Finisterre, once thought to be the end of the world."
+  },
+  "achievements": {
+    "cam-start": {
+      "name": "Buen Camino",
+      "description": "Buen Camino"
+    },
+    "cam-pyrenees": {
+      "name": "Over the Pyrenees",
+      "description": "Через Піренеї"
+    },
+    "cam-meseta": {
+      "name": "Meseta Crossed",
+      "description": "Месету подолано"
+    },
+    "cam-stone": {
+      "name": "A Stone Left Behind",
+      "description": "Залишений камінь"
+    },
+    "cam-finish": {
+      "name": "Compostela",
+      "description": "Компостела"
+    },
+    "cam-commits": {
+      "name": "Pilgrim's Patience",
+      "description": "Терпіння прочанина"
+    }
+  }
+}

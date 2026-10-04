@@ -44,6 +44,8 @@ data class Danger(val id: String = "", val atM: Double = 0.0, val text: String =
 
 data class RestDaysInfo(val days: List<Int> = emptyList())
 
+data class BadgeResult(val svg: String = "", val fileName: String = "", val markdown: String = "")
+
 /** Panel and notification choices, shared by every IDE on this computer. */
 data class Settings(
     val reduceMotion: String = "auto", // auto | on | off
@@ -102,8 +104,18 @@ data class Route(
     val dangers: List<Danger>? = null,
 )
 
+/** The next route of a series. */
+data class NextRoute(
+    val id: String = "",
+    val name: String = "",
+    val lengthM: Double = 0.0,
+    val seriesId: String = "",
+    val seriesName: String = "",
+)
+
 data class Journey(
     val scope: String = "",
+    val nextRoute: NextRoute? = null,
     val route: Route = Route(),
     val distanceM: Double = 0.0,
     val percent: Double = 0.0,

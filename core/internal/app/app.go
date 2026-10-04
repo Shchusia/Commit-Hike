@@ -45,6 +45,7 @@ func fail(code, format string, args ...any) error {
 type Service struct {
 	st            *store.Store
 	routes        map[string]*routes.Route
+	series        []routes.Series // built-in routes walked one after another
 	routeWarnings []error
 	score         score.Config
 	now           func() time.Time
@@ -61,7 +62,11 @@ func New(dir string) (*Service, error) {
 	if err != nil {
 		return nil, fmt.Errorf("built-in routes are broken: %w", err)
 	}
-	s := &Service{st: st, routes: builtin, score: score.Default(), now: time.Now, loc: time.Local}
+	series, err := routes.LoadSeries(content.FS, "series.json", builtin)
+	if err != nil {
+		return nil, fmt.Errorf("built-in series are broken: %w", err)
+	}
+	s := &Service{st: st, routes: builtin, series: series, score: score.Default(), now: time.Now, loc: time.Local}
 
 	// User routes are optional; a broken one must not break the app.
 	if _, err := os.Stat(st.UserRoutesDir()); err == nil {
@@ -198,16 +203,28 @@ func (s *Service) SetJourney(scope, repo, routeID string, fromHistory bool, lang
 	}
 	a := &store.Assignment{RouteID: routeID, Since: s.since(fromHistory)}
 	pid := ""
+	// the journey being left still counts for the passport
+	keepPast := func(scope, pid string, old *store.Assignment) {
+		if old == nil || (!remove && old.RouteID == routeID && old.Since == a.Since) {
+			return
+		}
+		cfg.PastJourneys = append(cfg.PastJourneys, store.PastJourney{Scope: scope, Project: pid, RouteID: old.RouteID, Since: old.Since, Until: s.now().Unix()})
+		if n := len(cfg.PastJourneys); n > 100 {
+			cfg.PastJourneys = cfg.PastJourneys[n-100:]
+		}
+	}
 	switch scope {
 	case ScopeGlobal:
 		if remove {
 			return nil, fail(protocol.CodeInvalidArgument, "the global journey cannot be removed, choose another route")
 		}
+		keepPast(ScopeGlobal, "", cfg.GlobalJourney)
 		cfg.GlobalJourney = a
 	case ScopeProject:
 		if pid, _, err = s.project(repo); err != nil {
 			return nil, err
 		}
+		keepPast(ScopeProject, pid, cfg.ProjectJourneys[pid])
 		if remove {
 			delete(cfg.ProjectJourneys, pid)
 		} else {

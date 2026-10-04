@@ -179,3 +179,15 @@ void test("Cli: settings", async () => {
   assert.deepEqual((await cli.status()).settings, { reduce_motion: "auto", high_contrast: "on", notifications: "off" });
   await assert.rejects(cli.settings({ reduce_motion: "sometimes" as never }), (e: unknown) => e instanceof CliError && e.code === "invalid_argument");
 });
+
+void test("Cli: badge and diagnostics", async () => {
+  process.env.COMMIT_HIKE_HOME = fs.mkdtempSync(path.join(os.tmpdir(), "ct-home7-"));
+  const cli = new Cli(bundledBinary(ext));
+  await cli.init({ emails: ["me@x.io"], mode: "all", fromHistory: true });
+  const b = await cli.badge();
+  assert.ok(b.svg.startsWith("<svg") && b.svg.includes("Commit Hike"));
+  assert.equal(b.file_name, "commit-hike-badge.svg");
+  const d = await cli.diagnostics();
+  assert.equal(d.initialized, true);
+  assert.ok(!JSON.stringify(d).includes("me@x.io"), "nothing personal in diagnostics");
+});

@@ -190,6 +190,8 @@ func main() {
 	profile := flag.String("profile", "cover.out", "cover profile from go test -coverprofile")
 	module := flag.String("module", "", "module path to strip from file names (read from go.mod by default)")
 	minPct := flag.Float64("min", 0, "fail when total coverage is below this percentage")
+	brief := flag.Bool("brief", false, "only the summary, not every uncovered line")
+	summary := flag.String("summary", "", "also write the total to this JSON file (for the coverage table)")
 	flag.Parse()
 
 	f, err := os.Open(*profile)
@@ -217,7 +219,19 @@ func main() {
 	fmt.Printf("  %6.1f%%  %4d/%-4d  total\n\n", total.Percent(), total.Covered, total.Total)
 
 	ranges := Uncovered(blocks)
-	fmt.Printf("Not covered by tests (%d places):\n", len(ranges))
+	if *summary != "" {
+		line := fmt.Sprintf(`{"part":"Core (Go)","percent":%.1f,"detail":"statements · %d places not covered"}`, total.Percent(), len(ranges))
+		if err := os.WriteFile(*summary, []byte(line), 0o600); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			os.Exit(2)
+		}
+	}
+	if *brief {
+		fmt.Printf("%d places not covered: task core:cover lists them\n", len(ranges))
+		ranges = nil
+	} else {
+		fmt.Printf("Not covered by tests (%d places):\n", len(ranges))
+	}
 	names := map[string]func(int) string{}
 	for _, r := range ranges {
 		local := filepath.FromSlash(rel(r.File))

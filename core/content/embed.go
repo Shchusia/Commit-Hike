@@ -3,7 +3,8 @@ package content
 
 import "embed"
 
-// FS holds routes/<id>/route.json and routes/<id>/locales/*.json.
+// FS holds routes/<id>/route.json, routes/<id>/locales/*.json and
+// series.json (routes walked one after another).
 //
-//go:embed routes
+//go:embed routes series.json
 var FS embed.FS

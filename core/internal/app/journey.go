@@ -212,6 +212,7 @@ func (s *Service) status(cfg *store.Config, st *store.State, pid, lang string) p
 	}
 	out.TotalM, out.TodayM = score.Round1(out.TotalM), score.Round1(out.TodayM)
 	out.History = s.history(st, eff)
+	out.Passport, out.RouteStops = s.passport(cfg, st, eff, chain)
 	out.RestDays = append([]int(nil), cfg.RestDays...)
 	out.Settings = settingsOf(cfg)
 	out.Difficulty = levelAt(cfg, s.now().Unix())
@@ -282,6 +283,10 @@ func (s *Service) journeyDTO(j journey, js journeyStats, unlocked map[string]int
 	out.Achievements = make([]protocol.Achievement, 0, len(r.Achievements))
 	for _, a := range r.Achievements {
 		out.Achievements = append(out.Achievements, achievementDTO(r, chain, a.ID, a.Hidden, unlocked[a.ID]))
+	}
+	if next, ser, ok := routes.Next(s.series, j.route.ID); ok && s.routes[next] != nil {
+		nr := s.routes[next]
+		out.NextRoute = &protocol.NextRoute{ID: nr.ID, Name: nr.T(chain, "name"), LengthM: nr.LengthM, SeriesID: ser.ID, SeriesName: routes.SeriesName(ser, chain)}
 	}
 	return out
 }

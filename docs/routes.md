@@ -147,6 +147,25 @@ task route:new ID=my-trail     # template in core/content/routes/my-trail
 task routes:check              # structure + every translation has exactly the same keys
 ```
 
+## Series
+
+`core/content/series.json` lists routes walked one after another. When a
+route of a series is finished, the plugins offer the next one (the status
+carries it as `next_route`).
+
+```json
+{
+  "series": [
+    { "id": "carpathians", "routes": ["chornohora-ridge", "svydovets-ridge", "gorgany-popadia-ring"],
+      "name": { "en": "The Carpathians", "uk": "Карпати" } }
+  ]
+}
+```
+
+A series needs an id, an English name and at least two built-in routes; a
+route can be in one series only. The core checks this when it starts, and
+`task routes:check` runs the same check.
+
 ## User routes (without rebuilding anything)
 
 In the IDE: **Create a Route Template…** (Tools → Commit Hike in JetBrains IDEs,

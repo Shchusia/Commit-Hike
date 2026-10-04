@@ -2,8 +2,10 @@ package app
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -155,5 +157,106 @@ func TestSettings(t *testing.T) {
 	cfg, _ := s.st.LoadConfig()
 	if cfg.Prefs.ReduceMotion != "" {
 		t.Fatalf("defaults aren't stored: %+v", cfg.Prefs)
+	}
+}
+
+func TestDiagnosticsHoldNothingPersonal(t *testing.T) {
+	s, r := setup(t, "demo-trail")
+	r.commit("", "a.go", 40)
+	scan(t, s, r.dir, "en")
+	d, err := s.Diagnostics("1.2.3")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !d.Initialized || d.Commits != 1 || d.Projects != 1 || d.Emails != 1 || len(d.Journeys) == 0 || d.CoreVersion != "1.2.3" {
+		t.Fatalf("diagnostics: %+v", d)
+	}
+	raw, _ := json.Marshal(d)
+	for _, private := range []string{"me@x.io", "x.io", r.dir, s.st.Dir, filepath.Base(r.dir)} {
+		if strings.Contains(strings.ToLower(string(raw)), strings.ToLower(private)) {
+			t.Fatalf("diagnostics leak %q: %s", private, raw)
+		}
+	}
+	fresh, _ := New(t.TempDir())
+	if d, err := fresh.Diagnostics("1.2.3"); err != nil || d.Initialized {
+		t.Fatalf("before setup: %+v %v", d, err)
+	}
+}
+
+func TestBadge(t *testing.T) {
+	s, r := setup(t, "demo-trail")
+	r.commit("", "a.go", 40)
+	scan(t, s, r.dir, "en")
+	b, err := s.Badge(r.dir, "en")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.Contains(b.SVG, "Commit Hike") || !strings.Contains(b.SVG, " km · ") || b.FileName != "commit-hike-badge.svg" || !strings.Contains(b.Markdown, b.FileName) {
+		t.Fatalf("badge: %+v", b)
+	}
+	for _, c := range []struct {
+		m    float64
+		lang string
+		want string
+	}{{34800, "en", "34.8 km"}, {342400, "en", "342 km"}, {34800, "uk", "34,8 км"}} {
+		if got := badgeDistance(c.m, c.lang); got != c.want {
+			t.Errorf("badgeDistance(%v, %s) = %q, want %q", c.m, c.lang, got, c.want)
+		}
+	}
+}
+
+func TestPassportKeepsStampsAcrossJourneys(t *testing.T) {
+	s, r := setup(t, "demo-trail")
+	for i := 0; i < 12; i++ {
+		r.commit("", fmt.Sprintf("f%d.go", i), 120)
+	}
+	scan(t, s, r.dir, "en")
+	st, _ := s.Status(r.dir, "en")
+	if len(st.Passport) == 0 || st.RouteStops["demo-trail"] == 0 {
+		t.Fatalf("stamps on the first trail: %+v", st.Passport)
+	}
+	first := len(st.Passport)
+	for i := 1; i < len(st.Passport); i++ {
+		if st.Passport[i].ReachedAt < st.Passport[i-1].ReachedAt {
+			t.Fatal("stamps go oldest first")
+		}
+	}
+	for _, p := range st.Passport {
+		if p.Name == "" || p.RouteName == "" || p.ReachedAt == 0 {
+			t.Fatalf("incomplete stamp: %+v", p)
+		}
+	}
+	// walk another route: the first route's stamps stay
+	if _, err := s.SetJourney(ScopeGlobal, "", "chornohora-ridge", false, ""); err != nil {
+		t.Fatal(err)
+	}
+	st, _ = s.Status(r.dir, "en")
+	kept := 0
+	for _, p := range st.Passport {
+		if p.RouteID == "demo-trail" {
+			kept++
+		}
+	}
+	if kept != first {
+		t.Fatalf("stamps of the route left behind: %d, want %d", kept, first)
+	}
+	cfg, _ := s.st.LoadConfig()
+	if len(cfg.PastJourneys) != 1 || cfg.PastJourneys[0].RouteID != "demo-trail" || cfg.PastJourneys[0].Until == 0 {
+		t.Fatalf("past journeys: %+v", cfg.PastJourneys)
+	}
+}
+
+func TestTheNextRouteOfASeries(t *testing.T) {
+	s, r := setup(t, "chornohora-ridge")
+	st, _ := s.Status(r.dir, "uk")
+	n := st.Global.NextRoute
+	if n == nil || n.ID != "svydovets-ridge" || n.SeriesName != "Карпати" || n.Name == "" || n.LengthM == 0 {
+		t.Fatalf("next route: %+v", n)
+	}
+	if _, err := s.SetJourney(ScopeGlobal, "", "demo-trail", false, ""); err != nil {
+		t.Fatal(err)
+	}
+	if st, _ = s.Status(r.dir, "en"); st.Global.NextRoute != nil {
+		t.Fatalf("a route in no series has no next: %+v", st.Global.NextRoute)
 	}
 }

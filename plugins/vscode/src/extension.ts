@@ -9,6 +9,7 @@ import { LANGUAGE_NAMES, formatDistanceL as formatDistance, language, setLanguag
 import { PanelMessage, TrailPanel } from "./panel";
 import * as rating from "./rating";
 import { RepoTracker } from "./repos";
+import { scrubReport } from "./report";
 
 export async function activate(ctx: vscode.ExtensionContext): Promise<void> {
   let binary: string;
@@ -147,8 +148,17 @@ class App {
       const evs = events.filter(e => e.journey === journey);
       const j = journey === "global" ? res.global : res.project;
       if (j && evs.some(e => e.type === "finished")) {
-        void vscode.window.showInformationMessage(t("finished", j.route.name), t("chooseTrail"))
-          .then(a => { if (a) void this.chooseRoute(journey); });
+        const next = j.next_route;
+        if (next) { // a series goes on: offer the next route
+          void vscode.window.showInformationMessage(`${t("finished", j.route.name)} ${t("seriesNextText", next.series_name, next.name)}`, t("walkOn", next.name), t("chooseTrail"))
+            .then(a => {
+              if (a === t("walkOn", next.name)) void this.guard(() => this.walkRoute(next.id));
+              else if (a) void this.chooseRoute(journey);
+            });
+        } else {
+          void vscode.window.showInformationMessage(t("finished", j.route.name), t("chooseTrail"))
+            .then(a => { if (a) void this.chooseRoute(journey); });
+        }
         continue;
       }
       // An encounter on the road is announced when it's the only news of this commit.
@@ -645,6 +655,10 @@ class App {
         await this.refresh();
       });
       case "exportProgress": return this.guard(() => this.exportProgress());
+      case "copyDiagnostics": return this.guard(() => this.copyDiagnostics());
+      case "saveBadge": return this.guard(() => this.saveBadge());
+      case "panelError": this.noteError("panel: " + String(m.message).slice(0, 500)); return;
+      case "walkRoute": return this.guard(() => this.walkRoute(String(m.id)));
       case "importProgress": return this.guard(() => this.importProgress());
     }
   }
@@ -675,7 +689,57 @@ class App {
   }
 
   private report(e: unknown): void {
-    this.log.appendLine(`[${new Date().toISOString()}] ${(e as Error)?.message ?? String(e)}`);
+    const msg = (e as Error)?.message ?? String(e);
+    this.log.appendLine(`[${new Date().toISOString()}] ${msg}`);
+    this.noteError(msg);
+  }
+
+  /** The last errors, for the developer report. */
+  private readonly recentErrors: string[] = [];
+  private noteError(msg: string): void {
+    this.recentErrors.push(`${new Date().toISOString()} ${msg}`.slice(0, 600));
+    if (this.recentErrors.length > 10) this.recentErrors.shift();
+  }
+
+  /** Walks on to [id], usually the next route of a series. */
+  private async walkRoute(id: string): Promise<void> {
+    if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(id)) return;
+    await this.cli.setJourney("global", id, false);
+    await this.refresh();
+    this.showTrail();
+  }
+
+  /** Saves an SVG badge with the trail, for a README such as a GitHub profile. */
+  private async saveBadge(): Promise<void> {
+    const badge = await this.cli.badge(this.currentRepo);
+    const target = await vscode.window.showSaveDialog({
+      title: t("badgeSaveTitle"), filters: { SVG: ["svg"] },
+      defaultUri: vscode.Uri.file(path.join(os.homedir(), badge.file_name)),
+    });
+    if (!target) return;
+    await fs.promises.writeFile(target.fsPath, badge.svg);
+    const markdown = badge.markdown.replace(badge.file_name, path.basename(target.fsPath));
+    if (await vscode.window.showInformationMessage(t("badgeSaved", target.fsPath), t("copyMarkdown"))) {
+      await vscode.env.clipboard.writeText(markdown);
+    }
+  }
+
+  /** "Copy a report for the developer": versions, settings and recent errors, nothing personal. */
+  private async copyDiagnostics(): Promise<void> {
+    const core = await this.cli.diagnostics().catch((e: unknown) => ({ error: (e as Error)?.message ?? String(e) }));
+    const report = scrubReport([
+      "Commit Hike: report for the developer",
+      `Plugin: ${this.build.version} (${this.build.flavor}), VS Code extension`,
+      `Editor: ${vscode.env.appName} ${vscode.version} (${vscode.env.uiKind === vscode.UIKind.Web ? "web" : "desktop"}${vscode.env.remoteName ? ", remote: " + vscode.env.remoteName : ""})`,
+      `OS: ${process.platform} ${process.arch}`,
+      "", "Core:", "```json", JSON.stringify(core, null, 2), "```",
+      "", "Recent errors:", ...(this.recentErrors.length ? this.recentErrors.map(e => "- " + e) : ["- none"]),
+    ].join("\n"), os.homedir());
+    await vscode.env.clipboard.writeText(report);
+    const issues = (this.ctx.extension.packageJSON as { bugs?: { url?: string } }).bugs?.url;
+    if (await vscode.window.showInformationMessage(t("reportCopied"), ...(issues ? [t("openIssues")] : [])) && issues) {
+      await vscode.env.openExternal(vscode.Uri.parse(issues));
+    }
   }
 }
 

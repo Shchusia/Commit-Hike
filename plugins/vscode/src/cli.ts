@@ -39,7 +39,9 @@ export interface Route {
   facts?: Fact[]; objects?: RouteObject[]; path?: [number, number][]; map_image?: string;
   underground?: Span[]; dangers?: Danger[]; track?: number[][]; loop?: boolean;
 }
+export interface NextRoute { id: string; name: string; length_m: number; series_id: string; series_name: string }
 export interface Journey {
+  next_route?: NextRoute; // the next route of this route's series
   scope: "global" | "project"; route: Route; distance_m: number; percent: number; finished: boolean;
   last_waypoint?: Waypoint; next_waypoint?: Waypoint; to_next_m?: number; story?: Story;
   achievements: Achievement[]; commits: number; streak_days: number; daily: Day[]; day: number;
@@ -155,6 +157,12 @@ export class Cli {
     const args = Object.entries(change).filter(([, v]) => v).map(([k, v]) => `--${k.replace(/_/g, "-")}=${v}`);
     return this.run<Settings>(["settings", ...args]);
   }
+  /** An SVG badge for a README, for the journey the panel shows. */
+  badge(repo?: string) {
+    return this.run<{ svg: string; file_name: string; markdown: string }>(this.withLang(["badge", ...(repo ? ["--repo", repo] : [])]));
+  }
+  /** Versions and counts for a bug report: nothing personal. */
+  diagnostics() { return this.run<Record<string, unknown>>(["diagnostics"]); }
   exportBackup(path: string) { return this.run<BackupResult>(["backup", "export", "--path", path]); }
   /** Rejects with CliError code "data_exists" when there is progress and replace is false. */
   importBackup(path: string, replace: boolean) {

@@ -1,0 +1,14 @@
+{
+  "series": [
+    {
+      "id": "carpathians",
+      "routes": ["chornohora-ridge", "svydovets-ridge", "gorgany-popadia-ring"],
+      "name": { "en": "The Carpathians", "uk": "Карпати" }
+    },
+    {
+      "id": "long-ways",
+      "routes": ["tour-du-mont-blanc", "camino-frances"],
+      "name": { "en": "The long ways", "uk": "Довгі шляхи" }
+    }
+  ]
+}

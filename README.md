@@ -26,6 +26,8 @@ a map, stories, facts and achievements.
 ## Features
 
 - **Real, literary and original routes.** Walk the Chornohora ridge over Hoverla and New Zealand's Tongariro Alpine Crossing on their real GPS tracks, Santiago's journey from The Alchemist across real Spain, Morocco, the Sahara and Egypt on real terrain, a folk tale through the Carpathians or a fantasy journey past seven lighthouses. Each route has its own stops, story, facts and achievements.
+- **Series.** Finish a route and walk on to the next: the Carpathians (Chornohora → Svydovets → Gorgany) and the long ways (Tour du Mont Blanc → Camino Francés to Santiago).
+- **Seasons, camps and a passport.** Snow in winter, golden meadows in autumn, a camp by the fire on days without commits, and a passport with a dated stamp for every stop you've reached.
 - **Climb for real.** Routes have elevation profiles: the ground rises and falls, your hiker leans into the slope, and you see your altitude, the grade, how much you've climbed and the climb left to the next stop. Some achievements are about height.
 - **A living scene.** The sky follows your clock and the weather changes day by day. The land changes with the route: conifer forests, deciduous woods that turn gold in autumn, meadows, fields, steppe, desert, rock, snow, tundra, lakes, swamps, the seaside, volcanoes and villages, blending smoothly into each other.
 - **Things to find.** Route packs place pictures (SVG, PNG, JPG, WebP, GIF) or small animated HTML scenes along the trail. They fade in as you approach and out once you've passed. Facts about the places unlock as you walk.
@@ -36,6 +38,7 @@ a map, stories, facts and achievements.
 - **No spoilers.** You can look back along the way you've walked, but what lies ahead stays hidden until you get there.
 - **Your year on the trail.** An activity calendar for every year you've walked, with the distance, commits, active days, best day and longest streak. Hover any day, or any bar of the last two weeks, to see its distance and commits.
 - **Days off.** Choose weekdays off (say, Saturday and Sunday): a day off without commits doesn't break your streak, and one with commits still counts.
+- **A badge for your profile.** Save an SVG badge with your trail and distance for your GitHub profile README, and a postcard of your year.
 - **Postcards.** Save a picture of where you are — the real scene, your hiker, the route, day and distance — and share it.
 - **One settings page.** Language, difficulty, days off, notifications, motion, contrast, your hiker and backups in one place, the same in every IDE.
 - **Comfortable for everyone.** Reduced motion and high-contrast themes are respected, down to animated scenes in route packs.
@@ -151,6 +154,7 @@ and says when a build is a development build.
 task coverage            # all three languages
 task core:cover          # Go: per package, every uncovered line with its function, HTML report; fails below 80%
 task core:cover MIN=85   # a different threshold
+task ui:test             # browser tests for the panel (Playwright; uses your Chrome if Playwright's isn't there)
 task vscode:cover        # TypeScript, with uncovered lines (trust branch and function %; imports count as lines)
 task jetbrains:cover     # Kotlin via Kover, per class, plus an HTML report
 ```

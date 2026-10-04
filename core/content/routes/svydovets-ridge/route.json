@@ -1,0 +1,192 @@
+{
+  "id": "svydovets-ridge",
+  "version": 1,
+  "default_locale": "en",
+  "length_m": 34000,
+  "track": [
+    [
+      48.15,
+      24.283
+    ],
+    [
+      48.186,
+      24.256
+    ],
+    [
+      48.2161,
+      24.2376
+    ],
+    [
+      48.249,
+      24.243
+    ],
+    [
+      48.262,
+      24.215
+    ],
+    [
+      48.2761,
+      24.1927
+    ],
+    [
+      48.278,
+      24.175
+    ],
+    [
+      48.2807,
+      24.1568
+    ],
+    [
+      48.33,
+      24.17
+    ]
+  ],
+  "waypoints": [
+    {
+      "id": "kvasy",
+      "at_m": 0,
+      "kind": "start",
+      "elevation_m": 600
+    },
+    {
+      "id": "brailka",
+      "at_m": 6124,
+      "kind": "hut",
+      "elevation_m": 1300
+    },
+    {
+      "id": "blyznytsia",
+      "at_m": 11069,
+      "kind": "peak",
+      "elevation_m": 1883,
+      "lat": 48.2161,
+      "lon": 24.2376
+    },
+    {
+      "id": "drahobrat",
+      "at_m": 16105,
+      "kind": "landmark",
+      "elevation_m": 1400
+    },
+    {
+      "id": "stih",
+      "at_m": 19563,
+      "kind": "peak",
+      "elevation_m": 1704
+    },
+    {
+      "id": "vorozheska",
+      "at_m": 22678,
+      "kind": "lake",
+      "elevation_m": 1460,
+      "lat": 48.2761,
+      "lon": 24.1927
+    },
+    {
+      "id": "kotel",
+      "at_m": 24493,
+      "kind": "peak",
+      "elevation_m": 1771
+    },
+    {
+      "id": "apshynets",
+      "at_m": 26381,
+      "kind": "lake",
+      "elevation_m": 1487,
+      "lat": 48.2807,
+      "lon": 24.1568
+    },
+    {
+      "id": "chorna-tysa",
+      "at_m": 34000,
+      "kind": "finish",
+      "elevation_m": 700
+    }
+  ],
+  "biomes": [
+    {
+      "at_m": 0,
+      "type": "grove"
+    },
+    {
+      "at_m": 3400,
+      "type": "forest"
+    },
+    {
+      "at_m": 7480,
+      "type": "meadow"
+    },
+    {
+      "at_m": 10200,
+      "type": "tundra"
+    },
+    {
+      "at_m": 22100,
+      "type": "meadow"
+    },
+    {
+      "at_m": 29920,
+      "type": "forest"
+    }
+  ],
+  "story": [
+    {
+      "id": "treeline",
+      "at_m": 5100
+    },
+    {
+      "id": "lakes",
+      "at_m": 20400
+    }
+  ],
+  "facts": [
+    {
+      "id": "centre-europe",
+      "at_m": 1700
+    },
+    {
+      "id": "nine-lakes",
+      "at_m": 18700
+    },
+    {
+      "id": "vorozheska-depth",
+      "at_m": 23800
+    }
+  ],
+  "achievements": [
+    {
+      "id": "svyd-start",
+      "rule": {
+        "type": "distance",
+        "min_m": 100
+      }
+    },
+    {
+      "id": "svyd-top",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "blyznytsia"
+      }
+    },
+    {
+      "id": "svyd-lakes",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "apshynets"
+      }
+    },
+    {
+      "id": "svyd-finish",
+      "rule": {
+        "type": "finish"
+      }
+    },
+    {
+      "id": "svyd-streak",
+      "rule": {
+        "type": "streak",
+        "days": 5
+      }
+    }
+  ]
+}

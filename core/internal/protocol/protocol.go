@@ -173,7 +173,8 @@ type Danger struct {
 
 // Journey is progress along one route: the global one or a project's own.
 type Journey struct {
-	Scope        string        `json:"scope"` // "global" | "project"
+	Scope        string        `json:"scope"`                // "global" | "project"
+	NextRoute    *NextRoute    `json:"next_route,omitempty"` // the next route of this route's series
 	Route        Route         `json:"route"`
 	DistanceM    float64       `json:"distance_m"`
 	Percent      float64       `json:"percent"`
@@ -225,6 +226,10 @@ type Status struct {
 	RestDays []int `json:"rest_days,omitempty"`
 	// Settings are the panel and notification choices.
 	Settings Settings `json:"settings"`
+	// Passport is every stop reached on every journey, current and past, oldest first.
+	Passport []Stamp `json:"passport,omitempty"`
+	// RouteStops is how many stops each route in the passport has, for "7 of 12".
+	RouteStops map[string]int `json:"route_stops,omitempty"`
 }
 
 // Settings answers `settings` and is part of every status.
@@ -336,4 +341,59 @@ type BackupResult struct {
 	Commits   int    `json:"commits"`    // counted commits it holds
 	Routes    int    `json:"routes"`     // user route files it holds
 	Avatar    bool   `json:"avatar"`     // a custom hiker icon is included
+}
+
+// Diagnostics answers `diagnostics`: what a bug report needs, nothing personal
+// (no e-mail addresses, paths, project or repository names).
+type Diagnostics struct {
+	CoreVersion string           `json:"core_version"`
+	OS          string           `json:"os"`
+	Arch        string           `json:"arch"`
+	GoVersion   string           `json:"go_version"`
+	Initialized bool             `json:"initialized"`
+	Emails      int              `json:"emails,omitempty"` // how many, not which
+	Mode        string           `json:"mode,omitempty"`
+	Locale      string           `json:"locale,omitempty"`
+	Difficulty  string           `json:"difficulty,omitempty"`
+	RestDays    []int            `json:"rest_days,omitempty"`
+	Settings    *Settings        `json:"settings,omitempty"`
+	Commits     int              `json:"commits"`
+	Projects    int              `json:"projects"`
+	UserRoutes  []string         `json:"user_routes,omitempty"`
+	Journeys    []DiagnosticTrip `json:"journeys,omitempty"`
+	AvatarSet   bool             `json:"avatar_set"`
+}
+
+// DiagnosticTrip is one journey in a diagnostics report.
+type DiagnosticTrip struct {
+	Scope     string  `json:"scope"`
+	RouteID   string  `json:"route_id"`
+	DistanceM float64 `json:"distance_m"`
+}
+
+// BadgeResult answers `badge`: an SVG for a README, e.g. a GitHub profile.
+type BadgeResult struct {
+	SVG      string `json:"svg"`
+	FileName string `json:"file_name"`
+	Markdown string `json:"markdown"` // how to show it in a README next to the file
+}
+
+// Stamp is a stop in the hiker's passport: the first time a journey reached it.
+type Stamp struct {
+	RouteID    string  `json:"route_id"`
+	RouteName  string  `json:"route_name"`
+	WaypointID string  `json:"waypoint_id"`
+	Name       string  `json:"name"`
+	Kind       string  `json:"kind,omitempty"`
+	ElevationM float64 `json:"elevation_m,omitempty"`
+	ReachedAt  int64   `json:"reached_at"` // unix seconds: the commit that got there
+}
+
+// NextRoute is the route after the current one in its series.
+type NextRoute struct {
+	ID         string  `json:"id"`
+	Name       string  `json:"name"`
+	LengthM    float64 `json:"length_m"`
+	SeriesID   string  `json:"series_id"`
+	SeriesName string  `json:"series_name"`
 }

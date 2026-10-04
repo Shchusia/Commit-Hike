@@ -10,6 +10,7 @@ import dev.commithike.core.BuildInfo
 import dev.commithike.core.CoreCli
 import dev.commithike.core.CoreException
 import dev.commithike.core.CorePlatform
+import dev.commithike.core.ErrorLog
 import dev.commithike.core.I18n
 import dev.commithike.core.LocaleInfo
 import dev.commithike.core.Route
@@ -33,6 +34,13 @@ import java.util.concurrent.ConcurrentHashMap
 @Service(Service.Level.APP)
 class CommitHikeApp {
     private val mutex = Mutex()
+
+    // The last errors from any project and from the panel, for the developer report.
+    private val errors = ErrorLog()
+
+    fun noteError(message: String) = errors.note(message)
+
+    fun recentErrors(): List<String> = errors.recent()
     private var cli: CoreCli? = null
 
     @Volatile var loaded = false

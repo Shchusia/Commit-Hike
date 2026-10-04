@@ -47,6 +47,16 @@ type Assignment struct {
 	Since   int64  `json:"since"` // unix seconds; 0 = include full history
 }
 
+// PastJourney is a journey the user left for another route; it still counts
+// for the passport.
+type PastJourney struct {
+	Scope   string `json:"scope"`             // global | project
+	Project string `json:"project,omitempty"` // project id, for project journeys
+	RouteID string `json:"route_id"`
+	Since   int64  `json:"since"`
+	Until   int64  `json:"until"`
+}
+
 // Config is the user settings file (config.json).
 type Config struct {
 	Version         int                    `json:"version"`
@@ -56,6 +66,7 @@ type Config struct {
 	Ignore          []string               `json:"ignore,omitempty"` // extra filter patterns
 	GlobalJourney   *Assignment            `json:"global_journey,omitempty"`
 	ProjectJourneys map[string]*Assignment `json:"project_journeys,omitempty"` // key: project id
+	PastJourneys    []PastJourney          `json:"past_journeys,omitempty"`    // newest last, at most 100
 	EnabledProjects map[string]bool        `json:"enabled_projects,omitempty"` // for ModeSelected
 	// Projects where the user wants to see teammates on the trail. Teammates
 	// are computed from git history on demand and never stored.

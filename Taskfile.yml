@@ -213,7 +213,7 @@ tasks:
       # -coverpkg: a test in one package counts toward the packages it exercises
       - go test -race -covermode=atomic -coverpkg=./internal/... -coverprofile="{{.SANDBOX}}/cover/core.out" ./... > /dev/null
       - go tool cover -html="{{.SANDBOX}}/cover/core.out" -o "{{.SANDBOX}}/cover/core.html"
-      - go run ./tools/uncovered -profile "{{.SANDBOX}}/cover/core.out" -min {{.MIN}}
+      - go run ./tools/uncovered -profile "{{.SANDBOX}}/cover/core.out" -min {{.MIN}} -summary "{{.SANDBOX}}/cover/summary-core.json" {{if .BRIEF}}-brief{{end}}
       - 'echo "HTML report (uncovered code in red): {{.SANDBOX}}/cover/core.html"'
 
   core:vet:
@@ -268,7 +268,7 @@ tasks:
     desc: Validate every route pack and check that all translations are complete
     dir: core
     cmds:
-      - go test -count=1 -v -run 'TestBuiltinRoutes|TestLoadRejects' ./internal/routes
+      - go test -count=1 -v -run 'TestBuiltinRoutes|TestLoadRejects|TestBuiltinSeries|TestSeriesAreChecked' ./internal/routes
 
   route:new:
     desc: "Start a new built-in route from a template: task route:new ID=my-trail"
@@ -352,15 +352,19 @@ tasks:
       - npm run typecheck
 
   vscode:cover:
-    desc: "VS Code extension coverage with uncovered lines (trust branch/funcs %: imports and types count as lines)"
+    desc: "VS Code extension tests with coverage (trust branch/function %: imports and types count as lines)"
     deps: [vscode:deps, core:dist]
     dir: plugins/vscode
     cmds:
       - npm run copy-core && npm run build
+      - mkdir -p "{{.SANDBOX}}/cover"
       - >-
         node --test --enable-source-maps --experimental-test-coverage
         --test-coverage-exclude='out/test/**' --test-coverage-exclude='node_modules/**'
+        --test-reporter=spec --test-reporter-destination=stdout
+        --test-reporter=lcov --test-reporter-destination="{{.SANDBOX}}/cover/vscode.lcov"
         out/test/*.test.js
+      - node ../../scripts/coverage-summary.mjs lcov "{{.SANDBOX}}/cover/vscode.lcov" "VS Code (TS)"
 
   vscode:package:
     desc: "Build the .vsix package (FLAVOR=dev for a development build)"
@@ -447,11 +451,12 @@ tasks:
       - ./gradlew ktlintCheck
 
   jetbrains:cover:
-    desc: JetBrains plugin coverage (Kover), per class, plus an HTML report with uncovered lines
+    desc: JetBrains plugin tests with coverage (Kover), plus an HTML report with uncovered lines
     deps: [core:dist]
     dir: plugins/jetbrains
     cmds:
-      - ./gradlew test koverLog koverHtmlReport
+      - ./gradlew test koverXmlReport koverHtmlReport
+      - node ../../scripts/coverage-summary.mjs kover build/reports/kover/report.xml "JetBrains (Kotlin)"
       - 'echo "HTML report: plugins/jetbrains/build/reports/kover/html/index.html"'
 
   jetbrains:fmt:
@@ -475,7 +480,7 @@ tasks:
     deps: [jetbrains:build]
     dir: plugins/jetbrains
     cmds:
-      - ./gradlew verifyPlugin -PverifyRecommended {{if .PYCHARM_PATH}}-PpycharmPath="{{.PYCHARM_PATH}}"{{end}}
+      - ./gradlew verifyPlugin -PverifyRecommended
 
   jetbrains:run:
     desc: Start a separate test IDE (IntelliJ IDEA Community) with the plugin
@@ -526,15 +531,24 @@ tasks:
     cmds:
       - task: core:test
       - task: routes:check
+      - task: ui:test
       - task: vscode:test
       - task: jetbrains:test
 
   coverage:
-    desc: Coverage for everything, with what isn't covered
+    desc: Coverage for everything, with what isn't covered, and a summary table at the end
     cmds:
+      - rm -f "{{.SANDBOX}}"/cover/summary-*.json
       - task: core:cover
+      - task: ui:test
       - task: vscode:cover
       - task: jetbrains:cover
+      - task: coverage:summary
+
+  coverage:summary:
+    desc: Print the coverage table from the last run
+    cmds:
+      - node scripts/coverage-summary.mjs print
 
   lint:
     desc: Run all linters (golangci-lint, ESLint + tsc, ktlint)
@@ -550,14 +564,18 @@ tasks:
       - task: jetbrains:fmt
 
   check:
-    desc: Everything CI checks, including the core coverage gate; run before pushing
+    desc: Everything CI checks (linters, vulnerabilities, all tests, the core coverage gate) and a coverage table
     cmds:
+      - rm -f "{{.SANDBOX}}"/cover/summary-*.json
       - task: lint
       - task: core:vuln
       - task: core:cover
+        vars: { BRIEF: "true" }
       - task: routes:check
-      - task: vscode:test
-      - task: jetbrains:test
+      - task: ui:test
+      - task: vscode:cover
+      - task: jetbrains:cover
+      - task: coverage:summary
 
   build:
     desc: Build the core for all platforms and both plugins
@@ -571,6 +589,26 @@ tasks:
     deps: [tools:goreleaser]
     cmds:
       - '"{{.GOBIN}}/goreleaser" release --snapshot --clean'
+
+  # ───────────────────────────── panel (browser tests) ─────────────────────────────
+
+  ui:deps:
+    desc: Install the panel test tools (Playwright and its Chromium)
+    dir: ui
+    sources: [package.json, package-lock.json]
+    cmds:
+      - npm ci --no-audit --no-fund
+      - node test/install-browser.mjs # uses an installed Chrome if any, downloads at most once
+
+  ui:test:
+    desc: "Browser tests for the trail panel shared by all plugins (ARGS=--headed to watch, ARGS='-g map' to pick)"
+    deps: [ui:deps, core:build]
+    dir: ui
+    env:
+      COMMIT_HIKE_BIN: "{{.SANDBOX_BIN}}"
+      COVER_DIR: "{{.SANDBOX}}/cover"
+    cmds:
+      - npx playwright test {{.ARGS}}
 
   # ───────────────────────────── development builds ─────────────────────────────
 

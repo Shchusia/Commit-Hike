@@ -33,7 +33,9 @@ export type PanelMessage =
   | { command: "savePostcard"; name: string; data: string }
   | { command: "setRestDays"; days: number[] }
   | { command: "setSettings"; reduce_motion?: string; high_contrast?: string; notifications?: string }
-  | { command: "exportProgress" | "importProgress" };
+  | { command: "exportProgress" | "importProgress" | "copyDiagnostics" | "saveBadge" }
+  | { command: "panelError"; message: string }
+  | { command: "walkRoute"; id: string };
 
 export class TrailPanel implements vscode.WebviewViewProvider {
   static readonly viewId = "commitHike.trail";

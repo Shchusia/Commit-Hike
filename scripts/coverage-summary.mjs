@@ -31,7 +31,7 @@ if (cmd === "lcov") {
     return m ? { missed: +m[1], covered: +m[2] } : { missed: 0, covered: 0 };
   };
   const line = counter("LINE"), method = counter("METHOD");
-  save("jetbrains", { part, percent: pct(line.covered, line.missed + line.covered), detail: `lines · ${pct(method.covered, method.missed + method.covered)}% of methods` });
+  save("jetbrains", { part, percent: pct(line.covered, line.missed + line.covered), detail: `lines · ${pct(method.covered, method.missed + method.covered)}% of methods · UI glue (ui, actions) not counted` });
 } else if (cmd === "print") {
   const order = ["core", "panel", "vscode", "jetbrains"];
   const rows = order.map(slug => {

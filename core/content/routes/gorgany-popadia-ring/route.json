@@ -1,0 +1,179 @@
+{
+  "id": "gorgany-popadia-ring",
+  "version": 1,
+  "default_locale": "en",
+  "length_m": 41000,
+  "loop": true,
+  "track": [
+    [
+      48.652,
+      23.99
+    ],
+    [
+      48.6343,
+      23.9505
+    ],
+    [
+      48.6196,
+      23.9307
+    ],
+    [
+      48.5961,
+      23.9122
+    ],
+    [
+      48.582,
+      23.918
+    ],
+    [
+      48.575,
+      23.945
+    ],
+    [
+      48.6,
+      23.975
+    ],
+    [
+      48.652,
+      23.99
+    ]
+  ],
+  "waypoints": [
+    {
+      "id": "osmoloda",
+      "at_m": 0,
+      "kind": "start",
+      "elevation_m": 710
+    },
+    {
+      "id": "kin-hrofetskyi",
+      "at_m": 6584,
+      "kind": "peak",
+      "elevation_m": 1552,
+      "lat": 48.6343,
+      "lon": 23.9505
+    },
+    {
+      "id": "grofa",
+      "at_m": 10694,
+      "kind": "peak",
+      "elevation_m": 1748,
+      "lat": 48.6196,
+      "lon": 23.9307
+    },
+    {
+      "id": "parenky",
+      "at_m": 16226,
+      "kind": "peak",
+      "elevation_m": 1735,
+      "lat": 48.5961,
+      "lon": 23.9122
+    },
+    {
+      "id": "mala-popadia",
+      "at_m": 19277,
+      "kind": "peak",
+      "elevation_m": 1598
+    },
+    {
+      "id": "popadia",
+      "at_m": 23282,
+      "kind": "peak",
+      "elevation_m": 1740
+    },
+    {
+      "id": "koretvyna",
+      "at_m": 29947,
+      "kind": "peak",
+      "elevation_m": 1671
+    },
+    {
+      "id": "osmoloda-return",
+      "at_m": 41000,
+      "kind": "finish",
+      "elevation_m": 710
+    }
+  ],
+  "biomes": [
+    {
+      "at_m": 0,
+      "type": "forest"
+    },
+    {
+      "at_m": 4920,
+      "type": "rock"
+    },
+    {
+      "at_m": 18450,
+      "type": "tundra"
+    },
+    {
+      "at_m": 22550,
+      "type": "rock"
+    },
+    {
+      "at_m": 34850,
+      "type": "forest"
+    }
+  ],
+  "story": [
+    {
+      "id": "stone-fields",
+      "at_m": 10250
+    },
+    {
+      "id": "dwarf-pine",
+      "at_m": 28700
+    }
+  ],
+  "facts": [
+    {
+      "id": "gorgan-word",
+      "at_m": 12300
+    },
+    {
+      "id": "grofa-view",
+      "at_m": 14350
+    },
+    {
+      "id": "highest",
+      "at_m": 24600
+    }
+  ],
+  "achievements": [
+    {
+      "id": "gorg-start",
+      "rule": {
+        "type": "distance",
+        "min_m": 100
+      }
+    },
+    {
+      "id": "gorg-grofa",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "grofa"
+      }
+    },
+    {
+      "id": "gorg-popadia",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "popadia"
+      }
+    },
+    {
+      "id": "gorg-finish",
+      "rule": {
+        "type": "finish"
+      }
+    },
+    {
+      "id": "gorg-day",
+      "rule": {
+        "type": "day_distance",
+        "min_m": 8000
+      }
+    }
+  ]
+}

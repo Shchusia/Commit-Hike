@@ -7,6 +7,8 @@ object I18n {
     private val en = mapOf(
         "showTrail" to "Show trail",
         "action.setRestDays" to "Days Off…",
+        "seriesNextText" to "Next in “{0}”: {1}.",
+        "walkOn" to "Walk On: {0}",
         "badgeSaveTitle" to "Save the Badge",
         "badgeSaveDesc" to "An SVG badge with your trail, for a README",
         "badgeSaved" to "Badge saved to {0}. Put it next to your README and show it with Markdown.",
@@ -148,6 +150,8 @@ object I18n {
     private val uk = mapOf(
         "showTrail" to "Показати стежку",
         "action.setRestDays" to "Вихідні дні…",
+        "seriesNextText" to "Далі в серії «{0}»: {1}.",
+        "walkOn" to "Іти далі: {0}",
         "badgeSaveTitle" to "Зберегти бейдж",
         "badgeSaveDesc" to "SVG-бейдж із твоєю стежкою для README",
         "badgeSaved" to "Бейдж збережено в {0}. Поклади його поруч із README й покажи через Markdown.",

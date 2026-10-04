@@ -170,3 +170,13 @@ the home folder and any e-mail address taken out, and copy it all for a GitHub
 issue. The panel sends `{"command": "panelError", "message": …}` for its own
 errors (at most 20 per session), `copyDiagnostics` for the report and
 `saveBadge` for the badge, which shows the journey the panel shows.
+
+## Passport
+
+`status` also returns `passport`: a stamp for every stop reached on every
+journey, current and past, oldest first:
+`[{"route_id": …, "route_name": …, "waypoint_id": …, "name": …, "kind": "peak", "elevation_m": 2061, "reached_at": 1790000000}, …]`,
+and `route_stops`: how many stops each of those routes has. A stamp's time is
+the commit that took the journey past the stop; a route walked twice keeps its
+first stamps. Journeys the user switched away from are kept in the settings as
+`past_journeys` (at most 100) from this version on.

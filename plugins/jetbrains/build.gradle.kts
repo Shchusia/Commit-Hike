@@ -179,6 +179,14 @@ ktlint {
 
 kover {
     reports {
+        filters {
+            excludes {
+                // Swing dialogs, the tool window and the menu actions: IDE glue, checked by hand and
+                // through the panel's browser tests. The logic behind them lives in dev.commithike.core
+                // (TrekFlows, PanelCommand, Celebration, …) and is measured there.
+                packages("dev.commithike.ui", "dev.commithike.actions")
+            }
+        }
         total {
             // koverLog prints coverage per class, so the gaps are visible in the console
             log {

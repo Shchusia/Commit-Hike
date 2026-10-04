@@ -289,14 +289,32 @@ html.hc .hint, html.hc .flavor { opacity: 1; }
 .set-row:last-child { border-bottom: 0; }
 .set-row h3 { margin: 0 0 4px; font-size: 1em; }
 .set-h { margin: 0 0 8px; color: var(--ct-muted); font-size: .9em; }
-.seg { display: flex; flex-wrap: wrap; gap: 4px; }
-.seg button { background: var(--ct-card-2); border: 1px solid transparent; border-radius: 6px; padding: 4px 10px; cursor: pointer; color: var(--ct-fg); }
-.seg button.on { border-color: var(--ct-blaze); background: color-mix(in srgb, var(--ct-blaze) 18%, var(--ct-bg)); }
-.seg button[disabled] { opacity: .45; cursor: not-allowed; }
-.seg.days button { min-width: 42px; }
+.choice { display: flex; flex-wrap: wrap; gap: 4px; }
+.choice button { background: var(--ct-card-2); border: 1px solid transparent; border-radius: 6px; padding: 4px 10px; cursor: pointer; color: var(--ct-fg); }
+.choice button.on { border-color: var(--ct-blaze); background: color-mix(in srgb, var(--ct-blaze) 18%, var(--ct-bg)); }
+.choice button[disabled] { opacity: .45; cursor: not-allowed; }
+.choice.days button { min-width: 42px; }
 .set-btns { display: flex; flex-wrap: wrap; gap: 6px; }
-html.hc .seg button { box-shadow: inset 0 0 0 1px var(--ct-fg); }
-html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
+html.hc .choice button { box-shadow: inset 0 0 0 1px var(--ct-fg); }
+html.hc .choice button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
+.places-mode { margin: 10px 0 12px; }
+.series-next { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin: 12px 0; padding: 10px 12px; border-radius: 8px;
+  background: color-mix(in srgb, var(--ct-blaze) 12%, var(--ct-bg)); border: 1px solid color-mix(in srgb, var(--ct-blaze) 45%, transparent); }
+.series-next .k { color: var(--ct-muted); font-size: .85em; }
+.chip-btn.primary { border-color: var(--ct-blaze); }
+.pass-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; margin: 14px 0 8px; }
+.pass-head .nm { font-weight: 600; }
+.pass-head .meta { color: var(--ct-muted); font-size: .85em; white-space: nowrap; }
+.stamps { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
+.stamp { --ink: hsl(var(--h) 55% 58%); aspect-ratio: 1; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; padding: 10px; text-align: center; color: var(--ink); transform: rotate(var(--r));
+  border: 2px solid var(--ink); box-shadow: inset 0 0 0 3px var(--ct-bg), inset 0 0 0 4px color-mix(in srgb, var(--ink) 70%, transparent);
+  background: color-mix(in srgb, var(--ink) 8%, var(--ct-bg)); }
+.stamp .ic { font-size: 1.2em; line-height: 1; }
+.stamp .nm { font-size: .78em; font-weight: 700; line-height: 1.15; text-transform: uppercase; letter-spacing: .02em;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.stamp .dt { font-size: .68em; opacity: .85; }
+html.reduce-motion .stamp { transform: none; }
 .year-actions, .badge-row { display: flex; justify-content: flex-end; margin-top: 8px; }
 .badge-row { justify-content: flex-start; margin-top: 16px; }
 .hike-actions { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
@@ -384,6 +402,10 @@ html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
       yearTitle: "{y} on the trail", yearDistance: "Walked", yearCommits: "Commits", yearActive: "Active days", yearBest: "Best day",
       yearStreak: "Longest streak", yearPrev: "Previous year", yearNext: "Next year", yearEmpty: "No commits in {y}.",
       restShort: "days off: {d}", calLess: "Less", calMore: "More",
+      camp: "Camp: no commits yet today", campRest: "Day off: resting by the fire", campShort: "Camp", campRestShort: "Day off",
+      thisTrail: "This trail", passport: "Passport", passportCount: "{n} of {m}",
+      seriesNext: "Next in “{s}”", walkOn: "Walk on: {name} ({d}) →", seriesAfter: "After this, “{s}” goes on to {name}.",
+      passportEmpty: "Stamps for the stops you reach gather here, from every trail you walk.",
       share: "Postcard", shareTitle: "Save a picture of where you are, to share", ofTotal: "{a} of {b}",
       settings: "Settings", back: "Back", optAuto: "Like the system", optOn: "On", optOff: "Off",
       setRest: "Days off", setRestHint: "A day off without commits doesn't break your streak; one with commits still counts.",
@@ -455,6 +477,10 @@ html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
       yearTitle: "{y} рік у поході", yearDistance: "Пройдено", yearCommits: "Комітів", yearActive: "Активних днів", yearBest: "Найкращий день",
       yearStreak: "Найдовша серія", yearPrev: "Попередній рік", yearNext: "Наступний рік", yearEmpty: "У {y} році комітів не було.",
       restShort: "вихідні: {d}", calLess: "Менше", calMore: "Більше",
+      camp: "Привал: сьогодні ще без комітів", campRest: "Вихідний: відпочинок біля вогнища", campShort: "Привал", campRestShort: "Вихідний",
+      thisTrail: "Ця стежка", passport: "Паспорт", passportCount: "{n} з {m}",
+      seriesNext: "Далі в серії «{s}»", walkOn: "Іти далі: {name} ({d}) →", seriesAfter: "Після цієї стежки серія «{s}» веде далі — {name}.",
+      passportEmpty: "Тут збиратимуться штампи зупинок, які ти проходиш, з усіх стежок.",
       share: "Листівка", shareTitle: "Зберегти картинку з місцем, де ти зараз, щоб поділитися", ofTotal: "{a} з {b}",
       settings: "Налаштування", back: "Назад", optAuto: "Як у системі", optOn: "Увімк.", optOff: "Вимк.",
       setRest: "Вихідні дні", setRestHint: "Вихідний без комітів не перериває серію, а з комітами — зараховується.",
@@ -849,13 +875,27 @@ html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
       tintCache.set(c, v);
       return v;
     }
-    const pal = (type, key) => tint(biomeOf(type)[key]);
+    const pal = (type, key) => tint(seasonal(type, key, biomeOf(type)[key]));
     function blend(w, key, fn) {
       const pairs = [];
-      for (const k in w) pairs.push([fn ? fn(k) : biomeOf(k)[key], w[k]]);
+      for (const k in w) pairs.push([fn ? fn(k) : seasonal(k, key, biomeOf(k)[key]), w[k]]);
       return tint(mixMany(pairs));
     }
-    const autumn = month >= 8 && month <= 10, spring = month >= 3 && month <= 4, winter = month === 11 || month <= 1;
+    // Seasons follow the calendar, flipped for routes south of the equator.
+    const track = j.route.track || [];
+    const southern = track.length > 0 && track.reduce((a, p) => a + p[0], 0) / track.length < 0;
+    const sm = southern ? (month + 6) % 12 : month;
+    const autumn = sm >= 8 && sm <= 10, spring = sm >= 3 && sm <= 4, winter = sm === 11 || sm <= 1;
+    const NO_SNOW = new Set(["desert", "coast"]);
+    // Winter covers the ground and the grass with snow (not deserts or beaches);
+    // autumn turns meadows and fields golden.
+    function seasonal(type, key, c) {
+      if (winter && !NO_SNOW.has(type) && (key === "ground" || key === "veg" || key === "deep")) {
+        return mix(c, key === "deep" ? "#c9d4de" : "#eef2f6", key === "ground" ? 0.7 : key === "veg" ? 0.55 : 0.35);
+      }
+      if (autumn && key === "veg" && (type === "meadow" || type === "grove" || type === "fields" || type === "steppe")) return mix(c, "#c9a646", 0.45);
+      return c;
+    }
 
     // Sky tint from the terrain in view: desert haze, misty swamps, pale snow.
     function hazeColor() {
@@ -1465,6 +1505,27 @@ html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
         const passed = w.at_m <= hikerM + 0.5;
         chip(f, w.name + (w.elevation_m ? " · " + fmtInt(w.elevation_m) : ""), x, groundY(wx) - 44 - row * 26, passed ? "rgba(232,181,61,0.7)" : null);
       }
+      // A camp on a day without commits: a tent behind the hiker, a fire in front.
+      const drawCamp = wx => {
+        const tx = wx - 40 - camX, fx = wx + 26 - camX;
+        if (tx < -60 || tx > W + 60) return;
+        const ty = groundY(wx - 40) + 2, fy = groundY(wx + 26) + 2;
+        f.save();
+        f.fillStyle = tint("#c0653a");
+        f.beginPath(); f.moveTo(tx - 17, ty); f.lineTo(tx, ty - 21); f.lineTo(tx + 17, ty); f.closePath(); f.fill();
+        f.fillStyle = tint("#6e3420");
+        f.beginPath(); f.moveTo(tx - 4, ty); f.lineTo(tx, ty - 12); f.lineTo(tx + 4, ty); f.closePath(); f.fill();
+        const glow = f.createRadialGradient(fx, fy - 6, 1, fx, fy - 6, 18 + 14 * sky.night);
+        glow.addColorStop(0, `rgba(255,186,90,${0.35 + 0.35 * sky.night})`); glow.addColorStop(1, "rgba(255,186,90,0)");
+        f.fillStyle = glow; f.beginPath(); f.arc(fx, fy - 6, 34, 0, 7); f.fill();
+        f.strokeStyle = tint("#5a3a22"); f.lineWidth = 2.4; f.lineCap = "round";
+        f.beginPath(); f.moveTo(fx - 7, fy); f.lineTo(fx + 7, fy - 3); f.moveTo(fx + 7, fy); f.lineTo(fx - 7, fy - 3); f.stroke();
+        f.fillStyle = "#f08a2e";
+        f.beginPath(); f.moveTo(fx - 5, fy - 2); f.quadraticCurveTo(fx - 4, fy - 12, fx, fy - 17); f.quadraticCurveTo(fx + 5, fy - 10, fx + 5, fy - 2); f.closePath(); f.fill();
+        f.fillStyle = "#ffd36b";
+        f.beginPath(); f.moveTo(fx - 2, fy - 2); f.quadraticCurveTo(fx - 2, fy - 8, fx, fy - 11); f.quadraticCurveTo(fx + 3, fy - 6, fx + 2, fy - 2); f.closePath(); f.fill();
+        f.restore();
+      };
       const drawHiker = (img, m, hgt, opacity, filter, label, color, idx) => {
         if (!img.complete || !img.naturalWidth) return;
         const wx = m * pxPerM + (idx || 0) * 7, x = wx - camX;
@@ -1494,6 +1555,7 @@ html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
           `hsl(${h2}, 55%, 38%)`, (i % 3) - 1);
       });
       drawHiker(avatar, hikerM, 50, 1, null, null);
+      if (opts.camp && !walkStart) drawCamp(hikerM * pxPerM);
 
       // HUD: where the hiker stands
       // the number the core reports where the hiker stands; the smooth curve elsewhere
@@ -1501,6 +1563,7 @@ html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
       hud.replaceChildren(...[
         opts.dev ? el("span", { class: "dev", text: t("devBadge") }) : null,
         ugAt > 0.5 ? el("span", { text: "⛏ " + t("underground") }) : null,
+        opts.camp ? el("span", { class: "camp", text: "⛺ " + (opts.restDay ? t("campRestShort") : t("campShort")), title: opts.restDay ? t("campRest") : t("camp") }) : null,
         e != null ? el("span", { text: "⛰ " + fmtElev(e) }) : null,
         e != null && Math.abs(gradePct) >= 1 ? el("span", { class: gradePct > 0 ? "up" : "down", text: (gradePct > 0 ? "↗ " : "↘ ") + Math.abs(gradePct) + "% " + t("grade") }) : null,
       ].filter(Boolean));
@@ -2352,7 +2415,10 @@ html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
     const mini = MiniMap(j, { team, assets: assetsFor(j.route.id), width: root.clientWidth < 320 ? 70 : 84,
       onOpen: () => { view = "map"; remember({ view }); render(); } });
     scene.style.setProperty("--mm-h", mini.height + "px");
-    sceneApi = HikeScene(scene, j, { from, avatar: data.avatar, team, assets: assetsFor(j.route.id), lockAhead: lock, dev: !!data.dev,
+    // a camp when today has no commits yet (on a day off it's a rest, not a stop)
+    const camp = !j.finished && (s.today_m || 0) === 0;
+    const restDay = (s.rest_days || []).includes(new Date().getDay());
+    sceneApi = HikeScene(scene, j, { from, avatar: data.avatar, team, assets: assetsFor(j.route.id), lockAhead: lock, dev: !!data.dev, camp, restDay,
       onView: (a, bM, hm) => { strip.view(a, bM, hm); mini.set(hm); } });
     scene.append(mini.node);
     const fc = factCard(j);
@@ -2371,6 +2437,48 @@ html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
   }
 
   // ================================================================ places
+  // ================================================================ passport
+  // A stamp for every stop reached on every trail, current and past, with the
+  // date of the commit that got there.
+  let placesMode = saved.placesMode || "trail";
+  function placesToggle(s) {
+    const n = (s.passport || []).length;
+    const opt = (v, text) => el("button", { role: "radio", "aria-checked": String(placesMode === v), class: placesMode === v ? "on" : null,
+      onclick: () => { if (placesMode !== v) { placesMode = v; remember({ placesMode: v }); render(); } } }, [text]);
+    return el("div", { class: "choice places-mode", role: "radiogroup", "aria-label": t("tabPlaces") },
+      [opt("trail", t("thisTrail")), opt("passport", "🎫 " + t("passport") + (n ? " · " + n : ""))]);
+  }
+  const STAMP_ICON = { peak: "▲", pass: "⛰", lake: "≈", river: "≈", spring: "≈", hut: "⌂", village: "⌂", start: "●", finish: "⚑",
+    bridge: "⌒", landmark: "◆", cave: "◗", lighthouse: "♜" };
+  function passportView(s) {
+    const stamps = s.passport || [];
+    if (!stamps.length) { root.append(el("p", { class: "hint", text: t("passportEmpty") })); return; }
+    const byRoute = new Map();
+    for (const st of stamps) {
+      if (!byRoute.has(st.route_id)) byRoute.set(st.route_id, []);
+      byRoute.get(st.route_id).push(st);
+    }
+    // the trails being walked now first, then the others by their latest stamp
+    const current = new Set([s.global, s.project].filter(Boolean).map(j => j.route.id));
+    const latest = list => list[list.length - 1].reached_at;
+    const routes = [...byRoute.entries()].sort((a, b) => (current.has(b[0]) - current.has(a[0])) || latest(b[1]) - latest(a[1]));
+    for (const [id, list] of routes) {
+      const total = (s.route_stops || {})[id] || list.length, done = list.length >= total;
+      root.append(el("div", { class: "pass-head" }, [
+        el("span", { class: "nm", text: list[0].route_name }),
+        el("span", { class: "meta", text: (done ? "✓ " : "") + t("passportCount", { n: list.length, m: total }) })]));
+      root.append(el("div", { class: "stamps", role: "list" }, list.map(st => {
+        const date = new Date(st.reached_at * 1000).toLocaleDateString(lang, { day: "numeric", month: "short", year: "numeric" });
+        const rot = Math.round((hash(strSeed(id + st.waypoint_id), 9) - 0.5) * 14);
+        return el("div", { class: "stamp", role: "listitem", style: `--h:${hue(id)};--r:${rot}deg`,
+          "aria-label": `${st.name}, ${date}`, title: st.elevation_m ? `${st.name} · ${fmtElev(st.elevation_m)}` : st.name }, [
+          el("span", { class: "ic", text: STAMP_ICON[st.kind] || "●" }),
+          el("span", { class: "nm", text: st.name }),
+          el("span", { class: "dt", text: date })]);
+      })));
+    }
+  }
+
   function placesView(j) {
     const rm = RouteModel(j.route), d = j.distance_m, assets = assetsFor(j.route.id);
     const items = [];
@@ -2426,6 +2534,7 @@ html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
     }
     if (!hereShown && !j.finished) list.append(here());
     root.append(list);
+    if (j.next_route && !j.finished) root.append(el("p", { class: "hint series-hint", text: t("seriesAfter", { s: j.next_route.series_name, name: j.next_route.name }) }));
   }
 
   // ================================================================ team
@@ -2725,7 +2834,7 @@ html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
   function settingsView() {
     const s = data.status || {}, set = s.settings || {};
     const ls = data.locale_setting || {};
-    const seg = (label, options, current, onPick) => el("div", { class: "seg", role: "radiogroup", "aria-label": label },
+    const seg = (label, options, current, onPick) => el("div", { class: "choice", role: "radiogroup", "aria-label": label },
       options.map(([v, text]) => el("button", { role: "radio", "aria-checked": String(v === current), class: v === current ? "on" : null,
         onclick: () => { if (v !== current) onPick(v); } }, [text])));
     const row = (title, hint, ...controls) => el("section", { class: "set-row" },
@@ -2751,7 +2860,7 @@ html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
       s.difficulty ? row(t("difficulty"), t("diffHint"), seg(t("difficulty"), ["easy", "medium", "hard"].map(l =>
         [l, (STRINGS[lang].diff || STRINGS.en.diff)[l] + " · " + t("perDay", { d: fmt(perLevel(l)) })]), s.difficulty,
         v => send({ command: "setDifficulty", level: v }))) : null,
-      row(t("setRest"), t("setRestHint"), el("div", { class: "seg days", role: "group", "aria-label": t("setRest") }, restBtns)),
+      row(t("setRest"), t("setRestHint"), el("div", { class: "choice days", role: "group", "aria-label": t("setRest") }, restBtns)),
       row(t("setNotif"), t("setNotifHint"), seg(t("setNotif"), [["all", t("notifAll")], ["milestones", t("notifMilestones")], ["off", t("notifOff")]],
         set.notifications || "all", v => send({ command: "setSettings", notifications: v }))),
       row(t("setMotion"), t("setMotionHint"), seg(t("setMotion"), auto3, set.reduce_motion || "auto", v => send({ command: "setSettings", reduce_motion: v }))),
@@ -2787,10 +2896,21 @@ html.hc .seg button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
 
     root.append(progressBlock(j));
     if (j.finished) root.append(el("div", { class: "finished-banner" }, [el("b", { text: "✓ " + t("completed") + ". " }), t("completedText", { d: fmt(j.route.length_m), name: j.route.name })]));
+    // a finished route of a series: offer the next one
+    if (j.finished && j.next_route) {
+      const n = j.next_route;
+      root.append(el("div", { class: "series-next" }, [
+        el("span", { class: "k", text: t("seriesNext", { s: n.series_name }) }),
+        el("button", { class: "chip-btn primary", text: t("walkOn", { name: n.name, d: fmt(n.length_m) }),
+          onclick: () => send({ command: "walkRoute", id: n.id }) })]));
+    }
     root.append(tabs());
     switch (view) {
       case "map": mapView(j); break;
-      case "places": placesView(j); break;
+      case "places":
+        root.append(placesToggle(s));
+        if (placesMode === "passport") passportView(s); else placesView(j);
+        break;
       case "team": teamView(j, s); break;
       case "stats": statsView(j, s); break;
       default: hikeView(j, s);

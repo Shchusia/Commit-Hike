@@ -1,0 +1,313 @@
+{
+  "id": "camino-frances",
+  "version": 1,
+  "default_locale": "en",
+  "length_m": 772000,
+  "track": [
+    [
+      43.163,
+      -1.2378
+    ],
+    [
+      43.0092,
+      -1.3195
+    ],
+    [
+      42.8125,
+      -1.6458
+    ],
+    [
+      42.672,
+      -1.814
+    ],
+    [
+      42.671,
+      -2.032
+    ],
+    [
+      42.465,
+      -2.4456
+    ],
+    [
+      42.344,
+      -3.6969
+    ],
+    [
+      42.5987,
+      -5.5671
+    ],
+    [
+      42.4588,
+      -6.0558
+    ],
+    [
+      42.489,
+      -6.361
+    ],
+    [
+      42.546,
+      -6.598
+    ],
+    [
+      42.708,
+      -7.043
+    ],
+    [
+      42.781,
+      -7.414
+    ],
+    [
+      42.807,
+      -7.616
+    ],
+    [
+      42.8805,
+      -8.5457
+    ]
+  ],
+  "waypoints": [
+    {
+      "id": "sjpp",
+      "at_m": 0,
+      "kind": "start",
+      "elevation_m": 170,
+      "lat": 43.163,
+      "lon": -1.2378
+    },
+    {
+      "id": "roncesvalles",
+      "at_m": 21939,
+      "kind": "village",
+      "elevation_m": 952,
+      "lat": 43.0092,
+      "lon": -1.3195
+    },
+    {
+      "id": "pamplona",
+      "at_m": 63103,
+      "kind": "village",
+      "elevation_m": 450,
+      "lat": 42.8125,
+      "lon": -1.6458
+    },
+    {
+      "id": "puente-la-reina",
+      "at_m": 87983,
+      "kind": "bridge",
+      "elevation_m": 346,
+      "lat": 42.672,
+      "lon": -1.814
+    },
+    {
+      "id": "estella",
+      "at_m": 109300,
+      "kind": "village",
+      "elevation_m": 420,
+      "lat": 42.671,
+      "lon": -2.032
+    },
+    {
+      "id": "logrono",
+      "at_m": 158204,
+      "kind": "village",
+      "elevation_m": 380,
+      "lat": 42.465,
+      "lon": -2.4456
+    },
+    {
+      "id": "burgos",
+      "at_m": 282130,
+      "kind": "landmark",
+      "elevation_m": 860,
+      "lat": 42.344,
+      "lon": -3.6969
+    },
+    {
+      "id": "leon",
+      "at_m": 468686,
+      "kind": "landmark",
+      "elevation_m": 840,
+      "lat": 42.5987,
+      "lon": -5.5671
+    },
+    {
+      "id": "astorga",
+      "at_m": 520068,
+      "kind": "village",
+      "elevation_m": 870,
+      "lat": 42.4588,
+      "lon": -6.0558
+    },
+    {
+      "id": "cruz-de-ferro",
+      "at_m": 550274,
+      "kind": "landmark",
+      "elevation_m": 1504
+    },
+    {
+      "id": "ponferrada",
+      "at_m": 574711,
+      "kind": "castle",
+      "elevation_m": 540,
+      "lat": 42.546,
+      "lon": -6.598
+    },
+    {
+      "id": "o-cebreiro",
+      "at_m": 623293,
+      "kind": "village",
+      "elevation_m": 1300,
+      "lat": 42.708,
+      "lon": -7.043
+    },
+    {
+      "id": "sarria",
+      "at_m": 660806,
+      "kind": "village",
+      "elevation_m": 450,
+      "lat": 42.781,
+      "lon": -7.414
+    },
+    {
+      "id": "portomarin",
+      "at_m": 680820,
+      "kind": "village",
+      "elevation_m": 350,
+      "lat": 42.807,
+      "lon": -7.616
+    },
+    {
+      "id": "santiago",
+      "at_m": 772000,
+      "kind": "finish",
+      "elevation_m": 260,
+      "lat": 42.8805,
+      "lon": -8.5457
+    }
+  ],
+  "biomes": [
+    {
+      "at_m": 0,
+      "type": "grove"
+    },
+    {
+      "at_m": 15440,
+      "type": "meadow"
+    },
+    {
+      "at_m": 46320,
+      "type": "grove"
+    },
+    {
+      "at_m": 115800,
+      "type": "fields"
+    },
+    {
+      "at_m": 231600,
+      "type": "village"
+    },
+    {
+      "at_m": 270200,
+      "type": "steppe"
+    },
+    {
+      "at_m": 424600,
+      "type": "fields"
+    },
+    {
+      "at_m": 501800,
+      "type": "grove"
+    },
+    {
+      "at_m": 555840,
+      "type": "rock"
+    },
+    {
+      "at_m": 602160,
+      "type": "grove"
+    },
+    {
+      "at_m": 656200,
+      "type": "forest"
+    },
+    {
+      "at_m": 733400,
+      "type": "village"
+    }
+  ],
+  "story": [
+    {
+      "id": "meseta",
+      "at_m": 347400
+    },
+    {
+      "id": "stone",
+      "at_m": 555840
+    },
+    {
+      "id": "galicia",
+      "at_m": 663920
+    }
+  ],
+  "facts": [
+    {
+      "id": "shell",
+      "at_m": 23160
+    },
+    {
+      "id": "compostela",
+      "at_m": 679360
+    },
+    {
+      "id": "unesco",
+      "at_m": 386000
+    },
+    {
+      "id": "km-zero",
+      "at_m": 764280
+    }
+  ],
+  "achievements": [
+    {
+      "id": "cam-start",
+      "rule": {
+        "type": "distance",
+        "min_m": 5000
+      }
+    },
+    {
+      "id": "cam-pyrenees",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "roncesvalles"
+      }
+    },
+    {
+      "id": "cam-meseta",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "leon"
+      }
+    },
+    {
+      "id": "cam-stone",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "cruz-de-ferro"
+      }
+    },
+    {
+      "id": "cam-finish",
+      "rule": {
+        "type": "finish"
+      }
+    },
+    {
+      "id": "cam-commits",
+      "rule": {
+        "type": "commits",
+        "count": 500
+      }
+    }
+  ]
+}

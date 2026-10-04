@@ -104,8 +104,18 @@ data class Route(
     val dangers: List<Danger>? = null,
 )
 
+/** The next route of a series. */
+data class NextRoute(
+    val id: String = "",
+    val name: String = "",
+    val lengthM: Double = 0.0,
+    val seriesId: String = "",
+    val seriesName: String = "",
+)
+
 data class Journey(
     val scope: String = "",
+    val nextRoute: NextRoute? = null,
     val route: Route = Route(),
     val distanceM: Double = 0.0,
     val percent: Double = 0.0,

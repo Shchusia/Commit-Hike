@@ -268,7 +268,7 @@ tasks:
     desc: Validate every route pack and check that all translations are complete
     dir: core
     cmds:
-      - go test -count=1 -v -run 'TestBuiltinRoutes|TestLoadRejects' ./internal/routes
+      - go test -count=1 -v -run 'TestBuiltinRoutes|TestLoadRejects|TestBuiltinSeries|TestSeriesAreChecked' ./internal/routes
 
   route:new:
     desc: "Start a new built-in route from a template: task route:new ID=my-trail"

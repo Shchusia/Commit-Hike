@@ -1,9 +1,5 @@
 package dev.commithike.ui
 
-import com.google.gson.FieldNamingPolicy
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonElement
-import com.google.gson.JsonParser
 import com.intellij.DynamicBundle
 import com.intellij.ide.ui.LafManagerListener
 import com.intellij.openapi.Disposable
@@ -34,11 +30,10 @@ import dev.commithike.ProjectTrek
 import dev.commithike.TrailListener
 import dev.commithike.core.BuildInfo
 import dev.commithike.core.I18n
-import dev.commithike.core.LocaleInfo
-import dev.commithike.core.RouteAssets
+import dev.commithike.core.PanelCommand
+import dev.commithike.core.PanelPayload
 import dev.commithike.core.Scope
 import dev.commithike.core.Status
-import dev.commithike.core.Team
 import java.awt.Color
 import java.awt.Cursor
 import java.awt.event.MouseAdapter
@@ -149,7 +144,6 @@ class TrailToolWindowFactory :
 private class TrailBrowser(private val project: Project, parent: Disposable) : Disposable {
     private val browser = JBCefBrowser()
     private val query = JBCefJSQuery.create(browser as JBCefBrowserBase)
-    private val gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
 
     @Volatile private var ready = false
 
@@ -210,92 +204,53 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
     }
 
     private fun onMessage(raw: String) {
-        val msg = try {
-            JsonParser.parseString(raw).asJsonObject
-        } catch (e: Exception) {
-            return
-        }
         val trek = project.service<ProjectTrek>()
-        when (msg.get("command")?.asString) {
-            "ready" -> {
+        when (val c = PanelCommand.parse(raw) ?: return) {
+            PanelCommand.Ready -> {
                 ready = true
                 push()
             }
-            "setup" -> trek.setup()
-            "refresh" -> trek.requestRefresh()
-            "enableProject" -> trek.setProjectEnabled(true)
-            "setAvatar" -> trek.setHikerIcon()
-            "resetAvatar" -> trek.resetHikerIcon()
-            "savePostcard" -> trek.savePostcard(msg.get("name")?.asString, msg.get("data")?.asString)
-            "setRestDays" -> trek.setRestDaysTo(msg.getAsJsonArray("days")?.map { it.asInt }.orEmpty())
-            "setSettings" -> trek.setSettings(
-                msg.get("reduce_motion")?.asString,
-                msg.get("high_contrast")?.asString,
-                msg.get("notifications")?.asString,
-            )
-            "exportProgress" -> trek.exportProgress()
-            "copyDiagnostics" -> trek.copyDiagnostics()
-            "saveBadge" -> trek.saveBadge()
-            "panelError" -> service<CommitHikeApp>().noteError("panel: " + msg.get("message")?.asString.orEmpty().take(500))
-            "importProgress" -> trek.importProgress()
-            "chooseRoute" -> trek.chooseRoute(if (msg.get("scope")?.asString == "project") Scope.PROJECT else Scope.GLOBAL)
-            "setLocale" -> msg.get("locale")?.asString?.let { trek.setLocale(it) }
-            "setTeam" -> trek.setTeam(msg.get("on")?.asBoolean == true)
-            "setDifficulty" -> msg.get("level")?.asString?.let { trek.setDifficulty(it) }
-            "requestTeam" -> trek.requestTeam()
-            "importRoute" -> trek.importRoute()
-            "createRouteTemplate" -> trek.createRouteTemplate()
-            "verify" -> trek.verify()
+            PanelCommand.Setup -> trek.setup()
+            PanelCommand.Refresh -> trek.requestRefresh()
+            PanelCommand.EnableProject -> trek.setProjectEnabled(true)
+            PanelCommand.SetAvatar -> trek.setHikerIcon()
+            PanelCommand.ResetAvatar -> trek.resetHikerIcon()
+            PanelCommand.ExportProgress -> trek.exportProgress()
+            PanelCommand.ImportProgress -> trek.importProgress()
+            PanelCommand.CopyDiagnostics -> trek.copyDiagnostics()
+            PanelCommand.SaveBadge -> trek.saveBadge()
+            PanelCommand.RequestTeam -> trek.requestTeam()
+            PanelCommand.ImportRoute -> trek.importRoute()
+            PanelCommand.CreateRouteTemplate -> trek.createRouteTemplate()
+            PanelCommand.Verify -> trek.verify()
+            is PanelCommand.ChooseRoute -> trek.chooseRoute(if (c.project) Scope.PROJECT else Scope.GLOBAL)
+            is PanelCommand.SetLocale -> trek.setLocale(c.locale)
+            is PanelCommand.SetTeam -> trek.setTeam(c.on)
+            is PanelCommand.SetDifficulty -> trek.setDifficulty(c.level)
+            is PanelCommand.SetRestDays -> trek.setRestDaysTo(c.days)
+            is PanelCommand.SetSettings -> trek.setSettings(c.reduceMotion, c.highContrast, c.notifications)
+            is PanelCommand.SavePostcard -> trek.savePostcard(c.fileName, c.png)
+            is PanelCommand.PanelError -> service<CommitHikeApp>().noteError(c.message)
+            is PanelCommand.WalkRoute -> trek.walkRoute(c.id)
         }
     }
-
-    private data class PanelData(
-        val type: String = "update",
-        val state: String,
-        val error: String?,
-        val repo: String?,
-        val locale: String,
-        val status: JsonElement?, // the core's own JSON, so every field reaches the panel
-        val avatar: String?, // custom hiker PNG as a data URL; null = the panel's default
-        val avatarCustom: Boolean,
-        val assets: Map<String, RouteAssets>, // pictures for route objects and custom maps, per route id
-        val team: Team?,
-        val teamError: String?,
-        val localeSetting: LocaleInfo?,
-        val dev: Boolean, // development build (runIde, COMMIT_HIKE_DEV=1): the trail view may look ahead
-        val build: BuildInfo,
-        val openView: String?, // a page to open once per openToken, e.g. "settings"
-        val openToken: Int,
-    )
 
     private fun push() {
         if (!ready) return
         val trek = project.service<ProjectTrek>()
-        val v = trek.view
-        if (v.state == "loading") return
-        val locale = v.status?.locale ?: DynamicBundle.getLocale().toLanguageTag()
         val app = CommitHikeApp.getInstance()
-        val avatar = app.avatar
-        val data = PanelData(
-            state = v.state,
-            error = v.error,
-            repo = v.repo,
-            locale = locale,
-            status = v.status?.raw ?: v.status?.let { gson.toJsonTree(it) },
-            avatar = avatar.dataUrl,
-            avatarCustom = avatar.custom,
-            assets = app.assetsFor(v.status),
-            team = v.team,
-            teamError = v.teamError,
+        val payload = PanelPayload.of(
+            view = trek.view,
+            ideLocale = DynamicBundle.getLocale().toLanguageTag(),
+            avatar = app.avatar,
+            assets = app.assetsFor(trek.view.status),
             localeSetting = app.localeInfo,
             dev = isDevBuild,
             build = buildInfo,
             openView = trek.openView,
             openToken = trek.openToken,
-        )
-        // Gson escapes <, >, & and quotes, so its output is a safe JS literal.
-        val js = "window.commitHike && window.commitHike.update(${gson.toJson(data)});"
-        browser.cefBrowser.executeJavaScript(js, browser.cefBrowser.url, 0)
+        ) ?: return
+        browser.cefBrowser.executeJavaScript(payload.script(), browser.cefBrowser.url, 0)
     }
 
     override fun dispose() {}

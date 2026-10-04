@@ -1,0 +1,103 @@
+{
+  "name": "Tour du Mont Blanc",
+  "description": "The classic Alpine loop around Mont Blanc through France, Italy and Switzerland, counter-clockwise from Les Houches. The track links the stops; passes without verified coordinates are placed along it.",
+  "waypoints": {
+    "les-houches": {
+      "name": "Les Houches",
+      "text": "The classic start, at the foot of Mont Blanc."
+    },
+    "col-de-voza": {
+      "name": "Col de Voza",
+      "text": "The first pass, with the tramway rattling past."
+    },
+    "les-contamines": {
+      "name": "Les Contamines",
+      "text": "A chalet village in the Montjoie valley."
+    },
+    "col-du-bonhomme": {
+      "name": "Col du Bonhomme",
+      "text": "A windswept pass on the old Roman road."
+    },
+    "les-chapieux": {
+      "name": "Les Chapieux",
+      "text": "A hamlet famous for its Beaufort cheese."
+    },
+    "col-de-la-seigne": {
+      "name": "Col de la Seigne",
+      "text": "The border with Italy, and the first sight of the Italian side of Mont Blanc."
+    },
+    "courmayeur": {
+      "name": "Courmayeur",
+      "text": "The Italian halfway town, below the south face."
+    },
+    "grand-col-ferret": {
+      "name": "Grand Col Ferret",
+      "text": "The highest pass of the tour and the border with Switzerland."
+    },
+    "la-fouly": {
+      "name": "La Fouly",
+      "text": "A Swiss village under the glaciers of Mont Dolent."
+    },
+    "champex": {
+      "name": "Champex-Lac",
+      "text": "A village around a mountain lake."
+    },
+    "trient": {
+      "name": "Trient",
+      "text": "A pink church below the Trient glacier."
+    },
+    "col-de-balme": {
+      "name": "Col de Balme",
+      "text": "Back in France, with the whole Chamonix valley ahead."
+    },
+    "lac-blanc": {
+      "name": "Lac Blanc",
+      "text": "The famous lake mirroring the Mont Blanc massif."
+    },
+    "chamonix": {
+      "name": "Chamonix",
+      "text": "The town of the first Winter Olympics, 1924."
+    },
+    "les-houches-return": {
+      "name": "Back in Les Houches",
+      "text": "Three countries and ten thousand metres of climbing later."
+    }
+  },
+  "story": {
+    "three-countries": "France, Italy, Switzerland: the tour crosses all three around one mountain.",
+    "glaciers": "Glaciers hang above the path, smaller every decade.",
+    "home-stretch": "The needles of Chamonix rise across the valley: almost home."
+  },
+  "facts": {
+    "tmb-length": "The Tour du Mont Blanc is about 170 km with around 10,000 m of climbing; most people take 10 to 11 days.",
+    "mont-blanc": "Mont Blanc, 4,806 m, is the highest mountain in the Alps and in Western Europe.",
+    "race": "The Ultra-Trail du Mont-Blanc runners cover the whole loop in about 20 hours.",
+    "1924": "Chamonix hosted the first Winter Olympic Games in 1924."
+  },
+  "achievements": {
+    "tmb-start": {
+      "name": "Bonjour, Mont Blanc",
+      "description": "Bonjour, Монблан"
+    },
+    "tmb-italy": {
+      "name": "Ciao, Italia",
+      "description": "Ciao, Italia"
+    },
+    "tmb-switzerland": {
+      "name": "Grüezi",
+      "description": "Grüezi"
+    },
+    "tmb-high": {
+      "name": "Above 2500",
+      "description": "Вище 2500"
+    },
+    "tmb-finish": {
+      "name": "Tour Complete",
+      "description": "Тур пройдено"
+    },
+    "tmb-streak": {
+      "name": "Ten Days of Alps",
+      "description": "Десять днів Альп"
+    }
+  }
+}

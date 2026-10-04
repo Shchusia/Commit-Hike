@@ -1,0 +1,73 @@
+{
+  "name": "Svydovets Ridge",
+  "description": "A green ridge of meadows and glacial lakes in the Ukrainian Carpathians, from Kvasy over Blyznytsia to Chorna Tysa. The track links the stops; those without verified coordinates are placed along it.",
+  "waypoints": {
+    "kvasy": {
+      "name": "Kvasy",
+      "text": "A village on the Black Tisza where the climb begins."
+    },
+    "brailka": {
+      "name": "Brailka Meadow",
+      "text": "Shepherds summer here, and cheese is made the old way."
+    },
+    "blyznytsia": {
+      "name": "Blyznytsia",
+      "text": "The highest point of Svydovets, two green twin summits."
+    },
+    "drahobrat": {
+      "name": "Drahobrat",
+      "text": "The highest ski resort in Ukraine, quiet in summer."
+    },
+    "stih": {
+      "name": "Stih",
+      "text": "A rounded summit on the main ridge."
+    },
+    "vorozheska": {
+      "name": "Lake Vorozheska",
+      "text": "Two glacial lakes linked by a stream, below a steep cirque."
+    },
+    "kotel": {
+      "name": "Velykyi Kotel",
+      "text": "The 'Great Cauldron', named for the cirque on its side."
+    },
+    "apshynets": {
+      "name": "Lake Apshynets",
+      "text": "One of the highest lakes in the Carpathians; the water stays below 12 °C."
+    },
+    "chorna-tysa": {
+      "name": "Chorna Tysa",
+      "text": "A village in the valley at the end of the ridge."
+    }
+  },
+  "story": {
+    "treeline": "The beeches give way to spruce, then to open meadow.",
+    "lakes": "Below the ridge, lake after lake lies in the old glacial cirques."
+  },
+  "facts": {
+    "centre-europe": "Svydovets borders the place near the village of Dilove claimed as the geographical centre of Europe.",
+    "nine-lakes": "Svydovets has nine glacial lakes; Apshynets, Vorozheska and Dohiaska are the best known.",
+    "vorozheska-depth": "The upper Lake Vorozheska is 4.5 m deep, the lower one 1.9 m."
+  },
+  "achievements": {
+    "svyd-start": {
+      "name": "On the Ridge Path",
+      "description": "На стежці хребта"
+    },
+    "svyd-top": {
+      "name": "Twin Peaks",
+      "description": "Близнючки"
+    },
+    "svyd-lakes": {
+      "name": "Lake Keeper",
+      "description": "Хранитель озер"
+    },
+    "svyd-finish": {
+      "name": "Svydovets Crossed",
+      "description": "Свидовець пройдено"
+    },
+    "svyd-streak": {
+      "name": "Five Days on the Ridge",
+      "description": "П'ять днів на хребті"
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "name": "Gorgany: the Popadia Ring",
+  "description": "A loop over the stone fields of the Gorgany: Osmoloda, Grofa, Parenky, Popadia, Koretvyna and back. The track links the stops; those without verified coordinates are placed along it.",
+  "waypoints": {
+    "osmoloda": {
+      "name": "Osmoloda",
+      "text": "A forest village at the heart of the Gorgany, start of the ring."
+    },
+    "kin-hrofetskyi": {
+      "name": "Kin Hrofetskyi",
+      "text": "The 'Horse of Hrofa', the first lookout above the forest."
+    },
+    "grofa": {
+      "name": "Grofa",
+      "text": "On a clear day you can see Hoverla, 84 km away."
+    },
+    "parenky": {
+      "name": "Parenky",
+      "text": "A stony summit with a wide view of Petros and Popadia."
+    },
+    "mala-popadia": {
+      "name": "Mala Popadia",
+      "text": "The little sister of Popadia."
+    },
+    "popadia": {
+      "name": "Popadia",
+      "text": "Its stone fields, the 'gorgany', gave the mountains their name."
+    },
+    "koretvyna": {
+      "name": "Koretvyna",
+      "text": "The last summit before the long descent."
+    },
+    "osmoloda-return": {
+      "name": "Back in Osmoloda",
+      "text": "The ring closes where it began."
+    }
+  },
+  "story": {
+    "stone-fields": "Above the dwarf pines the path crosses fields of grey stone that move underfoot.",
+    "dwarf-pine": "The mountain pine grows waist-high here and hides the path."
+  },
+  "facts": {
+    "gorgan-word": "'Gorgan' is the local word for a scree field of sandstone blocks; the whole range is named after them.",
+    "grofa-view": "From Grofa you can see Hoverla and the Chornohora ridge, 84 km away.",
+    "highest": "The highest peak of the Gorgany is Velyka Syvulia, 1836 m, east of this ring."
+  },
+  "achievements": {
+    "gorg-start": {
+      "name": "Into the Gorgany",
+      "description": "У Горгани"
+    },
+    "gorg-grofa": {
+      "name": "Hoverla in Sight",
+      "description": "Говерла на видноколі"
+    },
+    "gorg-popadia": {
+      "name": "Stone Walker",
+      "description": "Ходак по каменю"
+    },
+    "gorg-finish": {
+      "name": "Ring Closed",
+      "description": "Кільце замкнено"
+    },
+    "gorg-day": {
+      "name": "Long Stony Day",
+      "description": "Довгий кам'янистий день"
+    }
+  }
+}

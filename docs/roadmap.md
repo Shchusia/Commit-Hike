@@ -11,14 +11,13 @@ Each stage is one release. Done items are ticked; see CHANGELOG.md for what ship
 - [ ] Move to Gradle 9 (with the Kotlin, ktlint and Kover Gradle plugins), then the IntelliJ Platform Gradle plugin 2.12+
 - [ ] Decide on the minimum IDE version (2024.3 vs 2025.1) from the Marketplace download stats
 
-## 0.5.0 — atmosphere
-- [ ] Seasons by the calendar (snow in winter, autumn colours), respecting each route's biomes
-- [ ] A camp on days without commits, a rest on days off
-- [ ] The hiker's passport: a dated stamp for every stop passed, across all routes
-
-## 0.6.0 — routes and series
-- [ ] New GPS routes: Svydovets, Gorgany, Tour du Mont Blanc, Camino de Santiago
-- [ ] Route series: when you finish, carry on with the next route ("Carpathians", "Alps and Pyrenees")
+## 0.5.0 — atmosphere, routes and series (0.5.0 and 0.6.0 in one release)
+- [x] JetBrains plugin coverage: logic out of the IDE glue (64% → ~70%)
+- [x] Seasons by the calendar (snow in winter, autumn colours), respecting each route's biomes
+- [x] A camp on days without commits, a rest on days off
+- [x] The hiker's passport: a dated stamp for every stop passed, across all routes
+- [x] New GPS routes: Svydovets, Gorgany, Tour du Mont Blanc, Camino de Santiago
+- [x] Route series: when you finish, carry on with the next route ("The Carpathians", "The long ways")
 
 ## 0.7.0 — languages
 - [ ] Polish, German and Spanish: panel, both plugins, built-in routes (proofread by native speakers)

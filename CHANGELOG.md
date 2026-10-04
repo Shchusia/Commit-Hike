@@ -10,6 +10,22 @@ turns them into the section of the new version; the JetBrains Marketplace
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-10-04
+
+### Added
+- Seasons follow the calendar, flipped south of the equator: snow covers the ground and the grass in winter (not deserts or beaches), meadows and fields turn golden in autumn, blossom comes in spring.
+- A camp on days without commits: a tent and a fire next to your hiker, warmer at night. On a day off it's a rest, not a stop.
+- Four new routes on real geography: the Svydovets ridge (34 km) and the Popadia ring in the Gorgany (41 km) in the Ukrainian Carpathians, the Tour du Mont Blanc through France, Italy and Switzerland (170 km), and the Camino Francés to Santiago de Compostela (772 km). Each has its own stops, story, facts and achievements, in English and Ukrainian.
+- Route series: finish a route and the plugin offers the next one, in the panel and in the notification. The Carpathians: Chornohora → Svydovets → Gorgany. The long ways: Tour du Mont Blanc → Camino Francés.
+- The hiker's passport (Places → Passport): a dated stamp for every stop you reach, on every trail, including the ones you've left for another. Trails you switched away from before this version aren't in it.
+
+### Changed
+- JetBrains plugin: the logic behind the settings, backups, routes, the hiker, the language, the team and the notifications moved out of the IDE glue into tested code; the plugin's coverage counts that logic, not the Swing dialogs and menu actions.
+
+### Fixed
+- JetBrains: a message from the panel with a field of the wrong type was dropped silently instead of throwing in the browser callback.
+- The ascent lines between stops on the Places tab picked up the settings page's button layout.
+
 ## [0.4.0] - 2026-10-02
 
 ### Added

@@ -39,7 +39,9 @@ export interface Route {
   facts?: Fact[]; objects?: RouteObject[]; path?: [number, number][]; map_image?: string;
   underground?: Span[]; dangers?: Danger[]; track?: number[][]; loop?: boolean;
 }
+export interface NextRoute { id: string; name: string; length_m: number; series_id: string; series_name: string }
 export interface Journey {
+  next_route?: NextRoute; // the next route of this route's series
   scope: "global" | "project"; route: Route; distance_m: number; percent: number; finished: boolean;
   last_waypoint?: Waypoint; next_waypoint?: Waypoint; to_next_m?: number; story?: Story;
   achievements: Achievement[]; commits: number; streak_days: number; daily: Day[]; day: number;

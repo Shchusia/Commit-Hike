@@ -8,37 +8,31 @@ import com.intellij.notification.NotificationType
 import com.intellij.openapi.application.EDT
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.logger
-import com.intellij.openapi.fileChooser.FileChooser
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
-import com.intellij.openapi.fileChooser.FileChooserFactory
-import com.intellij.openapi.fileChooser.FileSaverDescriptor
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent
 import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
-import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.IconLoader
-import com.intellij.openapi.vfs.LocalFileSystem
-import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.util.SystemInfo
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.util.messages.Topic
-import dev.commithike.core.BuildInfo
+import dev.commithike.core.Celebration
+import dev.commithike.core.CoreCli
 import dev.commithike.core.CoreException
 import dev.commithike.core.I18n
+import dev.commithike.core.LocaleInfo
 import dev.commithike.core.RatingPrompt
-import dev.commithike.core.Report
+import dev.commithike.core.Route
 import dev.commithike.core.ScanResult
 import dev.commithike.core.Scope
 import dev.commithike.core.Status
 import dev.commithike.core.Team
+import dev.commithike.core.TrailView
+import dev.commithike.core.TrekFlows
+import dev.commithike.core.TrekHost
 import dev.commithike.core.gitGlobalEmail
-import dev.commithike.ui.DifficultyDialog
-import dev.commithike.ui.LanguageDialog
-import dev.commithike.ui.RemoveRouteDialog
-import dev.commithike.ui.RestDaysDialog
-import dev.commithike.ui.RouteDialog
-import dev.commithike.ui.SetupDialog
+import dev.commithike.ui.IdeTrekUi
 import git4idea.repo.GitRepository
 import git4idea.repo.GitRepositoryChangeListener
 import git4idea.repo.GitRepositoryManager
@@ -47,6 +41,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
@@ -68,15 +63,6 @@ fun interface TrailListener {
 }
 
 /** What the status bar widget and the tool window render. */
-data class TrailView(
-    val state: String, // loading | not_initialized | ok | error
-    val error: String? = null,
-    val repo: String? = null,
-    val status: Status? = null,
-    val flash: String? = null, // "+86 m", shown briefly after a commit
-    val team: Team? = null, // teammates, when the user turned them on for this project
-    val teamError: String? = null,
-)
 
 class CommitHikeStartup : ProjectActivity {
     override suspend fun execute(project: Project) {
@@ -259,9 +245,9 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
 
     private suspend fun celebrate(res: ScanResult) {
         // all | milestones (stops, achievements, the finish) | off: chosen on the settings page
-        val notifications = view.status?.settings?.notifications ?: "all"
-        if (res.addedM > 0 && notifications == "all") {
-            flash = "+" + I18n.distance(res.addedM)
+        val plan = Celebration.plan(res, view.status?.settings?.notifications ?: "all")
+        plan.flash?.let { text ->
+            flash = text
             flashJob?.cancel()
             flashJob = cs.launch {
                 delay(4000)
@@ -269,28 +255,16 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
                 publish(view)
             }
         }
-        if (res.rewritten && res.removedCommits > 0) LOG.info(I18n.t("rewritten"))
-        if (res.addedM > 0) maybeAskForRating()
-        if (notifications == "off") return
-        val events = res.events.orEmpty()
-        // An encounter on the road is announced when it's the only news of this commit.
-        events.lastOrNull { it.type == "danger" }?.danger?.let { d ->
-            if (events.size <= 3 && notifications == "all") notify("⚠", d.text, I18n.t("showTrail")) { showTrail() }
-        }
-        // Achievements always get a notification of their own.
-        for (e in events.filter { it.type == "achievement" }) {
-            val a = e.achievement ?: continue
-            notify("🏅 ${a.name ?: ""}", a.description ?: "", I18n.t("showTrail")) { showTrail() }
-        }
-        // Importing history can pass many stops at once: announce only the latest per journey.
-        for (scope in Scope.entries) {
-            val mine = events.filter { it.journey == scope.cli }
-            val journey = if (scope == Scope.GLOBAL) res.global else res.project
-            if (journey != null && mine.any { it.type == "finished" }) {
-                notify(I18n.t("finished", journey.route.name), I18n.t("finishedText"), I18n.t("chooseTrail")) { chooseRoute(scope) }
-            } else {
-                val w = mine.lastOrNull { it.type == "waypoint" }?.waypoint ?: continue
-                notify(w.name, w.text ?: I18n.t("reached", w.name), I18n.t("showTrail")) { showTrail() }
+        if (plan.rewritten) LOG.info(I18n.t("rewritten"))
+        if (plan.askForRating) maybeAskForRating()
+        for (n in plan.notes) {
+            notify(n.title, n.text, n.button) {
+                when (n.action) {
+                    Celebration.Action.SHOW_TRAIL -> showTrail()
+                    Celebration.Action.CHOOSE_GLOBAL_ROUTE -> chooseRoute(Scope.GLOBAL)
+                    Celebration.Action.CHOOSE_PROJECT_ROUTE -> chooseRoute(Scope.PROJECT)
+                    Celebration.Action.WALK_ROUTE -> n.routeId?.let { walkRoute(it) }
+                }
             }
         }
     }
@@ -301,324 +275,127 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
         cs.launch(Dispatchers.EDT) { ToolWindowManager.getInstance(project).getToolWindow(TOOL_WINDOW_ID)?.show() }
     }
 
-    fun setup() = guarded {
-        val email = withContext(Dispatchers.IO) { gitGlobalEmail() }
-        val result = withContext(Dispatchers.EDT) {
-            val dialog = SetupDialog(project, email)
-            if (dialog.showAndGet()) dialog.result() else null
-        } ?: return@guarded
-
-        app.call { it.init(result.emails, result.mode, result.fromHistory, result.difficulty) }
-        app.markInitialized(true)
-        app.reloadLocale()
-        app.reloadRoutes()
-        val repo = currentRepo
-        if (result.mode == "selected" && repo != null) {
-            val count = withContext(Dispatchers.EDT) {
-                Messages.showYesNoDialog(project, I18n.t("countThis"), "Commit Hike", I18n.t("countIt"), I18n.t("notNow"), null) ==
-                    Messages.YES
-            }
-            if (count) app.call { it.setProjectEnabled(repo, true) }
-        }
-        for (r in repositories()) app.call { it.scan(r.root.path) }
-        app.refreshAllProjects()
-        showTrail()
-    }
-
-    fun chooseRoute(scope: Scope) = guarded {
-        if (!app.initialized) {
-            setup()
-            return@guarded
-        }
-        val repo = currentRepo
-        if (scope == Scope.PROJECT && repo == null) {
-            notify("", I18n.t("openRepoForTrail"))
-            return@guarded
-        }
-        val canRemove = scope == Scope.PROJECT && view.status?.project != null
-        val choice = withContext(Dispatchers.EDT) {
-            val dialog = RouteDialog(
-                project,
-                scope,
-                app.routes.values.sortedBy { it.name },
-                canRemove,
-                onImport = { importRoute() },
-                onTemplate = { createRouteTemplate() },
-            )
-            if (dialog.showAndGet()) dialog.result() else null
-        } ?: return@guarded
-        app.call { it.setJourney(scope, choice.routeId, choice.fromHistory, if (scope == Scope.PROJECT) repo else null) }
-        refresh()
-    }
-
-    fun setProjectEnabled(on: Boolean) = guarded {
-        if (!app.initialized) {
-            setup()
-            return@guarded
-        }
-        val repo = currentRepo ?: run {
-            notify("", I18n.t("openRepoFirst"))
-            return@guarded
-        }
-        if (app.call { it.config() }.mode == "all") {
-            notify("", I18n.t("allCounted"))
-            return@guarded
-        }
-        app.call { it.setProjectEnabled(repo, on) }
-        if (on) scan(repo) else refresh()
-    }
-
-    fun verify() = guarded {
-        val repo = currentRepo ?: return@guarded
-        if (!app.initialized) return@guarded
-        val r = app.call { it.verify(repo) }
-        teamCache = null
-        app.refreshAllProjects()
-        val changes = r.added + r.updated + r.removed
-        notify(
-            I18n.t("recountTitle"),
-            if (changes == 0) I18n.t("recountSame") else I18n.t("recountDone", r.added, r.updated, r.removed),
-        )
-    }
-
-    // ---------- custom routes ----------
-
-    /** Imports a route pack from a folder or a .zip chosen by the user. */
-    fun importRoute() = guarded {
-        val file = withContext(Dispatchers.EDT) {
-            val descriptor = FileChooserDescriptorFactory.createSingleFileOrFolderDescriptor()
-                .withTitle(I18n.t("importTitle"))
-                .withDescription(I18n.t("importDesc"))
-            FileChooser.chooseFile(descriptor, project, null)
-        } ?: return@guarded
-        val route = try {
-            app.call { it.importRoute(file.path, replace = false) }
-        } catch (e: CoreException) {
-            if (e.code != "route_exists") throw e
-            val replace = withContext(Dispatchers.EDT) {
-                Messages.showYesNoDialog(
-                    project,
-                    I18n.t("replaceQ", e.message ?: ""),
-                    "Commit Hike",
-                    I18n.t("replace"),
-                    I18n.t("cancel"),
-                    null,
-                ) ==
-                    Messages.YES
-            }
-            if (!replace) return@guarded
-            app.call { it.importRoute(file.path, replace = true) }
-        }
-        app.reloadRoutes()
-        notify(
-            I18n.t("imported"),
-            I18n.t("importedText", route.name, I18n.distance(route.lengthM), route.waypoints.orEmpty().size),
-            I18n.t("walkNow"),
-        ) { walkRoute(route.id) }
-    }
-
-    /** Writes a template route pack the user can edit and then import. */
-    fun createRouteTemplate() = guarded {
-        val target = withContext(Dispatchers.EDT) {
-            val descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor()
-                .withTitle(I18n.t("whereCreate"))
-            val folder = FileChooser.chooseFile(descriptor, project, null) ?: return@withContext null
-            val id = Messages.showInputDialog(
-                project,
-                I18n.t("routeIdPrompt"),
-                I18n.t("newRoute"),
-                null,
-                "my-trail",
-                null,
-            ) ?: return@withContext null
-            folder.path to id.trim()
-        } ?: return@guarded
-        val dir = app.call { it.routeTemplate(target.second, target.first) }
-        withContext(Dispatchers.EDT) {
-            LocalFileSystem.getInstance().refreshAndFindFileByPath("$dir/route.json")
-                ?.let { FileEditorManager.getInstance(project).openFile(it, true) }
-        }
-        notify(I18n.t("templateCreated"), I18n.t("templateText"), I18n.t("importBtn")) { importRoute() }
-    }
-
-    /** Removes one of the user's imported routes. */
-    fun removeRoute() = guarded {
-        val custom = app.routes.values.filter { !it.builtin }.sortedBy { it.name }
-        if (custom.isEmpty()) {
-            notify("", I18n.t("noCustom"))
-            return@guarded
-        }
-        val route = withContext(Dispatchers.EDT) {
-            val dialog = RemoveRouteDialog(project, custom)
-            if (dialog.showAndGet()) dialog.selected else null
-        } ?: return@guarded
-        app.call { it.removeRoute(route.id) }
-        app.reloadRoutes()
-        notify("", I18n.t("removed", route.name))
-    }
-
-    // ---------- hiker icon ----------
-
-    /** Lets the user pick a PNG (ideally with a transparent background) as the hiker. */
-    fun setHikerIcon() = guarded {
-        val file = withContext(Dispatchers.EDT) {
-            val descriptor = FileChooserDescriptorFactory.createSingleFileDescriptor("png")
-                .withTitle(I18n.t("iconTitle"))
-                .withDescription(I18n.t("iconDesc"))
-            FileChooser.chooseFile(descriptor, project, null)
-        } ?: return@guarded
-        app.call { it.setAvatar(file.path) }
-        app.reloadAvatar()
-        app.refreshAllProjects()
-    }
-
-    fun resetHikerIcon() = guarded {
-        app.call { it.resetAvatar() }
-        app.reloadAvatar()
-        app.refreshAllProjects()
-    }
-
-    // ---------- language & team ----------
-
-    fun changeLanguage() = guarded {
-        if (!app.initialized) {
-            setup()
-            return@guarded
-        }
-        val info = app.localeInfo ?: app.call { it.locale() }
-        val choice = withContext(Dispatchers.EDT) {
-            val dialog = LanguageDialog(project, info)
-            if (dialog.showAndGet()) dialog.selected else null
-        } ?: return@guarded
-        setLocale(choice)
-    }
-
-    /** "auto" follows the IDE; anything else fixes the language for every IDE. */
-    fun setLocale(value: String) = guarded {
-        app.reloadLocale(value)
-        app.reloadRoutes() // route names come translated
-        app.refreshAllProjects()
-    }
-
-    fun setTeam(on: Boolean) = guarded {
-        val repo = currentRepo
-        if (!app.initialized || repo == null) {
-            notify("", I18n.t("teamNeedsRepo"))
-            return@guarded
-        }
-        app.call { it.setTeam(repo, on) }
-        teamCache = null
-        refresh()
-        notify("", if (on) I18n.t("teamOn") else I18n.t("teamOff"))
-    }
-
     fun toggleTeam() = setTeam(view.status?.team != true)
 
-    // ---------- badge ----------
-
     /** Saves an SVG badge with the trail, for a README such as a GitHub profile. */
-    fun saveBadge() = guarded {
-        val badge = app.call { it.badge(currentRepo) }
-        val target = withContext(Dispatchers.EDT) {
-            val descriptor = FileSaverDescriptor(I18n.t("badgeSaveTitle"), I18n.t("badgeSaveDesc"), "svg")
-            FileChooserFactory.getInstance().createSaveFileDialog(descriptor, project).save(null as VirtualFile?, badge.fileName)
-        } ?: return@guarded
-        withContext(Dispatchers.IO) { target.file.writeText(badge.svg) }
-        val markdown = badge.markdown.replace(badge.fileName, target.file.name)
-        notify("Commit Hike", I18n.t("badgeSaved", target.file.path), I18n.t("copyMarkdown")) {
-            com.intellij.openapi.ide.CopyPasteManager.getInstance().setContents(java.awt.datatransfer.StringSelection(markdown))
-        }
-    }
+    // ---------- settings, backups, badge, postcard, report: see TrekFlows ----------
 
-    // ---------- developer report ----------
+    private val flows: TrekFlows by lazy {
+        TrekFlows(
+            host = object : TrekHost {
+                override val currentRepo: String? get() = this@ProjectTrek.currentRepo
+                override val initialized: Boolean get() = app.initialized
+                override val routes: Collection<Route> get() = app.routes.values
+                override val status: Status? get() = view.status
+                override val localeInfo: LocaleInfo? get() = app.localeInfo
 
-    /** "Copy a report for the developer": versions, settings and recent errors, nothing personal. */
-    fun copyDiagnostics() = guarded {
-        val core = try {
-            app.call { it.diagnosticsJson() }
-        } catch (e: CoreException) {
-            "{ \"error\": \"${e.message}\" }"
-        }
-        val info = com.intellij.openapi.application.ApplicationInfo.getInstance()
-        val build = BuildInfo.current
-        val errors = app.recentErrors()
-        val report = Report.scrub(
-            listOf(
-                "Commit Hike: report for the developer",
-                "Plugin: ${build.version} (${build.flavor}), JetBrains plugin",
-                "IDE: ${info.fullApplicationName} (${info.build.asString()})",
-                "OS: ${com.intellij.openapi.util.SystemInfo.OS_NAME} ${com.intellij.openapi.util.SystemInfo.OS_VERSION} ${com.intellij.openapi.util.SystemInfo.OS_ARCH}",
-                "",
-                "Core:",
-                "```json",
-                core,
-                "```",
-                "",
-                "Recent errors:",
-            ).plus(if (errors.isEmpty()) listOf("- none") else errors.map { "- $it" }).joinToString("\n"),
-            System.getProperty("user.home"),
+                override fun <T> core(block: (CoreCli) -> T): T = runBlocking { app.call(block) }
+
+                override fun gitEmail() = gitGlobalEmail()
+
+                override fun markInitialized() = app.markInitialized(true)
+
+                override fun refreshAll() = app.refreshAllProjects()
+
+                override fun refreshProject() = runBlocking { refresh() }
+
+                override fun scanProject(repo: String) = runBlocking { scan(repo) }
+
+                override fun scanAllRepositories() {
+                    for (r in repositories()) core { it.scan(r.root.path) }
+                }
+
+                override fun forgetTeam() {
+                    teamCache = null
+                }
+
+                override fun reloadRoutes() = runBlocking { app.reloadRoutes() }
+
+                override fun reloadAvatar() = runBlocking { app.reloadAvatar() }
+
+                override fun reloadLocale(set: String?) = runBlocking { app.reloadLocale(set) }
+
+                override fun showTrail() = this@ProjectTrek.showTrail()
+
+                override fun launch(flow: TrekFlows.() -> Unit) {
+                    runFlow(block = flow)
+                }
+            },
+            ui = IdeTrekUi(
+                project,
+                notifier = { title, text, button, action -> notify(title, text, button, action = action) },
+                onImportRoute = { importRoute() },
+                onCreateTemplate = { createRouteTemplate() },
+            ),
         )
-        withContext(Dispatchers.EDT) {
-            com.intellij.openapi.ide.CopyPasteManager.getInstance().setContents(java.awt.datatransfer.StringSelection(report))
-        }
-        val issues = build.repo.takeIf { it.isNotBlank() }?.let { "$it/issues" }
-        if (issues != null) {
-            notify("Commit Hike", I18n.t("reportCopied"), I18n.t("openIssues")) { BrowserUtil.browse(issues) }
-        } else {
-            notify("Commit Hike", I18n.t("reportCopied"))
-        }
     }
 
-    // ---------- postcard ----------
-
-    /** Saves the postcard the panel drew (a PNG data URL) where the user chooses. */
-    fun savePostcard(name: String?, dataUrl: String?) = guarded {
-        val prefix = "data:image/png;base64,"
-        if (dataUrl == null || !dataUrl.startsWith(prefix) || dataUrl.length > 20_000_000) return@guarded
-        val png = try {
-            java.util.Base64.getDecoder().decode(dataUrl.substring(prefix.length))
-        } catch (_: IllegalArgumentException) {
-            return@guarded
-        }
-        val file = java.io.File(name ?: "commit-hike.png").name.replace(Regex("[^\\w.-]"), "-")
-        val target = withContext(Dispatchers.EDT) {
-            val descriptor = FileSaverDescriptor(I18n.t("postcardSaveTitle"), I18n.t("postcardSaveDesc"), "png")
-            FileChooserFactory.getInstance().createSaveFileDialog(descriptor, project)
-                .save(null as VirtualFile?, if (file.endsWith(".png")) file else "$file.png")
-        } ?: return@guarded
-        withContext(Dispatchers.IO) { target.file.writeBytes(png) }
-        notify("Commit Hike", I18n.t("postcardSaved", target.file.path), I18n.t("openBtn")) { BrowserUtil.browse(target.file.toPath()) }
-    }
-
-    // ---------- days off & backups ----------
-
-    fun setRestDays() = guarded {
-        if (!app.initialized) {
+    /** Runs a flow off the UI thread (its dialogs go to the EDT themselves); [needsSetup]: set up first. */
+    private fun runFlow(needsSetup: Boolean = false, block: TrekFlows.() -> Unit): Job = guarded {
+        if (needsSetup && !app.initialized) {
             setup()
             return@guarded
         }
-        val current = app.call { it.restDays() }.days
-        val chosen = withContext(Dispatchers.EDT) {
-            val dialog = RestDaysDialog(project, current)
-            if (dialog.showAndGet()) dialog.selected else null
-        } ?: return@guarded
-        val names = listOf("sun", "mon", "tue", "wed", "thu", "fri", "sat")
-        app.call { it.restDays(if (chosen.isEmpty()) "none" else chosen.joinToString(",") { d -> names[d] }) }
-        app.refreshAllProjects()
+        withContext(Dispatchers.IO) { flows.block() }
     }
+
+    fun saveBadge(): Job = runFlow { saveBadge() }
+
+    fun savePostcard(fileName: String, png: ByteArray): Job = runFlow { savePostcard(fileName, png) }
+
+    fun copyDiagnostics(): Job = runFlow {
+        val info = com.intellij.openapi.application.ApplicationInfo.getInstance()
+        copyDiagnostics(
+            ide = "${info.fullApplicationName} (${info.build.asString()})",
+            os = "${SystemInfo.OS_NAME} ${SystemInfo.OS_VERSION} ${SystemInfo.OS_ARCH}",
+            errors = app.recentErrors(),
+            home = System.getProperty("user.home"),
+        )
+    }
+
+    fun setRestDays(): Job = runFlow(needsSetup = true) { setRestDays() }
 
     /** Days off from the settings page: 0 = Sunday … 6 = Saturday. */
-    fun setRestDaysTo(days: List<Int>) = guarded {
-        val names = listOf("sun", "mon", "tue", "wed", "thu", "fri", "sat")
-        val valid = days.filter { it in 0..6 }.distinct()
-        app.call { it.restDays(if (valid.isEmpty()) "none" else valid.joinToString(",") { d -> names[d] }) }
-        app.refreshAllProjects()
+    fun setRestDaysTo(days: List<Int>): Job = runFlow { setRestDaysTo(days) }
+
+    fun setSettings(reduceMotion: String?, highContrast: String?, notifications: String?): Job = runFlow {
+        setSettings(reduceMotion, highContrast, notifications)
     }
 
-    fun setSettings(reduceMotion: String?, highContrast: String?, notifications: String?) = guarded {
-        app.call { it.settings(reduceMotion, highContrast, notifications) }
-        app.refreshAllProjects()
-    }
+    fun exportProgress(): Job = runFlow(needsSetup = true) { exportProgress() }
+
+    fun importProgress(): Job = runFlow { importProgress() }
+
+    fun changeDifficulty(): Job = runFlow(needsSetup = true) { changeDifficulty() }
+
+    fun setDifficulty(level: String): Job = runFlow { setDifficulty(level) }
+
+    fun setup(): Job = runFlow { setup() }
+
+    fun chooseRoute(scope: Scope): Job = runFlow(needsSetup = true) { chooseRoute(scope) }
+
+    fun setProjectEnabled(on: Boolean): Job = runFlow(needsSetup = true) { setProjectEnabled(on) }
+
+    fun verify(): Job = runFlow { verify() }
+
+    fun importRoute(): Job = runFlow { importRoute() }
+
+    fun createRouteTemplate(): Job = runFlow { createRouteTemplate() }
+
+    fun removeRoute(): Job = runFlow { removeRoute() }
+
+    fun setHikerIcon(): Job = runFlow { setHikerIcon() }
+
+    fun resetHikerIcon(): Job = runFlow { resetHikerIcon() }
+
+    fun changeLanguage(): Job = runFlow(needsSetup = true) { changeLanguage() }
+
+    fun setLocale(value: String): Job = runFlow { setLocale(value) }
+
+    fun setTeam(on: Boolean): Job = runFlow { setTeam(on) }
+
+    /** Walks on to [id], usually the next route of a series. */
+    fun walkRoute(id: String): Job = runFlow { walkRoute(id) }
 
     /** Tools → Commit Hike → Settings…: show the tool window on its settings page. */
     fun openSettings() {
@@ -626,68 +403,6 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
         openToken++
         showTrail()
         cs.launch { publish(view) }
-    }
-
-    fun exportProgress() = guarded {
-        if (!app.initialized) {
-            setup()
-            return@guarded
-        }
-        val target = withContext(Dispatchers.EDT) {
-            val descriptor = FileSaverDescriptor(I18n.t("backupSaveTitle"), I18n.t("backupSaveDesc"), "json")
-            FileChooserFactory.getInstance().createSaveFileDialog(descriptor, project)
-                .save(null as VirtualFile?, "commit-hike-backup-${java.time.LocalDate.now()}.json")
-        } ?: return@guarded
-        val res = app.call { it.exportBackup(target.file.path) }
-        notify("Commit Hike", I18n.t("backupSaved", res.path))
-    }
-
-    fun importProgress() = guarded {
-        val file = withContext(Dispatchers.EDT) {
-            val descriptor = FileChooserDescriptorFactory.createSingleFileDescriptor("json")
-                .withTitle(I18n.t("backupOpenTitle"))
-                .withDescription(I18n.t("backupOpenDesc"))
-            FileChooser.chooseFile(descriptor, project, null)
-        } ?: return@guarded
-        val res = try {
-            app.call { it.importBackup(file.path, replace = false) }
-        } catch (e: CoreException) {
-            if (e.code != "data_exists") throw e
-            val replace = withContext(Dispatchers.EDT) {
-                Messages.showYesNoDialog(project, I18n.t("backupReplaceQ"), "Commit Hike", I18n.t("replace"), I18n.t("cancel"), null) ==
-                    Messages.YES
-            }
-            if (!replace) return@guarded
-            app.call { it.importBackup(file.path, replace = true) }
-        }
-        app.reloadRoutes()
-        app.reloadAvatar()
-        app.refreshAllProjects()
-        notify("Commit Hike", I18n.t("backupRestored", res.commits))
-    }
-
-    fun changeDifficulty() = guarded {
-        if (!app.initialized) {
-            setup()
-            return@guarded
-        }
-        val current = app.call { it.difficulty() }.level
-        val choice = withContext(Dispatchers.EDT) {
-            val dialog = DifficultyDialog(project, current)
-            if (dialog.showAndGet()) dialog.selected else null
-        } ?: return@guarded
-        setDifficulty(choice)
-    }
-
-    fun setDifficulty(level: String) = guarded {
-        app.call { it.difficulty(level) }
-        app.refreshAllProjects()
-    }
-
-    private fun walkRoute(id: String) = guarded {
-        app.call { it.setJourney(Scope.GLOBAL, id, fromHistory = false) }
-        app.refreshAllProjects()
-        showTrail()
     }
 
     /**

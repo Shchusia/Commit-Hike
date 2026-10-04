@@ -148,8 +148,17 @@ class App {
       const evs = events.filter(e => e.journey === journey);
       const j = journey === "global" ? res.global : res.project;
       if (j && evs.some(e => e.type === "finished")) {
-        void vscode.window.showInformationMessage(t("finished", j.route.name), t("chooseTrail"))
-          .then(a => { if (a) void this.chooseRoute(journey); });
+        const next = j.next_route;
+        if (next) { // a series goes on: offer the next route
+          void vscode.window.showInformationMessage(`${t("finished", j.route.name)} ${t("seriesNextText", next.series_name, next.name)}`, t("walkOn", next.name), t("chooseTrail"))
+            .then(a => {
+              if (a === t("walkOn", next.name)) void this.guard(() => this.walkRoute(next.id));
+              else if (a) void this.chooseRoute(journey);
+            });
+        } else {
+          void vscode.window.showInformationMessage(t("finished", j.route.name), t("chooseTrail"))
+            .then(a => { if (a) void this.chooseRoute(journey); });
+        }
         continue;
       }
       // An encounter on the road is announced when it's the only news of this commit.
@@ -649,6 +658,7 @@ class App {
       case "copyDiagnostics": return this.guard(() => this.copyDiagnostics());
       case "saveBadge": return this.guard(() => this.saveBadge());
       case "panelError": this.noteError("panel: " + String(m.message).slice(0, 500)); return;
+      case "walkRoute": return this.guard(() => this.walkRoute(String(m.id)));
       case "importProgress": return this.guard(() => this.importProgress());
     }
   }
@@ -689,6 +699,14 @@ class App {
   private noteError(msg: string): void {
     this.recentErrors.push(`${new Date().toISOString()} ${msg}`.slice(0, 600));
     if (this.recentErrors.length > 10) this.recentErrors.shift();
+  }
+
+  /** Walks on to [id], usually the next route of a series. */
+  private async walkRoute(id: string): Promise<void> {
+    if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(id)) return;
+    await this.cli.setJourney("global", id, false);
+    await this.refresh();
+    this.showTrail();
   }
 
   /** Saves an SVG badge with the trail, for a README such as a GitHub profile. */

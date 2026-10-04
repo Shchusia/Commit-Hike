@@ -28,7 +28,7 @@ test("the last working day can't be made a day off", async ({ page }) => {
   st.rest_days = [0, 1, 2, 3, 4, 6]; // only Friday works
   const p = await openPanel(page, data(st));
   await openSettings(page);
-  const days = page.locator(".seg.days button");
+  const days = page.locator(".choice.days button");
   await expect(days.nth(4)).toBeDisabled(); // Friday
   await days.nth(0).click(); // Monday becomes a working day again
   expect(await p.sent()).toEqual([{ command: "setRestDays", days: [0, 2, 3, 4, 6] }]);

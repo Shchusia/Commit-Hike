@@ -2,6 +2,7 @@ package app
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -201,5 +202,61 @@ func TestBadge(t *testing.T) {
 		if got := badgeDistance(c.m, c.lang); got != c.want {
 			t.Errorf("badgeDistance(%v, %s) = %q, want %q", c.m, c.lang, got, c.want)
 		}
+	}
+}
+
+func TestPassportKeepsStampsAcrossJourneys(t *testing.T) {
+	s, r := setup(t, "demo-trail")
+	for i := 0; i < 12; i++ {
+		r.commit("", fmt.Sprintf("f%d.go", i), 120)
+	}
+	scan(t, s, r.dir, "en")
+	st, _ := s.Status(r.dir, "en")
+	if len(st.Passport) == 0 || st.RouteStops["demo-trail"] == 0 {
+		t.Fatalf("stamps on the first trail: %+v", st.Passport)
+	}
+	first := len(st.Passport)
+	for i := 1; i < len(st.Passport); i++ {
+		if st.Passport[i].ReachedAt < st.Passport[i-1].ReachedAt {
+			t.Fatal("stamps go oldest first")
+		}
+	}
+	for _, p := range st.Passport {
+		if p.Name == "" || p.RouteName == "" || p.ReachedAt == 0 {
+			t.Fatalf("incomplete stamp: %+v", p)
+		}
+	}
+	// walk another route: the first route's stamps stay
+	if _, err := s.SetJourney(ScopeGlobal, "", "chornohora-ridge", false, ""); err != nil {
+		t.Fatal(err)
+	}
+	st, _ = s.Status(r.dir, "en")
+	kept := 0
+	for _, p := range st.Passport {
+		if p.RouteID == "demo-trail" {
+			kept++
+		}
+	}
+	if kept != first {
+		t.Fatalf("stamps of the route left behind: %d, want %d", kept, first)
+	}
+	cfg, _ := s.st.LoadConfig()
+	if len(cfg.PastJourneys) != 1 || cfg.PastJourneys[0].RouteID != "demo-trail" || cfg.PastJourneys[0].Until == 0 {
+		t.Fatalf("past journeys: %+v", cfg.PastJourneys)
+	}
+}
+
+func TestTheNextRouteOfASeries(t *testing.T) {
+	s, r := setup(t, "chornohora-ridge")
+	st, _ := s.Status(r.dir, "uk")
+	n := st.Global.NextRoute
+	if n == nil || n.ID != "svydovets-ridge" || n.SeriesName != "Карпати" || n.Name == "" || n.LengthM == 0 {
+		t.Fatalf("next route: %+v", n)
+	}
+	if _, err := s.SetJourney(ScopeGlobal, "", "demo-trail", false, ""); err != nil {
+		t.Fatal(err)
+	}
+	if st, _ = s.Status(r.dir, "en"); st.Global.NextRoute != nil {
+		t.Fatalf("a route in no series has no next: %+v", st.Global.NextRoute)
 	}
 }

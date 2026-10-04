@@ -1,0 +1,300 @@
+{
+  "id": "tour-du-mont-blanc",
+  "version": 1,
+  "default_locale": "en",
+  "length_m": 170000,
+  "loop": true,
+  "track": [
+    [
+      45.8906,
+      6.7987
+    ],
+    [
+      45.879,
+      6.757
+    ],
+    [
+      45.8217,
+      6.7266
+    ],
+    [
+      45.734,
+      6.716
+    ],
+    [
+      45.696,
+      6.734
+    ],
+    [
+      45.7505,
+      6.8072
+    ],
+    [
+      45.7967,
+      6.969
+    ],
+    [
+      45.8727,
+      7.079
+    ],
+    [
+      45.9333,
+      7.095
+    ],
+    [
+      46.03,
+      7.115
+    ],
+    [
+      46.056,
+      6.995
+    ],
+    [
+      46.027,
+      6.938
+    ],
+    [
+      45.981,
+      6.89
+    ],
+    [
+      45.9237,
+      6.8694
+    ],
+    [
+      45.8906,
+      6.7987
+    ]
+  ],
+  "waypoints": [
+    {
+      "id": "les-houches",
+      "at_m": 0,
+      "kind": "start",
+      "elevation_m": 1010,
+      "lat": 45.8906,
+      "lon": 6.7987
+    },
+    {
+      "id": "col-de-voza",
+      "at_m": 5337,
+      "kind": "pass",
+      "elevation_m": 1653
+    },
+    {
+      "id": "les-contamines",
+      "at_m": 15766,
+      "kind": "village",
+      "elevation_m": 1164,
+      "lat": 45.8217,
+      "lon": 6.7266
+    },
+    {
+      "id": "col-du-bonhomme",
+      "at_m": 30791,
+      "kind": "pass",
+      "elevation_m": 2329
+    },
+    {
+      "id": "les-chapieux",
+      "at_m": 37624,
+      "kind": "village",
+      "elevation_m": 1549
+    },
+    {
+      "id": "col-de-la-seigne",
+      "at_m": 50379,
+      "kind": "pass",
+      "elevation_m": 2516
+    },
+    {
+      "id": "courmayeur",
+      "at_m": 71198,
+      "kind": "village",
+      "elevation_m": 1224,
+      "lat": 45.7967,
+      "lon": 6.969
+    },
+    {
+      "id": "grand-col-ferret",
+      "at_m": 89625,
+      "kind": "pass",
+      "elevation_m": 2537
+    },
+    {
+      "id": "la-fouly",
+      "at_m": 100144,
+      "kind": "village",
+      "elevation_m": 1593,
+      "lat": 45.9333,
+      "lon": 7.095
+    },
+    {
+      "id": "champex",
+      "at_m": 116823,
+      "kind": "lake",
+      "elevation_m": 1466,
+      "lat": 46.03,
+      "lon": 7.115
+    },
+    {
+      "id": "trient",
+      "at_m": 131720,
+      "kind": "village",
+      "elevation_m": 1279,
+      "lat": 46.056,
+      "lon": 6.995
+    },
+    {
+      "id": "col-de-balme",
+      "at_m": 140095,
+      "kind": "pass",
+      "elevation_m": 2191
+    },
+    {
+      "id": "lac-blanc",
+      "at_m": 149794,
+      "kind": "lake",
+      "elevation_m": 2352
+    },
+    {
+      "id": "chamonix",
+      "at_m": 159877,
+      "kind": "village",
+      "elevation_m": 1035,
+      "lat": 45.9237,
+      "lon": 6.8694
+    },
+    {
+      "id": "les-houches-return",
+      "at_m": 170000,
+      "kind": "finish",
+      "elevation_m": 1010
+    }
+  ],
+  "biomes": [
+    {
+      "at_m": 0,
+      "type": "forest"
+    },
+    {
+      "at_m": 10200,
+      "type": "meadow"
+    },
+    {
+      "at_m": 27200,
+      "type": "rock"
+    },
+    {
+      "at_m": 37400,
+      "type": "snow"
+    },
+    {
+      "at_m": 44200,
+      "type": "meadow"
+    },
+    {
+      "at_m": 61200,
+      "type": "village"
+    },
+    {
+      "at_m": 71400,
+      "type": "rock"
+    },
+    {
+      "at_m": 85000,
+      "type": "meadow"
+    },
+    {
+      "at_m": 105400,
+      "type": "forest"
+    },
+    {
+      "at_m": 127500,
+      "type": "rock"
+    },
+    {
+      "at_m": 144500,
+      "type": "meadow"
+    },
+    {
+      "at_m": 156400,
+      "type": "village"
+    }
+  ],
+  "story": [
+    {
+      "id": "three-countries",
+      "at_m": 61200
+    },
+    {
+      "id": "glaciers",
+      "at_m": 93500
+    },
+    {
+      "id": "home-stretch",
+      "at_m": 149600
+    }
+  ],
+  "facts": [
+    {
+      "id": "tmb-length",
+      "at_m": 8500
+    },
+    {
+      "id": "mont-blanc",
+      "at_m": 51000
+    },
+    {
+      "id": "race",
+      "at_m": 102000
+    },
+    {
+      "id": "1924",
+      "at_m": 161500
+    }
+  ],
+  "achievements": [
+    {
+      "id": "tmb-start",
+      "rule": {
+        "type": "distance",
+        "min_m": 1000
+      }
+    },
+    {
+      "id": "tmb-italy",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "courmayeur"
+      }
+    },
+    {
+      "id": "tmb-switzerland",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "la-fouly"
+      }
+    },
+    {
+      "id": "tmb-high",
+      "rule": {
+        "type": "altitude",
+        "altitude_m": 2500
+      }
+    },
+    {
+      "id": "tmb-finish",
+      "rule": {
+        "type": "finish"
+      }
+    },
+    {
+      "id": "tmb-streak",
+      "rule": {
+        "type": "streak",
+        "days": 10
+      }
+    }
+  ]
+}

@@ -4,6 +4,7 @@
 // VS Code's own display language.
 
 const en = {
+  seriesNextText: "Next in “{0}”: {1}.", walkOn: "Walk on: {0}",
   badgeSaveTitle: "Save the badge", badgeSaved: "Badge saved to {0}. Put it next to your README and show it with Markdown.", copyMarkdown: "Copy Markdown",
   reportCopied: "The report is copied. Paste it into a new issue on GitHub.", openIssues: "Open issues",
   postcardSaveTitle: "Save the postcard", postcardSaved: "Postcard saved to {0}.", openBtn: "Open",
@@ -66,6 +67,7 @@ const en = {
 type Key = keyof typeof en;
 
 const uk: Record<Key, string> = {
+  seriesNextText: "Далі в серії «{0}»: {1}.", walkOn: "Іти далі: {0}",
   badgeSaveTitle: "Зберегти бейдж", badgeSaved: "Бейдж збережено в {0}. Поклади його поруч із README й покажи через Markdown.", copyMarkdown: "Скопіювати Markdown",
   reportCopied: "Звіт скопійовано. Встав його в нове issue на GitHub.", openIssues: "Відкрити issues",
   postcardSaveTitle: "Зберегти листівку", postcardSaved: "Листівку збережено в {0}.", openBtn: "Відкрити",

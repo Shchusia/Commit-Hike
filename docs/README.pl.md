@@ -96,7 +96,7 @@ schowku, wystarczy ją wkleić.
 ## Dla programistów
 
 Budowanie, testy, wydania, architektura i dodawanie tras są opisane w
-[angielskim README](../README.md#development) oraz w [docs/](docs/). Tłumaczenia
+[angielskim README](../README.md#development) oraz w [docs/](./). Tłumaczenia
 tras i interfejsu są mile widziane: zob. [docs/routes.md](routes.md).
 Wydania, w tym wtyczki do Neovima, opisuje [docs/publishing.md](publishing.md).
 

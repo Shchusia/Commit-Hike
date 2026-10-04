@@ -97,7 +97,7 @@ en el portapapeles para pegarla.
 ## Para desarrolladores
 
 La compilación, las pruebas, las versiones, la arquitectura y cómo añadir
-rutas están en el [README en inglés](../README.md#development) y en [docs/](docs/).
+rutas están en el [README en inglés](../README.md#development) y en [docs/](./).
 Las traducciones de rutas y de la interfaz son bienvenidas: ver
 [docs/routes.md](routes.md).
 Las versiones, incluido el plugin de Neovim, se describen en [docs/publishing.md](publishing.md).

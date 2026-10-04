@@ -98,7 +98,7 @@ Text; die Postkarte liegt schon in der Zwischenablage zum Einfügen.
 ## Für Entwickler
 
 Bauen, Tests, Releases, Architektur und eigene Routen stehen im
-[englischen README](../README.md#development) und in [docs/](docs/).
+[englischen README](../README.md#development) und in [docs/](./).
 Übersetzungen von Routen und Oberfläche sind willkommen: siehe
 [docs/routes.md](routes.md).
 Releases, auch das Neovim-Plugin, beschreibt [docs/publishing.md](publishing.md).

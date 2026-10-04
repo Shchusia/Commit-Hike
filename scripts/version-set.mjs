@@ -2,7 +2,7 @@
 //   task version:set V=0.2.0
 // - VERSION (read by the Go core build, the JetBrains build and the VS Code build)
 // - plugins/vscode/package.json and package-lock.json
-// - "Version" lines in README.md and README.uk.md
+// - "Version" lines in README.md and docs/README.*.md (the other languages)
 // - CHANGELOG.md: what's under [Unreleased] becomes the new version's section
 import fs from "node:fs";
 import path from "node:path";
@@ -26,7 +26,7 @@ for (const rel of ["plugins/vscode/package.json", "plugins/vscode/package-lock.j
   fs.writeFileSync(file(rel), JSON.stringify(d, null, 2) + "\n");
 }
 
-for (const rel of ["README.md", "README.uk.md", "README.pl.md", "README.de.md", "README.es.md"]) {
+for (const rel of ["README.md", "docs/README.uk.md", "docs/README.pl.md", "docs/README.de.md", "docs/README.es.md"]) {
   if (!fs.existsSync(file(rel))) continue;
   const s = fs.readFileSync(file(rel), "utf8");
   fs.writeFileSync(file(rel), s.replace(/(\*\*(?:Version|Версія):\*\* )[0-9A-Za-z.-]+/, `$1${v}`));

@@ -5,7 +5,7 @@ A day of steady work takes you about ten kilometers along a real mountain
 ridge, a desert crossing or a folk tale, with a scene that changes as you go,
 a map, stories, facts and achievements.
 
-*In your language: [English](https://github.com/Shchusia/Commit-Hike/blob/master/README.md) · [Українська](https://github.com/Shchusia/Commit-Hike/blob/master/README.uk.md) · [Polski](https://github.com/Shchusia/Commit-Hike/blob/master/README.pl.md) · [Deutsch](https://github.com/Shchusia/Commit-Hike/blob/master/README.de.md) · [Español](https://github.com/Shchusia/Commit-Hike/blob/master/README.es.md)*
+*In your language: [English](https://github.com/Shchusia/Commit-Hike/blob/master/README.md) · [Українська](https://github.com/Shchusia/Commit-Hike/blob/master/docs/README.uk.md) · [Polski](https://github.com/Shchusia/Commit-Hike/blob/master/docs/README.pl.md) · [Deutsch](https://github.com/Shchusia/Commit-Hike/blob/master/docs/README.de.md) · [Español](https://github.com/Shchusia/Commit-Hike/blob/master/docs/README.es.md)*
 
 <p>
   <img src="https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/docs/screenshots/en-hike.png" width="49%" alt="Hike view: a side-on scene of the trail">

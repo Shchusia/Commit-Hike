@@ -610,14 +610,11 @@ tasks:
       - node screenshots.mjs {{.ARGS}}
 
   neovim:mirror:
-    desc: "Push plugins/neovim with the current version tag to its own repository by hand (MIRROR=you/commit-hike.nvim; CI does it on tags)"
+    desc: "Publish plugins/neovim with the current version tag as its own repository (MIRROR=you/commit-hike.nvim; CI does it on tags)"
     requires:
       vars: [MIRROR]
     cmds:
-      - git subtree split --prefix=plugins/neovim -b nvim-mirror
-      - git push --force "git@github.com:{{.MIRROR}}.git" nvim-mirror:refs/heads/main
-      - git push --force "git@github.com:{{.MIRROR}}.git" "nvim-mirror:refs/tags/v{{.APP_VERSION}}"
-      - git branch -D nvim-mirror
+      - sh scripts/neovim-mirror.sh "https://github.com/{{.MIRROR}}.git" "v{{.APP_VERSION}}"
 
   neovim:test:
     desc: Test the Neovim plugin against the real core in a headless Neovim (needs nvim 0.10+ on PATH)

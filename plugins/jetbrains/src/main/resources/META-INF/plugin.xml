@@ -31,10 +31,10 @@
     <a href="https://github.com/Shchusia/Commit-Hike/blob/master/docs/terminal.md">docs/terminal.md</a>.</p>
     <p>Read about it in
     <a href="https://github.com/Shchusia/Commit-Hike/blob/master/README.md">English</a>,
-    <a href="https://github.com/Shchusia/Commit-Hike/blob/master/README.uk.md">Українською</a>,
-    <a href="https://github.com/Shchusia/Commit-Hike/blob/master/README.pl.md">po polsku</a>,
-    <a href="https://github.com/Shchusia/Commit-Hike/blob/master/README.de.md">auf Deutsch</a> or
-    <a href="https://github.com/Shchusia/Commit-Hike/blob/master/README.es.md">en español</a>.</p>
+    <a href="https://github.com/Shchusia/Commit-Hike/blob/master/docs/README.uk.md">Українською</a>,
+    <a href="https://github.com/Shchusia/Commit-Hike/blob/master/docs/README.pl.md">po polsku</a>,
+    <a href="https://github.com/Shchusia/Commit-Hike/blob/master/docs/README.de.md">auf Deutsch</a> or
+    <a href="https://github.com/Shchusia/Commit-Hike/blob/master/docs/README.es.md">en español</a>.</p>
   ]]></description>
 
   <depends>com.intellij.modules.platform</depends>

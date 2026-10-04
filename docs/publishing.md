@@ -143,8 +143,8 @@ repository so it installs like any other plugin.
    secret `NEOVIM_MIRROR_TOKEN` = the token; variable `NEOVIM_MIRROR` =
    `Shchusia/commit-hike.nvim`.
 4. Publish the current version: **Actions → Neovim plugin mirror → Run
-   workflow** (or by hand, with your SSH key: `task neovim:mirror
-   MIRROR=Shchusia/commit-hike.nvim`).
+   workflow**, or by hand: `task neovim:mirror MIRROR=Shchusia/commit-hike.nvim`
+   (over HTTPS; git asks for your GitHub name and a token as the password).
 5. Tell people: a pull request adding it to
    [awesome-neovim](https://github.com/rockerBOO/awesome-neovim) (section
    *Utility*), and a post on r/neovim with a screenshot of the status line.
@@ -161,6 +161,13 @@ repository so it installs like any other plugin.
    `curl -fsSL https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/scripts/install.sh | sh`,
    then `{ "Shchusia/commit-hike.nvim", version = "*", opts = {} }` in lazy.nvim
    and `:Lazy update`.
+
+Each release is one commit on the mirror's `main` holding exactly
+`plugins/neovim` of the tagged commit (`scripts/neovim-mirror.sh`), plus the
+tag; an unchanged plugin just gets the new tag. It refuses to publish a
+`plugins/neovim` without `lua/`, `plugin/` and `doc/`, and replaces a mirror
+that doesn't look like a Neovim plugin. (`git subtree split` isn't used: on a
+history with merges it can produce the wrong tree.)
 
 Users with `version = "*"` (lazy.nvim) or `{ 'tag': '*' }` (vim-plug) get a
 new version only when you tag one, never a half-finished `master`. Issues stay

@@ -28,6 +28,7 @@ turns them into the section of the new version; the JetBrains Marketplace
 - The GitHub badge writes the distance like the panel: in metres below 1 km ("640 m", not "0.6 km").
 
 ### Fixed
+- The READMEs in Ukrainian, Polish, German and Spanish moved to `docs/`; their links, the marketplace pages' links to them and `task version:set` follow.
 - `task release:check` refused a release with new screenshots until they were on origin/master, which they can't be before the release commit is pushed. It now lists them as still to push; the publish tasks (`ovsx:publish`, `vscode:publish`, `jetbrains:publish`) fetch master and refuse to publish while they're missing there. Images in the JetBrains description are checked too.
 - The GitHub badge used a decimal point in Polish, German and Spanish ("34.8 km"); it uses the comma now, like the panel.
 - `task` failed on computers without PyCharm (CI machines included): looking for PyCharm broke every task.

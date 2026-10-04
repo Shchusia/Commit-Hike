@@ -1,0 +1,124 @@
+{
+  "name": "Siedem latarni",
+  "description": "Autorska długa podróż wzdłuż Cichego Morza, 700 km od solnej pustyni po północny lód, by na nowo zapalić siedem latarni, które zgasły jednej nocy. Z własną ręcznie rysowaną mapą.",
+  "waypoints": {
+    "salt-gate": {
+      "name": "Solna Brama",
+      "text": "Siedem świateł zgasło jednej nocy. Cech latarników daje ci ostatni żar i mapę."
+    },
+    "light-1": {
+      "name": "Latarnia Wydm",
+      "text": "Piasek po okna. Odgarniasz schody i zapalasz pierwszą lampę."
+    },
+    "three-wells": {
+      "name": "Oaza Trzech Studni",
+      "text": "Palmy, cień i zimna woda. Karawana zmierzająca na północ pozwala ci iść obok."
+    },
+    "light-2": {
+      "name": "Latarnia Przylądka Wiatrów",
+      "text": "Wiatr niemal porywa żar. Osłaniasz go i światło rozbłyska."
+    },
+    "shepherds-pass": {
+      "name": "Przełęcz Pasterzy",
+      "text": "Ze szczytu stepowej wyżyny widać całe wybrzeże i trzy światła płonące za tobą."
+    },
+    "light-3": {
+      "name": "Latarnia Kamiennych Strażników",
+      "text": "Menhiry otaczają wieżę jak dawni latarnicy."
+    },
+    "rye-valley": {
+      "name": "Młyny Doliny Żyta",
+      "text": "Wiatraki obracają się nad złotymi polami. Młynarze pieką ci chleb na drogę."
+    },
+    "light-4": {
+      "name": "Latarnia Wraku",
+      "text": "Na piasku leży rozbity statek. Tej nocy nikt do niego nie dołączy."
+    },
+    "misty-fens": {
+      "name": "Mgliste Moczary",
+      "text": "Trzciny wyższe od ciebie. Idziesz starą drogą z desek, deska po desce."
+    },
+    "light-5": {
+      "name": "Latarnia Czapli",
+      "text": "Na galerii gniazdują czaple i wcale im nie przeszkadzasz."
+    },
+    "birch-grove": {
+      "name": "Brzozowy Gaj",
+      "text": "Białe pnie i pierwsza zimna noc. Śpisz przy małym ognisku."
+    },
+    "light-6": {
+      "name": "Cicha Latarnia",
+      "text": "Tu nawet morze milczy. Lampa zajmuje się z cichym szmerem."
+    },
+    "light-7": {
+      "name": "Latarnia Północna",
+      "text": "Ostatnia lampa przyjmuje żar. Siedem świateł płonie wzdłuż Cichego Morza, a niebo nad tobą zaczyna jaśnieć."
+    }
+  },
+  "story": {
+    "heat": "Nad solą drga upał. Żar w latarence to jedyna rzecz chłodniejsza od powietrza.",
+    "caravan": "Poganiacze wielbłądów śpiewają, by trzymać rytm. Drugiego wieczoru znasz już refren.",
+    "half": "Połowa drogi. Za tobą trzy światła. Przed tobą cztery ciemne wieże.",
+    "fog": "Mgła jest tak gęsta, że drogę znajdujesz po zapachu morza.",
+    "snow": "Śnieg skrzypi pod butami. Latarnia Północna stoi na ostatnim klifie przed lodem."
+  },
+  "facts": {
+    "pharos": "Latarnia na Faros w Aleksandrii, jeden z siedmiu cudów świata starożytnego, dała nazwę latarniom w wielu językach: phare, faro, far.",
+    "singing-dunes": "Niektóre wydmy śpiewają: gdy piasek osypuje się po ich zboczu, potrafi wydać niski pomruk słyszalny z kilometrów.",
+    "fresnel": "W 1822 roku Augustin-Jean Fresnel zaprojektował soczewkę z pierścieni, dzięki której jedna lampa świeci na dziesiątki kilometrów.",
+    "steppe": "Step euroazjatycki ciągnie się na około 8000 km, od Dunaju po Mandżurię.",
+    "carnac": "W Carnac w Bretanii ponad 3000 prehistorycznych menhirów biegnie długimi rzędami przez pola.",
+    "windmills": "Najstarsze znane wiatraki obracały się w Persji ponad tysiąc lat temu, ze skrzydłami na pionowej osi.",
+    "characteristic": "Każda latarnia ma własną charakterystykę, czyli rytm błysków, by żeglarze nocą odróżniali jedno światło od drugiego.",
+    "peat": "Torfowiska zajmują tylko około 3% lądu, a przechowują mniej więcej dwa razy więcej węgla niż wszystkie lasy świata.",
+    "birch": "Brzozy to pionierzy: często jako pierwsze odrastają po pożarze albo na gołej ziemi.",
+    "permafrost": "W tundrze latem rozmarza tylko cienka wierzchnia warstwa; pod nią leży wieczna zmarzlina, która może trwać tysiące lat.",
+    "aurora": "Zorze świecą, gdy cząstki ze Słońca uderzają w górne warstwy atmosfery; częste zielone światło pochodzi od tlenu na wysokości około 100–300 km."
+  },
+  "objects": {
+    "tower-1": "Latarnia 1 z 7",
+    "tower-2": "Latarnia 2 z 7",
+    "tower-3": "Latarnia 3 z 7",
+    "tower-4": "Latarnia 4 z 7",
+    "tower-5": "Latarnia 5 z 7",
+    "tower-6": "Latarnia 6 z 7",
+    "tower-7": "Latarnia 7 z 7",
+    "caravan": "Karawana na północ",
+    "wreck": "Wrak na piasku",
+    "aurora": "Zorza polarna"
+  },
+  "achievements": {
+    "ember": {
+      "name": "Niosący żar",
+      "description": "Przejdź pierwsze 100 m."
+    },
+    "first-light": {
+      "name": "Pierwsze światło",
+      "description": "Zapal na nowo Latarnię Wydm."
+    },
+    "highlands": {
+      "name": "Góral",
+      "description": "Przejdź stepową wyżynę powyżej 800 m."
+    },
+    "halfway": {
+      "name": "Płoną cztery światła",
+      "description": "Zapal na nowo Latarnię Wraku."
+    },
+    "big-day": {
+      "name": "Długi dzień marszu",
+      "description": "Przejdź 20 km w jeden dzień."
+    },
+    "steady": {
+      "name": "Dyscyplina latarnika",
+      "description": "Commituj 10 dni z rzędu."
+    },
+    "commits-300": {
+      "name": "Trzysta kroków",
+      "description": "Zrób 300 commitów na tej trasie."
+    },
+    "seven": {
+      "name": "Siedem świateł",
+      "description": "Zapal na nowo wszystkie siedem latarni."
+    }
+  }
+}

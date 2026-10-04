@@ -1,0 +1,60 @@
+{
+  "name": "Sendero de prueba",
+  "description": "Una ruta corta para probar cómo funciona todo.",
+  "waypoints": {
+    "trailhead": {
+      "name": "Inicio del sendero",
+      "text": "Empieza tu travesía."
+    },
+    "old-bridge": {
+      "name": "Puente viejo",
+      "text": "El primer kilómetro, hecho."
+    },
+    "pine-forest": {
+      "name": "Pinar",
+      "text": "Un cuarto del camino."
+    },
+    "mountain-lake": {
+      "name": "Lago de montaña",
+      "text": "A mitad de camino."
+    },
+    "summit": {
+      "name": "Cumbre",
+      "text": "¡Lo lograste!"
+    }
+  },
+  "story": {
+    "birdsong": "El camino se queda en silencio, salvo por el canto de los pájaros.",
+    "clouds": "Ahora caminas por encima de las nubes."
+  },
+  "facts": {
+    "lapse-rate": "El aire se enfría unos 6,5 °C por cada 1000 m de subida, así que en la cumbre puede ser invierno mientras en el valle es primavera.",
+    "naismith": "La regla de Naismith (1892) para planificar rutas: una hora por cada 5 km de distancia más una hora por cada 600 m de subida."
+  },
+  "objects": {
+    "bridge": "El puente viejo",
+    "bench": "Un banco con vistas"
+  },
+  "achievements": {
+    "first-steps": {
+      "name": "Primeros pasos",
+      "description": "Camina tus primeros 100 m."
+    },
+    "bridge": {
+      "name": "Al otro lado del río",
+      "description": "Llega al Puente viejo."
+    },
+    "halfway": {
+      "name": "A mitad",
+      "description": "Llega al Lago de montaña."
+    },
+    "big-day": {
+      "name": "Gran día",
+      "description": "Camina 15 km en un solo día."
+    },
+    "summit": {
+      "name": "Arriba del todo",
+      "description": "Completa el Sendero de prueba."
+    }
+  }
+}

@@ -34,7 +34,7 @@ export default function setup() {
   core("scan", "--repo", repo);
   fs.rmSync(FIXTURES, { recursive: true, force: true });
   fs.mkdirSync(FIXTURES, { recursive: true });
-  for (const lang of ["en", "uk"]) {
+  for (const lang of ["en", "uk", "pl", "de", "es"]) {
     const status = core("status", "--repo", repo, "--lang", lang);
     if (!status.ok) throw new Error("status failed: " + JSON.stringify(status));
     fs.writeFileSync(path.join(FIXTURES, `status-${lang}.json`), JSON.stringify(status.data));

@@ -14,6 +14,40 @@
  * Colors come from the host theme: VS Code provides --vscode-* variables,
  * the JetBrains host injects --jb-* variables on :root.
  */
+/*
+ * The host variables are declared here as "not set" (initial = the
+ * guaranteed-invalid value), so editors can resolve them; var() still falls
+ * back exactly as if they were undeclared. :where() has zero specificity, so
+ * the host's own values (inline styles on <html>) always win.
+ */
+:where(html) {
+  --jb-bg: initial;
+  --jb-border: initial;
+  --jb-btn-bg: initial;
+  --jb-btn-fg: initial;
+  --jb-btn-hover: initial;
+  --jb-fg: initial;
+  --jb-focus: initial;
+  --jb-font: initial;
+  --jb-font-size: initial;
+  --jb-link: initial;
+  --jb-muted: initial;
+  --vscode-button-background: initial;
+  --vscode-button-foreground: initial;
+  --vscode-button-hoverBackground: initial;
+  --vscode-descriptionForeground: initial;
+  --vscode-focusBorder: initial;
+  --vscode-font-family: initial;
+  --vscode-font-size: initial;
+  --vscode-foreground: initial;
+  --vscode-menu-background: initial;
+  --vscode-menu-foreground: initial;
+  --vscode-menu-selectionBackground: initial;
+  --vscode-panel-border: initial;
+  --vscode-sideBar-background: initial;
+  --vscode-textLink-foreground: initial;
+  --vscode-widget-border: initial;
+}
 :root {
   --ct-bg: var(--vscode-sideBar-background, var(--jb-bg, #1e1f22));
   --ct-fg: var(--vscode-foreground, var(--jb-fg, #cfd1d6));
@@ -40,7 +74,7 @@ body.vscode-light, body[data-theme="light"] { --ct-blaze: #c98a00; --ct-blaze-in
 html, body { margin: 0; padding: 0; }
 body {
   background: var(--ct-bg); color: var(--ct-fg);
-  font-family: var(--ct-font); font-size: var(--ct-size); line-height: 1.45;
+  font-family: var(--ct-font), sans-serif; font-size: var(--ct-size); line-height: 1.45;
   padding: 12px 14px 22px; max-width: 560px;
 }
 button { font: inherit; color: inherit; }
@@ -60,7 +94,6 @@ html.hc .chart .bar-d { fill: var(--ct-fg); }
 html.hc .chart .bar-d.today, html.hc .cal-d.l4 { fill: var(--ct-blaze); }
 html.hc .cal-d { stroke: var(--ct-fg); stroke-width: .35; }
 html.hc .hint, html.hc .flavor { opacity: 1; }
-.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
 /* ---------------------------------------------------------------- header */
 .top { display: flex; align-items: center; gap: 8px; }
@@ -102,7 +135,7 @@ html.hc .hint, html.hc .flavor { opacity: 1; }
 
 /* ---------------------------------------------------------------- hike */
 .hike { border-radius: 8px; overflow: hidden; background: #0b0e12; color: #ece8de; box-shadow: 0 0 0 1px rgba(0,0,0,.25); }
-.scene { position: relative; height: 270px; cursor: grab; outline: none; touch-action: pan-y; overflow: hidden; user-select: none; }
+.scene { --mm-h: 0px; position: relative; height: 270px; cursor: grab; outline: none; touch-action: pan-y; overflow: hidden; user-select: none; }
 .scene:focus-visible { box-shadow: inset 0 0 0 2px var(--ct-focus); }
 .scene.dragging { cursor: grabbing; }
 .scene canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
@@ -161,11 +194,11 @@ html.hc .hint, html.hc .flavor { opacity: 1; }
 .profile .dangerpin { fill: #e0574f; }
 
 .hike-info { padding: 12px 16px 16px; text-align: center; background: linear-gradient(#0e1318, #0b0e12); }
-.hike-info .day { font-family: var(--ct-serif); font-size: 1.05em; letter-spacing: .03em; color: #cfc9bb; }
-.hike-info .big { font-family: var(--ct-serif); font-size: 3em; line-height: 1.05; color: var(--ct-blaze); font-variant-numeric: oldstyle-nums; margin-top: 2px; }
-.hike-info .unit { color: var(--ct-blaze); letter-spacing: .08em; font-variant: small-caps; font-family: var(--ct-serif); }
-.hike-info .place { margin-top: 12px; color: #a9b1b8; font-variant: small-caps; letter-spacing: .05em; font-family: var(--ct-serif); }
-.hike-info .flavor { font-style: italic; margin-top: 2px; font-size: 1.04em; font-family: var(--ct-serif); color: #ece8de; }
+.hike-info .day { font-family: var(--ct-serif), serif; font-size: 1.05em; letter-spacing: .03em; color: #cfc9bb; }
+.hike-info .big { font-family: var(--ct-serif), serif; font-size: 3em; line-height: 1.05; color: var(--ct-blaze); font-variant-numeric: oldstyle-nums; margin-top: 2px; }
+.hike-info .unit { color: var(--ct-blaze); letter-spacing: .08em; font-variant: small-caps; font-family: var(--ct-serif), serif; }
+.hike-info .place { margin-top: 12px; color: #a9b1b8; font-variant: small-caps; letter-spacing: .05em; font-family: var(--ct-serif), serif; }
+.hike-info .flavor { font-style: italic; margin-top: 2px; font-size: 1.04em; font-family: var(--ct-serif), serif; color: #ece8de; }
 .next { margin: 14px auto 0; max-width: 360px; text-align: left; font-size: .92em; color: #aab2b9; }
 .next .row { display: flex; justify-content: space-between; gap: 8px; }
 .next .row b { color: #ece8de; font-weight: 600; }
@@ -182,7 +215,7 @@ html.hc .hint, html.hc .flavor { opacity: 1; }
 .card p { margin: 0; }
 .card .from { color: var(--ct-muted); font-size: .9em; margin-top: 4px; }
 .card.fact { border-left: 3px solid #6fb6e8; }
-.card.story { border-left: 3px solid var(--ct-blaze); font-family: var(--ct-serif); font-style: italic; }
+.card.story { border-left: 3px solid var(--ct-blaze); font-family: var(--ct-serif), serif; font-style: italic; }
 .card.locked { color: var(--ct-muted); }
 
 /* ---------------------------------------------------------------- map */
@@ -218,10 +251,8 @@ html.hc .hint, html.hc .flavor { opacity: 1; }
 .map-svg .mate-txt { font-size: 7.5px; fill: #fff; font-weight: 700; text-anchor: middle; pointer-events: none; }
 .map-svg .pin { cursor: pointer; }
 .map-svg .pin circle { fill: #2f7fbf; stroke: #fff; stroke-width: 1.5; }
-.map-svg .pin text { fill: #fff; font-size: 9px; font-weight: 700; text-anchor: middle; font-family: var(--ct-serif); }
+.map-svg .pin text { fill: #fff; font-size: 9px; font-weight: 700; text-anchor: middle; font-family: var(--ct-serif), serif; }
 .map-svg .scale line { stroke: #22281f; stroke-width: 1.5; }
-.map-svg .scale text, .map-svg .compass text { fill: #22281f; font-size: 9.5px; paint-order: stroke; stroke: rgba(250,248,240,.8); stroke-width: 2.5px; }
-.map-svg .compass path { fill: #22281f; }
 .map-svg .thumb { pointer-events: none; }
 .map-svg .tunnel-bg { fill: none; stroke: #2b2622; stroke-width: 7; stroke-linecap: round; opacity: .85; }
 .map-svg .tunnel { fill: none; stroke: #d8cfbf; stroke-width: 2; stroke-dasharray: 2 4; stroke-linecap: round; }
@@ -306,7 +337,7 @@ html.hc .choice button.on { box-shadow: inset 0 0 0 2px var(--ct-blaze); }
 .pass-head .nm { font-weight: 600; }
 .pass-head .meta { color: var(--ct-muted); font-size: .85em; white-space: nowrap; }
 .stamps { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
-.stamp { --ink: hsl(var(--h) 55% 58%); aspect-ratio: 1; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+.stamp { --h: 40; --r: 0deg; --ink: hsl(var(--h) 55% 58%); aspect-ratio: 1; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 2px; padding: 10px; text-align: center; color: var(--ink); transform: rotate(var(--r));
   border: 2px solid var(--ink); box-shadow: inset 0 0 0 3px var(--ct-bg), inset 0 0 0 4px color-mix(in srgb, var(--ink) 70%, transparent);
   background: color-mix(in srgb, var(--ink) 8%, var(--ct-bg)); }
@@ -320,6 +351,28 @@ html.reduce-motion .stamp { transform: none; }
 .hike-actions { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
 .hike-actions .hint { margin: 8px 0 0; }
 .hike-actions .share { flex: none; margin-top: 6px; }
+.share-wrap { position: relative; flex: none; }
+.share-wrap .menu { top: calc(100% + 4px); right: 0; }
+.share-wrap .menu .net { display: grid; grid-template-columns: 1fr 1fr; gap: 0 4px; }
+.share-wrap .menu .masto { display: flex; gap: 4px; padding: 4px 10px 6px; }
+.share-wrap .menu .masto button { width: auto; flex: none; }
+.share-wrap .menu .masto input { flex: 1; min-width: 9em; font: inherit; color: inherit; background: var(--ct-card-2); border: 1px solid var(--ct-line); border-radius: 4px; padding: 2px 6px; }
+.team-week .big { font-size: 1.5em; font-weight: 650; font-variant-numeric: tabular-nums; }
+.team-week .trend { font-size: .9em; margin-left: 6px; }
+.team-week .trend.up { color: var(--ct-good); }
+.team-week .trend.down { color: var(--ct-muted); }
+.week-rows { display: grid; grid-template-columns: minmax(0, 7em) 1fr auto; gap: 4px 8px; align-items: center; margin-top: 8px; font-size: .92em; }
+.week-rows .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.week-rows .nm.me { color: var(--ct-blaze); font-weight: 600; }
+.week-rows .bar { margin: 0; }
+.week-rows .d { font-variant-numeric: tabular-nums; color: var(--ct-muted); }
+.goal-bar { display: flex; height: 9px; border-radius: 999px; overflow: hidden; background: var(--ct-card-2); margin: 8px 0 4px; }
+.goal-bar i { display: block; height: 100%; }
+.goal-legend { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: .86em; color: var(--ct-muted); margin-top: 4px; }
+.goal-legend span::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 5px; background: var(--sw); }
+.goal-pick { display: flex; gap: 6px; margin-top: 8px; align-items: center; }
+.goal-pick select { flex: 1; min-width: 0; font: inherit; color: inherit; background: var(--ct-card-2); border: 1px solid var(--ct-line); border-radius: 4px; padding: 3px 6px; }
+.share-note { margin: 6px 0 0; color: var(--ct-blaze); font-size: .9em; text-align: right; }
 .year { margin-top: 14px; }
 .year-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
 .year-head .section-title { margin: 0; }
@@ -365,6 +418,26 @@ html.reduce-motion .stamp { transform: none; }
 </style>
 </head>
 <body>
+<!--
+  Classes the script puts on elements it builds (el("div", { class: ... })),
+  plus the host's (VS Code sets vscode-light on <body>). Listed for editors,
+  whose "unused selector" check can't see them; the browser never renders a
+  <template>. ui/test/css-classes.spec.mjs keeps this list in step.
+-->
+<template id="script-classes">
+  <i class="actions active ahead area-done area-left ava badge badge-row badges bar bar-d bar-hit base big"></i>
+  <i class="build-info cal cal-d cal-legend cap card casing chart chart-box chart-tip chip-btn choice ck climb"></i>
+  <i class="d danger danger-pin dangerpin day days dev dist dot down dragging dt elev empty fact factpin far"></i>
+  <i class="finished-banner flavor from future goal-bar goal-legend goal-pick hc here hike hike-actions"></i>
+  <i class="hike-info hiker hud ic icon-btn img k l1 l2 l3 l4 label lbl legend line line-done link locked"></i>
+  <i class="map-svg mapbox mapcompass mapctl mapscale mapworld masto mate mate-txt me medal menu meta minimap"></i>
+  <i class="mm-ahead mm-mate mm-me mm-tunnel mm-walked mm-wp n net next nm obj objs off on pass-head passed"></i>
+  <i class="pills pin place places places-mode portal primary profile progress pulse rank recenter"></i>
+  <i class="reduce-motion row scale scene section-title seg sep series-next set-btns set-h set-head set-row"></i>
+  <i class="settings share share-note share-wrap stamp stamps stat stats story sub sym tabs team team-week th"></i>
+  <i class="thin thumb tick toast today top trend tunnel tunnel-bg txt u ug ug-edge unit up upcoming v view"></i>
+  <i class="vscode-light walked walked-edge week-rows year year-actions year-head"></i>
+</template>
 <main id="root"><p class="hint">…</p></main>
 <script nonce="{{NONCE}}">
 (function () {
@@ -406,7 +479,20 @@ html.reduce-motion .stamp { transform: none; }
       thisTrail: "This trail", passport: "Passport", passportCount: "{n} of {m}",
       seriesNext: "Next in “{s}”", walkOn: "Walk on: {name} ({d}) →", seriesAfter: "After this, “{s}” goes on to {name}.",
       passportEmpty: "Stamps for the stops you reach gather here, from every trail you walk.",
-      share: "Postcard", shareTitle: "Save a picture of where you are, to share", ofTotal: "{a} of {b}",
+      ofTotal: "{a} of {b}",
+      weekTitle: "This week", weekLast: "Last week: {d}", weekUp: "↑ {p}% on last week", weekDown: "↓ {p}% on last week",
+      weekDays: "{n} of {m} days with commits", weekBest: "Best day: {day}, {d}", weekEmpty: "No commits this week yet.",
+      goalTitle: "Team goal", goalNone: "Walk a route together: everyone's commits from the start of the goal add up.",
+      goalStart: "Start", goalRoute: "Route", goalTogether: "{a} of {b} together", goalNext: "Next stop: {name}, {d} to go",
+      goalPace: "Team pace ~{d} a day", goalLeft: "~{n} days to go", goalDone: "Walked together! ✓", goalChange: "Another route",
+      goalStop: "Stop the goal", goalSince: "since {date}",
+      goalNote: "Teammates who pick the same goal see the same numbers: it's counted from git history, nothing is shared.",
+      shareBtn: "Share", shareMenu: "Share where you are", shareSave: "Save the postcard…", shareCopyImage: "Copy the postcard",
+      shareCopyText: "Copy the text", shareOn: "Share on {n}", mastodonServer: "Your Mastodon server", shareGo: "Share",
+      shareHint: "The postcard is in your clipboard: paste it into your post.", shareTextCopied: "The text is in your clipboard.",
+      shareImageCopied: "The postcard is in your clipboard.", shareText: "🥾 {d} of {route} walked with my commits. I'm at {place}. #CommitHike",
+      shareTextDone: "🥾 I walked all {d} of {route} with my commits! #CommitHike",
+      shareYearText: "🥾 My {year} on the trail: {d}, {commits} commits, {days} active days. #CommitHike",
       settings: "Settings", back: "Back", optAuto: "Like the system", optOn: "On", optOff: "Off",
       setRest: "Days off", setRestHint: "A day off without commits doesn't break your streak; one with commits still counts.",
       restAllDays: "At least one day has to be a working day.",
@@ -481,7 +567,20 @@ html.reduce-motion .stamp { transform: none; }
       thisTrail: "Ця стежка", passport: "Паспорт", passportCount: "{n} з {m}",
       seriesNext: "Далі в серії «{s}»", walkOn: "Іти далі: {name} ({d}) →", seriesAfter: "Після цієї стежки серія «{s}» веде далі — {name}.",
       passportEmpty: "Тут збиратимуться штампи зупинок, які ти проходиш, з усіх стежок.",
-      share: "Листівка", shareTitle: "Зберегти картинку з місцем, де ти зараз, щоб поділитися", ofTotal: "{a} з {b}",
+      ofTotal: "{a} з {b}",
+      weekTitle: "Цей тиждень", weekLast: "Минулого тижня: {d}", weekUp: "↑ на {p}% більше, ніж минулого тижня", weekDown: "↓ на {p}% менше, ніж минулого тижня",
+      weekDays: "{n} з {m} днів із комітами", weekBest: "Найкращий день: {day}, {d}", weekEmpty: "Цього тижня комітів ще не було.",
+      goalTitle: "Командна ціль", goalNone: "Пройдіть маршрут разом: коміти всіх від початку цілі складаються.",
+      goalStart: "Почати", goalRoute: "Маршрут", goalTogether: "{a} з {b} разом", goalNext: "Наступна зупинка: {name}, ще {d}",
+      goalPace: "Темп команди ~{d} на день", goalLeft: "~{n} дн. до фінішу", goalDone: "Пройдено разом! ✓", goalChange: "Інший маршрут",
+      goalStop: "Зупинити ціль", goalSince: "з {date}",
+      goalNote: "У всіх, хто вибере ту саму ціль, однакові числа: їх рахують з історії git, нічим не діляться.",
+      shareBtn: "Поділитися", shareMenu: "Поділитися тим, де ти зараз", shareSave: "Зберегти листівку…", shareCopyImage: "Скопіювати листівку",
+      shareCopyText: "Скопіювати текст", shareOn: "Поділитися в {n}", mastodonServer: "Твій сервер Mastodon", shareGo: "Поділитися",
+      shareHint: "Листівка в буфері обміну: встав її у свій допис.", shareTextCopied: "Текст у буфері обміну.",
+      shareImageCopied: "Листівка в буфері обміну.", shareText: "🥾 {d} маршруту «{route}» пройдено моїми комітами. Я тут: {place}. #CommitHike",
+      shareTextDone: "🥾 Я пройшов усі {d} маршруту «{route}» своїми комітами! #CommitHike",
+      shareYearText: "🥾 Мій {year} на стежці: {d}, комітів — {commits}, активних днів — {days}. #CommitHike",
       settings: "Налаштування", back: "Назад", optAuto: "Як у системі", optOn: "Увімк.", optOff: "Вимк.",
       setRest: "Вихідні дні", setRestHint: "Вихідний без комітів не перериває серію, а з комітами — зараховується.",
       restAllDays: "Хоча б один день має бути робочим.",
@@ -524,8 +623,270 @@ html.reduce-motion .stamp { transform: none; }
       scrollHintLocked: "Перетягуй, гортай або тисни ← →, щоб озирнутися на пройдений шлях. Що попереду — побачиш, коли дійдеш.",
       devBadge: "DEV · видно вперед", devBuild: "збірка для розробки", mapTunnel: "Тунель", mapDanger: "Зустріч",
     },
+  pl: {
+      scopeAll: "Wszystkie projekty", scopeProject: "Ten projekt", scopeTitle: "Przełącz między główną wędrówką a szlakiem tego projektu",
+      tabHike: "Wędrówka", tabMap: "Mapa", tabPlaces: "Miejsca", tabTeam: "Zespół", tabStats: "Statystyki",
+      dayN: "Dzień {n}", kmWord: { one: "kilometr", few: "kilometry", many: "kilometrów", other: "kilometra" }, mWord: { one: "metr", few: "metry", many: "metrów", other: "metra" },
+      startPlace: "Wyruszasz", backToHiker: "Wróć do wędrowca",
+      scrollHint: "Przeciągnij, przewiń lub użyj ← →, by patrzeć wzdłuż szlaku. Kliknij profil, by przeskoczyć.",
+      menu: "Menu", language: "Język", langAuto: "Jak w IDE", changeTrail: "Zmień szlak…", startNew: "Zacznij nowy szlak…",
+      importRoute: "Importuj trasę lub mapę…", createTemplate: "Utwórz szablon trasy…", changeIcon: "Ikona wędrowca…", resetIcon: "Domyślna ikona wędrowca",
+      showTeam: "Pokaż zespół", recount: "Przelicz ten projekt",
+      setupTitle: "Zamień commity w wędrówkę",
+      setupText: "Każdy twój commit przesuwa cię po szlaku. Nic nie jest zapisywane w twoich projektach i nic nie opuszcza tego komputera.",
+      setupBtn: "Skonfiguruj Commit Hike",
+      errorTitle: "Commit Hike nie mógł odczytać postępu", unknownError: "Nieznany błąd.", retry: "Spróbuj ponownie",
+      notCountedTitle: "Ten projekt nie jest liczony",
+      notCountedText: "Twoje ustawienia liczą tylko wybrane projekty. Commity tutaj nie przesuną cię naprzód, dopóki go nie dodasz.",
+      countBtn: "Licz ten projekt",
+      noProjectTitle: "Ten projekt nie ma jeszcze wędrówki",
+      noProjectText: "Daj temu projektowi własny szlak. Twoje commity tutaj nadal liczą się do głównej wędrówki.",
+      chooseTrail: "Wybierz szlak", noTrailTitle: "Nie wybrano szlaku", noTrailText: "Wybierz szlak, by ruszyć w drogę.",
+      completed: "Szlak ukończony", completedText: "Przeszedłeś całe {d} trasy {name}.",
+      nextStop: "Następny przystanek", toGo: "zostało {d}", climbLeft: "↑ {d} podejścia", descentLeft: "↓ w dół",
+      here: "Jesteś tutaj", left: "za {d}", passedAt: "na {d}",
+      altitude: "Wysokość", grade: "nachylenie", climbed: "Przewyższenie", highest: "Najwyższy punkt", today: "Dziś", streak: "Seria",
+      onTrail: "Na tym szlaku", commits: "Commity", toNextClimb: "Podejście do przystanku",
+      days: { one: "{n} dzień", few: "{n} dni", many: "{n} dni", other: "{n} dnia" }, lastDays: "Ostatnie 14 dni", noActivity: "W ostatnich dwóch tygodniach nie było jeszcze commitów.",
+      yearTitle: "Rok {y} na szlaku", yearDistance: "Przebyto", yearCommits: "Commity", yearActive: "Aktywne dni", yearBest: "Najlepszy dzień",
+      yearStreak: "Najdłuższa seria", yearPrev: "Poprzedni rok", yearNext: "Następny rok", yearEmpty: "W roku {y} nie było commitów.",
+      restShort: "wolne: {d}", calLess: "Mniej", calMore: "Więcej",
+      camp: "Obóz: dziś jeszcze bez commitów", campRest: "Dzień wolny: odpoczynek przy ognisku", campShort: "Obóz", campRestShort: "Wolne",
+      thisTrail: "Ten szlak", passport: "Paszport", passportCount: "{n} z {m}",
+      seriesNext: "Dalej w serii „{s}”", walkOn: "Idź dalej: {name} ({d}) →", seriesAfter: "Po tym szlaku seria „{s}” prowadzi dalej: {name}.",
+      passportEmpty: "Tu zbiorą się pieczątki przystanków, do których dojdziesz, ze wszystkich szlaków.",
+      ofTotal: "{a} z {b}",
+      weekTitle: "Ten tydzień", weekLast: "W zeszłym tygodniu: {d}", weekUp: "↑ o {p}% więcej niż tydzień temu", weekDown: "↓ o {p}% mniej niż tydzień temu",
+      weekDays: "{n} z {m} dni z commitami", weekBest: "Najlepszy dzień: {day}, {d}", weekEmpty: "W tym tygodniu nie było jeszcze commitów.",
+      goalTitle: "Cel zespołu", goalNone: "Przejdźcie trasę razem: commity wszystkich od startu celu się sumują.",
+      goalStart: "Start", goalRoute: "Trasa", goalTogether: "{a} z {b} razem", goalNext: "Następny przystanek: {name}, jeszcze {d}",
+      goalPace: "Tempo zespołu ~{d} dziennie", goalLeft: "~{n} dni do mety", goalDone: "Przebyte razem! ✓", goalChange: "Inna trasa",
+      goalStop: "Zakończ cel", goalSince: "od {date}",
+      goalNote: "Każdy, kto wybierze ten sam cel, widzi te same liczby: liczone są z historii git, nic nie jest wysyłane.",
+      shareBtn: "Udostępnij", shareMenu: "Udostępnij, gdzie jesteś", shareSave: "Zapisz pocztówkę…", shareCopyImage: "Skopiuj pocztówkę",
+      shareCopyText: "Skopiuj tekst", shareOn: "Udostępnij w {n}", mastodonServer: "Twój serwer Mastodon", shareGo: "Udostępnij",
+      shareHint: "Pocztówka jest w schowku: wklej ją do swojego posta.", shareTextCopied: "Tekst jest w schowku.",
+      shareImageCopied: "Pocztówka jest w schowku.", shareText: "🥾 {d} szlaku {route} przebyte moimi commitami. Jestem tu: {place}. #CommitHike",
+      shareTextDone: "🥾 Przeszedłem całe {d} szlaku {route} moimi commitami! #CommitHike",
+      shareYearText: "🥾 Mój rok {year} na szlaku: {d}, commitów: {commits}, aktywnych dni: {days}. #CommitHike",
+      settings: "Ustawienia", back: "Wstecz", optAuto: "Jak w systemie", optOn: "Wł.", optOff: "Wył.",
+      setRest: "Dni wolne", setRestHint: "Dzień wolny bez commitów nie przerywa serii, a z commitami nadal się liczy.",
+      restAllDays: "Przynajmniej jeden dzień musi być roboczy.",
+      setNotif: "Powiadomienia", notifAll: "Wszystkie", notifMilestones: "Tylko ważne", notifOff: "Wył.",
+      setNotifHint: "Ważne to przystanki, osiągnięcia i meta; „Wszystkie” dodają, ile przeszedłeś po każdym commicie.",
+      setMotion: "Mniej ruchu", setMotionHint: "Wyłącza spacer po commicie i wszystkie animacje, także sceny tras.",
+      setContrast: "Większy kontrast", setContrastHint: "Pełny tekst, widoczne obramowania i wyraźniejszy fokus.",
+      setHiker: "Twój wędrowiec", setBackup: "Kopia zapasowa",
+      setBackupHint: "Jeden plik z postępem, ustawieniami, wędrowcem i trasami, by przenieść je na inny komputer. Zawiera twój prywatny klucz: nie udostępniaj go.",
+      backupExport: "Eksportuj…", backupImport: "Importuj…",
+      setHelp: "Coś nie tak?", copyReport: "Skopiuj raport dla twórcy",
+      yearPostcard: "Pocztówka roku", badge: "Odznaka do profilu GitHub…", badgeTitle: "Odznaka SVG z twoim szlakiem do README",
+      setHelpHint: "Wersje, twoje IDE i ostatnie błędy, bez imienia, e-maila, projektów i kodu. Wklej go do zgłoszenia na GitHubie.",
+      achievements: "Osiągnięcia", achCount: "{n} z {m}", secret: "Tajne osiągnięcie", secretDesc: "Idź dalej, a się dowiesz.",
+      factTitle: "Czy wiesz, że…", factLocked: "Ciekawostka czeka {d} dalej.", storyTitle: "Na szlaku",
+      factsFound: "Znaleziono {n} z {m} ciekawostek",
+      mapZoomIn: "Przybliż", mapZoomOut: "Oddal", mapReset: "Pokaż cały szlak", mapHint: "Przewiń, by przybliżyć, przeciągnij, by przesunąć. Pinezki to znalezione ciekawostki.",
+      northUp: "Pn", customMap: "Mapa z pakietu trasy",
+      segment: "↑ {u}  ↓ {d}",
+      teamTitle: "Idźcie razem",
+      teamText: "Zobacz wszystkich, którzy commitują do tego projektu, na tym samym szlaku i kto jest z przodu.",
+      teamPrivacy: "Imiona pochodzą z historii git tego repozytorium. Są liczone na twoim komputerze, gdy patrzysz, i nigdzie nie są zapisywane ani wysyłane.",
+      teamOn: "Pokaż zespół", teamOff: "Ukryj zespół", teamLoading: "Liczę commity wszystkich…",
+      teamNoRepo: "Otwórz plik z repozytorium git, by zobaczyć, kto jeszcze jest na jego szlaku.",
+      teamEmpty: "Nikt inny nie commitował tutaj od początku tej wędrówki.",
+      teamRoute: "Na trasie {name}", you: "ty", teamMore: "…i jeszcze {n}",
+      lastActive: "aktywność {when}", commitsN: { one: "{n} commit", few: "{n} commity", many: "{n} commitów", other: "{n} commita" }, todayShort: "dziś {d}",
+      teamOtherRoute: "Zespół idzie trasą {name}, szlakiem tego projektu.",
+      ahead: "{name} jest {d} przed tobą", behind: "Prowadzisz o {d}",
+      justNow: "przed chwilą", minutesAgo: "{n} min temu", hoursAgo: "{n} godz. temu", daysAgo: "{n} dn. temu",
+      biome: { forest: "Las iglasty", grove: "Las liściasty", meadow: "Łąka", fields: "Pola", steppe: "Step", desert: "Pustynia", rock: "Skały",
+        snow: "Śnieg", tundra: "Tundra wysokogórska", water: "Woda", swamp: "Bagno", coast: "Wybrzeże", volcanic: "Wulkaniczny", village: "Wieś" },
+      m: "m", km: "km", decimal: ",",
+      difficulty: "Trudność", diff: { easy: "Łatwa", medium: "Średnia", hard: "Trudna" }, perDay: "~{d} dziennie",
+      diffHint: "Dotyczy commitów od teraz. Typowy dzień to ~6 commitów.",
+      daysLeft: "~{n} dni do mety w typowym tempie", daysLeftShort: "~{n} dn. do mety", daysLeftLabel: "Do mety",
+      underground: "Pod ziemią", intoTunnels: "W głąb tuneli", backToDaylight: "Z powrotem na światło",
+      danger: "Niebezpieczeństwo", dangerTitle: "Niebezpieczeństwo!",
+      scrollHintLocked: "Przeciągnij, przewiń lub użyj ← →, by spojrzeć wstecz na przebytą drogę. To, co przed tobą, pozostaje ukryte, dopóki tam nie dotrzesz.",
+      devBadge: "DEV · podgląd naprzód", devBuild: "wersja deweloperska", mapTunnel: "Tunel", mapDanger: "Spotkanie",
+    },
+  de: {
+      scopeAll: "Alle Projekte", scopeProject: "Dieses Projekt", scopeTitle: "Zwischen deiner Hauptwanderung und dem Weg dieses Projekts wechseln",
+      tabHike: "Wanderung", tabMap: "Karte", tabPlaces: "Orte", tabTeam: "Team", tabStats: "Statistik",
+      dayN: "Tag {n}", kmWord: { one: "Kilometer", other: "Kilometer" }, mWord: { one: "Meter", other: "Meter" },
+      startPlace: "Aufbruch", backToHiker: "Zurück zum Wanderer",
+      scrollHint: "Ziehen, scrollen oder ← → verwenden, um den Weg entlang zu schauen. Auf das Profil klicken, um zu springen.",
+      menu: "Menü", language: "Sprache", langAuto: "Wie in der IDE", changeTrail: "Weg wechseln…", startNew: "Neuen Weg beginnen…",
+      importRoute: "Route oder Karte importieren…", createTemplate: "Routenvorlage erstellen…", changeIcon: "Wanderer-Symbol…", resetIcon: "Standard-Wanderer",
+      showTeam: "Team anzeigen", recount: "Dieses Projekt neu zählen",
+      setupTitle: "Mach aus Commits eine Wanderung",
+      setupText: "Jeder Commit bringt dich auf einem Weg voran. In deine Projekte wird nichts geschrieben, und nichts verlässt diesen Computer.",
+      setupBtn: "Commit Hike einrichten",
+      errorTitle: "Commit Hike konnte deinen Fortschritt nicht lesen", unknownError: "Unbekannter Fehler.", retry: "Erneut versuchen",
+      notCountedTitle: "Dieses Projekt wird nicht gezählt",
+      notCountedText: "Deine Einstellungen zählen nur ausgewählte Projekte. Commits hier bringen dich erst voran, wenn du es hinzufügst.",
+      countBtn: "Dieses Projekt zählen",
+      noProjectTitle: "Dieses Projekt hat noch keine Wanderung",
+      noProjectText: "Gib diesem Projekt einen eigenen Weg. Deine Commits hier zählen weiterhin für deine Hauptwanderung.",
+      chooseTrail: "Weg wählen", noTrailTitle: "Kein Weg gewählt", noTrailText: "Wähle einen Weg, um loszugehen.",
+      completed: "Weg geschafft", completedText: "Du bist die ganzen {d} von {name} gegangen.",
+      nextStop: "Nächster Halt", toGo: "noch {d}", climbLeft: "↑ {d} Anstieg", descentLeft: "↓ bergab",
+      here: "Du bist hier", left: "in {d}", passedAt: "bei {d}",
+      altitude: "Höhe", grade: "Steigung", climbed: "Aufstieg", highest: "Höchster Punkt", today: "Heute", streak: "Serie",
+      onTrail: "Auf diesem Weg", commits: "Commits", toNextClimb: "Anstieg bis zum Halt",
+      days: { one: "{n} Tag", other: "{n} Tage" }, lastDays: "Letzte 14 Tage", noActivity: "In den letzten zwei Wochen gab es noch keine Commits.",
+      yearTitle: "{y} auf dem Weg", yearDistance: "Gegangen", yearCommits: "Commits", yearActive: "Aktive Tage", yearBest: "Bester Tag",
+      yearStreak: "Längste Serie", yearPrev: "Vorheriges Jahr", yearNext: "Nächstes Jahr", yearEmpty: "Keine Commits im Jahr {y}.",
+      restShort: "frei: {d}", calLess: "Weniger", calMore: "Mehr",
+      camp: "Lager: heute noch keine Commits", campRest: "Freier Tag: Rast am Feuer", campShort: "Lager", campRestShort: "Frei",
+      thisTrail: "Dieser Weg", passport: "Pass", passportCount: "{n} von {m}",
+      seriesNext: "Weiter in „{s}“", walkOn: "Weitergehen: {name} ({d}) →", seriesAfter: "Danach geht „{s}“ weiter nach {name}.",
+      passportEmpty: "Hier sammeln sich die Stempel der Halte, die du erreichst, von jedem Weg.",
+      ofTotal: "{a} von {b}",
+      weekTitle: "Diese Woche", weekLast: "Letzte Woche: {d}", weekUp: "↑ {p}% mehr als letzte Woche", weekDown: "↓ {p}% weniger als letzte Woche",
+      weekDays: "{n} von {m} Tagen mit Commits", weekBest: "Bester Tag: {day}, {d}", weekEmpty: "Diese Woche gab es noch keine Commits.",
+      goalTitle: "Teamziel", goalNone: "Geht eine Route gemeinsam: Die Commits aller ab dem Start des Ziels zählen zusammen.",
+      goalStart: "Starten", goalRoute: "Route", goalTogether: "{a} von {b} gemeinsam", goalNext: "Nächster Halt: {name}, noch {d}",
+      goalPace: "Team-Tempo ~{d} pro Tag", goalLeft: "~{n} Tage bis zum Ziel", goalDone: "Gemeinsam geschafft! ✓", goalChange: "Andere Route",
+      goalStop: "Ziel beenden", goalSince: "seit {date}",
+      goalNote: "Wer im Team dasselbe Ziel wählt, sieht dieselben Zahlen: Sie werden aus der Git-Historie gezählt, nichts wird geteilt.",
+      shareBtn: "Teilen", shareMenu: "Teilen, wo du gerade bist", shareSave: "Postkarte speichern…", shareCopyImage: "Postkarte kopieren",
+      shareCopyText: "Text kopieren", shareOn: "Auf {n} teilen", mastodonServer: "Dein Mastodon-Server", shareGo: "Teilen",
+      shareHint: "Die Postkarte ist in der Zwischenablage: füge sie in deinen Beitrag ein.", shareTextCopied: "Der Text ist in der Zwischenablage.",
+      shareImageCopied: "Die Postkarte ist in der Zwischenablage.", shareText: "🥾 {d} von {route} mit meinen Commits gewandert. Ich bin hier: {place}. #CommitHike",
+      shareTextDone: "🥾 Ich bin die ganzen {d} von {route} mit meinen Commits gewandert! #CommitHike",
+      shareYearText: "🥾 Mein Jahr {year} auf dem Weg: {d}, {commits} Commits, {days} aktive Tage. #CommitHike",
+      settings: "Einstellungen", back: "Zurück", optAuto: "Wie im System", optOn: "An", optOff: "Aus",
+      setRest: "Freie Tage", setRestHint: "Ein freier Tag ohne Commits unterbricht deine Serie nicht; mit Commits zählt er trotzdem.",
+      restAllDays: "Mindestens ein Tag muss ein Arbeitstag sein.",
+      setNotif: "Benachrichtigungen", notifAll: "Alle", notifMilestones: "Nur Meilensteine", notifOff: "Aus",
+      setNotifHint: "Meilensteine sind Halte, Erfolge und das Ziel; „Alle“ zeigt zusätzlich, wie weit dich jeder Commit gebracht hat.",
+      setMotion: "Weniger Bewegung", setMotionHint: "Schaltet den Spaziergang nach einem Commit und alle Animationen ab, auch die Szenen der Routen.",
+      setContrast: "Mehr Kontrast", setContrastHint: "Voller Text, sichtbare Umrisse und deutlichere Fokusmarkierungen.",
+      setHiker: "Dein Wanderer", setBackup: "Sicherung",
+      setBackupHint: "Eine Datei mit Fortschritt, Einstellungen, Wanderer und Routen, um auf einen anderen Computer umzuziehen. Sie enthält deinen privaten Schlüssel: behalte sie für dich.",
+      backupExport: "Exportieren…", backupImport: "Importieren…",
+      setHelp: "Stimmt etwas nicht?", copyReport: "Bericht für den Entwickler kopieren",
+      yearPostcard: "Jahrespostkarte", badge: "Abzeichen für dein GitHub-Profil…", badgeTitle: "Ein SVG-Abzeichen mit deinem Weg, für eine README",
+      setHelpHint: "Versionen, deine IDE und letzte Fehler, ohne Namen, E-Mail, Projekte oder Code. Füge ihn in ein Issue auf GitHub ein.",
+      achievements: "Erfolge", achCount: "{n} von {m}", secret: "Geheimer Erfolg", secretDesc: "Geh weiter, dann erfährst du es.",
+      factTitle: "Wusstest du?", factLocked: "Ein Fakt wartet {d} weiter vorn.", storyTitle: "Unterwegs",
+      factsFound: "{n} von {m} Fakten gefunden",
+      mapZoomIn: "Vergrößern", mapZoomOut: "Verkleinern", mapReset: "Ganzen Weg zeigen", mapHint: "Scrollen zum Zoomen, ziehen zum Verschieben. Stecknadeln sind gefundene Fakten.",
+      northUp: "N", customMap: "Karte aus dem Routenpaket",
+      segment: "↑ {u}  ↓ {d}",
+      teamTitle: "Gemeinsam gehen",
+      teamText: "Sieh alle, die in dieses Projekt committen, auf demselben Weg, und wer vorne liegt.",
+      teamPrivacy: "Die Namen stammen aus der git-Historie dieses Repositorys. Sie werden auf deinem Computer gezählt, wenn du hinschaust, und nirgends gespeichert oder gesendet.",
+      teamOn: "Team anzeigen", teamOff: "Team ausblenden", teamLoading: "Zähle die Commits aller…",
+      teamNoRepo: "Öffne eine Datei aus einem git-Repository, um zu sehen, wer noch auf seinem Weg ist.",
+      teamEmpty: "Seit Beginn dieser Wanderung hat hier niemand sonst committet.",
+      teamRoute: "Auf {name}", you: "du", teamMore: "…und {n} weitere",
+      lastActive: "aktiv {when}", commitsN: { one: "{n} Commit", other: "{n} Commits" }, todayShort: "heute {d}",
+      teamOtherRoute: "Das Team geht {name}, den Weg dieses Projekts.",
+      ahead: "{name} liegt {d} vorn", behind: "Du führst mit {d}",
+      justNow: "gerade eben", minutesAgo: "vor {n} Min.", hoursAgo: "vor {n} Std.", daysAgo: "vor {n} T.",
+      biome: { forest: "Nadelwald", grove: "Laubwald", meadow: "Wiese", fields: "Felder", steppe: "Steppe", desert: "Wüste", rock: "Fels",
+        snow: "Schnee", tundra: "Alpine Tundra", water: "Wasser", swamp: "Sumpf", coast: "Küste", volcanic: "Vulkanisch", village: "Dorf" },
+      m: "m", km: "km", decimal: ",",
+      difficulty: "Schwierigkeit", diff: { easy: "Leicht", medium: "Mittel", hard: "Schwer" }, perDay: "~{d} am Tag",
+      diffHint: "Gilt für Commits ab jetzt. Ein typischer Tag sind ~6 Commits.",
+      daysLeft: "noch ~{n} Tage im üblichen Tempo", daysLeftShort: "noch ~{n} T.", daysLeftLabel: "Bis zum Ziel",
+      underground: "Unter Tage", intoTunnels: "In die Tunnel", backToDaylight: "Zurück ans Tageslicht",
+      danger: "Gefahr", dangerTitle: "Gefahr!",
+      scrollHintLocked: "Ziehen, scrollen oder ← → verwenden, um auf den gegangenen Weg zurückzuschauen. Was vor dir liegt, bleibt verborgen, bis du dort bist.",
+      devBadge: "DEV · Vorschau an", devBuild: "Entwicklerversion", mapTunnel: "Tunnel", mapDanger: "Begegnung",
+    },
+  es: {
+      scopeAll: "Todos los proyectos", scopeProject: "Este proyecto", scopeTitle: "Cambia entre tu travesía principal y el sendero de este proyecto",
+      tabHike: "Travesía", tabMap: "Mapa", tabPlaces: "Lugares", tabTeam: "Equipo", tabStats: "Estadísticas",
+      dayN: "Día {n}", kmWord: { one: "kilómetro", other: "kilómetros" }, mWord: { one: "metro", other: "metros" },
+      startPlace: "Saliendo", backToHiker: "Volver al caminante",
+      scrollHint: "Arrastra, desplaza o usa ← → para mirar a lo largo del sendero. Haz clic en el perfil para saltar.",
+      menu: "Menú", language: "Idioma", langAuto: "Como el IDE", changeTrail: "Cambiar de sendero…", startNew: "Empezar un sendero nuevo…",
+      importRoute: "Importar una ruta o un mapa…", createTemplate: "Crear una plantilla de ruta…", changeIcon: "Icono del caminante…", resetIcon: "Caminante predeterminado",
+      showTeam: "Mostrar al equipo", recount: "Recontar este proyecto",
+      setupTitle: "Convierte tus commits en una travesía",
+      setupText: "Cada commit te hace avanzar por un sendero. No se escribe nada en tus proyectos y nada sale de este ordenador.",
+      setupBtn: "Configurar Commit Hike",
+      errorTitle: "Commit Hike no pudo leer tu progreso", unknownError: "Error desconocido.", retry: "Reintentar",
+      notCountedTitle: "Este proyecto no cuenta",
+      notCountedText: "Tu configuración cuenta solo los proyectos que eliges. Los commits de aquí no te harán avanzar hasta que lo añadas.",
+      countBtn: "Contar este proyecto",
+      noProjectTitle: "Este proyecto aún no tiene travesía",
+      noProjectText: "Dale a este proyecto su propio sendero. Tus commits aquí siguen contando para tu travesía principal.",
+      chooseTrail: "Elegir un sendero", noTrailTitle: "Ningún sendero elegido", noTrailText: "Elige un sendero para empezar a caminar.",
+      completed: "Sendero completado", completedText: "Recorriste los {d} de {name}.",
+      nextStop: "Próxima parada", toGo: "faltan {d}", climbLeft: "↑ {d} de subida", descentLeft: "↓ cuesta abajo",
+      here: "Estás aquí", left: "en {d}", passedAt: "a {d}",
+      altitude: "Altitud", grade: "pendiente", climbed: "Desnivel subido", highest: "Punto más alto", today: "Hoy", streak: "Racha",
+      onTrail: "En este sendero", commits: "Commits", toNextClimb: "Subida hasta la parada",
+      days: { one: "{n} día", other: "{n} días" }, lastDays: "Últimos 14 días", noActivity: "Aún no hay commits en las dos últimas semanas.",
+      yearTitle: "{y} en el sendero", yearDistance: "Recorrido", yearCommits: "Commits", yearActive: "Días activos", yearBest: "Mejor día",
+      yearStreak: "Racha más larga", yearPrev: "Año anterior", yearNext: "Año siguiente", yearEmpty: "No hubo commits en {y}.",
+      restShort: "libres: {d}", calLess: "Menos", calMore: "Más",
+      camp: "Campamento: aún sin commits hoy", campRest: "Día libre: descanso junto al fuego", campShort: "Campamento", campRestShort: "Libre",
+      thisTrail: "Este sendero", passport: "Pasaporte", passportCount: "{n} de {m}",
+      seriesNext: "Sigue en «{s}»", walkOn: "Seguir: {name} ({d}) →", seriesAfter: "Después, «{s}» sigue hacia {name}.",
+      passportEmpty: "Aquí se reunirán los sellos de las paradas que alcances, de todos tus senderos.",
+      ofTotal: "{a} de {b}",
+      weekTitle: "Esta semana", weekLast: "La semana pasada: {d}", weekUp: "↑ {p}% más que la semana pasada", weekDown: "↓ {p}% menos que la semana pasada",
+      weekDays: "{n} de {m} días con commits", weekBest: "Mejor día: {day}, {d}", weekEmpty: "Aún no hay commits esta semana.",
+      goalTitle: "Meta del equipo", goalNone: "Recorred una ruta juntos: los commits de todos desde el inicio de la meta se suman.",
+      goalStart: "Empezar", goalRoute: "Ruta", goalTogether: "{a} de {b} juntos", goalNext: "Próxima parada: {name}, faltan {d}",
+      goalPace: "Ritmo del equipo ~{d} al día", goalLeft: "~{n} días para llegar", goalDone: "¡Recorrida juntos! ✓", goalChange: "Otra ruta",
+      goalStop: "Terminar la meta", goalSince: "desde {date}",
+      goalNote: "Quien elija la misma meta ve los mismos números: se cuentan del historial de git, no se comparte nada.",
+      shareBtn: "Compartir", shareMenu: "Comparte dónde estás", shareSave: "Guardar la postal…", shareCopyImage: "Copiar la postal",
+      shareCopyText: "Copiar el texto", shareOn: "Compartir en {n}", mastodonServer: "Tu servidor de Mastodon", shareGo: "Compartir",
+      shareHint: "La postal está en el portapapeles: pégala en tu publicación.", shareTextCopied: "El texto está en el portapapeles.",
+      shareImageCopied: "La postal está en el portapapeles.", shareText: "🥾 {d} de {route} recorridos con mis commits. Estoy en: {place}. #CommitHike",
+      shareTextDone: "🥾 ¡Recorrí los {d} de {route} con mis commits! #CommitHike",
+      shareYearText: "🥾 Mi {year} en el sendero: {d}, {commits} commits, {days} días activos. #CommitHike",
+      settings: "Ajustes", back: "Atrás", optAuto: "Como el sistema", optOn: "Sí", optOff: "No",
+      setRest: "Días libres", setRestHint: "Un día libre sin commits no rompe tu racha; uno con commits sigue contando.",
+      restAllDays: "Al menos un día tiene que ser laborable.",
+      setNotif: "Notificaciones", notifAll: "Todas", notifMilestones: "Solo hitos", notifOff: "Ninguna",
+      setNotifHint: "Los hitos son paradas, logros y la meta; «Todas» añade cuánto avanzaste con cada commit.",
+      setMotion: "Menos movimiento", setMotionHint: "Desactiva el paseo tras un commit y todas las animaciones, incluidas las escenas de las rutas.",
+      setContrast: "Más contraste", setContrastHint: "Texto sólido, contornos visibles y marcas de foco más claras.",
+      setHiker: "Tu caminante", setBackup: "Copia de seguridad",
+      setBackupHint: "Un archivo con tu progreso, ajustes, caminante y rutas, para pasarlo a otro ordenador. Contiene tu clave privada: guárdalo para ti.",
+      backupExport: "Exportar…", backupImport: "Importar…",
+      setHelp: "¿Algo va mal?", copyReport: "Copiar un informe para el desarrollador",
+      yearPostcard: "Postal del año", badge: "Insignia para tu perfil de GitHub…", badgeTitle: "Una insignia SVG con tu sendero, para un README",
+      setHelpHint: "Versiones, tu IDE y los últimos errores, sin tu nombre, correo, proyectos ni código. Pégalo en un issue de GitHub.",
+      achievements: "Logros", achCount: "{n} de {m}", secret: "Logro secreto", secretDesc: "Sigue caminando para descubrirlo.",
+      factTitle: "¿Sabías que…?", factLocked: "Un dato te espera {d} más adelante.", storyTitle: "En el sendero",
+      factsFound: "{n} de {m} datos encontrados",
+      mapZoomIn: "Acercar", mapZoomOut: "Alejar", mapReset: "Ver todo el sendero", mapHint: "Desplaza para acercar, arrastra para mover. Los alfileres son datos que encontraste.",
+      northUp: "N", customMap: "Mapa del paquete de la ruta",
+      segment: "↑ {u}  ↓ {d}",
+      teamTitle: "Caminar juntos",
+      teamText: "Mira a todos los que hacen commits en este proyecto en el mismo sendero, y quién va delante.",
+      teamPrivacy: "Los nombres salen del historial git de este repositorio. Se cuentan en tu ordenador cuando miras y nunca se guardan ni se envían.",
+      teamOn: "Mostrar al equipo", teamOff: "Ocultar al equipo", teamLoading: "Contando los commits de todos…",
+      teamNoRepo: "Abre un archivo de un repositorio git para ver quién más está en su sendero.",
+      teamEmpty: "Nadie más ha hecho commits aquí desde que empezó esta travesía.",
+      teamRoute: "En {name}", you: "tú", teamMore: "…y {n} más",
+      lastActive: "activo {when}", commitsN: { one: "{n} commit", other: "{n} commits" }, todayShort: "hoy {d}",
+      teamOtherRoute: "El equipo recorre {name}, el sendero de este proyecto.",
+      ahead: "{name} va {d} por delante", behind: "Vas {d} por delante",
+      justNow: "ahora mismo", minutesAgo: "hace {n} min", hoursAgo: "hace {n} h", daysAgo: "hace {n} d",
+      biome: { forest: "Bosque de coníferas", grove: "Bosque", meadow: "Pradera", fields: "Campos", steppe: "Estepa", desert: "Desierto", rock: "Roca",
+        snow: "Nieve", tundra: "Tundra alpina", water: "Agua", swamp: "Pantano", coast: "Costa", volcanic: "Volcánico", village: "Pueblo" },
+      m: "m", km: "km", decimal: ",",
+      difficulty: "Dificultad", diff: { easy: "Fácil", medium: "Media", hard: "Difícil" }, perDay: "~{d} al día",
+      diffHint: "Se aplica a los commits a partir de ahora. Un día típico son ~6 commits.",
+      daysLeft: "~{n} días a un ritmo típico", daysLeftShort: "~{n} d para llegar", daysLeftLabel: "Hasta la meta",
+      underground: "Bajo tierra", intoTunnels: "Hacia los túneles", backToDaylight: "De vuelta a la luz",
+      danger: "Peligro", dangerTitle: "¡Peligro!",
+      scrollHintLocked: "Arrastra, desplaza o usa ← → para mirar atrás por el camino recorrido. Lo que hay delante sigue oculto hasta que llegues.",
+      devBadge: "DEV · vista adelante", devBuild: "versión de desarrollo", mapTunnel: "Túnel", mapDanger: "Encuentro",
+    }
+
   };
-  const LANG_NAMES = { en: "English", uk: "Українська" };
+  const LANG_NAMES = { en: "English", uk: "Українська", pl: "Polski", de: "Deutsch", es: "Español" };
   let lang = "en";
   function t(key, vars) {
     let s = (STRINGS[lang] && STRINGS[lang][key]) || STRINGS.en[key] || key;
@@ -548,7 +909,9 @@ html.reduce-motion .stamp { transform: none; }
     const km = m / 1000;
     return (km < 100 ? km.toFixed(1).replace(".", t("decimal")) : String(Math.round(km))) + " " + t("km");
   }
-  const fmtInt = n => Math.round(n).toLocaleString(lang === "uk" ? "uk-UA" : "en-US").replace(/,/g, lang === "uk" ? " " : ",");
+  // Whole numbers by each language's rules: 1,925 · 1 925 · 1.925 · 1925 (Polish and Spanish don't group four digits).
+  const NUMBER_LOCALE = { en: "en-US", uk: "uk-UA", pl: "pl-PL", de: "de-DE", es: "es-ES" };
+  const fmtInt = n => Math.round(n).toLocaleString(NUMBER_LOCALE[lang] || "en-US");
   const fmtElev = e => fmtInt(e) + " " + t("m");
   function ago(unix) {
     const s = Date.now() / 1000 - unix;
@@ -961,8 +1324,8 @@ html.reduce-motion .stamp { transform: none; }
     }
     function house(c, x, y, s, i) {
       const walls = ["#e8dcc4", "#d9c7a6", "#f1ece2", "#cdb89a", "#c9d6d9"], roofs = ["#7a3b2e", "#4d3a2a", "#6b4e3a", "#39485a", "#8a5a2b"];
-      const wall = tint(walls[Math.floor(hash(i, 1) * walls.length)]), roof = tint(roofs[Math.floor(hash(i, 2) * roofs.length)]);
-      c.fillStyle = wall; c.fillRect(x - s, y - s * 1.1, s * 2, s * 1.1);
+      const roof = tint(roofs[Math.floor(hash(i, 2) * roofs.length)]);
+      c.fillStyle = tint(walls[Math.floor(hash(i, 1) * walls.length)]); c.fillRect(x - s, y - s * 1.1, s * 2, s * 1.1);
       c.fillStyle = roof; c.beginPath(); c.moveTo(x - s * 1.25, y - s * 1.05); c.lineTo(x, y - s * 2); c.lineTo(x + s * 1.25, y - s * 1.05); c.fill();
       c.fillStyle = sky.night > 0.4 ? "#ffd27a" : tint("#48606e"); c.fillRect(x - s * 0.55, y - s * 0.8, s * 0.4, s * 0.35);
       c.fillStyle = tint("#5a4030"); c.fillRect(x + s * 0.2, y - s * 0.65, s * 0.4, s * 0.65);
@@ -1888,7 +2251,7 @@ html.reduce-motion .stamp { transform: none; }
     box.append(world, svg, ctl);
 
     // ---- the trail as a polyline with distance along it ----
-    const geo = trailGeometry(route, W, H), at = geo.at, plen = geo.plen, dFull = geo.d;
+    const geo = trailGeometry(route, W, H), at = geo.at, dFull = geo.d;
 
     // ---- terrain raster ----
     const c = cv.getContext("2d");
@@ -2354,10 +2717,112 @@ html.reduce-motion .stamp { transform: none; }
       host.remove();
     }
   }
-  function savePostcard(dataUrl, j) {
-    const name = `commit-hike-${j.route.id}-day-${j.day || 1}.png`;
-    if (vscode || window.commitHikeHost) send({ command: "savePostcard", name, data: dataUrl });
-    else el("a", { href: dataUrl, download: name }).click(); // a plain browser, e.g. while developing the panel
+
+  // ================================================================ sharing
+  // Sharing pages of the networks take text and a link, never a picture: the
+  // postcard goes to the clipboard first and the post opens with the text,
+  // ready to paste the picture into. The hosts only open these URL shapes.
+  const SHARE_LINK = "https://github.com/Shchusia/Commit-Hike";
+  const enc = encodeURIComponent;
+  const SHARE_NETWORKS = [
+    ["x", "X", (tx, u) => `https://twitter.com/intent/tweet?text=${enc(tx)}&url=${enc(u)}`],
+    ["bluesky", "Bluesky", (tx, u) => `https://bsky.app/intent/compose?text=${enc(tx + " " + u)}`],
+    ["mastodon", "Mastodon", (tx, u, server) => `https://${server}/share?text=${enc(tx + " " + u)}`],
+    ["threads", "Threads", (tx, u) => `https://www.threads.net/intent/post?text=${enc(tx + " " + u)}`],
+    ["linkedin", "LinkedIn", (tx, u) => `https://www.linkedin.com/sharing/share-offsite/?url=${enc(u)}`],
+    ["facebook", "Facebook", (tx, u) => `https://www.facebook.com/sharer/sharer.php?u=${enc(u)}`],
+    ["telegram", "Telegram", (tx, u) => `https://t.me/share/url?url=${enc(u)}&text=${enc(tx)}`],
+    ["reddit", "Reddit", (tx, u) => `https://www.reddit.com/submit?url=${enc(u)}&title=${enc(tx)}`],
+  ];
+  let closeShareMenu = null; // the open share menu's close(); clicks elsewhere close it
+  document.addEventListener("click", () => closeShareMenu && closeShareMenu());
+  const MASTODON_SERVER = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/;
+  const shareText = j => j.finished
+    ? t("shareTextDone", { d: fmt(j.route.length_m), route: j.route.name })
+    : t("shareText", { d: fmt(j.distance_m), route: j.route.name, place: j.last_waypoint ? j.last_waypoint.name : t("startPlace") });
+
+  /** Puts the picture into the clipboard: the browser's clipboard if it may, else the host's. */
+  async function copyImage(dataUrl) {
+    try {
+      // not fetch(dataUrl): the panel's CSP allows no connections at all
+      const bin = atob(dataUrl.slice(dataUrl.indexOf(",") + 1));
+      const bytes = new Uint8Array(bin.length);
+      for (let k = 0; k < bin.length; k++) bytes[k] = bin.charCodeAt(k);
+      const blob = new Blob([bytes], { type: "image/png" });
+      await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+      return true;
+    } catch (e) {
+      send({ command: "copyImage", data: dataUrl }); // JetBrains copies it; VS Code saves it next to a note
+      return false;
+    }
+  }
+
+  /**
+   * A "Share" button with its menu. picture() draws the postcard (a PNG data
+   * URL), text() is the post, name the file name for saving.
+   */
+  function shareButton({ picture, text, name, label }) {
+    const wrap = el("div", { class: "share-wrap" });
+    const note = el("p", { class: "share-note", role: "status", hidden: true });
+    let menu = null, cached = null;
+    const image = async () => (cached = cached || await picture());
+    const close = () => {
+      if (!menu) return;
+      menu.remove(); menu = null; closeShareMenu = null;
+      btn.setAttribute("aria-expanded", "false");
+    };
+    const say = msg => { note.textContent = msg; note.hidden = !msg; };
+    const run = fn => async () => {
+      close();
+      btn.disabled = true;
+      try { await fn(); } finally { btn.disabled = false; }
+    };
+    const toNetwork = (build, server) => run(async () => {
+      const copied = await copyImage(await image());
+      send({ command: "openUrl", url: build(text(), SHARE_LINK, server) });
+      say(copied ? t("shareHint") : "");
+    });
+    const item = (label2, onclick) => el("button", { role: "menuitem", onclick, text: label2 });
+    const btn = el("button", { class: "chip-btn share", "aria-haspopup": "menu", "aria-expanded": "false", text: "↗ " + (label || t("shareBtn")), title: t("shareMenu"),
+      onclick: ev => {
+        ev.stopPropagation();
+        if (menu) return close();
+        if (closeShareMenu) closeShareMenu(); // only one share menu at a time
+        say("");
+        const server = el("input", { type: "text", value: saved.mastodonServer || "mastodon.social", "aria-label": t("mastodonServer"), spellcheck: "false" });
+        const masto = SHARE_NETWORKS.find(n => n[0] === "mastodon");
+        menu = el("div", { class: "menu", role: "menu", "aria-label": t("shareMenu"), onclick: e => e.stopPropagation() }, [
+          item("✉ " + t("shareSave"), run(async () => {
+            const url = await image();
+            if (vscode || window.commitHikeHost) send({ command: "savePostcard", name, data: url });
+            else el("a", { href: url, download: name }).click(); // a plain browser, while developing the panel
+          })),
+          item("⧉ " + t("shareCopyImage"), run(async () => { if (await copyImage(await image())) say(t("shareImageCopied")); })),
+          item("¶ " + t("shareCopyText"), run(async () => {
+            const tx = text() + " " + SHARE_LINK;
+            try { await navigator.clipboard.writeText(tx); } catch (e) { send({ command: "copyText", text: tx }); }
+            say(t("shareTextCopied"));
+          })),
+          el("div", { class: "sep" }),
+          el("div", { class: "label", text: t("shareMenu") }),
+          el("div", { class: "net" }, SHARE_NETWORKS.filter(n => n[0] !== "mastodon").map(([id, title, build]) =>
+            el("button", { role: "menuitem", "data-net": id, title: t("shareOn", { n: title }), onclick: toNetwork(build), text: title }))),
+          el("div", { class: "label", text: t("mastodonServer") }),
+          el("div", { class: "masto" }, [server, el("button", { class: "chip-btn", "data-net": "mastodon", text: t("shareGo"), onclick: () => {
+            const host = server.value.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/\/.*$/, "");
+            if (!MASTODON_SERVER.test(host)) { server.focus(); return; }
+            remember({ mastodonServer: host });
+            toNetwork(masto[2], host)();
+          } })]),
+        ]);
+        wrap.append(menu);
+        closeShareMenu = close;
+        btn.setAttribute("aria-expanded", "true");
+        menu.querySelector("button").focus();
+      } });
+    wrap.addEventListener("keydown", e => { if (e.key === "Escape" && menu) { e.stopPropagation(); close(); btn.focus(); } });
+    wrap.append(btn);
+    return { node: wrap, note };
   }
 
   function hikeView(j, s) {
@@ -2406,12 +2871,8 @@ html.reduce-motion .stamp { transform: none; }
     const lock = !data.dev;
     const strip = ProfileStrip(j, team, m => sceneApi && sceneApi.lookAt(m), lock ? j.distance_m : null);
     const card = el("div", { class: "hike" }, [scene, strip.node, info]);
-    const share = el("button", { class: "chip-btn share", text: "✉ " + t("share"), title: t("shareTitle"),
-      onclick: async () => {
-        share.disabled = true;
-        try { savePostcard(await postcard(j), j); } finally { share.disabled = false; }
-      } });
-    root.append(card, el("div", { class: "hike-actions" }, [el("p", { class: "hint", text: lock ? t("scrollHintLocked") : t("scrollHint") }), share]));
+    const share = shareButton({ picture: () => postcard(j), text: () => shareText(j), name: `commit-hike-${j.route.id}-day-${j.day || 1}.png` });
+    root.append(card, el("div", { class: "hike-actions" }, [el("p", { class: "hint", text: lock ? t("scrollHintLocked") : t("scrollHint") }), share.node]), share.note);
     const mini = MiniMap(j, { team, assets: assetsFor(j.route.id), width: root.clientWidth < 320 ? 70 : 84,
       onOpen: () => { view = "map"; remember({ view }); render(); } });
     scene.style.setProperty("--mm-h", mini.height + "px");
@@ -2538,6 +2999,78 @@ html.reduce-motion .stamp { transform: none; }
   }
 
   // ================================================================ team
+  // ================================================================ the team's week and goal
+  const shortDate = iso => new Date(iso + "T00:00:00Z").toLocaleDateString(lang, { day: "numeric", month: "short", timeZone: "UTC" });
+  const memberColor = m => m.me ? "var(--ct-blaze)" : `hsl(${hue(m.id)},55%,50%)`;
+
+  function teamWeekCard(w) {
+    const card = el("div", { class: "card team-week" }, [el("h3", { text: t("weekTitle") + " · " + shortDate(w.from) + " – " + shortDate(w.to) })]);
+    if (!w.commits) {
+      card.append(el("p", { class: "from", text: t("weekEmpty") }));
+      if (w.prev_total_m) card.append(el("p", { class: "from", text: t("weekLast", { d: fmt(w.prev_total_m) }) }));
+      return card;
+    }
+    let trend = null;
+    if (w.prev_total_m > 0) {
+      const p = Math.round((w.total_m - w.prev_total_m) / w.prev_total_m * 100);
+      trend = el("span", { class: "trend " + (p >= 0 ? "up" : "down"), text: t(p >= 0 ? "weekUp" : "weekDown", { p: Math.abs(p) }) });
+    }
+    card.append(el("p", {}, [el("span", { class: "big", text: fmt(w.total_m) }), trend]),
+      el("p", { class: "from", text: [plural("commitsN", w.commits), t("weekDays", { n: w.active_days, m: w.days_elapsed }),
+        w.best_day ? t("weekBest", { day: new Date(w.best_day + "T00:00:00Z").toLocaleDateString(lang, { weekday: "long", timeZone: "UTC" }), d: fmt(w.best_day_m) }) : null,
+      ].filter(Boolean).join(" · ") }));
+    const max = Math.max(...w.members.map(m => m.distance_m), 1);
+    const rows = el("div", { class: "week-rows" });
+    for (const m of w.members) {
+      rows.append(el("span", { class: "nm" + (m.me ? " me" : ""), title: m.name, text: m.me ? `${m.name} (${t("you")})` : m.name }),
+        el("div", { class: "bar thin" }, [el("i", { style: `width:${(m.distance_m / max * 100).toFixed(1)}%;background:${memberColor(m)}` })]),
+        el("span", { class: "d", text: fmt(m.distance_m) }));
+    }
+    card.append(rows);
+    if (w.hidden) card.append(el("p", { class: "from", text: t("teamMore", { n: w.hidden }) }));
+    return card;
+  }
+
+  function goalPicker(routes, current, label) {
+    const select = el("select", { "aria-label": t("goalRoute") }, routes.map(r =>
+      el("option", { value: r.id, selected: r.id === current ? true : null, text: `${r.name} · ${fmt(r.length_m)}` })));
+    return el("div", { class: "goal-pick" }, [select,
+      el("button", { class: "chip-btn", text: label, onclick: () => send({ command: "setTeamGoal", route: select.value }) })]);
+  }
+
+  function teamGoalCard(tm) {
+    const g = tm.goal, routes = tm.routes || [];
+    if (!g) {
+      return el("div", { class: "card team-goal" }, [el("h3", { text: t("goalTitle") }), el("p", { text: t("goalNone") }),
+        routes.length ? goalPicker(routes, null, t("goalStart")) : null, el("p", { class: "from", text: t("goalNote") })]);
+    }
+    const bar = el("div", { class: "goal-bar", role: "img", "aria-label": t("goalTogether", { a: fmt(g.distance_m), b: fmt(g.length_m) }) });
+    for (const m of g.members) bar.append(el("i", { title: `${m.name}: ${fmt(m.distance_m)}`, style: `width:${Math.min(100, m.distance_m / g.length_m * 100).toFixed(2)}%;background:${memberColor(m)}` }));
+    const facts = g.finished ? [t("goalDone")] : [
+      g.next_waypoint ? t("goalNext", { name: g.next_waypoint.name, d: fmt(g.to_next_m || 0) }) : null,
+      g.pace_m ? t("goalPace", { d: fmt(g.pace_m) }) : null,
+      g.days_left ? t("goalLeft", { n: g.days_left }) : null,
+    ].filter(Boolean);
+    let changing = null;
+    const card = el("div", { class: "card team-goal" }, [
+      el("h3", { text: t("goalTitle") + " · " + t("goalSince", { date: new Date(g.since * 1000).toLocaleDateString(lang, { day: "numeric", month: "short" }) }) }),
+      el("p", {}, [el("b", { text: g.route_name }), " — " + t("goalTogether", { a: fmt(g.distance_m), b: fmt(g.length_m) }) + ` (${String(g.percent).replace(".", t("decimal"))}%)`]),
+      bar,
+      el("div", { class: "goal-legend" }, g.members.map(m => el("span", { style: `--sw:${memberColor(m)}`, text: `${m.me ? t("you") : m.name} ${fmt(m.distance_m)}` }))),
+      facts.length ? el("p", { class: "from", text: facts.join(" · ") }) : null,
+      el("div", { class: "actions", style: "margin-top:8px" }, [
+        el("button", { class: "link", text: t("goalChange"), onclick: () => {
+          if (changing) { changing.remove(); changing = null; return; }
+          changing = goalPicker(routes, g.route_id, t("goalStart"));
+          card.insertBefore(changing, card.lastChild);
+        } }),
+        el("button", { class: "link", text: t("goalStop"), onclick: () => send({ command: "setTeamGoal", route: "" }) }),
+      ]),
+      el("p", { class: "from", text: t("goalNote") }),
+    ]);
+    return card;
+  }
+
   function teamView(j, s) {
     if (!data.repo) return root.append(el("div", { class: "card" }, [el("p", { text: t("teamNoRepo") })]));
     if (!s.team) {
@@ -2554,6 +3087,8 @@ html.reduce-motion .stamp { transform: none; }
       const routeName = tm.route_id === j.route.id ? j.route.name : ((data.status.project && data.status.project.route.id === tm.route_id && data.status.project.route.name) ||
         (data.status.global && data.status.global.route.id === tm.route_id && data.status.global.route.name) || tm.route_id);
       root.append(el("p", { class: "hint", style: "margin-top:0", text: tm.route_id === j.route.id ? t("teamRoute", { name: routeName }) : t("teamOtherRoute", { name: routeName }) }));
+      if (tm.week) root.append(teamWeekCard(tm.week));
+      root.append(teamGoalCard(tm));
       const members = tm.members || [];
       const me = members.findIndex(m => m.me);
       if (me > 0) root.append(el("div", { class: "card" }, [el("p", { text: t("ahead", { name: members[0].name, d: fmt(members[0].distance_m - members[me].distance_m) }) })]));
@@ -2682,13 +3217,12 @@ html.reduce-motion .stamp { transform: none; }
         ? el("div", { class: "stats" }, [stat(fmt(total), t("yearDistance")), stat(String(commits), t("yearCommits")),
             stat(String(active.length), t("yearActive")), stat(plural("days", longest), t("yearStreak")), stat(bestText, t("yearBest"))])
         : el("p", { class: "hint", text: t("yearEmpty", { y }) });
-      const share = active.length ? el("button", { class: "chip-btn share", text: "✉ " + t("yearPostcard"), title: t("shareTitle"),
-        onclick: () => {
-          const url = yearPostcard(y, days, { total, commits, activeDays: active.length, longest, best, bestText });
-          if (vscode || window.commitHikeHost) send({ command: "savePostcard", name: `commit-hike-year-${y}.png`, data: url });
-          else el("a", { href: url, download: `commit-hike-year-${y}.png` }).click();
-        } }) : null;
-      box.replaceChildren(...[head, summary, calendar(days, active), share ? el("div", { class: "year-actions" }, [share]) : null].filter(Boolean));
+      const share = active.length ? shareButton({ label: t("yearPostcard"),
+        picture: async () => yearPostcard(y, days, { total, commits, activeDays: active.length, longest, best, bestText }),
+        text: () => t("shareYearText", { year: y, d: fmt(total), commits, days: active.length }),
+        name: `commit-hike-year-${y}.png` }) : null;
+      box.replaceChildren(...[head, summary, calendar(days, active), share ? el("div", { class: "year-actions" }, [share.node]) : null,
+        share ? share.note : null].filter(Boolean));
     };
 
     // The year on one picture, 1200×630 like the trail postcard: totals on top,

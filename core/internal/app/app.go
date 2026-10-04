@@ -325,6 +325,9 @@ func (s *Service) Locale(set *string, requested string) (*protocol.LocaleInfo, e
 		}
 	}
 	avail := map[string]bool{i18n.DefaultLocale: true}
+	for _, l := range i18n.UILocales {
+		avail[l] = true
+	}
 	for _, r := range s.routes {
 		for _, l := range r.Locales() {
 			avail[l] = true

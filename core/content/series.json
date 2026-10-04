@@ -2,13 +2,32 @@
   "series": [
     {
       "id": "carpathians",
-      "routes": ["chornohora-ridge", "svydovets-ridge", "gorgany-popadia-ring"],
-      "name": { "en": "The Carpathians", "uk": "Карпати" }
+      "routes": [
+        "chornohora-ridge",
+        "svydovets-ridge",
+        "gorgany-popadia-ring"
+      ],
+      "name": {
+        "en": "The Carpathians",
+        "uk": "Карпати",
+        "pl": "Karpaty",
+        "de": "Die Karpaten",
+        "es": "Los Cárpatos"
+      }
     },
     {
       "id": "long-ways",
-      "routes": ["tour-du-mont-blanc", "camino-frances"],
-      "name": { "en": "The long ways", "uk": "Довгі шляхи" }
+      "routes": [
+        "tour-du-mont-blanc",
+        "camino-frances"
+      ],
+      "name": {
+        "en": "The long ways",
+        "uk": "Довгі шляхи",
+        "pl": "Długie drogi",
+        "de": "Die langen Wege",
+        "es": "Los caminos largos"
+      }
     }
   ]
 }

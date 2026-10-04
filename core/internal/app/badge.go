@@ -1,9 +1,6 @@
 package app
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/Shchusia/commit-hike/core/internal/protocol"
 	"github.com/Shchusia/commit-hike/core/internal/render"
 )
@@ -22,7 +19,7 @@ func (s *Service) Badge(repo, lang string) (*protocol.BadgeResult, error) {
 	if j == nil {
 		return nil, fail(protocol.CodeInvalidArgument, "there is no journey to show yet")
 	}
-	value := badgeDistance(j.DistanceM, st.Locale) + " · " + j.Route.Name
+	value := FormatDistance(j.DistanceM, st.Locale) + " · " + j.Route.Name
 	if j.Finished {
 		value = "✓ " + j.Route.Name
 	}
@@ -32,18 +29,4 @@ func (s *Service) Badge(repo, lang string) (*protocol.BadgeResult, error) {
 		FileName: file,
 		Markdown: "[![Commit Hike](" + file + ")](https://github.com/Shchusia/Commit-Hike)",
 	}, nil
-}
-
-// badgeDistance: whole kilometres from 100 km on, one decimal below; the
-// unit and the decimal separator follow the language.
-func badgeDistance(m float64, lang string) string {
-	km := m / 1000
-	s := fmt.Sprintf("%.1f", km)
-	if km >= 100 {
-		s = fmt.Sprintf("%.0f", km)
-	}
-	if strings.HasPrefix(lang, "uk") {
-		return strings.Replace(s, ".", ",", 1) + " км"
-	}
-	return s + " km"
 }

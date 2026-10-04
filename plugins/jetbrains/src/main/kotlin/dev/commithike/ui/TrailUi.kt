@@ -232,6 +232,10 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
             is PanelCommand.SavePostcard -> trek.savePostcard(c.fileName, c.png)
             is PanelCommand.PanelError -> service<CommitHikeApp>().noteError(c.message)
             is PanelCommand.WalkRoute -> trek.walkRoute(c.id)
+            is PanelCommand.SetTeamGoal -> trek.setTeamGoal(c.route)
+            is PanelCommand.OpenUrl -> trek.openShareUrl(c.url)
+            is PanelCommand.CopyText -> trek.copyText(c.text)
+            is PanelCommand.CopyImage -> trek.copyPostcard(c.png)
         }
     }
 

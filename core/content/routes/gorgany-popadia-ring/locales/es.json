@@ -1,0 +1,69 @@
+{
+  "name": "Gorgany: el anillo de Popadia",
+  "description": "Un circuito por los campos de piedra de los Gorgany: Osmoloda, Grofa, Parenky, Popadia, Koretvyna y vuelta. El trazado une las paradas; las que no tienen coordenadas comprobadas se reparten a lo largo de él.",
+  "waypoints": {
+    "osmoloda": {
+      "name": "Osmoloda",
+      "text": "Un pueblo del bosque en el corazón de los Gorgany, inicio del anillo."
+    },
+    "kin-hrofetskyi": {
+      "name": "Kin Hrofetskyi",
+      "text": "El «Caballo de Grofa», el primer mirador sobre el bosque."
+    },
+    "grofa": {
+      "name": "Grofa",
+      "text": "En un día claro se ve el Hoverla, a 84 km."
+    },
+    "parenky": {
+      "name": "Parenky",
+      "text": "Una cumbre pedregosa con amplias vistas al Petros y a la Popadia."
+    },
+    "mala-popadia": {
+      "name": "Mala Popadia",
+      "text": "La hermana pequeña de la Popadia."
+    },
+    "popadia": {
+      "name": "Popadia",
+      "text": "Sus campos de piedra, los «gorgany», dieron nombre a las montañas."
+    },
+    "koretvyna": {
+      "name": "Koretvyna",
+      "text": "La última cumbre antes del largo descenso."
+    },
+    "osmoloda-return": {
+      "name": "De vuelta en Osmoloda",
+      "text": "El anillo se cierra donde empezó."
+    }
+  },
+  "story": {
+    "stone-fields": "Por encima del pino enano, el sendero cruza campos de piedra gris que se mueve bajo los pies.",
+    "dwarf-pine": "El pino de montaña crece aquí a la altura de la cintura y esconde el sendero."
+  },
+  "facts": {
+    "gorgan-word": "«Gorgan» es la palabra local para un pedregal de bloques de arenisca; de ellos toma nombre toda la sierra.",
+    "grofa-view": "Desde la Grofa se ven el Hoverla y la cresta de Chornohora, a 84 km.",
+    "highest": "La cumbre más alta de los Gorgany es la Velyka Syvulia, de 1836 m, al este de este anillo."
+  },
+  "achievements": {
+    "gorg-start": {
+      "name": "Hacia los Gorgany",
+      "description": "Camina tus primeros 100 m."
+    },
+    "gorg-grofa": {
+      "name": "El Hoverla a la vista",
+      "description": "Llega a la Grofa."
+    },
+    "gorg-popadia": {
+      "name": "Caminante de piedras",
+      "description": "Cruza los campos de piedra hasta la Popadia."
+    },
+    "gorg-finish": {
+      "name": "Anillo cerrado",
+      "description": "Recorre todo el anillo de Popadia de vuelta a Osmoloda."
+    },
+    "gorg-day": {
+      "name": "Largo día pedregoso",
+      "description": "Camina 8 km en un solo día."
+    }
+  }
+}

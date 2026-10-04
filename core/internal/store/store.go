@@ -71,6 +71,10 @@ type Config struct {
 	// Projects where the user wants to see teammates on the trail. Teammates
 	// are computed from git history on demand and never stored.
 	TeamProjects map[string]bool `json:"team_projects,omitempty"`
+	// TeamGoals: a route a project's team walks together, per project id.
+	// Only the route and the start are stored; the team's distance is counted
+	// from git history every time, like the rest of the team view.
+	TeamGoals map[string]*TeamGoal `json:"team_goals,omitempty"`
 	// Difficulty over time: each change applies to commits from At on, so
 	// switching never rewrites distance already walked. Empty = medium.
 	Difficulty []DifficultyChange `json:"difficulty,omitempty"`
@@ -83,6 +87,12 @@ type Config struct {
 	RestDays []int `json:"rest_days,omitempty"`
 	// Prefs are panel and notification choices, shared by every IDE on this computer.
 	Prefs Prefs `json:"prefs,omitempty"`
+}
+
+// TeamGoal is a route the whole team walks together from Since on.
+type TeamGoal struct {
+	RouteID string `json:"route"`
+	Since   int64  `json:"since"` // unix seconds
 }
 
 // Prefs are the panel and notification choices; "" means the default (auto, auto, all).

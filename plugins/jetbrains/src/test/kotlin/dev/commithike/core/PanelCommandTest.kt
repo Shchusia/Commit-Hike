@@ -62,4 +62,32 @@ class PanelCommandTest {
             assertNull(bad, parse(bad))
         }
     }
+
+    @Test
+    fun sharing() {
+        val x = "https://twitter.com/intent/tweet?text=hi&url=https%3A%2F%2Fgithub.com"
+        assertEquals(PanelCommand.OpenUrl(x), parse("""{"command":"openUrl","url":"$x"}"""))
+        val masto = "https://social.example.org/share?text=hi"
+        assertEquals(PanelCommand.OpenUrl(masto), parse("""{"command":"openUrl","url":"$masto"}"""))
+        for (bad in listOf(
+            "http://twitter.com/intent/tweet?text=hi", "https://twitter.com/settings", "https://evil.example/intent/tweet",
+            "https://mastodon.social/share?text=hi&next=x", "https://localhost/share?text=hi", "https://u:p@bsky.app/intent/compose?text=x",
+            "https://bsky.app:8443/intent/compose?text=x", "file:///etc/passwd", "javascript:alert(1)",
+        )) {
+            assertNull(bad, parse("""{"command":"openUrl","url":"$bad"}"""))
+        }
+        assertNull(parse("""{"command":"openUrl","url":42}"""))
+        assertEquals(PanelCommand.CopyText("🥾 hi"), parse("""{"command":"copyText","text":"🥾 hi"}"""))
+        assertNull(parse("""{"command":"copyText","text":""}"""))
+        assertEquals(PanelCommand.CopyImage(pngBytes), parse("""{"command":"copyImage","data":"$png"}"""))
+        assertNull(parse("""{"command":"copyImage","data":"data:image/svg+xml;base64,PHN2Zz4="}"""))
+    }
+
+    @Test
+    fun teamGoal() {
+        assertEquals(PanelCommand.SetTeamGoal("camino-frances"), parse("""{"command":"setTeamGoal","route":"camino-frances"}"""))
+        assertEquals(PanelCommand.SetTeamGoal(""), parse("""{"command":"setTeamGoal","route":""}"""))
+        assertNull(parse("""{"command":"setTeamGoal","route":"../etc"}"""))
+        assertNull(parse("""{"command":"setTeamGoal"}"""))
+    }
 }

@@ -1,0 +1,73 @@
+{
+  "name": "Pasmo Świdowca",
+  "description": "Zielone pasmo połonin i polodowcowych jezior w ukraińskich Karpatach, od Kwasów przez Bliźnicę do Czarnej Cisy. Trasa łączy przystanki; te bez sprawdzonych współrzędnych rozmieszczono wzdłuż niej.",
+  "waypoints": {
+    "kvasy": {
+      "name": "Kwasy",
+      "text": "Wieś nad Czarną Cisą, gdzie zaczyna się podejście."
+    },
+    "brailka": {
+      "name": "Połonina Brajłka",
+      "text": "Pasterze spędzają tu lato, a ser robi się po staremu."
+    },
+    "blyznytsia": {
+      "name": "Bliźnica",
+      "text": "Najwyższy punkt Świdowca, dwa zielone bliźniacze wierzchołki."
+    },
+    "drahobrat": {
+      "name": "Drahobrat",
+      "text": "Najwyżej położony ośrodek narciarski Ukrainy, latem cichy."
+    },
+    "stih": {
+      "name": "Stih",
+      "text": "Zaokrąglony szczyt na głównej grani."
+    },
+    "vorozheska": {
+      "name": "Jezioro Worożeska",
+      "text": "Dwa polodowcowe jeziora połączone strumieniem, pod stromym karem."
+    },
+    "kotel": {
+      "name": "Wielki Kocioł",
+      "text": "„Wielki Kocioł”, nazwany od karu na jego zboczu."
+    },
+    "apshynets": {
+      "name": "Jezioro Apszyniec",
+      "text": "Jedno z najwyżej położonych jezior Karpat; woda nie przekracza 12 °C."
+    },
+    "chorna-tysa": {
+      "name": "Czarna Cisa",
+      "text": "Wieś w dolinie na końcu grani."
+    }
+  },
+  "story": {
+    "treeline": "Buki ustępują świerkom, a te otwartej połoninie.",
+    "lakes": "Pod granią, w dawnych karach polodowcowych, jedno za drugim leżą jeziora."
+  },
+  "facts": {
+    "centre-europe": "Świdowiec graniczy z miejscem koło wsi Diłowe, uznawanym za geograficzny środek Europy.",
+    "nine-lakes": "Na Świdowcu jest dziewięć jezior polodowcowych; najbardziej znane to Apszyniec, Worożeska i Dohiaska.",
+    "vorozheska-depth": "Górne jezioro Worożeska ma 4,5 m głębokości, dolne 1,9 m."
+  },
+  "achievements": {
+    "svyd-start": {
+      "name": "Na ścieżce grani",
+      "description": "Przejdź pierwsze 100 m po Świdowcu."
+    },
+    "svyd-top": {
+      "name": "Bliźniacze szczyty",
+      "description": "Dojdź na Bliźnicę, szczyt Świdowca."
+    },
+    "svyd-lakes": {
+      "name": "Strażnik jezior",
+      "description": "Przejdź wzdłuż jezior aż do Apszyńca."
+    },
+    "svyd-finish": {
+      "name": "Świdowiec przebyty",
+      "description": "Przejdź całą grań do Czarnej Cisy."
+    },
+    "svyd-streak": {
+      "name": "Pięć dni na grani",
+      "description": "Commituj pięć dni z rzędu."
+    }
+  }
+}

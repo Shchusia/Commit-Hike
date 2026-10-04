@@ -318,6 +318,72 @@ type Team struct {
 	LengthM float64  `json:"length_m"`
 	Members []Member `json:"members"`          // furthest first
 	Hidden  int      `json:"hidden,omitempty"` // people beyond the list limit
+	// Week is this calendar week (Monday to Sunday, the user's time zone).
+	Week TeamWeek `json:"week"`
+	// Goal is the route the team walks together, when one is set.
+	Goal *TeamGoal `json:"goal,omitempty"`
+	// Routes to choose a goal from, translated.
+	Routes []RouteChoice `json:"routes"`
+}
+
+// TeamWeek sums up the team's week. Everyone, the user included, is counted
+// from git history with the same rules, so the numbers match on every
+// teammate's computer.
+type TeamWeek struct {
+	From        string       `json:"from"` // YYYY-MM-DD, a Monday
+	To          string       `json:"to"`   // the Sunday
+	TotalM      float64      `json:"total_m"`
+	Commits     int          `json:"commits"`
+	ActiveDays  int          `json:"active_days"` // days anyone committed
+	PrevTotalM  float64      `json:"prev_total_m"`
+	BestDay     string       `json:"best_day,omitempty"` // the team's best day this week
+	BestDayM    float64      `json:"best_day_m,omitempty"`
+	Members     []WeekMember `json:"members"` // most distance first; only people who committed this week
+	Hidden      int          `json:"hidden,omitempty"`
+	DaysElapsed int          `json:"days_elapsed"` // 1 on Monday … 7 on Sunday
+}
+
+// WeekMember is one person's week.
+type WeekMember struct {
+	ID         string  `json:"id"`
+	Name       string  `json:"name"`
+	Me         bool    `json:"me,omitempty"`
+	DistanceM  float64 `json:"distance_m"`
+	Commits    int     `json:"commits"`
+	ActiveDays int     `json:"active_days"`
+}
+
+// TeamGoal is a route the team walks together: everyone's distance since
+// the goal was set adds up.
+type TeamGoal struct {
+	RouteID      string       `json:"route_id"`
+	RouteName    string       `json:"route_name"`
+	LengthM      float64      `json:"length_m"`
+	Since        int64        `json:"since"`
+	DistanceM    float64      `json:"distance_m"`
+	Percent      float64      `json:"percent"`
+	Finished     bool         `json:"finished,omitempty"`
+	LastWaypoint *Waypoint    `json:"last_waypoint,omitempty"`
+	NextWaypoint *Waypoint    `json:"next_waypoint,omitempty"`
+	ToNextM      float64      `json:"to_next_m,omitempty"`
+	PaceM        float64      `json:"pace_m"`              // the team's meters per day over the last 14 days
+	DaysLeft     int          `json:"days_left,omitempty"` // at that pace; 0 when finished or no pace yet
+	Members      []GoalMember `json:"members"`             // who walked how much of it, most first
+}
+
+// GoalMember is one person's part of a team goal.
+type GoalMember struct {
+	ID        string  `json:"id"`
+	Name      string  `json:"name"`
+	Me        bool    `json:"me,omitempty"`
+	DistanceM float64 `json:"distance_m"`
+}
+
+// RouteChoice is a route to choose as a team goal.
+type RouteChoice struct {
+	ID      string  `json:"id"`
+	Name    string  `json:"name"`
+	LengthM float64 `json:"length_m"`
 }
 
 // LocaleInfo is the language setting.

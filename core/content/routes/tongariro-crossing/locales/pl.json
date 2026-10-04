@@ -1,0 +1,88 @@
+{
+  "name": "Przejście Tongariro",
+  "description": "Słynna jednodniowa wulkaniczna trasa Nowej Zelandii: przez kratery, obok Szmaragdowych Jezior i w dół przez trawy i las. Odległości są przybliżone.",
+  "waypoints": {
+    "mangatepopo": {
+      "name": "Koniec drogi Mangatepopo",
+      "text": "Stara dolina lawowa, kładki nad trawami i stożek Ngauruhoe przed tobą."
+    },
+    "soda-springs": {
+      "name": "Soda Springs",
+      "text": "Ostatnia łatwo dostępna woda. Wyżej Diabelskie Schody wspinają się na przełęcz."
+    },
+    "south-crater": {
+      "name": "Krater Południowy",
+      "text": "Płaskie, ciche dno krateru. Po lewej góruje Ngauruhoe."
+    },
+    "red-crater": {
+      "name": "Czerwony Krater",
+      "text": "Najwyższy punkt przejścia. Para, siarka i rdzawoczerwone ściany."
+    },
+    "emerald-lakes": {
+      "name": "Szmaragdowe Jeziora",
+      "text": "Trzy jaskrawozielone stawy u stóp piargu."
+    },
+    "blue-lake": {
+      "name": "Błękitne Jezioro",
+      "text": "Zimne jezioro kraterowe, święte dla miejscowych Maorysów."
+    },
+    "ketetahi-shelter": {
+      "name": "Schron Ketetahi",
+      "text": "Dzienny schron z widokiem na jeziora Rotoaira i Taupō."
+    },
+    "ketetahi-end": {
+      "name": "Koniec drogi Ketetahi",
+      "text": "W dół przez las do drogi. Przeszedłeś wulkan!"
+    }
+  },
+  "story": {
+    "staircase": "Diabelskie Schody: stopień za stopniem starej lawy. Zatrzymujesz się, by złapać oddech, a dolina jest już mała.",
+    "wind": "Na grani wiatr pcha mocno. Pochylasz się pod niego i nie spuszczasz oczu z tyczek znakujących.",
+    "scree": "Zjeżdżasz po luźnym piargu dużymi, ostrożnymi krokami, a w dole błyskają zielone jeziora.",
+    "forest": "Trawy ustępują drzewom. Po godzinach skał las pachnie niewiarygodnie zielono."
+  },
+  "facts": {
+    "gift": "W 1887 roku Te Heuheu Tūkino IV, najwyższy wódz Ngāti Tūwharetoa, podarował te święte szczyty narodowi. Dar stał się zalążkiem pierwszego parku narodowego Nowej Zelandii.",
+    "heritage": "Tongariro to podwójne miejsce Światowego Dziedzictwa: wpisane za przyrodę w 1990 roku, a w 1993 jako pierwsze uznane za krajobraz kulturowy.",
+    "summits": "Szczyty są tapu (święte) dla Ngāti Tūwharetoa. Proszą oni wędrowców, by podziwiali je ze szlaku, a nie wchodzili na wierzchołki.",
+    "film": "Ngauruhoe, niemal idealny stożek przy szlaku, zagrał fikcyjny wulkan w słynnej trylogii fantasy. Ostatni raz wybuchł w 1975 roku.",
+    "emerald": "Szmaragdowe Jeziora zawdzięczają kolor minerałom wypłukiwanym z otaczających skał wulkanicznych.",
+    "blue-lake": "Błękitne Jezioro jest tapu: odwiedzających prosi się, by nie pływali w nim ani nie jedli i nie pili nad jego brzegiem.",
+    "te-maari": "W 2012 roku kratery Te Māri tuż na północ od szlaku wybuchły i wyrzuciły skały aż do starego schroniska Ketetahi, które nie przyjmuje już gości na noc."
+  },
+  "objects": {
+    "hazard": "Strefa aktywnego zagrożenia wulkanicznego",
+    "fumarole": "Fumarole Czerwonego Krateru",
+    "shelter": "Schron Ketetahi"
+  },
+  "achievements": {
+    "first-steps": {
+      "name": "Buty na nogach",
+      "description": "Przejdź pierwsze 100 m."
+    },
+    "staircase": {
+      "name": "Diabelskie Schody",
+      "description": "Wejdź do Krateru Południowego."
+    },
+    "crater-rim": {
+      "name": "Krawędź krateru",
+      "description": "Stań wyżej niż 1850 m."
+    },
+    "emeralds": {
+      "name": "Szmaragdy",
+      "description": "Dojdź do Szmaragdowych Jezior."
+    },
+    "up-and-over": {
+      "name": "W górę i na drugą stronę",
+      "description": "Pokonaj łącznie 700 m podejścia."
+    },
+    "steam": {
+      "name": "Pełną parą",
+      "description": "Przejdź 15 km w jeden dzień."
+    },
+    "crossed": {
+      "name": "Przejście zaliczone",
+      "description": "Ukończ Przejście Tongariro."
+    }
+  }
+}

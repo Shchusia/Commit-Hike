@@ -29,8 +29,12 @@ export type PanelMessage =
   | { command: "chooseRoute"; scope: "global" | "project" }
   | { command: "setLocale"; locale: string }
   | { command: "setTeam"; on: boolean }
+  | { command: "setTeamGoal"; route: string } // "" removes the goal
   | { command: "setDifficulty"; level: "easy" | "medium" | "hard" }
   | { command: "savePostcard"; name: string; data: string }
+  | { command: "openUrl"; url: string } // checked by isShareUrl before anything opens
+  | { command: "copyText"; text: string }
+  | { command: "copyImage"; data: string }
   | { command: "setRestDays"; days: number[] }
   | { command: "setSettings"; reduce_motion?: string; high_contrast?: string; notifications?: string }
   | { command: "exportProgress" | "importProgress" | "copyDiagnostics" | "saveBadge" }

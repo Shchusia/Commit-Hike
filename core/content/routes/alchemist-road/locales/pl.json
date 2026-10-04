@@ -1,0 +1,118 @@
+{
+  "name": "Droga Alchemika",
+  "description": "Podróż Santiaga z „Alchemika” Paula Coelho przez prawdziwe miejsca w prawdziwej skali, około 4370 km: Andaluzja, Tanger, przez Saharę do Al-Fajum i piramid. Mapa to prawdziwa rzeźba terenu (Natural Earth).",
+  "waypoints": {
+    "andalusia": {
+      "name": "Pastwiska Andaluzji",
+      "text": "Młody pasterz śpi wśród owiec i dwa razy śni o skarbie przy piramidach."
+    },
+    "old-church": {
+      "name": "Zrujnowany kościół",
+      "text": "Kościół bez dachu, z sykomorą rosnącą tam, gdzie kiedyś była zakrystia."
+    },
+    "tarifa": {
+      "name": "Tarifa",
+      "text": "Na rynku starzec, który twierdzi, że jest królem, prosi o dziesiątą część twojego stada."
+    },
+    "strait": {
+      "name": "Cieśnina Gibraltarska",
+      "text": "Sprzedajesz owce i przeprawiasz się przez morze do Afryki."
+    },
+    "tangier": {
+      "name": "Tanger",
+      "text": "Okradziony pierwszego dnia, w mieście, którego języka nie znasz."
+    },
+    "crystal-shop": {
+      "name": "Kupiec kryształów",
+      "text": "Rok polerowania szkła, sprzedawania herbaty i oszczędzania. Sklepowi nigdy nie szło lepiej."
+    },
+    "sahara-edge": {
+      "name": "Skraj Sahary",
+      "text": "Karawana wielbłądów zostawia za sobą ostatnią studnię. Pewien Anglik czyta książki o alchemii."
+    },
+    "deep-sahara": {
+      "name": "Serce Sahary",
+      "text": "Tygodnie piasku i ciszy. Uczysz się słuchać pustyni."
+    },
+    "al-fayoum": {
+      "name": "Oaza Al-Fajum",
+      "text": "Palmy, studnie i kobieta o imieniu Fatima. Dwa jastrzębie walczą na niebie, a ty odczytujesz znak."
+    },
+    "alchemist-tent": {
+      "name": "Namiot Alchemika",
+      "text": "Mężczyzna w czerni na białym koniu zgadza się przeprowadzić cię przez pustynię."
+    },
+    "wind-rock": {
+      "name": "Skała Wiatru",
+      "text": "Zatrzymany w pustynnym obozie, masz trzy dni, by zamienić się w wiatr."
+    },
+    "giza": {
+      "name": "Piramidy w Gizie",
+      "text": "Kopiesz przy piramidach, a słowa nieznajomego mówią ci, że skarb leży w domu, pod sykomorą."
+    }
+  },
+  "story": {
+    "reading": "Lubisz owce, ale lubisz też książki i nowe horyzonty.",
+    "omens": "Dwa kamienie, czarny i biały, pomagają ci, gdy nie możesz się zdecydować.",
+    "war": "Na pustyni plemiona toczą wojnę, a karawana idzie tylko nocą.",
+    "lead": "Alchemik pokazuje ci sztuczkę z ołowiem. Nie o złoto tu chodzi."
+  },
+  "facts": {
+    "first-print": "„Alchemik” ukazał się po raz pierwszy w Brazylii w 1988 roku. Pierwszy wydawca wydrukował około 900 egzemplarzy i zrezygnował z dodruku.",
+    "camino": "Dwa lata wcześniej, w 1986 roku, Coelho przeszedł Camino de Santiago, drogę pielgrzymów przez północną Hiszpanię.",
+    "tarifa-point": "Przylądek w Tarifie to najdalej na południe wysunięty punkt kontynentalnej Europy.",
+    "strait-width": "W najwęższym miejscu Cieśnina Gibraltarska ma tylko około 14 km szerokości; w pogodne dni z Hiszpanii widać Afrykę.",
+    "ibn-battuta": "Ibn Battuta, jeden z największych podróżników średniowiecza, urodził się w Tangerze w 1304 roku.",
+    "alchemy-word": "Słowo „alchemia” trafiło do języków europejskich z arabskiego al-kīmiyā, a z alchemii wyrosła chemia.",
+    "sahara-size": "Sahara to największa gorąca pustynia świata, około 9 mln km², mniej więcej wielkości Stanów Zjednoczonych.",
+    "not-all-sand": "Większość Sahary to wcale nie wydmy, lecz skaliste płaskowyże i żwirowe równiny.",
+    "camel-drink": "Spragniony wielbłąd potrafi w kilka minut wypić ponad 100 litrów wody.",
+    "fayoum": "Al-Fajum to prawdziwa oaza w pustynnej depresji na zachód od Nilu, zasilana starożytnym kanałem, z jeziorem Karun.",
+    "emerald-tablet": "Szmaragdowa Tablica, krótki tajemniczy tekst przypisywany Hermesowi Trismegistosowi, była fundamentem europejskiej alchemii.",
+    "great-pyramid": "Wielka Piramida w Gizie była najwyższą budowlą wzniesioną przez ludzi przez około 3800 lat.",
+    "translations": "„Alchemik” ma rekord Guinnessa jako najczęściej tłumaczona książka żyjącego autora."
+  },
+  "objects": {
+    "flock": "Stado Santiaga",
+    "church": "Kościół z sykomorą",
+    "crystal": "Sklep z kryształami",
+    "caravan": "Karawana",
+    "oasis-palms": "Oaza",
+    "hawks": "Dwa jastrzębie",
+    "pyramids": "Piramidy"
+  },
+  "achievements": {
+    "dream": {
+      "name": "Powracający sen",
+      "description": "Przejdź pierwsze 100 m."
+    },
+    "africa": {
+      "name": "Inny kontynent",
+      "description": "Dojdź do Tangeru."
+    },
+    "crystal": {
+      "name": "Polerowane szkło",
+      "description": "Popracuj u kupca kryształów."
+    },
+    "desert-day": {
+      "name": "Tempo karawany",
+      "description": "Przejdź 20 km w jeden dzień."
+    },
+    "oasis": {
+      "name": "Woda na pustyni",
+      "description": "Dojdź do Al-Fajum."
+    },
+    "wind": {
+      "name": "Stań się wiatrem",
+      "description": "Dojdź do Skały Wiatru."
+    },
+    "steady": {
+      "name": "Idź za znakami",
+      "description": "Commituj 30 dni z rzędu."
+    },
+    "treasure": {
+      "name": "Tam, gdzie jest skarb",
+      "description": "Dojdź do piramid i dowiedz się, gdzie jest skarb."
+    }
+  }
+}

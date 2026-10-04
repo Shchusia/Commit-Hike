@@ -68,10 +68,10 @@ func (r *repo) commit(email, file string, lines int) {
 	p := filepath.Join(r.dir, file)
 	var b strings.Builder
 	if old, err := os.ReadFile(p); err == nil {
-		b.Write(old)
+		_, _ = b.Write(old) // a strings.Builder never fails
 	}
 	for i := 0; i < lines; i++ {
-		fmt.Fprintf(&b, "line %d %d\n", r.ts, i)
+		_, _ = fmt.Fprintf(&b, "line %d %d\n", r.ts, i)
 	}
 	mustWrite(r.t, p, b.String())
 	r.git(email, "add", "-A")
@@ -196,9 +196,14 @@ func TestEventsAreTranslated(t *testing.T) {
 		t.Fatalf("journey: %+v", g)
 	}
 	// An unknown language falls back to English.
-	st, _ := s.Status(r.dir, "de")
+	st, _ := s.Status(r.dir, "fr")
 	if st.Global.Route.Name != "Demo Trail" || st.Locale != "en" {
 		t.Fatalf("fallback: %q %q", st.Global.Route.Name, st.Locale)
+	}
+	// Route texts come in every interface language.
+	st, _ = s.Status(r.dir, "de")
+	if st.Global.Route.Name != "Probeweg" || st.Locale != "de" {
+		t.Fatalf("German: %q %q", st.Global.Route.Name, st.Locale)
 	}
 	// Achievements unlock once.
 	r.commit("", "big.go", 1)

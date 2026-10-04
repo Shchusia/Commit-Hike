@@ -8,6 +8,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"os"
 	"strings"
 
 	"github.com/Shchusia/commit-hike/core/internal/app"
@@ -29,6 +30,8 @@ const usage = `commit-hike: turns commits into a journey. Every command prints o
   commit-hike journey  --scope global|project [--repo PATH] --route ID|none [--from-history]
   commit-hike project  enable|disable --repo PATH
   commit-hike project  team-on|team-off --repo PATH
+  commit-hike project  goal --repo PATH --route ID   # a route the team walks together, from now
+  commit-hike project  goal-off --repo PATH
   commit-hike team     --repo PATH
   commit-hike locale   [--set auto|en|uk] [--lang uk]
   commit-hike difficulty [--set easy|medium|hard]
@@ -41,10 +44,14 @@ const usage = `commit-hike: turns commits into a journey. Every command prints o
   commit-hike render   [--scope global|project] [--repo PATH] [--format svg|scene] [--width 300] [--lang uk]
   commit-hike config
   commit-hike version
+  commit-hike prompt   [--repo PATH] [--lang uk] [--scan] [--icon 🥾]   # one line of plain text, for shell prompts and status lines
 `
 
 // Run executes one command and returns the process exit code.
 func Run(args []string, stdout, stderr io.Writer, version, dataDir string) int {
+	if len(args) > 0 && args[0] == "prompt" {
+		return prompt(args[1:], stdout, stderr, dataDir)
+	}
 	data, err := run(args, stderr, version, dataDir)
 	env := protocol.Envelope{API: protocol.Version, OK: err == nil}
 	if err != nil {
@@ -112,6 +119,8 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 		replace = fs.Bool("replace", false, "import: replace the progress already on this computer")
 	case "scan":
 		prevHead = fs.String("prev-head", "", "HEAD before this change; a rewrite triggers a full recount")
+	case "project":
+		route = fs.String("route", "", "project goal: the route the team walks together")
 	case "locale":
 		setLocale = fs.String("set", "", "auto | en | uk | …")
 	case "journey":
@@ -171,7 +180,7 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 	case "scan":
 		return svc.ScanWith(*repo, *lang, app.ScanOptions{PrevHead: *prevHead})
 	case "team":
-		return svc.Team(*repo)
+		return svc.Team(*repo, *lang)
 	case "locale":
 		var set *string
 		fs.Visit(func(f *flag.Flag) {
@@ -192,6 +201,13 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 			return map[string]bool{"enabled": sub == "enable"}, svc.SetProjectEnabled(*repo, sub == "enable")
 		case "team-on", "team-off":
 			return map[string]bool{"team": sub == "team-on"}, svc.SetTeam(*repo, sub == "team-on")
+		case "goal":
+			if *route == "" {
+				return nil, invalid("usage: commit-hike project goal --repo PATH --route ID")
+			}
+			return map[string]string{"goal": *route}, svc.SetTeamGoal(*repo, *route)
+		case "goal-off":
+			return map[string]string{"goal": ""}, svc.SetTeamGoal(*repo, "")
 		}
 		return nil, invalid("usage: commit-hike project enable|disable|team-on|team-off --repo PATH")
 	case "route":
@@ -241,4 +257,44 @@ func toError(err error) *protocol.Error {
 	default:
 		return &protocol.Error{Code: protocol.CodeInternal, Message: err.Error()}
 	}
+}
+
+// prompt is the one command without a JSON envelope: shell prompts and
+// editor status lines print its output as it is. It never fails loudly: on
+// any problem it prints nothing (the reason goes to stderr) and exits 0, so a
+// prompt never breaks.
+func prompt(args []string, stdout, stderr io.Writer, dataDir string) int {
+	fs := flag.NewFlagSet("prompt", flag.ContinueOnError)
+	fs.SetOutput(stderr)
+	repo := fs.String("repo", "", "path inside a git repository (default: the current folder)")
+	lang := fs.String("lang", "", "language, e.g. uk (default: from LC_ALL, LC_MESSAGES or LANG)")
+	scan := fs.Bool("scan", false, "count new commits first when HEAD moved since the last prompt")
+	icon := fs.String("icon", "🥾", "shown before the distance; empty for none")
+	if err := fs.Parse(args); err != nil {
+		return 0
+	}
+	if *repo == "" {
+		if wd, err := os.Getwd(); err == nil {
+			*repo = wd
+		}
+	}
+	if *lang == "" {
+		*lang = app.LangFromEnv()
+	}
+	svc, err := app.New(dataDir)
+	if err != nil {
+		fmt.Fprintln(stderr, err)
+		return 0
+	}
+	line, err := svc.Prompt(app.PromptOptions{Repo: *repo, Lang: *lang, Icon: *icon, Scan: *scan})
+	if err != nil {
+		if !errors.Is(err, store.ErrNotInitialized) {
+			fmt.Fprintln(stderr, err)
+		}
+		return 0
+	}
+	if line != "" {
+		fmt.Fprintln(stdout, line)
+	}
+	return 0
 }

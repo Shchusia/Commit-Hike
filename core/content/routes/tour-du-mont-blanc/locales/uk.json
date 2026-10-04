@@ -76,27 +76,27 @@
   },
   "achievements": {
     "tmb-start": {
-      "name": "Walk your first kilometre.",
+      "name": "Bonjour, Монблан",
       "description": "Пройди перший кілометр."
     },
     "tmb-italy": {
-      "name": "Reach Courmayeur.",
+      "name": "Ciao, Italia",
       "description": "Досягни Курмаєра."
     },
     "tmb-switzerland": {
-      "name": "Reach Switzerland at La Fouly.",
+      "name": "Grüezi",
       "description": "Дійди до Швейцарії в Ла-Фулі."
     },
     "tmb-high": {
-      "name": "Climb above 2500 m.",
+      "name": "Вище 2500",
       "description": "Піднімися вище 2500 м."
     },
     "tmb-finish": {
-      "name": "Walk the whole loop around Mont Blanc.",
+      "name": "Тур пройдено",
       "description": "Обійди весь Монблан."
     },
     "tmb-streak": {
-      "name": "Commit ten days in a row.",
+      "name": "Десять днів Альп",
       "description": "Коміть десять днів поспіль."
     }
   }

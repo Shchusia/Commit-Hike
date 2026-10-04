@@ -1,0 +1,124 @@
+{
+  "name": "Los siete faros",
+  "description": "Un largo viaje original junto al Mar Callado, 700 km desde el desierto de sal hasta el hielo del norte, para volver a encender siete faros que se apagaron en una sola noche. Con su propio mapa dibujado a mano.",
+  "waypoints": {
+    "salt-gate": {
+      "name": "La Puerta de Sal",
+      "text": "Siete luces se apagaron en una noche. El gremio de fareros te da la última brasa y un mapa."
+    },
+    "light-1": {
+      "name": "Faro de las Dunas",
+      "text": "Arena hasta las ventanas. Despejas la escalera y enciendes la primera lámpara."
+    },
+    "three-wells": {
+      "name": "Oasis de los Tres Pozos",
+      "text": "Palmeras, sombra y agua fría. Una caravana que va al norte te deja caminar a su lado."
+    },
+    "light-2": {
+      "name": "Faro del Cabo de los Vientos",
+      "text": "El viento casi se lleva la brasa. La proteges y la luz se aviva."
+    },
+    "shepherds-pass": {
+      "name": "Paso de los Pastores",
+      "text": "Desde lo alto de la meseta esteparia ves toda la costa y tres luces ardiendo a tu espalda."
+    },
+    "light-3": {
+      "name": "Faro de los Centinelas de Piedra",
+      "text": "Menhires rodean la torre como viejos fareros."
+    },
+    "rye-valley": {
+      "name": "Molinos del Valle del Centeno",
+      "text": "Los molinos giran sobre campos dorados. Los molineros te hornean pan para el camino."
+    },
+    "light-4": {
+      "name": "Faro del Naufragio",
+      "text": "Un barco roto yace en la arena. Esta noche no se le unirá ningún otro."
+    },
+    "misty-fens": {
+      "name": "Las Ciénagas de Niebla",
+      "text": "Juncos más altos que tú. Caminas por la vieja senda de tablas, tabla a tabla."
+    },
+    "light-5": {
+      "name": "Faro de las Garzas",
+      "text": "Las garzas anidan en la galería y no les molestas en absoluto."
+    },
+    "birch-grove": {
+      "name": "El Abedular",
+      "text": "Troncos blancos y la primera noche fría. Duermes junto a un fuego pequeño."
+    },
+    "light-6": {
+      "name": "El Faro Callado",
+      "text": "Aquí hasta el mar calla. La lámpara prende con un sonido suave."
+    },
+    "light-7": {
+      "name": "Faro del Norte",
+      "text": "La última lámpara recibe la brasa. Siete luces arden junto al Mar Callado y sobre ti el cielo empieza a brillar."
+    }
+  },
+  "story": {
+    "heat": "El calor reverbera sobre la sal. La brasa en su farol es lo único más fresco que el aire.",
+    "caravan": "Los camelleros cantan para llevar el paso. A la segunda noche ya te sabes el estribillo.",
+    "half": "Mitad del camino. Detrás, tres luces. Delante, cuatro torres oscuras esperando.",
+    "fog": "La niebla es tan espesa que te orientas por el olor del mar.",
+    "snow": "La nieve cruje bajo tus botas. El Faro del Norte se alza en el último acantilado antes del hielo."
+  },
+  "facts": {
+    "pharos": "El Faro de Alejandría, una de las Siete Maravillas del Mundo Antiguo, dio nombre a los faros en muchos idiomas: phare, faro, far.",
+    "singing-dunes": "Algunas dunas cantan: cuando la arena se desliza por su ladera, puede producir un zumbido grave que se oye a kilómetros.",
+    "fresnel": "En 1822 Augustin-Jean Fresnel diseñó una lente de anillos que permitía a una sola lámpara brillar a decenas de kilómetros.",
+    "steppe": "La estepa euroasiática se extiende unos 8000 km, del Danubio a Manchuria.",
+    "carnac": "En Carnac, en Bretaña, más de 3000 menhires prehistóricos cruzan los campos en largas filas.",
+    "windmills": "Los molinos de viento más antiguos que se conocen giraban en Persia hace más de mil años, con las aspas en un eje vertical.",
+    "characteristic": "Cada faro tiene su característica, un patrón de destellos, para que los marinos distingan una luz de otra de noche.",
+    "peat": "Las turberas cubren solo un 3 % de la tierra, pero almacenan aproximadamente el doble de carbono que todos los bosques del mundo.",
+    "birch": "Los abedules son pioneros: a menudo son los primeros árboles en volver a crecer tras un incendio o en suelo desnudo.",
+    "permafrost": "En la tundra solo se deshiela en verano una fina capa superior; debajo está el permafrost, que puede seguir helado miles de años.",
+    "aurora": "Las auroras brillan cuando partículas del Sol chocan con la alta atmósfera; la luz verde habitual procede del oxígeno a unos 100–300 km de altura."
+  },
+  "objects": {
+    "tower-1": "Faro 1 de 7",
+    "tower-2": "Faro 2 de 7",
+    "tower-3": "Faro 3 de 7",
+    "tower-4": "Faro 4 de 7",
+    "tower-5": "Faro 5 de 7",
+    "tower-6": "Faro 6 de 7",
+    "tower-7": "Faro 7 de 7",
+    "caravan": "La caravana hacia el norte",
+    "wreck": "Un naufragio en la arena",
+    "aurora": "Auroras boreales"
+  },
+  "achievements": {
+    "ember": {
+      "name": "Portador de la brasa",
+      "description": "Camina tus primeros 100 m."
+    },
+    "first-light": {
+      "name": "Primera luz",
+      "description": "Vuelve a encender el Faro de las Dunas."
+    },
+    "highlands": {
+      "name": "Montañés",
+      "description": "Cruza la meseta esteparia por encima de 800 m."
+    },
+    "halfway": {
+      "name": "Arden cuatro luces",
+      "description": "Vuelve a encender el Faro del Naufragio."
+    },
+    "big-day": {
+      "name": "Larga jornada de marcha",
+      "description": "Camina 20 km en un solo día."
+    },
+    "steady": {
+      "name": "La disciplina del farero",
+      "description": "Haz commits 10 días seguidos."
+    },
+    "commits-300": {
+      "name": "Trescientos pasos",
+      "description": "Haz 300 commits en esta ruta."
+    },
+    "seven": {
+      "name": "Siete luces",
+      "description": "Vuelve a encender los siete faros."
+    }
+  }
+}

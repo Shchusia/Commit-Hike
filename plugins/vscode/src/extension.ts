@@ -10,6 +10,7 @@ import { PanelMessage, TrailPanel } from "./panel";
 import * as rating from "./rating";
 import { RepoTracker } from "./repos";
 import { scrubReport } from "./report";
+import { isShareUrl, pngBytes } from "./share";
 
 export async function activate(ctx: vscode.ExtensionContext): Promise<void> {
   let binary: string;
@@ -264,6 +265,14 @@ class App {
   }
 
   /** Teammates are counted from the whole history: cached until the next scan or for five minutes. */
+  /** Sets (or with "" removes) the team goal from the Team tab, then recounts the team. */
+  private async setTeamGoal(route: unknown): Promise<void> {
+    const repo = this.currentRepo;
+    if (!repo || typeof route !== "string" || (route !== "" && !/^[a-z0-9]+(-[a-z0-9]+)*$/.test(route))) return;
+    await this.cli.setTeamGoal(repo, route);
+    await this.loadTeam(repo, true);
+  }
+
   private async loadTeam(repo: string, force = false): Promise<void> {
     const cur = this.team;
     if (!force && cur && cur.repo === repo && (cur.loading || Date.now() - cur.at < 5 * 60_000)) return;
@@ -639,6 +648,7 @@ class App {
       case "setLocale": return this.guard(() => this.setLocale(m.locale));
       case "setTeam": return this.guard(() => this.setTeam(m.on));
       case "setDifficulty": return this.guard(() => this.setDifficulty(m.level));
+      case "setTeamGoal": return this.guard(() => this.setTeamGoal(m.route));
       case "requestTeam": if (this.currentRepo && this.lastStatus?.team) void this.loadTeam(this.currentRepo); return;
       case "importRoute": return this.guard(() => this.importRoute());
       case "createRouteTemplate": return this.guard(() => this.createRouteTemplate());
@@ -657,23 +667,52 @@ class App {
       case "exportProgress": return this.guard(() => this.exportProgress());
       case "copyDiagnostics": return this.guard(() => this.copyDiagnostics());
       case "saveBadge": return this.guard(() => this.saveBadge());
+      case "openUrl": return this.guard(() => this.openShareUrl(m.url));
+      case "copyText": return this.guard(async () => { await vscode.env.clipboard.writeText(String(m.text).slice(0, 4000)); });
+      case "copyImage": return this.guard(() => this.postcardForPost(m.data));
       case "panelError": this.noteError("panel: " + String(m.message).slice(0, 500)); return;
       case "walkRoute": return this.guard(() => this.walkRoute(String(m.id)));
       case "importProgress": return this.guard(() => this.importProgress());
     }
   }
 
+  /** Opens a network's sharing page; only the ones isShareUrl knows. */
+  private async openShareUrl(url: unknown): Promise<void> {
+    if (!isShareUrl(url)) {
+      this.noteError("share: refused a URL that isn't a sharing page");
+      return;
+    }
+    await vscode.env.openExternal(vscode.Uri.parse(url, true));
+  }
+
+  /**
+   * The postcard for a post, when the panel can't put it into the clipboard.
+   * VS Code's clipboard API takes text only, so the picture goes into a
+   * temporary file, shown in the file manager, ready to attach.
+   */
+  private async postcardForPost(dataUrl: unknown): Promise<void> {
+    const png = pngBytes(dataUrl);
+    if (!png) return;
+    const dir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "commit-hike-"));
+    const file = path.join(dir, "commit-hike-postcard.png");
+    await fs.promises.writeFile(file, png);
+    const show = t("showFile");
+    if (await vscode.window.showInformationMessage(t("postcardForPost", file), show) === show) {
+      await vscode.commands.executeCommand("revealFileInOS", vscode.Uri.file(file));
+    }
+  }
+
   /** Saves the postcard the panel drew (a PNG data URL) where the user chooses. */
   private async savePostcard(name: string, dataUrl: string): Promise<void> {
-    const png = /^data:image\/png;base64,([A-Za-z0-9+/=]+)$/.exec(typeof dataUrl === "string" && dataUrl.length < 20_000_000 ? dataUrl : "");
-    if (!png) return;
+    const bytes = pngBytes(dataUrl);
+    if (!bytes) return;
     const file = path.basename(String(name || "commit-hike.png")).replace(/[^\w.-]/g, "-");
     const target = await vscode.window.showSaveDialog({
       title: t("postcardSaveTitle"), filters: { PNG: ["png"] },
       defaultUri: vscode.Uri.file(path.join(os.homedir(), file.endsWith(".png") ? file : file + ".png")),
     });
     if (!target) return;
-    await fs.promises.writeFile(target.fsPath, Buffer.from(png[1], "base64"));
+    await fs.promises.writeFile(target.fsPath, bytes);
     if (await vscode.window.showInformationMessage(t("postcardSaved", target.fsPath), t("openBtn"))) await vscode.env.openExternal(target);
   }
 

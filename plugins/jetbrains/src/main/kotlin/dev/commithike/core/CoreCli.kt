@@ -49,7 +49,14 @@ class CoreCli(
     )
 
     /** Everyone who commits to the project, on the same route. Computed from git history, never stored. */
-    fun team(repo: String): Team = call(listOf("team", "--repo", repo), Team::class.java)
+    fun team(repo: String): Team = call(listOf("team", "--repo", repo) + langArgs(), Team::class.java)
+
+    /** The route the project's team walks together, from now; "" removes it. */
+    fun setTeamGoal(repo: String, route: String) {
+        val args = mutableListOf("project", if (route.isEmpty()) "goal-off" else "goal", "--repo", repo)
+        if (route.isNotEmpty()) args += listOf("--route", route)
+        call<JsonElement>(args, JsonElement::class.java)
+    }
 
     fun setTeam(repo: String, on: Boolean) {
         call<JsonElement>(listOf("project", if (on) "team-on" else "team-off", "--repo", repo), JsonElement::class.java)
@@ -199,12 +206,13 @@ object CorePlatform {
 
 fun formatDistance(m: Double, lang: String = "en"): String {
     val uk = lang == "uk"
+    val comma = lang in setOf("uk", "pl", "de", "es") // a decimal comma
     if (m < 1000) return "${m.roundToInt()} " + if (uk) "м" else "m"
     val km = m / 1000
     val unit = if (uk) "км" else "km"
     if (km >= 100) return "${km.roundToInt()} $unit"
     val s = "%.1f".format(java.util.Locale.ROOT, km)
-    return (if (uk) s.replace('.', ',') else s) + " " + unit
+    return (if (comma) s.replace('.', ',') else s) + " " + unit
 }
 
 /** `git config --global user.email`, or "" when git or the setting is missing. */

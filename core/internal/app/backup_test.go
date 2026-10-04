@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -191,16 +192,26 @@ func TestBadge(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !strings.Contains(b.SVG, "Commit Hike") || !strings.Contains(b.SVG, " km · ") || b.FileName != "commit-hike-badge.svg" || !strings.Contains(b.Markdown, b.FileName) {
+	if !strings.Contains(b.SVG, "Commit Hike") || !strings.Contains(b.SVG, "117 m · Demo Trail") || b.FileName != "commit-hike-badge.svg" || !strings.Contains(b.Markdown, b.FileName) {
 		t.Fatalf("badge: %+v", b)
 	}
 	for _, c := range []struct {
 		m    float64
 		lang string
 		want string
-	}{{34800, "en", "34.8 km"}, {342400, "en", "342 km"}, {34800, "uk", "34,8 км"}} {
-		if got := badgeDistance(c.m, c.lang); got != c.want {
-			t.Errorf("badgeDistance(%v, %s) = %q, want %q", c.m, c.lang, got, c.want)
+	}{
+		{34800, "en", "34.8 km"},
+		{342400, "en", "342 km"},
+		{34800, "uk", "34,8 км"},
+		{34800, "pl", "34,8 km"},
+		{34800, "de-DE", "34,8 km"},
+		{34800, "es", "34,8 km"},
+		{640, "uk", "640 м"},
+		{2863000, "de", "2863 km"},
+		{-5, "en", "0 m"},
+	} {
+		if got := FormatDistance(c.m, c.lang); got != c.want {
+			t.Errorf("FormatDistance(%v, %s) = %q, want %q", c.m, c.lang, got, c.want)
 		}
 	}
 }
@@ -258,5 +269,25 @@ func TestTheNextRouteOfASeries(t *testing.T) {
 	}
 	if st, _ = s.Status(r.dir, "en"); st.Global.NextRoute != nil {
 		t.Fatalf("a route in no series has no next: %+v", st.Global.NextRoute)
+	}
+}
+
+func TestInterfaceLanguagesAreAvailableBeforeRoutesAreTranslated(t *testing.T) {
+	s, r := setup(t, "demo-trail")
+	info, err := s.Locale(nil, "pl")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, l := range []string{"en", "uk", "pl", "de", "es"} {
+		if !slices.Contains(info.Available, l) {
+			t.Errorf("%s missing from %v", l, info.Available)
+		}
+	}
+	st, _ := s.Status(r.dir, "pl")
+	if st.Locale != "pl" {
+		t.Fatalf("a Polish interface stays Polish: %q", st.Locale)
+	}
+	if st.Global.Route.Name == "" {
+		t.Fatal("route texts fall back to English when there's no Polish yet")
 	}
 }

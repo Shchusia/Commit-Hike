@@ -188,7 +188,7 @@ func TestTeam(t *testing.T) {
 	r.commit("anna@old.io", "b.go", 1)                                 // anna: 30
 	r.commit("anna@team.io", "c.go", 3)                                // anna: +50
 	r.commit("dependabot[bot]@users.noreply.github.com", "go.mod", 10) // bot
-	team, err := s.Team(r.dir)
+	team, err := s.Team(r.dir, "en")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -206,7 +206,7 @@ func TestTeam(t *testing.T) {
 	}
 	scan(t, s, r.dir, "en")
 	st, _ := s.Status(r.dir, "en")
-	team, _ = s.Team(r.dir)
+	team, _ = s.Team(r.dir, "en")
 	var me protocol.Member
 	for _, m := range team.Members {
 		if m.Me {
@@ -384,5 +384,67 @@ func TestUpgradeKeepsWalkedDistance(t *testing.T) {
 	r.commit("", "b.go", 3) // after the upgrade: 50 × 13
 	if got := scan(t, s, r.dir, "").TotalM; got != 50+650 {
 		t.Fatalf("total = %v, want 700", got)
+	}
+}
+
+// The team's week and a goal walked together, on fixed dates: "now" is
+// Wednesday 30 September 2026 at noon, in UTC.
+func TestTeamWeekAndGoal(t *testing.T) {
+	s, r := setup(t, "chornohora-ridge")
+	at := func(day, hour int) int64 { return time.Date(2026, 9, day, hour, 0, 0, 0, time.UTC).Unix() }
+	r.ts = at(1, 10)
+	r.commit("other@x.io", "README", 1)                         // long before: the project needs a first commit
+	s.now = func() time.Time { return time.Unix(at(28, 0), 0) } // Monday, midnight: the goal starts
+	if err := s.SetTeamGoal(r.dir, "demo-trail"); err != nil {
+		t.Fatal(err)
+	}
+	r.ts = at(24, 10) - 60
+	r.commit("anna@team.io", "x.go", 3) // Thursday last week: 50 m, before the goal
+	r.ts = at(28, 10) - 60
+	r.commit("", "a.go", 3) // Monday: me, 50 m
+	r.ts = at(29, 10) - 60
+	r.commit("anna@team.io", "b.go", 1) // Tuesday: anna, 30 m
+	s.now = func() time.Time { return time.Unix(at(30, 12), 0) }
+
+	team, err := s.Team(r.dir, "en")
+	if err != nil {
+		t.Fatal(err)
+	}
+	w := team.Week
+	if w.From != "2026-09-28" || w.To != "2026-10-04" || w.DaysElapsed != 3 {
+		t.Fatalf("week bounds: %+v", w)
+	}
+	if w.TotalM != 80 || w.Commits != 2 || w.ActiveDays != 2 || w.PrevTotalM != 50 || w.BestDay != "2026-09-28" || w.BestDayM != 50 {
+		t.Fatalf("week totals: %+v", w)
+	}
+	if len(w.Members) != 2 || !w.Members[0].Me || w.Members[0].DistanceM != 50 || w.Members[1].Name != "T" || w.Members[1].ActiveDays != 1 {
+		t.Fatalf("week members: %+v", w.Members)
+	}
+
+	g := team.Goal
+	if g == nil || g.RouteID != "demo-trail" || g.RouteName != "Demo Trail" || g.DistanceM != 80 || g.Finished {
+		t.Fatalf("goal: %+v", g)
+	}
+	if len(g.Members) != 2 || g.Members[0].DistanceM != 50 || g.Members[1].DistanceM != 30 {
+		t.Fatalf("goal members (anna's last-week commit must not count): %+v", g.Members)
+	}
+	if g.PaceM != 26.7 || g.DaysLeft != 747 { // 80 m over 3 days since Monday; (20000 − 80) / 26.7 = 746.07, rounded up
+		t.Fatalf("pace %v, days left %d", g.PaceM, g.DaysLeft)
+	}
+	if g.LastWaypoint == nil || g.NextWaypoint == nil || g.ToNextM <= 0 {
+		t.Fatalf("goal stops: %+v %+v", g.LastWaypoint, g.NextWaypoint)
+	}
+	if len(team.Routes) < 10 || team.Routes[0].Name == "" {
+		t.Fatalf("routes to choose a goal from: %+v", team.Routes)
+	}
+
+	if err := s.SetTeamGoal(r.dir, "no-such-route"); code(err) != protocol.CodeUnknownRoute {
+		t.Fatalf("unknown route: %v", err)
+	}
+	if err := s.SetTeamGoal(r.dir, ""); err != nil {
+		t.Fatal(err)
+	}
+	if team, _ = s.Team(r.dir, "en"); team.Goal != nil {
+		t.Fatal("the goal is gone after goal-off")
 	}
 }

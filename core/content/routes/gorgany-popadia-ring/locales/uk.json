@@ -46,23 +46,23 @@
   },
   "achievements": {
     "gorg-start": {
-      "name": "Walk your first 100 m.",
+      "name": "У Горгани",
       "description": "Пройди перші 100 м."
     },
     "gorg-grofa": {
-      "name": "Reach Grofa.",
+      "name": "Говерла на видноколі",
       "description": "Досягни Грофи."
     },
     "gorg-popadia": {
-      "name": "Cross the stone fields to Popadia.",
+      "name": "Ходак по каменю",
       "description": "Пройди кам'яними розсипами до Попаді."
     },
     "gorg-finish": {
-      "name": "Walk the whole Popadia ring back to Osmoloda.",
+      "name": "Кільце замкнено",
       "description": "Пройди все Попадинське кільце назад до Осмолоди."
     },
     "gorg-day": {
-      "name": "Walk 8 km in one day.",
+      "name": "Довгий кам'янистий день",
       "description": "Пройди 8 км за день."
     }
   }

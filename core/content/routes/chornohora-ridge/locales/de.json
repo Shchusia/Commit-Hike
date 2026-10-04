@@ -1,0 +1,87 @@
+{
+  "name": "Tschornohora-Kamm",
+  "description": "Der höchste Gebirgskamm der Ukraine, von Saroslak über die Howerla zum Pip Iwan. Die Entfernungen sind ungefähr.",
+  "waypoints": {
+    "zaroslyak": {
+      "name": "Saroslak",
+      "text": "Der Weg beginnt an der alten Basis im Fichtenwald."
+    },
+    "hoverla": {
+      "name": "Howerla",
+      "text": "2061 m, der höchste Punkt der Ukraine."
+    },
+    "breskul": {
+      "name": "Breskul",
+      "text": "Vor dir öffnet sich der Kamm."
+    },
+    "pozhyzhevska": {
+      "name": "Poshyshewska",
+      "text": "Bergwiesen zu beiden Seiten, Wind im Gesicht."
+    },
+    "nesamovyte": {
+      "name": "See Nessamowyte",
+      "text": "Der Legende nach bringt ein in diesen See geworfener Stein ein Unwetter. Lieber nicht."
+    },
+    "brebeneskul-lake": {
+      "name": "See Brebeneskul",
+      "text": "Der höchstgelegene See der Ukraine."
+    },
+    "pip-ivan": {
+      "name": "Pip Iwan",
+      "text": "Auf dem Gipfel steht das Observatorium „Weißer Elefant“. Du bist den ganzen Kamm gegangen!"
+    }
+  },
+  "story": {
+    "treeline": "Die Fichten lichten sich. Über dir nur noch Gras und Himmel.",
+    "ridge-wind": "Hier oben hört der Wind nie auf. Du ziehst die Jacke zu und gehst weiter.",
+    "white-elephant": "Weit vorn zeigt sich auf dem Gipfel ein graues Gebäude: das alte Observatorium."
+  },
+  "facts": {
+    "six-2000": "Auf der Tschornohora liegen sechs der ukrainischen Gipfel über 2000 m: Howerla, Brebeneskul, Pip Iwan, Petros, Hutyn Tomnatyk und Rebra.",
+    "prut": "Der Pruth, einer der großen Flüsse der Ukraine und Moldaus, beginnt als Bach an den Hängen der Howerla.",
+    "border-posts": "Zwischen den Weltkriegen verlief auf diesem Kamm die Grenze zwischen Polen und der Tschechoslowakei. Die nummerierten Grenzsteine stehen noch am Weg.",
+    "polonyna": "Eine Polonyna ist eine Hochalm. Jeden Sommer trieben huzulische Hirten ihre Herden hinauf und lebten bis zum Herbst in Holzhütten.",
+    "reserve": "Ein großer Teil der Tschornohora ist durch das Karpaten-Biosphärenreservat und den Karpaten-Nationalpark geschützt.",
+    "cirques": "Die Seen Nessamowyte und Brebeneskul liegen in Karen: Mulden, die Gletscher der letzten Eiszeit ausgeschürft haben.",
+    "observatory": "Das Observatorium auf dem Pip Iwan baute Polen 1936–1938 für Astronomie und Wetterforschung. Die Einheimischen nannten es den Weißen Elefanten."
+  },
+  "objects": {
+    "hoverla-top": "Gipfel der Howerla",
+    "koliba": "Eine Hirtenhütte",
+    "white-elephant": "Der Weiße Elefant"
+  },
+  "achievements": {
+    "first-steps": {
+      "name": "Erste Schritte",
+      "description": "Geh deine ersten 100 m."
+    },
+    "roof-of-ukraine": {
+      "name": "Dach der Ukraine",
+      "description": "Erreiche die Howerla."
+    },
+    "above-2000": {
+      "name": "Über 2000",
+      "description": "Steh höher als 2000 m."
+    },
+    "quiet-stones": {
+      "name": "Keine Panik",
+      "description": "Erreiche den See Nessamowyte, ohne einen einzigen Stein zu werfen."
+    },
+    "kilometre-up": {
+      "name": "Ein Kilometer hinauf",
+      "description": "Steige insgesamt 1000 m auf."
+    },
+    "steady-pace": {
+      "name": "Gleichmäßiges Tempo",
+      "description": "Committe 5 Tage in Folge."
+    },
+    "hundred": {
+      "name": "Hundert",
+      "description": "Mach 100 Commits auf dieser Route."
+    },
+    "ridge-walker": {
+      "name": "Kammwanderer",
+      "description": "Geh den ganzen Tschornohora-Kamm."
+    }
+  }
+}

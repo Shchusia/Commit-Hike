@@ -68,7 +68,21 @@ export interface Member {
   id: string; name: string; me?: boolean; distance_m: number; percent: number; finished?: boolean;
   commits: number; today_m: number; last_commit_at: number; elevation_m?: number;
 }
-export interface Team { scope: "global" | "project"; route_id: string; length_m: number; members: Member[]; hidden?: number }
+export interface WeekMember { id: string; name: string; me?: boolean; distance_m: number; commits: number; active_days: number }
+export interface TeamWeek {
+  from: string; to: string; total_m: number; commits: number; active_days: number; prev_total_m: number;
+  best_day?: string; best_day_m?: number; members: WeekMember[]; hidden?: number; days_elapsed: number;
+}
+export interface GoalMember { id: string; name: string; me?: boolean; distance_m: number }
+export interface TeamGoal {
+  route_id: string; route_name: string; length_m: number; since: number; distance_m: number; percent: number; finished?: boolean;
+  last_waypoint?: Waypoint; next_waypoint?: Waypoint; to_next_m?: number; pace_m: number; days_left?: number; members: GoalMember[];
+}
+export interface RouteChoice { id: string; name: string; length_m: number }
+export interface Team {
+  scope: "global" | "project"; route_id: string; length_m: number; members: Member[]; hidden?: number;
+  week: TeamWeek; goal?: TeamGoal; routes: RouteChoice[];
+}
 export interface LocaleInfo { locale: string; effective: string; available: string[] }
 export interface RouteAssets { id: string; images: Record<string, string>; html: Record<string, string> }
 
@@ -143,7 +157,11 @@ export class Cli {
   scan(repo: string, prevHead?: string) {
     return this.run<ScanResult>(this.withLang(["scan", "--repo", repo, ...(prevHead ? ["--prev-head", prevHead] : [])]));
   }
-  team(repo: string) { return this.run<Team>(["team", "--repo", repo]); }
+  team(repo: string) { return this.run<Team>(this.withLang(["team", "--repo", repo])); }
+  /** The route the project's team walks together, from now; "" removes it. */
+  setTeamGoal(repo: string, route: string) {
+    return this.run<{ goal: string }>(route ? ["project", "goal", "--repo", repo, "--route", route] : ["project", "goal-off", "--repo", repo]);
+  }
   setTeam(repo: string, on: boolean) { return this.run<{ team: boolean }>(["project", on ? "team-on" : "team-off", "--repo", repo]); }
   /** Reads the language setting; with set ("auto", "en", "uk"…) changes it for every IDE. */
   locale(set?: string) { return this.run<LocaleInfo>(this.withLang(set === undefined ? ["locale"] : ["locale", "--set", set])); }

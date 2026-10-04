@@ -191,3 +191,24 @@ void test("Cli: badge and diagnostics", async () => {
   assert.equal(d.initialized, true);
   assert.ok(!JSON.stringify(d).includes("me@x.io"), "nothing personal in diagnostics");
 });
+
+void test("Cli: a team goal and the team's week", async () => {
+  process.env.COMMIT_HIKE_HOME = fs.mkdtempSync(path.join(os.tmpdir(), "ct-home-goal-"));
+  const repo = fs.mkdtempSync(path.join(os.tmpdir(), "ct-repo-goal-"));
+  const git = (...a: string[]) => execFileSync("git", ["-C", repo, ...a], {
+    env: { ...process.env, ...dates(), GIT_AUTHOR_NAME: "T", GIT_AUTHOR_EMAIL: "me@x.io", GIT_COMMITTER_NAME: "T", GIT_COMMITTER_EMAIL: "me@x.io" },
+  });
+  git("init", "-q");
+  git("commit", "-q", "--allow-empty", "-m", "first");
+  const cli = new Cli(bundledBinary(ext));
+  cli.lang = "de";
+  await cli.init({ emails: ["me@x.io"], mode: "all", fromHistory: true });
+  await cli.setTeamGoal(repo, "tour-du-mont-blanc");
+  const team = await cli.team(repo);
+  assert.equal(team.goal?.route_id, "tour-du-mont-blanc");
+  assert.equal(team.goal?.distance_m, 0); // nothing walked since the goal was set
+  assert.ok(team.routes.length >= 10 && team.routes.every(r => r.name && r.length_m > 0));
+  assert.match(team.week.from, /^\d{4}-\d{2}-\d{2}$/);
+  await cli.setTeamGoal(repo, "");
+  assert.equal((await cli.team(repo)).goal, undefined);
+});

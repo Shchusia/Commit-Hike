@@ -47,23 +47,23 @@
   "achievements": {
     "gorg-start": {
       "name": "Into the Gorgany",
-      "description": "У Горгани"
+      "description": "Walk your first 100 m."
     },
     "gorg-grofa": {
       "name": "Hoverla in Sight",
-      "description": "Говерла на видноколі"
+      "description": "Reach Grofa."
     },
     "gorg-popadia": {
       "name": "Stone Walker",
-      "description": "Ходак по каменю"
+      "description": "Cross the stone fields to Popadia."
     },
     "gorg-finish": {
       "name": "Ring Closed",
-      "description": "Кільце замкнено"
+      "description": "Walk the whole Popadia ring back to Osmoloda."
     },
     "gorg-day": {
       "name": "Long Stony Day",
-      "description": "Довгий кам'янистий день"
+      "description": "Walk 8 km in one day."
     }
   }
 }

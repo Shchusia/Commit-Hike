@@ -35,7 +35,7 @@ vars:
     sh: |
       for p in /snap/pycharm-professional/current /snap/pycharm/current /snap/pycharm-community/current \
                "$HOME"/.local/share/JetBrains/Toolbox/apps/pycharm* /opt/pycharm*; do
-        [ -f "$p/product-info.json" ] && { echo "$p"; exit 0; }
+        if [ -f "$p/product-info.json" ]; then echo "$p"; exit 0; fi
       done
       true # not found is fine: tasks that need PyCharm say so themselves
   # Pinned so everyone (and CI) lints with the same rules. Bump deliberately.
@@ -573,6 +573,7 @@ tasks:
         vars: { BRIEF: "true" }
       - task: routes:check
       - task: ui:test
+      - task: neovim:test
       - task: vscode:cover
       - task: jetbrains:cover
       - task: coverage:summary
@@ -585,10 +586,43 @@ tasks:
       - task: jetbrains:build
 
   release:snapshot:
-    desc: Try a local release build with GoReleaser (nothing is published)
+    desc: Build the core release archives with GoReleaser into dist/ (nothing is published)
     deps: [tools:goreleaser]
+    env:
+      APP_VERSION: "{{.APP_VERSION}}"
     cmds:
+      - '"{{.GOBIN}}/goreleaser" check'
       - '"{{.GOBIN}}/goreleaser" release --snapshot --clean'
+      - sh scripts/install.sh --from dist --to "{{.SANDBOX}}/bin-test" && "{{.SANDBOX}}/bin-test/commit-hike" version
+
+  # ───────────────────────────── terminal: the core on its own ─────────────────────────────
+
+  screenshots:
+    desc: "Remake docs/screenshots (README and marketplace pictures) from the real panel in all five languages (ARGS=uk or ARGS=uk-map for some)"
+    deps: [ui:deps, core:build]
+    dir: ui
+    env:
+      COMMIT_HIKE_BIN: "{{.SANDBOX_BIN}}"
+    cmds:
+      - node screenshots.mjs {{.ARGS}}
+
+  neovim:test:
+    desc: Test the Neovim plugin against the real core in a headless Neovim (needs nvim 0.10+ on PATH)
+    deps: [core:build]
+    env:
+      COMMIT_HIKE_BIN: "{{.SANDBOX_BIN}}"
+    cmds:
+      - |
+        if ! command -v nvim >/dev/null 2>&1; then echo "nvim not found: skipping the Neovim plugin tests"; exit 0; fi
+        nvim --headless -u NONE -l plugins/neovim/tests/run.lua
+
+  install:check:
+    desc: Check the installers (shellcheck) and that the release archives install (after task release:snapshot)
+    cmds:
+      - |
+        if command -v shellcheck >/dev/null 2>&1; then shellcheck scripts/install.sh; else echo "shellcheck not found: skipped"; fi
+      - |
+        if [ -d dist ]; then sh scripts/install.sh --from dist --to "{{.SANDBOX}}/bin-test"; else echo "no dist/ yet: run task release:snapshot first"; fi
 
   # ───────────────────────────── panel (browser tests) ─────────────────────────────
 

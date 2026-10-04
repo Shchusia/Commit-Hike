@@ -1,0 +1,60 @@
+{
+  "name": "Probeweg",
+  "description": "Eine kurze Übungsroute zum Ausprobieren.",
+  "waypoints": {
+    "trailhead": {
+      "name": "Ausgangspunkt",
+      "text": "Deine Wanderung beginnt."
+    },
+    "old-bridge": {
+      "name": "Alte Brücke",
+      "text": "Der erste Kilometer liegt hinter dir."
+    },
+    "pine-forest": {
+      "name": "Kiefernwald",
+      "text": "Ein Viertel des Weges."
+    },
+    "mountain-lake": {
+      "name": "Bergsee",
+      "text": "Die Hälfte geschafft."
+    },
+    "summit": {
+      "name": "Gipfel",
+      "text": "Du hast es geschafft!"
+    }
+  },
+  "story": {
+    "birdsong": "Der Weg wird still, nur die Vögel singen.",
+    "clouds": "Jetzt gehst du über den Wolken."
+  },
+  "facts": {
+    "lapse-rate": "Die Luft kühlt sich pro 1000 Höhenmeter um etwa 6,5 °C ab – auf dem Gipfel kann Winter sein, während im Tal Frühling ist.",
+    "naismith": "Die Naismith-Regel (1892) zur Wanderplanung: eine Stunde für je 5 km Strecke plus eine Stunde für je 600 m Aufstieg."
+  },
+  "objects": {
+    "bridge": "Die alte Brücke",
+    "bench": "Eine Bank mit Aussicht"
+  },
+  "achievements": {
+    "first-steps": {
+      "name": "Erste Schritte",
+      "description": "Geh deine ersten 100 m."
+    },
+    "bridge": {
+      "name": "Über den Fluss",
+      "description": "Erreiche die Alte Brücke."
+    },
+    "halfway": {
+      "name": "Halbzeit",
+      "description": "Erreiche den Bergsee."
+    },
+    "big-day": {
+      "name": "Großer Tag",
+      "description": "Geh 15 km an einem Tag."
+    },
+    "summit": {
+      "name": "Ganz oben",
+      "description": "Schaffe den Probeweg."
+    }
+  }
+}

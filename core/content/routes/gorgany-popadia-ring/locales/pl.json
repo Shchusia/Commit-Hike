@@ -1,0 +1,69 @@
+{
+  "name": "Gorgany: pętla Popadii",
+  "description": "Pętla przez kamienne pola Gorganów: Osmołoda, Grofa, Pareńki, Popadia, Koretwyna i z powrotem. Trasa łączy przystanki; te bez sprawdzonych współrzędnych rozmieszczono wzdłuż niej.",
+  "waypoints": {
+    "osmoloda": {
+      "name": "Osmołoda",
+      "text": "Leśna wieś w sercu Gorganów, początek pętli."
+    },
+    "kin-hrofetskyi": {
+      "name": "Koń Grofecki",
+      "text": "„Koń Grofy”, pierwszy punkt widokowy nad lasem."
+    },
+    "grofa": {
+      "name": "Grofa",
+      "text": "W pogodny dzień widać stąd Howerlę, 84 km dalej."
+    },
+    "parenky": {
+      "name": "Pareńki",
+      "text": "Kamienisty szczyt z szerokim widokiem na Petros i Popadię."
+    },
+    "mala-popadia": {
+      "name": "Mała Popadia",
+      "text": "Młodsza siostra Popadii."
+    },
+    "popadia": {
+      "name": "Popadia",
+      "text": "Jej kamienne pola, „gorgany”, dały nazwę całym górom."
+    },
+    "koretvyna": {
+      "name": "Koretwyna",
+      "text": "Ostatni szczyt przed długim zejściem."
+    },
+    "osmoloda-return": {
+      "name": "Znów w Osmołodzie",
+      "text": "Pętla zamyka się tam, gdzie się zaczęła."
+    }
+  },
+  "story": {
+    "stone-fields": "Ponad kosodrzewiną ścieżka przecina pola szarego kamienia, który rusza się pod stopami.",
+    "dwarf-pine": "Kosodrzewina rośnie tu do pasa i chowa ścieżkę."
+  },
+  "facts": {
+    "gorgan-word": "„Gorgan” to miejscowe słowo na rumowisko piaskowcowych bloków; od nich nazwę wzięło całe pasmo.",
+    "grofa-view": "Z Grofy widać Howerlę i pasmo Czarnohory, 84 km dalej.",
+    "highest": "Najwyższy szczyt Gorganów to Wielka Sywula, 1836 m, na wschód od tej pętli."
+  },
+  "achievements": {
+    "gorg-start": {
+      "name": "W Gorgany",
+      "description": "Przejdź pierwsze 100 m."
+    },
+    "gorg-grofa": {
+      "name": "Howerla na horyzoncie",
+      "description": "Dojdź na Grofę."
+    },
+    "gorg-popadia": {
+      "name": "Wędrowiec po kamieniach",
+      "description": "Przejdź kamiennymi polami na Popadię."
+    },
+    "gorg-finish": {
+      "name": "Pętla zamknięta",
+      "description": "Przejdź całą pętlę Popadii z powrotem do Osmołody."
+    },
+    "gorg-day": {
+      "name": "Długi kamienisty dzień",
+      "description": "Przejdź 8 km w jeden dzień."
+    }
+  }
+}

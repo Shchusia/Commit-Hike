@@ -1,0 +1,73 @@
+{
+  "name": "Swydowez-Kamm",
+  "description": "Ein grüner Kamm aus Bergwiesen und Gletscherseen in den ukrainischen Karpaten, von Kwassy über die Blysnyzja nach Tschorna Tyssa. Die Strecke verbindet die Halte; Halte ohne geprüfte Koordinaten sind entlang der Strecke verteilt.",
+  "waypoints": {
+    "kvasy": {
+      "name": "Kwassy",
+      "text": "Ein Dorf an der Schwarzen Theiß, wo der Aufstieg beginnt."
+    },
+    "brailka": {
+      "name": "Brajilka-Alm",
+      "text": "Hier verbringen Hirten den Sommer, und der Käse wird wie früher gemacht."
+    },
+    "blyznytsia": {
+      "name": "Blysnyzja",
+      "text": "Der höchste Punkt des Swydowez, zwei grüne Zwillingsgipfel."
+    },
+    "drahobrat": {
+      "name": "Drahobrat",
+      "text": "Das höchstgelegene Skigebiet der Ukraine, im Sommer ruhig."
+    },
+    "stih": {
+      "name": "Stih",
+      "text": "Ein runder Gipfel auf dem Hauptkamm."
+    },
+    "vorozheska": {
+      "name": "See Woroscheska",
+      "text": "Zwei Gletscherseen, durch einen Bach verbunden, unter einem steilen Kar."
+    },
+    "kotel": {
+      "name": "Welykyj Kotel",
+      "text": "Der „Große Kessel“, benannt nach dem Kar an seiner Flanke."
+    },
+    "apshynets": {
+      "name": "See Apschynez",
+      "text": "Einer der höchsten Seen der Karpaten; das Wasser wird nie wärmer als 12 °C."
+    },
+    "chorna-tysa": {
+      "name": "Tschorna Tyssa",
+      "text": "Ein Dorf im Tal am Ende des Kamms."
+    }
+  },
+  "story": {
+    "treeline": "Die Buchen weichen Fichten, dann offener Bergwiese.",
+    "lakes": "Unter dem Kamm liegt in den alten Gletscherkaren ein See nach dem anderen."
+  },
+  "facts": {
+    "centre-europe": "Der Swydowez grenzt an den Ort beim Dorf Dilowe, der als geografischer Mittelpunkt Europas gilt.",
+    "nine-lakes": "Auf dem Swydowez gibt es neun Gletscherseen; am bekanntesten sind Apschynez, Woroscheska und Dohjaska.",
+    "vorozheska-depth": "Der obere See Woroscheska ist 4,5 m tief, der untere 1,9 m."
+  },
+  "achievements": {
+    "svyd-start": {
+      "name": "Auf dem Kammweg",
+      "description": "Geh deine ersten 100 m auf dem Swydowez."
+    },
+    "svyd-top": {
+      "name": "Zwillingsgipfel",
+      "description": "Erreiche die Blysnyzja, den Gipfel des Swydowez."
+    },
+    "svyd-lakes": {
+      "name": "Hüter der Seen",
+      "description": "Geh an den Seen entlang bis zum Apschynez."
+    },
+    "svyd-finish": {
+      "name": "Swydowez überquert",
+      "description": "Geh den ganzen Kamm bis Tschorna Tyssa."
+    },
+    "svyd-streak": {
+      "name": "Fünf Tage auf dem Kamm",
+      "description": "Committe fünf Tage in Folge."
+    }
+  }
+}

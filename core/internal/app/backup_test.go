@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -258,5 +259,25 @@ func TestTheNextRouteOfASeries(t *testing.T) {
 	}
 	if st, _ = s.Status(r.dir, "en"); st.Global.NextRoute != nil {
 		t.Fatalf("a route in no series has no next: %+v", st.Global.NextRoute)
+	}
+}
+
+func TestInterfaceLanguagesAreAvailableBeforeRoutesAreTranslated(t *testing.T) {
+	s, r := setup(t, "demo-trail")
+	info, err := s.Locale(nil, "pl")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, l := range []string{"en", "uk", "pl", "de", "es"} {
+		if !slices.Contains(info.Available, l) {
+			t.Errorf("%s missing from %v", l, info.Available)
+		}
+	}
+	st, _ := s.Status(r.dir, "pl")
+	if st.Locale != "pl" {
+		t.Fatalf("a Polish interface stays Polish: %q", st.Locale)
+	}
+	if st.Global.Route.Name == "" {
+		t.Fatal("route texts fall back to English when there's no Polish yet")
 	}
 }

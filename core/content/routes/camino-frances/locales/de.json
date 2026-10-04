@@ -1,0 +1,103 @@
+{
+  "name": "Camino Francés",
+  "description": "Der Französische Jakobsweg, 772 km von Saint-Jean-Pied-de-Port über die Pyrenäen und durch ganz Spanien nach Santiago de Compostela. Die Strecke verbindet die Halte; das Cruz de Ferro ist entlang der Strecke platziert.",
+  "waypoints": {
+    "sjpp": {
+      "name": "Saint-Jean-Pied-de-Port",
+      "text": "Hier bekommen Pilger ihren ersten Stempel, am Fuß der Pyrenäen."
+    },
+    "roncesvalles": {
+      "name": "Roncesvalles",
+      "text": "Über die Pyrenäen nach Spanien: eine Abtei und eine Pilgerherberge."
+    },
+    "pamplona": {
+      "name": "Pamplona",
+      "text": "Die Stadt der Stierläufe."
+    },
+    "puente-la-reina": {
+      "name": "Puente la Reina",
+      "text": "Eine Brücke aus dem 11. Jahrhundert, für Pilger gebaut."
+    },
+    "estella": {
+      "name": "Estella",
+      "text": "In der Nähe spendet ein Brunnen den Pilgern Wein."
+    },
+    "logrono": {
+      "name": "Logroño",
+      "text": "Die Hauptstadt des Rioja-Weins."
+    },
+    "burgos": {
+      "name": "Burgos",
+      "text": "Eine gotische Kathedrale am Rand der Meseta."
+    },
+    "leon": {
+      "name": "León",
+      "text": "Über die weite Meseta zur Kathedrale des Lichts."
+    },
+    "astorga": {
+      "name": "Astorga",
+      "text": "Gaudí baute hier einen Palast."
+    },
+    "cruz-de-ferro": {
+      "name": "Cruz de Ferro",
+      "text": "Der höchste Punkt: Pilger legen einen Stein ab, den sie von zu Hause mitgebracht haben."
+    },
+    "ponferrada": {
+      "name": "Ponferrada",
+      "text": "Eine Templerburg."
+    },
+    "o-cebreiro": {
+      "name": "O Cebreiro",
+      "text": "Steinhütten mit Strohdächern am Tor zu Galicien."
+    },
+    "sarria": {
+      "name": "Sarria",
+      "text": "Viele starten hier: 100 km sind das Minimum für die Compostela."
+    },
+    "portomarin": {
+      "name": "Portomarín",
+      "text": "Eine Kirche, Stein für Stein versetzt, als das Tal geflutet wurde."
+    },
+    "santiago": {
+      "name": "Santiago de Compostela",
+      "text": "Der Platz vor der Kathedrale, das Ende des Weges."
+    }
+  },
+  "story": {
+    "meseta": "Die Meseta: Weizen bis zum Horizont und die eigenen Gedanken als Begleitung.",
+    "stone": "Am Eisenkreuz legst du den Stein ab, den du den ganzen Weg getragen hast.",
+    "galicia": "Galicien: grüne Hügel, Regen und Eukalyptus, und an jeder Ecke gelbe Pfeile."
+  },
+  "facts": {
+    "shell": "Die Jakobsmuschel markiert den Jakobsweg seit tausend Jahren.",
+    "compostela": "Geh die letzten 100 km, und die Kathedrale stellt dir die Compostela aus, die Pilgerurkunde.",
+    "unesco": "Die Wege nach Santiago gehören zum UNESCO-Welterbe.",
+    "km-zero": "Viele gehen weiter nach Finisterre, das einst als das Ende der Welt galt."
+  },
+  "achievements": {
+    "cam-start": {
+      "name": "Buen Camino",
+      "description": "Geh deine ersten 5 km."
+    },
+    "cam-pyrenees": {
+      "name": "Über die Pyrenäen",
+      "description": "Überquere die Grenze nach Spanien."
+    },
+    "cam-meseta": {
+      "name": "Meseta durchquert",
+      "description": "Durchquere die Meseta bis León."
+    },
+    "cam-stone": {
+      "name": "Ein abgelegter Stein",
+      "description": "Erreiche das Cruz de Ferro."
+    },
+    "cam-finish": {
+      "name": "Compostela",
+      "description": "Geh den ganzen Weg bis Santiago."
+    },
+    "cam-commits": {
+      "name": "Geduld des Pilgers",
+      "description": "Mach 500 Commits auf dem Weg."
+    }
+  }
+}

@@ -14,6 +14,11 @@ import (
 // DefaultLocale is the last fallback for every lookup.
 const DefaultLocale = "en"
 
+// UILocales are the languages the panel and the IDE plugins are translated
+// into. They count as available even before every route is translated:
+// route texts fall back to English.
+var UILocales = []string{"en", "uk", "pl", "de", "es"}
+
 // Catalog is a flat key -> text map, e.g. "waypoints.trailhead.name".
 type Catalog map[string]string
 

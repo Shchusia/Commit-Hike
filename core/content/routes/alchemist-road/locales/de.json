@@ -1,0 +1,118 @@
+{
+  "name": "Der Weg des Alchimisten",
+  "description": "Santiagos Reise aus „Der Alchimist“ von Paulo Coelho durch echte Orte in echtem Maßstab, rund 4370 km: Andalusien, Tanger, durch die Sahara nach al-Fayyum und zu den Pyramiden. Die Karte zeigt echtes Gelände (Natural Earth).",
+  "waypoints": {
+    "andalusia": {
+      "name": "Andalusische Weiden",
+      "text": "Ein junger Hirte schläft zwischen seinen Schafen und träumt zweimal von einem Schatz bei den Pyramiden."
+    },
+    "old-church": {
+      "name": "Die verfallene Kirche",
+      "text": "Eine Kirche ohne Dach, mit einer Sykomore, wo einst die Sakristei stand."
+    },
+    "tarifa": {
+      "name": "Tarifa",
+      "text": "Auf dem Marktplatz bittet ein alter Mann, der sagt, er sei ein König, um ein Zehntel deiner Herde."
+    },
+    "strait": {
+      "name": "Straße von Gibraltar",
+      "text": "Du verkaufst deine Schafe und fährst über das Meer nach Afrika."
+    },
+    "tangier": {
+      "name": "Tanger",
+      "text": "Am ersten Tag bestohlen, in einer Stadt, deren Sprache du nicht sprichst."
+    },
+    "crystal-shop": {
+      "name": "Der Kristallhändler",
+      "text": "Ein Jahr lang Glas polieren, Tee verkaufen und sparen. Dem Laden ging es nie besser."
+    },
+    "sahara-edge": {
+      "name": "Rand der Sahara",
+      "text": "Eine Kamelkarawane lässt den letzten Brunnen hinter sich. Ein Engländer liest Bücher über Alchimie."
+    },
+    "deep-sahara": {
+      "name": "Herz der Sahara",
+      "text": "Wochen aus Sand und Stille. Du lernst, der Wüste zuzuhören."
+    },
+    "al-fayoum": {
+      "name": "Oase al-Fayyum",
+      "text": "Palmen, Brunnen und eine Frau namens Fatima. Zwei Falken kämpfen am Himmel, und du liest ein Zeichen."
+    },
+    "alchemist-tent": {
+      "name": "Das Zelt des Alchimisten",
+      "text": "Ein Mann in Schwarz auf einem weißen Pferd willigt ein, dich durch die Wüste zu führen."
+    },
+    "wind-rock": {
+      "name": "Der Fels des Windes",
+      "text": "In einem Wüstenlager festgehalten, hast du drei Tage, um dich in den Wind zu verwandeln."
+    },
+    "giza": {
+      "name": "Pyramiden von Gizeh",
+      "text": "Du gräbst bei den Pyramiden, und die Worte eines Fremden verraten dir, dass der Schatz zu Hause liegt, unter der Sykomore."
+    }
+  },
+  "story": {
+    "reading": "Du magst die Schafe, aber auch Bücher und neue Horizonte.",
+    "omens": "Zwei Steine, ein schwarzer und ein weißer, helfen dir, wenn du dich nicht entscheiden kannst.",
+    "war": "In der Wüste führen Stämme Krieg, und die Karawane zieht nur nachts weiter.",
+    "lead": "Der Alchimist zeigt dir einen Trick mit Blei. Es geht nicht um das Gold."
+  },
+  "facts": {
+    "first-print": "„Der Alchimist“ erschien 1988 zuerst in Brasilien. Der erste Verlag druckte etwa 900 Exemplare und verzichtete auf einen Nachdruck.",
+    "camino": "Zwei Jahre zuvor, 1986, ging Coelho den Jakobsweg, den Pilgerweg durch Nordspanien.",
+    "tarifa-point": "Die Landspitze von Tarifa ist der südlichste Punkt des europäischen Festlands.",
+    "strait-width": "An ihrer engsten Stelle ist die Straße von Gibraltar nur etwa 14 km breit; an klaren Tagen sieht man von Spanien aus Afrika.",
+    "ibn-battuta": "Ibn Battuta, einer der größten Reisenden des Mittelalters, wurde 1304 in Tanger geboren.",
+    "alchemy-word": "Das Wort Alchimie kam aus dem arabischen al-kīmiyā in die europäischen Sprachen, und aus ihr ging die Chemie hervor.",
+    "sahara-size": "Die Sahara ist die größte heiße Wüste der Welt, rund 9 Millionen km², etwa so groß wie die USA.",
+    "not-all-sand": "Der größte Teil der Sahara besteht gar nicht aus Dünen, sondern aus felsigen Hochebenen und Kiesebenen.",
+    "camel-drink": "Ein durstiges Kamel kann in wenigen Minuten über 100 Liter Wasser trinken.",
+    "fayoum": "Al-Fayyum ist eine echte Oase in einer Wüstensenke westlich des Nils, gespeist von einem antiken Kanal, mit dem Qarun-See.",
+    "emerald-tablet": "Die Smaragdtafel, ein kurzer rätselhafter Text, der Hermes Trismegistos zugeschrieben wird, war eine Grundlage der europäischen Alchimie.",
+    "great-pyramid": "Die Cheops-Pyramide von Gizeh war rund 3800 Jahre lang das höchste von Menschen errichtete Bauwerk.",
+    "translations": "„Der Alchimist“ hält einen Guinness-Weltrekord als meistübersetztes Buch eines lebenden Autors."
+  },
+  "objects": {
+    "flock": "Santiagos Herde",
+    "church": "Die Kirche mit der Sykomore",
+    "crystal": "Der Kristallladen",
+    "caravan": "Die Karawane",
+    "oasis-palms": "Die Oase",
+    "hawks": "Zwei Falken",
+    "pyramids": "Die Pyramiden"
+  },
+  "achievements": {
+    "dream": {
+      "name": "Ein wiederkehrender Traum",
+      "description": "Geh deine ersten 100 m."
+    },
+    "africa": {
+      "name": "Ein anderer Kontinent",
+      "description": "Erreiche Tanger."
+    },
+    "crystal": {
+      "name": "Poliertes Glas",
+      "description": "Arbeite für den Kristallhändler."
+    },
+    "desert-day": {
+      "name": "Karawanentempo",
+      "description": "Geh 20 km an einem Tag."
+    },
+    "oasis": {
+      "name": "Wasser in der Wüste",
+      "description": "Erreiche al-Fayyum."
+    },
+    "wind": {
+      "name": "Werde zum Wind",
+      "description": "Erreiche den Fels des Windes."
+    },
+    "steady": {
+      "name": "Folge den Zeichen",
+      "description": "Committe 30 Tage in Folge."
+    },
+    "treasure": {
+      "name": "Wo der Schatz liegt",
+      "description": "Erreiche die Pyramiden und erfahre, wo der Schatz liegt."
+    }
+  }
+}

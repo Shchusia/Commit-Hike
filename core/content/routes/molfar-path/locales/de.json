@@ -1,0 +1,104 @@
+{
+  "name": "Der Pfad des Molfars",
+  "description": "Ein eigenes Märchen in den Karpaten: Die alte Molfarin Jawdocha schickt ihren Lehrling mit einer Trembita zum Donnergipfel, um den Regen zu rufen.",
+  "waypoints": {
+    "village": {
+      "name": "Dorf unter dem Berg",
+      "text": "Das Heu ist trocken, die Brunnen sind leer. Jawdocha legt dir eine Trembita auf die Schulter: „Geh hinauf und bitte den Sturm.“"
+    },
+    "mill": {
+      "name": "Die Wassermühle",
+      "text": "Das Rad dreht sich kaum. Der Müller sagt, so still war der Fluss noch nie."
+    },
+    "church": {
+      "name": "Die Holzkirche",
+      "text": "Schindeln, silbern vom Alter. Du zündest eine Kerze für den Weg an."
+    },
+    "beech-forest": {
+      "name": "Die Urbuchen",
+      "text": "Graue Stämme, älter als das Dorf. Kleine grüne Lichter schweben zwischen ihnen."
+    },
+    "vatra": {
+      "name": "Watra-Alm",
+      "text": "Der Oberhirte gibt dir eine Glut aus dem lebendigen Feuer, in Birkenrinde gewickelt."
+    },
+    "black-tarn": {
+      "name": "Der Schwarze See",
+      "text": "Wasser so dunkel, dass es am Tag die Sterne hält. Du trinkst nicht daraus."
+    },
+    "stone-guardian": {
+      "name": "Der Steinwächter",
+      "text": "Ein uralter behauener Stein bewacht den Pass. Du verneigst dich, und der Wind lässt dich vorbei."
+    },
+    "molfar-hut": {
+      "name": "Die Hütte des alten Molfars",
+      "text": "Leer, aber warm. Unter den Balken hängen getrocknete Kräuter, als hätte jemand gewusst, dass du kommst."
+    },
+    "seven-winds": {
+      "name": "Pass der Sieben Winde",
+      "text": "Sieben Winde, sieben Stimmen. Du antwortest keiner und gehst weiter."
+    },
+    "thunder-peak": {
+      "name": "Donnergipfel",
+      "text": "Du bläst die Trembita. Weit im Westen beginnt ein grauer Regenvorhang über dem Tal zu fallen."
+    }
+  },
+  "story": {
+    "dust": "Bei jedem Schritt steigt Staub von der Straße auf. Selbst den Hunden ist es zum Bellen zu heiß.",
+    "lights": "Die grünen Lichter ziehen vor dir her, immer knapp außer Reichweite. Du folgst ihnen und verlierst den Pfad nicht.",
+    "ember": "Die Glut in deiner Tasche bleibt warm. Jawdocha sagte, sie muss lebend oben ankommen.",
+    "clouds-gather": "Unter dir sammeln sich Wolken, schwer und langsam, als warteten sie auf ein Zeichen."
+  },
+  "facts": {
+    "molfar": "In der huzulischen Tradition ist ein Molfar ein Volksheiler und Wettermacher, dem man zutraut, Hagel abzuwenden oder Regen zu rufen.",
+    "tserkvas": "2013 wurden sechzehn Holzkirchen der Karpatenregion in Polen und der Ukraine in die Welterbeliste der UNESCO aufgenommen.",
+    "beeches": "Die Karpaten bewahren einige der letzten Buchenurwälder Europas; die ukrainischen sind seit 2007 Welterbe.",
+    "forest-song": "Mawka, ein Waldgeist der ukrainischen Folklore, wurde zur Heldin von Lessja Ukrajinkas Drama „Das Waldlied“ (1911).",
+    "vatra-tradition": "Die Hirten entzündeten das Almfeuer zu Beginn der Weidezeit und versuchten, es zu hüten, bis sie die Herden im Herbst ins Tal trieben.",
+    "cheese": "Budz und Brynza, Käse aus Schafsmilch, werden noch heute direkt auf der Alm am Feuer gemacht.",
+    "shadows": "Mychajlo Kozjubynskyjs Novelle „Schatten vergessener Ahnen“ (1911) und Sergei Paradschanows Film von 1965 machten das Leben der Huzulen weltbekannt.",
+    "trembita": "Die Trembita ist ein huzulisches Holzhorn, das über 3 m lang sein kann. Ihr Ruf trug Nachrichten über die Täler: Geburten, Hochzeiten, Todesfälle."
+  },
+  "objects": {
+    "mill": "Die Wassermühle",
+    "church": "Die Holzkirche",
+    "wisps": "Mawkas Lichter",
+    "vatra-fire": "Das lebendige Feuer",
+    "guardian": "Der Steinwächter",
+    "trembita": "Die Trembita"
+  },
+  "achievements": {
+    "on-the-road": {
+      "name": "Unterwegs",
+      "description": "Geh deine ersten 100 m."
+    },
+    "candle": {
+      "name": "Eine Kerze für den Weg",
+      "description": "Erreiche die Holzkirche."
+    },
+    "ember": {
+      "name": "Hüter der Glut",
+      "description": "Hol dir die Glut auf der Watra-Alm."
+    },
+    "high-meadows": {
+      "name": "Hohe Almen",
+      "description": "Steige insgesamt 800 m auf."
+    },
+    "guardian": {
+      "name": "Durchgelassen",
+      "description": "Komm am Steinwächter vorbei."
+    },
+    "two-thousand": {
+      "name": "Wo Stürme geboren werden",
+      "description": "Steh höher als 2000 m."
+    },
+    "steady": {
+      "name": "Sieben Tage, sieben Winde",
+      "description": "Committe 7 Tage in Folge."
+    },
+    "rain": {
+      "name": "Regenrufer",
+      "description": "Erreiche den Donnergipfel und ruf den Regen."
+    }
+  }
+}

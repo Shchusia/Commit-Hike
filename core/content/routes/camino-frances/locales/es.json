@@ -1,0 +1,103 @@
+{
+  "name": "Camino Francés",
+  "description": "El Camino Francés de Santiago, 772 km desde Saint-Jean-Pied-de-Port por los Pirineos y toda España hasta Santiago de Compostela. El trazado une las paradas; la Cruz de Ferro se sitúa a lo largo de él.",
+  "waypoints": {
+    "sjpp": {
+      "name": "Saint-Jean-Pied-de-Port",
+      "text": "Aquí los peregrinos reciben su primer sello, al pie de los Pirineos."
+    },
+    "roncesvalles": {
+      "name": "Roncesvalles",
+      "text": "Cruzando los Pirineos hacia España: una abadía y un albergue de peregrinos."
+    },
+    "pamplona": {
+      "name": "Pamplona",
+      "text": "La ciudad de los encierros."
+    },
+    "puente-la-reina": {
+      "name": "Puente la Reina",
+      "text": "Un puente del siglo XI construido para los peregrinos."
+    },
+    "estella": {
+      "name": "Estella",
+      "text": "Cerca de aquí, una fuente sirve vino a los peregrinos."
+    },
+    "logrono": {
+      "name": "Logroño",
+      "text": "La capital del vino de Rioja."
+    },
+    "burgos": {
+      "name": "Burgos",
+      "text": "Una catedral gótica al borde de la Meseta."
+    },
+    "leon": {
+      "name": "León",
+      "text": "A través de la ancha Meseta hasta la catedral de la luz."
+    },
+    "astorga": {
+      "name": "Astorga",
+      "text": "Gaudí construyó aquí un palacio."
+    },
+    "cruz-de-ferro": {
+      "name": "Cruz de Ferro",
+      "text": "El punto más alto: los peregrinos dejan una piedra traída de casa."
+    },
+    "ponferrada": {
+      "name": "Ponferrada",
+      "text": "Un castillo templario."
+    },
+    "o-cebreiro": {
+      "name": "O Cebreiro",
+      "text": "Pallozas de piedra con techos de paja a las puertas de Galicia."
+    },
+    "sarria": {
+      "name": "Sarria",
+      "text": "Muchos empiezan aquí: 100 km es el mínimo para la Compostela."
+    },
+    "portomarin": {
+      "name": "Portomarín",
+      "text": "Una iglesia trasladada piedra a piedra cuando inundaron el valle."
+    },
+    "santiago": {
+      "name": "Santiago de Compostela",
+      "text": "La plaza de la catedral, el final del Camino."
+    }
+  },
+  "story": {
+    "meseta": "La Meseta: trigo hasta el horizonte y tus propios pensamientos como compañía.",
+    "stone": "En la cruz de hierro dejas la piedra que has llevado todo el camino.",
+    "galicia": "Galicia: colinas verdes, lluvia y eucaliptos, y flechas amarillas en cada curva."
+  },
+  "facts": {
+    "shell": "La concha de vieira señala el Camino de Santiago desde hace mil años.",
+    "compostela": "Camina los últimos 100 km y en la catedral te darán la Compostela, el certificado del peregrino.",
+    "unesco": "Los caminos a Santiago son Patrimonio de la Humanidad de la UNESCO.",
+    "km-zero": "Muchos siguen hasta Finisterre, que antiguamente se creía el fin del mundo."
+  },
+  "achievements": {
+    "cam-start": {
+      "name": "Buen Camino",
+      "description": "Camina tus primeros 5 km."
+    },
+    "cam-pyrenees": {
+      "name": "Al otro lado de los Pirineos",
+      "description": "Entra en España."
+    },
+    "cam-meseta": {
+      "name": "Meseta cruzada",
+      "description": "Cruza la Meseta hasta León."
+    },
+    "cam-stone": {
+      "name": "Una piedra que se queda",
+      "description": "Llega a la Cruz de Ferro."
+    },
+    "cam-finish": {
+      "name": "Compostela",
+      "description": "Recorre todo el Camino hasta Santiago."
+    },
+    "cam-commits": {
+      "name": "Paciencia de peregrino",
+      "description": "Haz 500 commits en el Camino."
+    }
+  }
+}

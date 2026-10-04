@@ -1,0 +1,88 @@
+{
+  "name": "Tongariro Alpine Crossing",
+  "description": "Neuseelands berühmte vulkanische Tageswanderung: über Krater, vorbei an den Smaragdseen und hinunter durch Tussockgras und Wald. Die Entfernungen sind ungefähr.",
+  "waypoints": {
+    "mangatepopo": {
+      "name": "Straßenende Mangatepopo",
+      "text": "Ein altes Lavatal, Holzstege über dem Tussock und vor dir der Kegel des Ngauruhoe."
+    },
+    "soda-springs": {
+      "name": "Soda Springs",
+      "text": "Das letzte leicht erreichbare Wasser. Darüber steigt die Teufelstreppe zum Sattel."
+    },
+    "south-crater": {
+      "name": "Südkrater",
+      "text": "Ein flacher, stiller Kraterboden. Links ragt der Ngauruhoe auf."
+    },
+    "red-crater": {
+      "name": "Roter Krater",
+      "text": "Der höchste Punkt der Überquerung. Dampf, Schwefel und rostrote Wände."
+    },
+    "emerald-lakes": {
+      "name": "Smaragdseen",
+      "text": "Drei leuchtend grüne Teiche am Fuß eines Geröllhangs."
+    },
+    "blue-lake": {
+      "name": "Blauer See",
+      "text": "Ein kalter Kratersee, den einheimischen Māori heilig."
+    },
+    "ketetahi-shelter": {
+      "name": "Ketetahi-Schutzhütte",
+      "text": "Eine Tageshütte mit Blick über den Rotoaira- und den Taupō-See."
+    },
+    "ketetahi-end": {
+      "name": "Straßenende Ketetahi",
+      "text": "Durch den Wald hinunter zur Straße. Du hast einen Vulkan überquert!"
+    }
+  },
+  "story": {
+    "staircase": "Die Teufelstreppe: Stufe um Stufe alter Lava. Du hältst zum Atmen an, und das Tal ist schon klein.",
+    "wind": "Auf dem Grat drückt der Wind kräftig. Du lehnst dich hinein und behältst die Markierungsstangen im Blick.",
+    "scree": "Du rutschst in großen, vorsichtigen Schritten das lose Geröll hinab, unten blitzen die Seen grün.",
+    "forest": "Das Tussockgras weicht Bäumen. Nach Stunden im Fels riecht der Wald unglaublich grün."
+  },
+  "facts": {
+    "gift": "1887 schenkte Te Heuheu Tūkino IV., Oberhäuptling der Ngāti Tūwharetoa, diese heiligen Gipfel der Nation. Das Geschenk wurde zum Kern von Neuseelands erstem Nationalpark.",
+    "heritage": "Tongariro ist doppeltes Welterbe: 1990 für die Natur aufgenommen und 1993 als erste Stätte, die als Kulturlandschaft anerkannt wurde.",
+    "summits": "Die Gipfel sind für die Ngāti Tūwharetoa tapu (heilig). Sie bitten Wanderer, die Berge vom Weg aus zu genießen, statt auf die Spitzen zu steigen.",
+    "film": "Der Ngauruhoe, der fast perfekte Kegel neben dem Weg, spielte einen erfundenen Vulkan in einer berühmten Fantasy-Filmtrilogie. Zuletzt brach er 1975 aus.",
+    "emerald": "Die Smaragdseen verdanken ihre Farbe Mineralien, die aus dem umliegenden Vulkangestein gewaschen werden.",
+    "blue-lake": "Der Blaue See ist tapu: Besucher werden gebeten, nicht darin zu baden und an seinem Ufer weder zu essen noch zu trinken.",
+    "te-maari": "2012 brachen die Te-Māri-Krater gleich nördlich des Weges aus und schleuderten Felsbrocken bis zur alten Ketetahi-Hütte, die keine Übernachtungsgäste mehr aufnimmt."
+  },
+  "objects": {
+    "hazard": "Zone aktiver Vulkangefahr",
+    "fumarole": "Fumarolen des Roten Kraters",
+    "shelter": "Ketetahi-Schutzhütte"
+  },
+  "achievements": {
+    "first-steps": {
+      "name": "Stiefel an",
+      "description": "Geh deine ersten 100 m."
+    },
+    "staircase": {
+      "name": "Teufelstreppe",
+      "description": "Steig zum Südkrater auf."
+    },
+    "crater-rim": {
+      "name": "Kraterrand",
+      "description": "Steh höher als 1850 m."
+    },
+    "emeralds": {
+      "name": "Smaragde",
+      "description": "Erreiche die Smaragdseen."
+    },
+    "up-and-over": {
+      "name": "Hinauf und hinüber",
+      "description": "Steige insgesamt 700 m auf."
+    },
+    "steam": {
+      "name": "Volldampf",
+      "description": "Geh 15 km an einem Tag."
+    },
+    "crossed": {
+      "name": "Überquert",
+      "description": "Schaffe das Tongariro Alpine Crossing."
+    }
+  }
+}

@@ -230,8 +230,14 @@ class CoreCliTest {
         assertEquals("uk", I18n.lang)
         assertEquals("8,4 км", I18n.distance(8400.0))
         assertEquals("Сьогодні: 5 м", I18n.t("barToday", I18n.distance(5.0)))
-        I18n.setLanguage("de")
+        for ((tag, expected) in listOf("pl-PL" to "8,4 km", "de" to "8,4 km", "es" to "8,4 km")) {
+            I18n.setLanguage(tag)
+            assertEquals(tag.take(2), I18n.lang)
+            assertEquals(expected, I18n.distance(8400.0))
+        }
+        I18n.setLanguage("fr") // not translated: English
         assertEquals("en", I18n.lang)
+        assertEquals("8.4 km", I18n.distance(8400.0))
     }
 
     private fun coreBinary(): Path {

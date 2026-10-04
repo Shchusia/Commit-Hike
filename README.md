@@ -26,6 +26,7 @@ a map, stories, facts and achievements.
 ## Features
 
 - **Real, literary and original routes.** Walk the Chornohora ridge over Hoverla and New Zealand's Tongariro Alpine Crossing on their real GPS tracks, Santiago's journey from The Alchemist across real Spain, Morocco, the Sahara and Egypt on real terrain, a folk tale through the Carpathians or a fantasy journey past seven lighthouses. Each route has its own stops, story, facts and achievements.
+- **Five languages.** English, Ukrainian, Polish, German and Spanish, following your IDE or chosen in the settings.
 - **Series.** Finish a route and walk on to the next: the Carpathians (Chornohora → Svydovets → Gorgany) and the long ways (Tour du Mont Blanc → Camino Francés to Santiago).
 - **Seasons, camps and a passport.** Snow in winter, golden meadows in autumn, a camp by the fire on days without commits, and a passport with a dated stamp for every stop you've reached.
 - **Climb for real.** Routes have elevation profiles: the ground rises and falls, your hiker leans into the slope, and you see your altitude, the grade, how much you've climbed and the climb left to the next stop. Some achievements are about height.

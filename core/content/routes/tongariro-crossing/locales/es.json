@@ -1,0 +1,88 @@
+{
+  "name": "Travesía Alpina del Tongariro",
+  "description": "La famosa ruta volcánica de un día de Nueva Zelanda: por cráteres, junto a los Lagos Esmeralda y bajando entre pastizales y bosque. Las distancias son aproximadas.",
+  "waypoints": {
+    "mangatepopo": {
+      "name": "Final de la carretera Mangatepopo",
+      "text": "Un viejo valle de lava, pasarelas sobre los pastizales y delante el cono del Ngauruhoe."
+    },
+    "soda-springs": {
+      "name": "Soda Springs",
+      "text": "La última agua fácil. Arriba, la Escalera del Diablo sube hasta el collado."
+    },
+    "south-crater": {
+      "name": "Cráter Sur",
+      "text": "Un fondo de cráter llano y silencioso. A tu izquierda se alza el Ngauruhoe."
+    },
+    "red-crater": {
+      "name": "Cráter Rojo",
+      "text": "El punto más alto de la travesía. Vapor, azufre y paredes rojo óxido."
+    },
+    "emerald-lakes": {
+      "name": "Lagos Esmeralda",
+      "text": "Tres pozas de un verde vivo al pie de una ladera de pedregal."
+    },
+    "blue-lake": {
+      "name": "Lago Azul",
+      "text": "Un frío lago de cráter, sagrado para los maoríes de la zona."
+    },
+    "ketetahi-shelter": {
+      "name": "Refugio Ketetahi",
+      "text": "Un refugio de día con vistas al lago Rotoaira y al Taupō."
+    },
+    "ketetahi-end": {
+      "name": "Final de la carretera Ketetahi",
+      "text": "Bajando por el bosque hasta la carretera. ¡Cruzaste un volcán!"
+    }
+  },
+  "story": {
+    "staircase": "La Escalera del Diablo: escalón tras escalón de lava antigua. Te paras a respirar y el valle ya se ve pequeño.",
+    "wind": "En la cresta el viento empuja fuerte. Te inclinas contra él sin perder de vista los postes de señalización.",
+    "scree": "Bajas por el pedregal suelto a pasos largos y cuidadosos, y abajo destellan los lagos verdes.",
+    "forest": "Los pastizales dan paso a los árboles. Tras horas de roca, el bosque huele increíblemente verde."
+  },
+  "facts": {
+    "gift": "En 1887 Te Heuheu Tūkino IV, jefe supremo de los Ngāti Tūwharetoa, regaló estas cumbres sagradas a la nación. El regalo fue el núcleo del primer parque nacional de Nueva Zelanda.",
+    "heritage": "Tongariro es Patrimonio de la Humanidad doble: inscrito por su naturaleza en 1990 y en 1993 como el primer sitio reconocido como paisaje cultural.",
+    "summits": "Las cumbres son tapu (sagradas) para los Ngāti Tūwharetoa. Piden a los caminantes que las disfruten desde el sendero en lugar de subir a la cima.",
+    "film": "El Ngauruhoe, el cono casi perfecto junto al sendero, hizo de volcán ficticio en una famosa trilogía de fantasía. Su última erupción fue en 1975.",
+    "emerald": "Los Lagos Esmeralda deben su color a los minerales que el agua arrastra de la roca volcánica de alrededor.",
+    "blue-lake": "El Lago Azul es tapu: se pide a los visitantes que no se bañen ni coman ni beban a su orilla.",
+    "te-maari": "En 2012 los cráteres Te Māri, justo al norte del sendero, entraron en erupción y lanzaron rocas hasta el viejo refugio Ketetahi, que ya no admite pernoctaciones."
+  },
+  "objects": {
+    "hazard": "Zona de peligro volcánico activo",
+    "fumarole": "Fumarolas del Cráter Rojo",
+    "shelter": "Refugio Ketetahi"
+  },
+  "achievements": {
+    "first-steps": {
+      "name": "Botas puestas",
+      "description": "Camina tus primeros 100 m."
+    },
+    "staircase": {
+      "name": "Escalera del Diablo",
+      "description": "Sube hasta el Cráter Sur."
+    },
+    "crater-rim": {
+      "name": "Borde del cráter",
+      "description": "Ponte a más de 1850 m."
+    },
+    "emeralds": {
+      "name": "Esmeraldas",
+      "description": "Llega a los Lagos Esmeralda."
+    },
+    "up-and-over": {
+      "name": "Arriba y al otro lado",
+      "description": "Sube 700 m en total."
+    },
+    "steam": {
+      "name": "A todo vapor",
+      "description": "Camina 15 km en un solo día."
+    },
+    "crossed": {
+      "name": "Cruzado",
+      "description": "Completa la Travesía Alpina del Tongariro."
+    }
+  }
+}

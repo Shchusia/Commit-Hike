@@ -1,0 +1,60 @@
+{
+  "name": "Szlak próbny",
+  "description": "Krótka trasa do wypróbowania wszystkiego.",
+  "waypoints": {
+    "trailhead": {
+      "name": "Początek szlaku",
+      "text": "Twoja wędrówka się zaczyna."
+    },
+    "old-bridge": {
+      "name": "Stary most",
+      "text": "Pierwszy kilometr za tobą."
+    },
+    "pine-forest": {
+      "name": "Las sosnowy",
+      "text": "Ćwierć drogi."
+    },
+    "mountain-lake": {
+      "name": "Górskie jezioro",
+      "text": "Połowa drogi."
+    },
+    "summit": {
+      "name": "Szczyt",
+      "text": "Udało się!"
+    }
+  },
+  "story": {
+    "birdsong": "Na ścieżce cichnie wszystko poza śpiewem ptaków.",
+    "clouds": "Idziesz już ponad chmurami."
+  },
+  "facts": {
+    "lapse-rate": "Powietrze ochładza się o około 6,5 °C na każde 1000 m wysokości, więc na szczycie może być zima, gdy w dolinie jest wiosna.",
+    "naismith": "Reguła Naismitha (1892) do planowania wędrówek: godzina na każde 5 km drogi plus godzina na każde 600 m podejścia."
+  },
+  "objects": {
+    "bridge": "Stary most",
+    "bench": "Ławka z widokiem"
+  },
+  "achievements": {
+    "first-steps": {
+      "name": "Pierwsze kroki",
+      "description": "Przejdź pierwsze 100 m."
+    },
+    "bridge": {
+      "name": "Przez rzekę",
+      "description": "Dojdź do Starego mostu."
+    },
+    "halfway": {
+      "name": "Połowa drogi",
+      "description": "Dojdź do Górskiego jeziora."
+    },
+    "big-day": {
+      "name": "Wielki dzień",
+      "description": "Przejdź 15 km w jeden dzień."
+    },
+    "summit": {
+      "name": "Na górze",
+      "description": "Ukończ Szlak próbny."
+    }
+  }
+}

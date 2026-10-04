@@ -10,6 +10,14 @@ turns them into the section of the new version; the JetBrains Marketplace
 
 ## [Unreleased]
 
+### Added
+- Polish, German and Spanish: the trail panel, both plugins (menus, dialogs, notifications, the status bar), the command titles in VS Code, and the texts of all ten built-in routes and both series: stops, stories, facts and achievements. Pick a language in Settings → Language, or follow the IDE.
+- Distances use a decimal comma in Ukrainian, Polish, German and Spanish, and whole numbers follow each language's rules: 1,925 m · 1 925 м · 1.925 m · 1925 m.
+
+### Fixed
+- The four routes added in 0.5.0 (Svydovets, Gorgany, Tour du Mont Blanc, Camino) had their achievement texts mixed up: English descriptions in Ukrainian and Ukrainian names in English. A new check keeps every text in its own script.
+- Altitudes in German read like decimals ("1,925 m"): numbers used English grouping in every language but Ukrainian.
+
 ## [0.5.0] - 2026-10-04
 
 ### Added

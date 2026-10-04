@@ -20,6 +20,13 @@ func TestBuiltinSeries(t *testing.T) {
 	if !ok || next != "svydovets-ridge" || SeriesName(s, []string{"uk", "en"}) != "Карпати" {
 		t.Fatalf("after Chornohora: %q in %+v", next, s)
 	}
+	for _, ser := range series {
+		for _, l := range []string{"en", "uk", "pl", "de", "es"} {
+			if ser.Name[l] == "" {
+				t.Errorf("series %q has no %s name", ser.ID, l)
+			}
+		}
+	}
 	if _, _, ok := Next(series, "gorgany-popadia-ring"); ok {
 		t.Fatal("the last route of a series has no next")
 	}

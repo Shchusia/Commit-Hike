@@ -196,9 +196,14 @@ func TestEventsAreTranslated(t *testing.T) {
 		t.Fatalf("journey: %+v", g)
 	}
 	// An unknown language falls back to English.
-	st, _ := s.Status(r.dir, "de")
+	st, _ := s.Status(r.dir, "fr")
 	if st.Global.Route.Name != "Demo Trail" || st.Locale != "en" {
 		t.Fatalf("fallback: %q %q", st.Global.Route.Name, st.Locale)
+	}
+	// Route texts come in every interface language.
+	st, _ = s.Status(r.dir, "de")
+	if st.Global.Route.Name != "Probeweg" || st.Locale != "de" {
+		t.Fatalf("German: %q %q", st.Global.Route.Name, st.Locale)
 	}
 	// Achievements unlock once.
 	r.commit("", "big.go", 1)

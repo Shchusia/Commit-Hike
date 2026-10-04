@@ -19,13 +19,15 @@ Each stage is one release. Done items are ticked; see CHANGELOG.md for what ship
 - [x] New GPS routes: Svydovets, Gorgany, Tour du Mont Blanc, Camino de Santiago
 - [x] Route series: when you finish, carry on with the next route ("The Carpathians", "The long ways")
 
-## 0.7.0 — languages
-- [ ] Polish, German and Spanish: panel, both plugins, built-in routes (proofread by native speakers)
+## 0.6.0 — languages
+- [x] Polish, German and Spanish: the panel, both plugins and the core
+- [x] Polish, German and Spanish: the texts of all ten built-in routes and both series
+- [ ] Proofreading by native speakers
 
-## 0.8.0 — team
+## 0.7.0 — team
 - [ ] A team goal walked together, and the team's week
 
-## 0.9.0 — beyond IDEs
+## 0.8.0 — beyond IDEs
 - [ ] Core binaries on GitHub Releases
 - [ ] A starship prompt module and a Neovim plugin
 - [ ] Look into Zed's extension API

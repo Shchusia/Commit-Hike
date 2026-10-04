@@ -51,23 +51,23 @@
   "achievements": {
     "svyd-start": {
       "name": "On the Ridge Path",
-      "description": "На стежці хребта"
+      "description": "Walk your first 100 m on Svydovets."
     },
     "svyd-top": {
       "name": "Twin Peaks",
-      "description": "Близнючки"
+      "description": "Reach Blyznytsia, the top of Svydovets."
     },
     "svyd-lakes": {
       "name": "Lake Keeper",
-      "description": "Хранитель озер"
+      "description": "Pass the lakes all the way to Apshynets."
     },
     "svyd-finish": {
       "name": "Svydovets Crossed",
-      "description": "Свидовець пройдено"
+      "description": "Walk the whole ridge to Chorna Tysa."
     },
     "svyd-streak": {
       "name": "Five Days on the Ridge",
-      "description": "П'ять днів на хребті"
+      "description": "Commit five days in a row."
     }
   }
 }

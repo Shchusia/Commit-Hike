@@ -1,0 +1,52 @@
+# The core as a stand-alone program on GitHub Releases: for shells (starship),
+# Neovim and anything else that isn't an IDE. The IDE plugins bundle their own
+# copy (task core:dist) and don't use these archives.
+#
+#   task release:snapshot      try it locally, nothing is published (output in dist/)
+#   git tag v0.7.0 && git push origin v0.7.0
+#                              .github/workflows/core-release.yml publishes it
+version: 2
+project_name: commit-hike
+
+builds:
+  - id: commit-hike
+    dir: core
+    main: ./cmd/commit-hike
+    binary: commit-hike
+    env: [CGO_ENABLED=0]
+    flags: [-trimpath]
+    # The same flags as task core:dist; the version comes from the tag (v0.7.0 → 0.7.0).
+    ldflags: ["-s -w -X main.version={{ .Version }}"]
+    goos: [linux, darwin, windows]
+    goarch: [amd64, arm64]
+
+archives:
+  - id: commit-hike
+    formats: [tar.gz]
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+    # No version in the name: .../releases/latest/download/commit-hike_linux_amd64.tar.gz
+    # always gets the newest one. scripts/install.sh and install.ps1 build these names.
+    name_template: "commit-hike_{{ .Os }}_{{ .Arch }}"
+    files: [LICENSE, README.md]
+
+checksum:
+  name_template: checksums.txt
+  algorithm: sha256
+
+snapshot:
+  # Tags make release versions; snapshots take VERSION (task release:snapshot sets APP_VERSION).
+  version_template: "{{ .Env.APP_VERSION }}-snapshot"
+
+# Release notes come from CHANGELOG.md (scripts/release-notes.mjs, passed with
+# --release-notes), not from commit messages.
+changelog:
+  disable: true
+
+release:
+  github:
+    owner: Shchusia
+    name: Commit-Hike
+  prerelease: auto
+  mode: keep-existing

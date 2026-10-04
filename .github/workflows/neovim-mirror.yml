@@ -1,0 +1,37 @@
+name: Neovim plugin mirror
+
+# On every version tag, publishes plugins/neovim as a repository of its own
+# (the NEOVIM_MIRROR variable, e.g. Shchusia/commit-hike.nvim), with the same
+# tag, so plugin managers install it as usual and pin it to releases.
+# Needs the NEOVIM_MIRROR_TOKEN secret: a fine-grained token with "Contents:
+# read and write" on the mirror repository only. Skipped while NEOVIM_MIRROR
+# isn't set. See docs/publishing.md, "Neovim".
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mirror:
+    if: ${{ vars.NEOVIM_MIRROR != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Publish plugins/neovim with the tag
+        env:
+          TOKEN: ${{ secrets.NEOVIM_MIRROR_TOKEN }}
+          MIRROR: ${{ vars.NEOVIM_MIRROR }}
+        run: |
+          set -eu
+          [ -n "$TOKEN" ] || { echo "::error::Set the NEOVIM_MIRROR_TOKEN secret (see docs/publishing.md)"; exit 1; }
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          tag="${GITHUB_REF_NAME}"
+          case "$GITHUB_REF" in refs/tags/v*) ;; *) tag="v$(cat VERSION)" ;; esac
+          sh scripts/neovim-mirror.sh "https://x-access-token:${TOKEN}@github.com/${MIRROR}.git" "$tag"

@@ -56,8 +56,10 @@ test("the year postcard and the badge go to the host", async ({ page }) => {
   st.history = history();
   const p = await openPanel(page, data(st));
   await page.getByRole("tab", { name: "Stats" }).click();
-  await page.getByRole("button", { name: "✉ Year postcard" }).click();
+  await page.getByRole("button", { name: "↗ Year postcard" }).click();
+  await page.getByRole("menuitem", { name: /Save the postcard/ }).click();
   await page.getByRole("button", { name: /Badge for your GitHub profile/ }).click();
+  await expect.poll(async () => (await p.sent()).some(m => m.command === "savePostcard")).toBe(true);
   const sent = await p.sent();
   const card = sent.find(m => m.command === "savePostcard");
   expect(card.name).toBe("commit-hike-year-2026.png");

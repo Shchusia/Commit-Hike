@@ -3,13 +3,38 @@
   <name>Commit Hike</name>
   <vendor email="denisshchutskyi@gmail.com" url="https://github.com/Shchusia/Commit-Hike">Denis Shchutskyi</vendor>
   <description><![CDATA[
-    <p>Every commit you make moves you along a hiking trail.</p>
+    <p>Every commit you make moves you along a hiking trail, right inside your IDE. A day of steady work takes you
+    about ten kilometers along a real mountain ridge, a desert crossing or a folk tale, with a scene that changes as
+    you go, a map, stories, facts and achievements.</p>
     <ul>
-      <li><b>Nothing touches your projects.</b> No git hooks, no files in your repository: Commit Hike only reads git history.</li>
-      <li><b>Everything stays on this computer.</b> No accounts, no network requests.</li>
-      <li><b>Real work counts.</b> Lock files, generated code, whitespace-only changes and other people's commits don't.</li>
+      <li><b>Real trails.</b> Ten routes: the Chornohora ridge over Hoverla, the Tongariro Alpine Crossing, the Tour du
+        Mont Blanc and the Camino Francés on their real GPS tracks, Santiago's road from <i>The Alchemist</i>, folk tales
+        and original stories, in two series you can walk one after another.</li>
+      <li><b>A hike you can watch.</b> A side-on scene that follows the real elevation, the weather, the season and your
+        clock, a minimap and a topographic map you zoom like paper. Look back at the way you came; what lies ahead stays
+        hidden until you get there.</li>
+      <li><b>Real distances, your difficulty.</b> A typical day of commits is about 10 km on medium (12.5 on easy, 8 on hard).</li>
+      <li><b>Stories, facts and achievements</b> at every stop, streaks, days off, your year in a calendar and a passport
+        with a stamp for every stop.</li>
+      <li><b>Share it.</b> A postcard of where you are, saved, copied or posted to X, Bluesky, Mastodon, Threads, LinkedIn,
+        Facebook, Telegram or Reddit with the text ready, and an SVG badge for your GitHub profile.</li>
+      <li><b>Walk together.</b> Everyone committing to a project on the same trail, with a leaderboard, the team's week and a
+        team goal: a route you walk together, everyone's commits adding up.</li>
+      <li><b>Five languages.</b> English, Ukrainian, Polish, German and Spanish.</li>
     </ul>
-    <p>Open the Commit Hike tool window to see your trail. The status bar shows how far you've walked.</p>
+    <p><b>Private by design.</b> Nothing is written to your projects (no git hooks, no files): Commit Hike only reads git
+    history. No accounts, no telemetry: the plugin makes no network requests; Share opens a network's page in your
+    browser only when you pick it. Lock files, generated code, whitespace-only changes and other people's commits
+    don't count.</p>
+    <p>Open the <b>Commit Hike</b> tool window to see your trail; the status bar shows how far you've walked, and
+    <b>Tools | Commit Hike</b> has everything else. The same progress also shows in your shell prompt and in Neovim:
+    <a href="https://github.com/Shchusia/Commit-Hike/blob/master/docs/terminal.md">docs/terminal.md</a>.</p>
+    <p>Read about it in
+    <a href="https://github.com/Shchusia/Commit-Hike/blob/master/README.md">English</a>,
+    <a href="https://github.com/Shchusia/Commit-Hike/blob/master/README.uk.md">Українською</a>,
+    <a href="https://github.com/Shchusia/Commit-Hike/blob/master/README.pl.md">po polsku</a>,
+    <a href="https://github.com/Shchusia/Commit-Hike/blob/master/README.de.md">auf Deutsch</a> or
+    <a href="https://github.com/Shchusia/Commit-Hike/blob/master/README.es.md">en español</a>.</p>
   ]]></description>
 
   <depends>com.intellij.modules.platform</depends>

@@ -18,6 +18,7 @@ for (const dev of [false, true]) {
 test("the postcard is a 1200×630 PNG handed to the host", async ({ page }) => {
   const p = await openPanel(page, data(status("en")));
   await page.locator(".hike-actions .share").click();
+  await page.getByRole("menuitem", { name: /Save the postcard/ }).click();
   await expect.poll(async () => (await p.sent()).some(m => m.command === "savePostcard")).toBe(true);
   const m = (await p.sent()).find(x => x.command === "savePostcard");
   expect(m.name).toMatch(/^commit-hike-chornohora-ridge-day-\d+\.png$/);

@@ -87,11 +87,26 @@ task release:build                # prod packages, after every check and verific
 git commit -am "Release 0.2.0" && git tag v0.2.0 && git push --follow-tags
 ```
 
+Pushing the tag also publishes the core on its own: the workflow
+`.github/workflows/core-release.yml` builds it with GoReleaser for Linux, macOS
+and Windows (x64 and Arm), attaches the archives and `checksums.txt` to the
+GitHub release with the notes from CHANGELOG.md, and checks that the tag
+matches `VERSION`. The install scripts (`scripts/install.sh`,
+`scripts/install.ps1`) take the latest release from there. Try it locally
+first with `task release:snapshot` (output in `dist/`, nothing published);
+**Actions → Core binaries → Run workflow** does the same dry run on GitHub.
+
+**Screenshots.** `task screenshots` remakes `docs/screenshots/` from the real
+panel in all five languages (1280×800, the size both marketplaces like). The
+READMEs and the VS Code page use them straight from the repository, so push
+them before releasing (`task release:check` says so). On JetBrains
+Marketplace upload `en-hike`, `en-map`, `en-places`, `en-stats` and
+`en-share` once in the plugin's **Media** tab; they don't come from the zip.
+
 Then upload by hand: the signed JetBrains zip (`./gradlew signPlugin` in
 `plugins/jetbrains`, see above) on plugins.jetbrains.com → **Upload Update**,
 the `.vsix` with `task ovsx:publish` and on the Visual Studio Marketplace
-publisher page. A GitHub release with `gh release create` and the notes from
-`node scripts/release-notes.mjs` is optional.
+publisher page. The GitHub release itself is made by the core workflow above.
 
 To publish from CI later, add a workflow that runs `task release:build` and the
 `*:publish` tasks on version tags, with the secrets from section 2.

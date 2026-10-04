@@ -10,6 +10,28 @@ turns them into the section of the new version; the JetBrains Marketplace
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-10-04
+
+### Added
+- Share where you are: the ↗ Share menu under the hike and on the year postcard posts to X, Bluesky, Mastodon (your own server), Threads, LinkedIn, Facebook, Telegram or Reddit with a ready text in your language. The networks' sharing pages don't take pictures, so the postcard goes to your clipboard first, ready to paste into the post. The menu also saves the postcard, copies it or copies the text. The plugins open only these networks' sharing pages.
+- Commit Hike in the terminal: the core installs with one command (`curl … /scripts/install.sh | sh`, or `install.ps1` on Windows) from GitHub Releases, checked against the release's checksums. `commit-hike prompt` prints one line such as "🥾 16,0 км · Озеро Несамовите" for starship, bash, zsh or fish, and counts new commits by itself, so the shell is enough without an IDE. See docs/terminal.md.
+- A Neovim plugin (plugins/neovim): the same line in your status line (lualine or plain), updated within a second of any commit, and `:CommitHike` to see where you are, scan, choose a trail, the difficulty or the language. In five languages, with `:checkhealth commit-hike` and `:help commit-hike`.
+- Zed: its extension API can't show anything in the status bar or a panel yet, so there is no Zed extension; the starship line works in Zed's terminal and a task shows it on demand (docs/zed.md).
+- The core's binaries for Linux, macOS and Windows (x64 and Arm) are published to GitHub Releases for every version tag.
+- A team goal: pick a route in the Team tab and the whole team walks it together, everyone's commits since the start adding up, with each person's part, the next stop, the team's pace and the days left. Only the route and the start are saved; the distance is counted from git history, so teammates who pick the same goal see the same numbers. `commit-hike project goal --route ID` / `goal-off` from the command line.
+- The team's week in the Team tab: the distance since Monday and how it compares with last week, commits, days with commits, the best day and everyone's part.
+- The README in Polish, German and Spanish too, and new screenshots in all five languages, including the Share menu. `task screenshots` makes them from the real panel, so they can be remade after any change.
+- The marketplace pages (VS Code / Open VSX and JetBrains) describe all ten routes, sharing, the terminal and the five languages, and link to the README in each language.
+
+### Changed
+- The ✉ Postcard buttons became the ↗ Share menu; saving the postcard is its first item.
+- The GitHub badge writes the distance like the panel: in metres below 1 km ("640 m", not "0.6 km").
+
+### Fixed
+- The GitHub badge used a decimal point in Polish, German and Spanish ("34.8 km"); it uses the comma now, like the panel.
+- `task` failed on computers without PyCharm (CI machines included): looking for PyCharm broke every task.
+- Editor warnings in the panel (unresolved host colours, fonts without a generic family, unused code) and in the READMEs.
+
 ## [0.6.0] - 2026-10-04
 
 ### Added

@@ -213,7 +213,54 @@ data class Team(
     val lengthM: Double = 0.0,
     val members: List<Member>? = null,
     val hidden: Int = 0,
+    val week: TeamWeek? = null,
+    val goal: TeamGoal? = null, // the route the team walks together, when one is set
+    val routes: List<GoalRoute>? = null, // to choose a goal from, translated
 )
+
+data class TeamWeek(
+    val from: String = "",
+    val to: String = "",
+    val totalM: Double = 0.0,
+    val commits: Int = 0,
+    val activeDays: Int = 0,
+    val prevTotalM: Double = 0.0,
+    val bestDay: String? = null,
+    val bestDayM: Double = 0.0,
+    val members: List<WeekMember>? = null,
+    val hidden: Int = 0,
+    val daysElapsed: Int = 0,
+)
+
+data class WeekMember(
+    val id: String = "",
+    val name: String = "",
+    val me: Boolean = false,
+    val distanceM: Double = 0.0,
+    val commits: Int = 0,
+    val activeDays: Int = 0,
+)
+
+data class TeamGoal(
+    val routeId: String = "",
+    val routeName: String = "",
+    val lengthM: Double = 0.0,
+    val since: Long = 0,
+    val distanceM: Double = 0.0,
+    val percent: Double = 0.0,
+    val finished: Boolean = false,
+    val lastWaypoint: Waypoint? = null,
+    val nextWaypoint: Waypoint? = null,
+    val toNextM: Double = 0.0,
+    val paceM: Double = 0.0,
+    val daysLeft: Int = 0,
+    val members: List<GoalMember>? = null,
+)
+
+data class GoalMember(val id: String = "", val name: String = "", val me: Boolean = false, val distanceM: Double = 0.0)
+
+/** A route to choose as a team goal (the core's RouteChoice). */
+data class GoalRoute(val id: String = "", val name: String = "", val lengthM: Double = 0.0)
 
 data class LocaleInfo(val locale: String = "", val effective: String = "en", val available: List<String>? = null)
 

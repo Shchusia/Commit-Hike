@@ -19,8 +19,13 @@ import dev.commithike.core.RouteChoice
 import dev.commithike.core.Scope
 import dev.commithike.core.SetupChoice
 import dev.commithike.core.TrekUi
+import java.awt.Image
+import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.StringSelection
+import java.awt.datatransfer.Transferable
+import java.awt.datatransfer.UnsupportedFlavorException
 import java.io.File
+import javax.imageio.ImageIO
 
 /**
  * [TrekUi] in a JetBrains IDE. The flows run off the UI thread; every dialog
@@ -113,4 +118,21 @@ class IdeTrekUi(
     override fun open(file: File) = BrowserUtil.browse(file.toPath())
 
     override fun browse(url: String) = BrowserUtil.browse(url)
+
+    override fun copyImageToClipboard(png: ByteArray) {
+        val image = ImageIO.read(png.inputStream()) ?: return
+        CopyPasteManager.getInstance().setContents(ImageSelection(image))
+    }
+
+    /** A picture for the clipboard: pasted as an image into a post or a chat. */
+    private class ImageSelection(private val image: Image) : Transferable {
+        override fun getTransferDataFlavors() = arrayOf(DataFlavor.imageFlavor)
+
+        override fun isDataFlavorSupported(flavor: DataFlavor) = flavor == DataFlavor.imageFlavor
+
+        override fun getTransferData(flavor: DataFlavor): Any {
+            if (!isDataFlavorSupported(flavor)) throw UnsupportedFlavorException(flavor)
+            return image
+        }
+    }
 }

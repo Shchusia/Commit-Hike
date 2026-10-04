@@ -1,7 +1,9 @@
 package dev.commithike.core
 
+import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
@@ -34,6 +36,7 @@ class TrekFlowsTest {
         var opened: File? = null
         var edited: File? = null
         var browsed: String? = null
+        var image: ByteArray? = null
         var saveDefault: String? = null
         var offeredRoutes: List<Route> = emptyList()
 
@@ -90,6 +93,10 @@ class TrekFlowsTest {
 
         override fun browse(url: String) {
             browsed = url
+        }
+
+        override fun copyImageToClipboard(png: ByteArray) {
+            image = png
         }
     }
 
@@ -258,6 +265,11 @@ class TrekFlowsTest {
         user.actions.last()()
         assertEquals(png, user.opened)
 
+        // sharing: the postcard goes to the clipboard, with a note to paste it
+        flows.copyPostcard(byteArrayOf(9, 8, 7))
+        assertArrayEquals(byteArrayOf(9, 8, 7), user.image)
+        assertEquals(I18n.t("postcardCopied"), user.notes.last().first)
+
         flows.copyDiagnostics("GoLand 2026.2", "Linux", listOf("failed for me@x.io"), null)
         assertTrue(user.clipboard!!.contains("Plugin: 0.5.0 (prod)") && user.clipboard!!.contains("\"initialized\""))
         assertFalse(user.clipboard!!.contains("me@x.io"))
@@ -316,6 +328,14 @@ class TrekFlowsTest {
 
         flows(host, user).setTeam(true)
         assertEquals(2, host.teamForgotten)
+
+        // a team goal from the Team tab: set, recounted, removed
+        flows(host, user).setTeamGoal("svydovets-ridge")
+        assertEquals(3, host.teamForgotten)
+        assertEquals("svydovets-ridge", host.cli.team(r.path).goal!!.routeId)
+        assertTrue(host.cli.team(r.path).routes!!.size >= 10)
+        flows(host, user).setTeamGoal("")
+        assertNull(host.cli.team(r.path).goal)
         host.currentRepo = null
         flows(host, user).setTeam(true) // needs a project
         assertEquals("", user.titles.last())

@@ -7,18 +7,18 @@
 [![GitHub stars](https://img.shields.io/github/stars/Shchusia/Commit-Hike?style=flat&logo=github)](https://github.com/Shchusia/Commit-Hike)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-*[Українською](README.uk.md) · [What's new](CHANGELOG.md)*
+*[English](README.md) · [Українська](docs/README.uk.md) · [Polski](docs/README.pl.md) · [Deutsch](docs/README.de.md) · [Español](docs/README.es.md) · [What's new](CHANGELOG.md)*
 
 Every commit you make moves you along a hiking trail, right inside your IDE.
 A day of steady work takes you about ten kilometers along a real mountain
 ridge, a desert crossing or a fairy tale, with a scene that changes as you go,
 a map, stories, facts and achievements.
 
-<p align="center">
+<p>
   <img src="https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/docs/screenshots/en-hike.png" width="49%" alt="Hike view: a side-on scene of the trail">
   <img src="https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/docs/screenshots/en-map.png" width="49%" alt="Map view: the real GPS track of the Chornohora ridge">
 </p>
-<p align="center">
+<p>
   <img src="https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/docs/screenshots/en-places.png" width="49%" alt="Places view: every stop and its story">
   <img src="https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/docs/screenshots/en-stats.png" width="49%" alt="Stats view: streaks, daily distance and achievements">
 </p>
@@ -33,21 +33,21 @@ a map, stories, facts and achievements.
 - **A living scene.** The sky follows your clock and the weather changes day by day. The land changes with the route: conifer forests, deciduous woods that turn gold in autumn, meadows, fields, steppe, desert, rock, snow, tundra, lakes, swamps, the seaside, volcanoes and villages, blending smoothly into each other.
 - **Things to find.** Route packs place pictures (SVG, PNG, JPG, WebP, GIF) or small animated HTML scenes along the trail. They fade in as you approach and out once you've passed. Facts about the places unlock as you walk.
 - **A minimap and a real map.** The hike view has a minimap of the whole trail. The map tab is a topographic map generated from the route itself: contour lines, hill shading, forests, lakes and the sea, with the stops you've passed, facts you've found and your teammates. Real routes are drawn from their GPS track at true scale. Zoom and pan like a paper map: the scale bar follows the zoom, symbols and labels keep their size, and more labels appear as you zoom in. A route pack can bring its own hand-drawn map instead.
-- **Walk together.** Turn on teammates for a project and everyone who commits to it appears on the same trail, with a leaderboard. Names come from git history and are never stored.
+- **Walk together.** Turn on teammates for a project and everyone who commits to it appears on the same trail, with a leaderboard, the team's week and a team goal: a route you all walk together, everyone's commits adding up. Names come from git history and are never stored.
 - **Real distances, your difficulty.** Routes have their real lengths: Santiago's road is about 4,370 km. A typical day of commits takes you about 10 km on medium (12.5 on easy, 8 on hard), about half a hiker's day, so a long route is a months-long goal. A difficulty change applies from then on, and you see how many typical days are left.
 - **Tunnels and encounters.** Walk through mines and caves by torchlight, and feel the world go cold and dark where danger crossed the road.
 - **No spoilers.** You can look back along the way you've walked, but what lies ahead stays hidden until you get there.
 - **Your year on the trail.** An activity calendar for every year you've walked, with the distance, commits, active days, best day and longest streak. Hover any day, or any bar of the last two weeks, to see its distance and commits.
 - **Days off.** Choose weekdays off (say, Saturday and Sunday): a day off without commits doesn't break your streak, and one with commits still counts.
 - **A badge for your profile.** Save an SVG badge with your trail and distance for your GitHub profile README, and a postcard of your year.
-- **Postcards.** Save a picture of where you are — the real scene, your hiker, the route, day and distance — and share it.
+- **Share it.** A postcard of where you are — the real scene, your hiker, the route, day and distance — saved, copied or posted to X, Bluesky, Mastodon, Threads, LinkedIn, Facebook, Telegram or Reddit with the text ready.
+- **In the terminal too.** One line in your shell prompt (starship, bash, zsh, fish) and in Neovim's status line, from the same core: `🥾 16.0 km · Lake Nesamovyte`.
 - **One settings page.** Language, difficulty, days off, notifications, motion, contrast, your hiker and backups in one place, the same in every IDE.
 - **Comfortable for everyone.** Reduced motion and high-contrast themes are respected, down to animated scenes in route packs.
 - **Take it with you.** Export your progress, settings, hiker and routes to one file and import it on another computer: nothing is counted twice.
 - **Fair distance.** Meters grow with the size of a commit, but slowly: tiny commits count, huge ones can't be farmed. Lock files, generated code, whitespace-only changes and other people's commits don't count. Squashed, rebased or amended history is recounted, never counted twice.
 - **Your own routes and maps.** Create a route from a template, add pictures and a map, then import it as a folder or a `.zip`, right from the IDE. See [docs/routes.md](docs/routes.md).
 - **Your own hiker.** Replace the default figure with any PNG with a transparent background. The default, [`ui/panel/hiker-default.png`](ui/panel/hiker-default.png), shows the expected format: facing right, feet at the bottom edge.
-- **Your language.** The whole plugin in English and Ukrainian: route texts, the trail view, notifications, dialogs and menus. Switch it in the plugin's menu, or follow the IDE.
 - **Private by design.** Nothing is written to your repositories and nothing leaves your computer. No source code, commit messages, file names or repository names are stored.
 
 ## Supported IDEs
@@ -57,6 +57,8 @@ a map, stories, facts and achievements.
 | JetBrains IDEs 2024.3+: PyCharm, IntelliJ IDEA, GoLand, WebStorm, PhpStorm, RubyMine, CLion, Rider… | [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/34595) |
 | VSCodium, Cursor, Windsurf and other editors that use Open VSX | [Open VSX](https://open-vsx.org/extension/shchusia/commit-hike) |
 | VS Code 1.85+ | coming to the Visual Studio Marketplace; until then, install the `.vsix` from Open VSX |
+| Neovim 0.10+, and any shell prompt: starship, bash, zsh, fish | [docs/terminal.md](docs/terminal.md) |
+| Zed | through its terminal, see [docs/terminal.md](docs/terminal.md#zed) |
 
 ## Install
 
@@ -73,6 +75,13 @@ a map, stories, facts and achievements.
 the `.vsix` from the [Open VSX page](https://open-vsx.org/extension/shchusia/commit-hike)
 (**Download**), then in VS Code open the Extensions view, **⋯ → Install from VSIX…**
 and pick the file.
+
+**Terminal and Neovim.** Install the core with one command, then add it to your
+prompt or your status line, see [docs/terminal.md](docs/terminal.md):
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/scripts/install.sh | sh
+```
 
 **From source.** See [Development](#development): `task jetbrains:install` or
 `task vscode:install`.
@@ -95,6 +104,13 @@ Everything else is in **Tools → Commit Hike** (JetBrains) or the command
 palette, under *Commit Hike* (VS Code): choosing a trail, importing your own
 route, the hiker icon, difficulty, language, counting a project or not, and
 recounting a project from its git history.
+
+**↗ Share** under the hike (and on the year postcard in Stats) saves or copies a
+postcard of where you are, or opens a post on X, Bluesky, Mastodon, Threads,
+LinkedIn, Facebook, Telegram or Reddit with the text ready; the postcard is in
+your clipboard to paste into it.
+
+<p><img src="https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/docs/screenshots/en-share.png" width="49%" alt="The Share menu: save, copy or post the postcard"></p>
 
 Your progress is stored in `~/.config/commit-hike` (Linux), `~/Library/Application
 Support/commit-hike` (macOS) or `%AppData%\commit-hike` (Windows). `task data:where`

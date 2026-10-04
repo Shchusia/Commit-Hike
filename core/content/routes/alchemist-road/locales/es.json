@@ -1,0 +1,118 @@
+{
+  "name": "El camino del Alquimista",
+  "description": "El viaje de Santiago en «El Alquimista» de Paulo Coelho por lugares reales y a escala real, unos 4370 km: Andalucía, Tánger, a través del Sahara hasta El Fayum y las pirámides. El mapa es relieve real (Natural Earth).",
+  "waypoints": {
+    "andalusia": {
+      "name": "Pastos de Andalucía",
+      "text": "Un joven pastor duerme entre sus ovejas y sueña, dos veces, con un tesoro junto a las pirámides."
+    },
+    "old-church": {
+      "name": "La iglesia en ruinas",
+      "text": "Una iglesia sin tejado con un sicómoro donde antes estaba la sacristía."
+    },
+    "tarifa": {
+      "name": "Tarifa",
+      "text": "En la plaza, un anciano que dice ser rey te pide la décima parte de tu rebaño."
+    },
+    "strait": {
+      "name": "Estrecho de Gibraltar",
+      "text": "Vendes tus ovejas y cruzas el mar hacia África."
+    },
+    "tangier": {
+      "name": "Tánger",
+      "text": "Te roban el primer día, en una ciudad cuyo idioma no hablas."
+    },
+    "crystal-shop": {
+      "name": "El mercader de cristales",
+      "text": "Un año puliendo vidrio, vendiendo té y ahorrando. A la tienda nunca le fue mejor."
+    },
+    "sahara-edge": {
+      "name": "Límite del Sahara",
+      "text": "Una caravana de camellos deja atrás el último pozo. Un inglés lee libros de alquimia."
+    },
+    "deep-sahara": {
+      "name": "El corazón del Sahara",
+      "text": "Semanas de arena y silencio. Aprendes a escuchar al desierto."
+    },
+    "al-fayoum": {
+      "name": "Oasis de El Fayum",
+      "text": "Palmeras, pozos y una mujer llamada Fátima. Dos halcones pelean en el cielo y lees una señal."
+    },
+    "alchemist-tent": {
+      "name": "La tienda del Alquimista",
+      "text": "Un hombre de negro en un caballo blanco acepta llevarte a través del desierto."
+    },
+    "wind-rock": {
+      "name": "La Roca del Viento",
+      "text": "Retenido en un campamento del desierto, tienes tres días para convertirte en viento."
+    },
+    "giza": {
+      "name": "Pirámides de Guiza",
+      "text": "Cavas junto a las pirámides, y las palabras de un desconocido te dicen que el tesoro está en casa, bajo el sicómoro."
+    }
+  },
+  "story": {
+    "reading": "Te gustan las ovejas, pero también los libros y los horizontes nuevos.",
+    "omens": "Dos piedras, una negra y otra blanca, te ayudan cuando no sabes qué decidir.",
+    "war": "En el desierto hay tribus en guerra, y la caravana solo avanza de noche.",
+    "lead": "El alquimista te enseña un truco con plomo. No es el oro lo que importa."
+  },
+  "facts": {
+    "first-print": "«El Alquimista» se publicó por primera vez en Brasil en 1988. La primera editorial imprimió unos 900 ejemplares y decidió no reimprimirlo.",
+    "camino": "Dos años antes, en 1986, Coelho recorrió el Camino de Santiago, la ruta de los peregrinos por el norte de España.",
+    "tarifa-point": "La punta de Tarifa es el extremo más meridional de la Europa continental.",
+    "strait-width": "En su parte más estrecha, el Estrecho de Gibraltar mide solo unos 14 km; en días claros se ve África desde España.",
+    "ibn-battuta": "Ibn Battuta, uno de los mayores viajeros de la Edad Media, nació en Tánger en 1304.",
+    "alchemy-word": "La palabra alquimia llegó a las lenguas europeas desde el árabe al-kīmiyā, y de ella nació la química.",
+    "sahara-size": "El Sahara es el mayor desierto cálido del mundo, unos 9 millones de km², más o menos el tamaño de Estados Unidos.",
+    "not-all-sand": "La mayor parte del Sahara no son dunas, sino mesetas rocosas y llanuras de grava.",
+    "camel-drink": "Un camello sediento puede beber más de 100 litros de agua en pocos minutos.",
+    "fayoum": "El Fayum es un oasis real en una depresión del desierto al oeste del Nilo, alimentado por un canal antiguo y con el lago Qarún.",
+    "emerald-tablet": "La Tabla Esmeralda, un texto breve y críptico atribuido a Hermes Trismegisto, fue una base de la alquimia europea.",
+    "great-pyramid": "La Gran Pirámide de Guiza fue la construcción humana más alta durante unos 3800 años.",
+    "translations": "«El Alquimista» tiene un récord Guinness como el libro más traducido de un autor vivo."
+  },
+  "objects": {
+    "flock": "El rebaño de Santiago",
+    "church": "La iglesia del sicómoro",
+    "crystal": "La tienda de cristales",
+    "caravan": "La caravana",
+    "oasis-palms": "El oasis",
+    "hawks": "Dos halcones",
+    "pyramids": "Las pirámides"
+  },
+  "achievements": {
+    "dream": {
+      "name": "Un sueño que se repite",
+      "description": "Camina tus primeros 100 m."
+    },
+    "africa": {
+      "name": "Otro continente",
+      "description": "Llega a Tánger."
+    },
+    "crystal": {
+      "name": "Vidrio pulido",
+      "description": "Trabaja para el mercader de cristales."
+    },
+    "desert-day": {
+      "name": "Paso de caravana",
+      "description": "Camina 20 km en un solo día."
+    },
+    "oasis": {
+      "name": "Agua en el desierto",
+      "description": "Llega a El Fayum."
+    },
+    "wind": {
+      "name": "Conviértete en viento",
+      "description": "Llega a la Roca del Viento."
+    },
+    "steady": {
+      "name": "Sigue las señales",
+      "description": "Haz commits 30 días seguidos."
+    },
+    "treasure": {
+      "name": "Donde está el tesoro",
+      "description": "Llega a las pirámides y descubre dónde está el tesoro."
+    }
+  }
+}

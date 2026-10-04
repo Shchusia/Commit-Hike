@@ -1,0 +1,87 @@
+{
+  "name": "Cresta de Chornohora",
+  "description": "La cresta más alta de Ucrania, de Zaroslyak por el Hoverla hasta el Pip Iván. Las distancias son aproximadas.",
+  "waypoints": {
+    "zaroslyak": {
+      "name": "Zaroslyak",
+      "text": "El sendero empieza en la antigua base, en el bosque de abetos."
+    },
+    "hoverla": {
+      "name": "Hoverla",
+      "text": "2061 m, el punto más alto de Ucrania."
+    },
+    "breskul": {
+      "name": "Breskul",
+      "text": "La cresta se abre ante ti."
+    },
+    "pozhyzhevska": {
+      "name": "Pozhyzhevska",
+      "text": "Prados a ambos lados y el viento en la cara."
+    },
+    "nesamovyte": {
+      "name": "Lago Nesamovyte",
+      "text": "Dice la leyenda que una piedra lanzada a este lago desata una tormenta. Mejor no."
+    },
+    "brebeneskul-lake": {
+      "name": "Lago Brebeneskul",
+      "text": "El lago más alto de Ucrania."
+    },
+    "pip-ivan": {
+      "name": "Pip Iván",
+      "text": "En la cumbre se alza el observatorio Elefante Blanco. ¡Recorriste toda la cresta!"
+    }
+  },
+  "story": {
+    "treeline": "Los abetos ralean. Sobre ti solo quedan hierba y cielo.",
+    "ridge-wind": "Aquí arriba el viento nunca para. Te subes la cremallera y sigues.",
+    "white-elephant": "Muy por delante asoma en la cumbre un edificio gris: el viejo observatorio."
+  },
+  "facts": {
+    "six-2000": "Chornohora reúne seis de los picos de Ucrania de más de 2000 m: Hoverla, Brebeneskul, Pip Iván, Petros, Hutyn Tomnatyk y Rebra.",
+    "prut": "El Prut, uno de los grandes ríos de Ucrania y Moldavia, nace como un arroyo en las laderas del Hoverla.",
+    "border-posts": "Entre las dos guerras mundiales, esta cresta era la frontera entre Polonia y Checoslovaquia. Los mojones de piedra numerados siguen junto al sendero.",
+    "polonyna": "Una polonyna es un prado de alta montaña. Cada verano los pastores hutsules subían aquí sus rebaños y vivían en cabañas de madera hasta el otoño.",
+    "reserve": "Gran parte de Chornohora está protegida por la Reserva de la Biosfera de los Cárpatos y el Parque Natural Nacional de los Cárpatos.",
+    "cirques": "Los lagos Nesamovyte y Brebeneskul ocupan circos: cuencas excavadas por los glaciares que cubrían estas montañas en la última glaciación.",
+    "observatory": "Polonia construyó el observatorio del Pip Iván en 1936–1938 para astronomía y meteorología. Los lugareños lo apodaron el Elefante Blanco."
+  },
+  "objects": {
+    "hoverla-top": "Cumbre del Hoverla",
+    "koliba": "Una cabaña de pastores",
+    "white-elephant": "El Elefante Blanco"
+  },
+  "achievements": {
+    "first-steps": {
+      "name": "Primeros pasos",
+      "description": "Camina tus primeros 100 m."
+    },
+    "roof-of-ukraine": {
+      "name": "El techo de Ucrania",
+      "description": "Llega al Hoverla."
+    },
+    "above-2000": {
+      "name": "Por encima de 2000",
+      "description": "Ponte a más de 2000 m."
+    },
+    "quiet-stones": {
+      "name": "Sin pánico",
+      "description": "Llega al lago Nesamovyte sin tirar ni una piedra."
+    },
+    "kilometre-up": {
+      "name": "Un kilómetro hacia arriba",
+      "description": "Sube 1000 m en total."
+    },
+    "steady-pace": {
+      "name": "Paso constante",
+      "description": "Haz commits 5 días seguidos."
+    },
+    "hundred": {
+      "name": "Cien",
+      "description": "Haz 100 commits en esta ruta."
+    },
+    "ridge-walker": {
+      "name": "Caminante de crestas",
+      "description": "Recorre toda la cresta de Chornohora."
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "name": "Cresta de Svydovets",
+  "description": "Una cresta verde de prados y lagos glaciares en los Cárpatos ucranianos, de Kvasy por el Blyznytsia hasta Chorna Tysa. El trazado une las paradas; las que no tienen coordenadas comprobadas se reparten a lo largo de él.",
+  "waypoints": {
+    "kvasy": {
+      "name": "Kvasy",
+      "text": "Un pueblo junto al Tisza Negro donde empieza la subida."
+    },
+    "brailka": {
+      "name": "Prado de Brailka",
+      "text": "Aquí veranean los pastores y el queso se hace a la antigua."
+    },
+    "blyznytsia": {
+      "name": "Blyznytsia",
+      "text": "El punto más alto de Svydovets, dos cumbres verdes gemelas."
+    },
+    "drahobrat": {
+      "name": "Drahobrat",
+      "text": "La estación de esquí más alta de Ucrania, tranquila en verano."
+    },
+    "stih": {
+      "name": "Stih",
+      "text": "Una cumbre redondeada en la cresta principal."
+    },
+    "vorozheska": {
+      "name": "Lago Vorozheska",
+      "text": "Dos lagos glaciares unidos por un arroyo, bajo un circo empinado."
+    },
+    "kotel": {
+      "name": "Velykyi Kotel",
+      "text": "El «Gran Caldero», llamado así por el circo de su ladera."
+    },
+    "apshynets": {
+      "name": "Lago Apshynets",
+      "text": "Uno de los lagos más altos de los Cárpatos; el agua no pasa de 12 °C."
+    },
+    "chorna-tysa": {
+      "name": "Chorna Tysa",
+      "text": "Un pueblo en el valle al final de la cresta."
+    }
+  },
+  "story": {
+    "treeline": "Las hayas dan paso a los abetos y luego al prado abierto.",
+    "lakes": "Bajo la cresta, en los viejos circos glaciares, hay un lago tras otro."
+  },
+  "facts": {
+    "centre-europe": "Svydovets linda con el lugar cerca del pueblo de Dilove que se considera el centro geográfico de Europa.",
+    "nine-lakes": "Svydovets tiene nueve lagos glaciares; los más conocidos son Apshynets, Vorozheska y Dohiaska.",
+    "vorozheska-depth": "El lago Vorozheska superior tiene 4,5 m de profundidad; el inferior, 1,9 m."
+  },
+  "achievements": {
+    "svyd-start": {
+      "name": "En la senda de la cresta",
+      "description": "Camina tus primeros 100 m por Svydovets."
+    },
+    "svyd-top": {
+      "name": "Cumbres gemelas",
+      "description": "Llega al Blyznytsia, la cima de Svydovets."
+    },
+    "svyd-lakes": {
+      "name": "Guardián de los lagos",
+      "description": "Recorre los lagos hasta el Apshynets."
+    },
+    "svyd-finish": {
+      "name": "Svydovets cruzado",
+      "description": "Recorre toda la cresta hasta Chorna Tysa."
+    },
+    "svyd-streak": {
+      "name": "Cinco días en la cresta",
+      "description": "Haz commits cinco días seguidos."
+    }
+  }
+}

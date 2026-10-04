@@ -77,27 +77,27 @@
   "achievements": {
     "tmb-start": {
       "name": "Bonjour, Mont Blanc",
-      "description": "Bonjour, Монблан"
+      "description": "Walk your first kilometre."
     },
     "tmb-italy": {
       "name": "Ciao, Italia",
-      "description": "Ciao, Italia"
+      "description": "Reach Courmayeur."
     },
     "tmb-switzerland": {
       "name": "Grüezi",
-      "description": "Grüezi"
+      "description": "Reach Switzerland at La Fouly."
     },
     "tmb-high": {
       "name": "Above 2500",
-      "description": "Вище 2500"
+      "description": "Climb above 2500 m."
     },
     "tmb-finish": {
       "name": "Tour Complete",
-      "description": "Тур пройдено"
+      "description": "Walk the whole loop around Mont Blanc."
     },
     "tmb-streak": {
       "name": "Ten Days of Alps",
-      "description": "Десять днів Альп"
+      "description": "Commit ten days in a row."
     }
   }
 }

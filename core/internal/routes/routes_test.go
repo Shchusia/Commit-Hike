@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"regexp"
 	"strings"
 	"testing"
 	"testing/fstest"
@@ -29,11 +30,29 @@ func TestBuiltinRoutesAreValidAndFullyTranslated(t *testing.T) {
 			}
 		}
 	}
+	// Each text is in its own script: a mix-up between languages shows up here.
+	cyrillic := regexp.MustCompile(`\p{Cyrillic}`)
+	latinOnly := regexp.MustCompile(`^[\p{Latin}\s\p{P}\d]+$`)
+	for id, r := range rs {
+		for loc, texts := range r.Texts {
+			for key, text := range texts {
+				switch {
+				case loc != "uk" && cyrillic.MatchString(text):
+					t.Errorf("%s: %s text %q is in Cyrillic: %q", id, loc, key, text)
+				case loc == "uk" && strings.Count(text, " ") >= 3 && latinOnly.MatchString(text):
+					t.Errorf("%s: uk text %q looks untranslated: %q", id, key, text)
+				}
+			}
+		}
+	}
 	r := rs["chornohora-ridge"]
 	if got := r.T(i18n.Chain("uk-UA"), "waypoints.hoverla.name"); got != "Говерла" {
 		t.Errorf("uk name = %q", got)
 	}
-	if got := r.T(i18n.Chain("de"), "waypoints.hoverla.name"); got != "Hoverla" {
+	if got := r.T(i18n.Chain("de"), "waypoints.hoverla.name"); got != "Howerla" {
+		t.Errorf("de name = %q", got)
+	}
+	if got := r.T(i18n.Chain("fr"), "waypoints.hoverla.name"); got != "Hoverla" {
 		t.Errorf("fallback name = %q", got)
 	}
 }

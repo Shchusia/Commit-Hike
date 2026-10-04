@@ -1,0 +1,104 @@
+{
+  "name": "El camino del molfar",
+  "description": "Un cuento original en los Cárpatos: la vieja molfar Yavdokha envía a su aprendiz con una trembita al Pico del Trueno para llamar a la lluvia.",
+  "waypoints": {
+    "village": {
+      "name": "La aldea al pie del monte",
+      "text": "El heno está seco y los pozos, bajos. Yavdokha te pone una trembita al hombro: «Sube y pídeselo a la Tormenta»."
+    },
+    "mill": {
+      "name": "El molino de agua",
+      "text": "La rueda apenas gira. El molinero dice que el río nunca había estado tan callado."
+    },
+    "church": {
+      "name": "La iglesia de madera",
+      "text": "Tejas plateadas por los años. Enciendes una vela para el camino."
+    },
+    "beech-forest": {
+      "name": "Las hayas primigenias",
+      "text": "Troncos grises más viejos que la aldea. Entre ellos flotan lucecitas verdes."
+    },
+    "vatra": {
+      "name": "El prado de la Vatra",
+      "text": "El pastor mayor te da una brasa del fuego vivo, envuelta en corteza de abedul."
+    },
+    "black-tarn": {
+      "name": "El Lago Negro",
+      "text": "Un agua tan oscura que de día guarda las estrellas. No bebes de ella."
+    },
+    "stone-guardian": {
+      "name": "El Guardián de Piedra",
+      "text": "Una antigua piedra tallada vigila el paso. Haces una reverencia y el viento te deja pasar."
+    },
+    "molfar-hut": {
+      "name": "La cabaña del viejo molfar",
+      "text": "Vacía pero tibia. De las vigas cuelgan hierbas secas, como si alguien supiera que vendrías."
+    },
+    "seven-winds": {
+      "name": "El paso de los Siete Vientos",
+      "text": "Siete vientos, siete voces. No contestas a ninguna y sigues caminando."
+    },
+    "thunder-peak": {
+      "name": "El Pico del Trueno",
+      "text": "Soplas la trembita. Lejos, al oeste, una cortina gris de lluvia empieza a caer sobre el valle."
+    }
+  },
+  "story": {
+    "dust": "A cada paso se levanta polvo del camino. Hasta los perros tienen demasiado calor para ladrar.",
+    "lights": "Las luces verdes avanzan delante de ti, siempre fuera de tu alcance. Las sigues y no pierdes el sendero.",
+    "ember": "La brasa en tu bolsillo sigue caliente. Yavdokha dijo que tenía que llegar viva a la cima.",
+    "clouds-gather": "Debajo de ti se juntan nubes, pesadas y lentas, como si esperaran una señal."
+  },
+  "facts": {
+    "molfar": "En la tradición hutsul, un molfar es un sanador popular y hacedor del tiempo, capaz, según se cree, de desviar el granizo o llamar a la lluvia.",
+    "tserkvas": "En 2013, dieciséis iglesias de madera de la región de los Cárpatos, en Polonia y Ucrania, entraron en la lista del Patrimonio Mundial de la UNESCO.",
+    "beeches": "Los Cárpatos conservan algunos de los últimos hayedos primigenios de Europa; los ucranianos son Patrimonio de la Humanidad desde 2007.",
+    "forest-song": "Mavka, un espíritu del bosque del folclore ucraniano, protagoniza la obra de Lesya Ukrainka «La canción del bosque» (1911).",
+    "vatra-tradition": "Los pastores encendían el fuego de la polonyna al empezar la temporada de pasto e intentaban mantenerlo hasta bajar los rebaños en otoño.",
+    "cheese": "El budz y la brynza, quesos de leche de oveja, se siguen haciendo en la propia polonyna, junto al fuego.",
+    "shadows": "La novela corta de Mijailo Kotsiubynski «Sombras de los antepasados olvidados» (1911) y la película de Serguéi Paradzhánov de 1965 dieron a conocer la vida hutsul en todo el mundo.",
+    "trembita": "La trembita es un cuerno hutsul de madera que puede medir más de 3 m. Su llamada llevaba noticias por los valles: nacimientos, bodas, muertes."
+  },
+  "objects": {
+    "mill": "El molino de agua",
+    "church": "La iglesia de madera",
+    "wisps": "Las luces de Mavka",
+    "vatra-fire": "El fuego vivo",
+    "guardian": "El Guardián de Piedra",
+    "trembita": "La trembita"
+  },
+  "achievements": {
+    "on-the-road": {
+      "name": "En camino",
+      "description": "Camina tus primeros 100 m."
+    },
+    "candle": {
+      "name": "Una vela para el camino",
+      "description": "Llega a la iglesia de madera."
+    },
+    "ember": {
+      "name": "Guardián de la brasa",
+      "description": "Recibe la brasa en el prado de la Vatra."
+    },
+    "high-meadows": {
+      "name": "Prados altos",
+      "description": "Sube 800 m en total."
+    },
+    "guardian": {
+      "name": "Te dejaron pasar",
+      "description": "Pasa junto al Guardián de Piedra."
+    },
+    "two-thousand": {
+      "name": "Donde nacen las tormentas",
+      "description": "Ponte a más de 2000 m."
+    },
+    "steady": {
+      "name": "Siete días, siete vientos",
+      "description": "Haz commits 7 días seguidos."
+    },
+    "rain": {
+      "name": "Llamador de la lluvia",
+      "description": "Llega al Pico del Trueno y llama a la lluvia."
+    }
+  }
+}

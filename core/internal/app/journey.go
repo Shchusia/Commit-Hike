@@ -294,6 +294,9 @@ func (s *Service) journeyDTO(j journey, js journeyStats, unlocked map[string]int
 // resolvedLocale is the first language in chain that any route provides.
 func (s *Service) resolvedLocale(chain []string) string {
 	for _, loc := range chain {
+		if slices.Contains(i18n.UILocales, loc) {
+			return loc
+		}
 		for _, r := range s.routes {
 			if _, ok := r.Texts[loc]; ok {
 				return loc

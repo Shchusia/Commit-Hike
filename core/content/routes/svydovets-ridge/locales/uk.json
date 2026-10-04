@@ -50,23 +50,23 @@
   },
   "achievements": {
     "svyd-start": {
-      "name": "Walk your first 100 m on Svydovets.",
+      "name": "На стежці хребта",
       "description": "Пройди перші 100 м Свидовцем."
     },
     "svyd-top": {
-      "name": "Reach Blyznytsia, the top of Svydovets.",
+      "name": "Близнючки",
       "description": "Досягни Близниці, вершини Свидовця."
     },
     "svyd-lakes": {
-      "name": "Pass the lakes all the way to Apshynets.",
+      "name": "Хранитель озер",
       "description": "Пройди озерами аж до Апшинця."
     },
     "svyd-finish": {
-      "name": "Walk the whole ridge to Chorna Tysa.",
+      "name": "Свидовець пройдено",
       "description": "Пройди весь хребет до Чорної Тиси."
     },
     "svyd-streak": {
-      "name": "Commit five days in a row.",
+      "name": "П'ять днів на хребті",
       "description": "Коміть п'ять днів поспіль."
     }
   }

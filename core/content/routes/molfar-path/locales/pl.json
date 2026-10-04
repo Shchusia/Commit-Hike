@@ -1,0 +1,104 @@
+{
+  "name": "Ścieżka molfara",
+  "description": "Autorska opowieść w Karpatach: stara molfarka Jawdocha wysyła ucznia z trembitą na Gromowy Szczyt, by wezwał deszcz.",
+  "waypoints": {
+    "village": {
+      "name": "Wieś pod górą",
+      "text": "Siano suche, w studniach mało wody. Jawdocha kładzie ci na ramię trembitę: „Idź w górę i poproś Burzę”."
+    },
+    "mill": {
+      "name": "Młyn wodny",
+      "text": "Koło ledwo się obraca. Młynarz mówi, że rzeka nigdy nie była tak cicha."
+    },
+    "church": {
+      "name": "Drewniana cerkiew",
+      "text": "Gonty posrebrzone wiekiem. Zapalasz świeczkę na drogę."
+    },
+    "beech-forest": {
+      "name": "Pradawne buki",
+      "text": "Szare pnie starsze niż wieś. Między nimi dryfują małe zielone światełka."
+    },
+    "vatra": {
+      "name": "Połonina Watra",
+      "text": "Starszy pasterz daje ci żar z żywego ognia, owinięty w korę brzozy."
+    },
+    "black-tarn": {
+      "name": "Czarny Staw",
+      "text": "Woda tak ciemna, że w dzień trzyma gwiazdy. Nie pijesz z niego."
+    },
+    "stone-guardian": {
+      "name": "Kamienny Strażnik",
+      "text": "Prastary rzeźbiony kamień pilnuje przełęczy. Kłaniasz się i wiatr cię przepuszcza."
+    },
+    "molfar-hut": {
+      "name": "Chata starego molfara",
+      "text": "Pusta, ale ciepła. Pod belkami suszą się zioła, jakby ktoś wiedział, że przyjdziesz."
+    },
+    "seven-winds": {
+      "name": "Przełęcz Siedmiu Wiatrów",
+      "text": "Siedem wiatrów, siedem głosów. Nie odpowiadasz żadnemu i idziesz dalej."
+    },
+    "thunder-peak": {
+      "name": "Gromowy Szczyt",
+      "text": "Dmiesz w trembitę. Daleko na zachodzie nad doliną zaczyna padać szara zasłona deszczu."
+    }
+  },
+  "story": {
+    "dust": "Z każdym krokiem z drogi wzbija się kurz. Nawet psom jest za gorąco, by szczekać.",
+    "lights": "Zielone światełka płyną przed tobą, zawsze tuż poza zasięgiem. Idziesz za nimi i nie gubisz ścieżki.",
+    "ember": "Żar w kieszeni wciąż grzeje. Jawdocha mówiła, że musi dotrzeć na szczyt żywy.",
+    "clouds-gather": "Pod tobą zbierają się chmury, ciężkie i powolne, jakby czekały na znak."
+  },
+  "facts": {
+    "molfar": "W tradycji huculskiej molfar to ludowy uzdrowiciel i zaklinacz pogody, który podobno potrafi odwrócić grad albo wezwać deszcz.",
+    "tserkvas": "W 2013 roku szesnaście drewnianych cerkwi regionu karpackiego w Polsce i na Ukrainie wpisano na listę Światowego Dziedzictwa UNESCO.",
+    "beeches": "Karpaty zachowały jedne z ostatnich pierwotnych lasów bukowych Europy; ukraińskie są Światowym Dziedzictwem od 2007 roku.",
+    "forest-song": "Mawka, leśny duch ukraińskiego folkloru, została bohaterką dramatu Łesi Ukrainki „Pieśń lasu” (1911).",
+    "vatra-tradition": "Pasterze rozpalali ogień na połoninie na początku wypasu i starali się utrzymać go do jesieni, gdy spędzali stada w doliny.",
+    "cheese": "Budz i bryndzę, sery z owczego mleka, wciąż robi się na połoninie, przy ogniu.",
+    "shadows": "Nowela Mychajła Kociubynskiego „Cienie zapomnianych przodków” (1911) i film Siergieja Paradżanowa z 1965 roku rozsławiły życie Hucułów na świecie.",
+    "trembita": "Trembita to huculska drewniana trąba, która może mieć ponad 3 m długości. Jej głos niósł wieści przez doliny: narodziny, wesela, śmierć."
+  },
+  "objects": {
+    "mill": "Młyn wodny",
+    "church": "Drewniana cerkiew",
+    "wisps": "Światełka Mawki",
+    "vatra-fire": "Żywy ogień",
+    "guardian": "Kamienny Strażnik",
+    "trembita": "Trembita"
+  },
+  "achievements": {
+    "on-the-road": {
+      "name": "W drodze",
+      "description": "Przejdź pierwsze 100 m."
+    },
+    "candle": {
+      "name": "Świeczka na drogę",
+      "description": "Dojdź do drewnianej cerkwi."
+    },
+    "ember": {
+      "name": "Strażnik żaru",
+      "description": "Odbierz żar na Połoninie Watra."
+    },
+    "high-meadows": {
+      "name": "Wysokie połoniny",
+      "description": "Pokonaj łącznie 800 m podejścia."
+    },
+    "guardian": {
+      "name": "Przepuszczony",
+      "description": "Minij Kamiennego Strażnika."
+    },
+    "two-thousand": {
+      "name": "Tam, gdzie rodzą się burze",
+      "description": "Stań wyżej niż 2000 m."
+    },
+    "steady": {
+      "name": "Siedem dni, siedem wiatrów",
+      "description": "Commituj 7 dni z rzędu."
+    },
+    "rain": {
+      "name": "Przywoływacz deszczu",
+      "description": "Dojdź na Gromowy Szczyt i wezwij deszcz."
+    }
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "name": "Die sieben Leuchttürme",
+  "description": "Eine eigene lange Reise entlang der Stillen See, 700 km von der Salzwüste bis zum nördlichen Eis, um sieben Leuchttürme neu zu entzünden, die in einer einzigen Nacht erloschen sind. Mit einer eigenen handgezeichneten Karte.",
+  "waypoints": {
+    "salt-gate": {
+      "name": "Das Salztor",
+      "text": "Sieben Lichter erloschen in einer Nacht. Die Zunft der Leuchtturmwärter gibt dir die letzte Glut und eine Karte."
+    },
+    "light-1": {
+      "name": "Dünenfeuer",
+      "text": "Sand bis zu den Fenstern. Du räumst die Treppe frei und entzündest die erste Lampe."
+    },
+    "three-wells": {
+      "name": "Oase der Drei Brunnen",
+      "text": "Palmen, Schatten und kaltes Wasser. Eine Karawane nach Norden lässt dich neben sich gehen."
+    },
+    "light-2": {
+      "name": "Feuer am Kap der Winde",
+      "text": "Der Wind reißt dir fast die Glut weg. Du schirmst sie ab, und das Licht flammt auf."
+    },
+    "shepherds-pass": {
+      "name": "Hirtenpass",
+      "text": "Vom Rand des Steppenhochlands siehst du die ganze Küste und drei Lichter, die hinter dir brennen."
+    },
+    "light-3": {
+      "name": "Feuer der Steinernen Wächter",
+      "text": "Menhire umringen den Turm wie alte Wärter."
+    },
+    "rye-valley": {
+      "name": "Mühlen im Roggental",
+      "text": "Windmühlen drehen sich über goldenen Feldern. Die Müller backen dir Brot für den Weg."
+    },
+    "light-4": {
+      "name": "Wrackfeuer",
+      "text": "Ein zerbrochenes Schiff liegt im Sand. Heute Nacht wird ihm keines folgen."
+    },
+    "misty-fens": {
+      "name": "Die Nebelmoore",
+      "text": "Schilf, höher als dein Kopf. Du gehst den alten Bohlenweg, Brett für Brett."
+    },
+    "light-5": {
+      "name": "Reiherfeuer",
+      "text": "Auf der Galerie nisten Reiher und stören sich gar nicht an dir."
+    },
+    "birch-grove": {
+      "name": "Der Birkenhain",
+      "text": "Weiße Stämme und die erste kalte Nacht. Du schläfst an einem kleinen Feuer."
+    },
+    "light-6": {
+      "name": "Das Stille Feuer",
+      "text": "Hier schweigt selbst das Meer. Die Lampe fängt mit einem leisen Laut Feuer."
+    },
+    "light-7": {
+      "name": "Nordfeuer",
+      "text": "Die letzte Lampe nimmt die Glut auf. Sieben Lichter brennen an der Stillen See, und über dir beginnt der Himmel zu leuchten."
+    }
+  },
+  "story": {
+    "heat": "Über dem Salz flimmert die Hitze. Die Glut in ihrer Laterne ist das Einzige, was kühler ist als die Luft.",
+    "caravan": "Die Kameltreiber singen, um den Takt zu halten. Am zweiten Abend kannst du den Refrain.",
+    "half": "Halbzeit. Hinter dir drei Lichter. Vor dir vier dunkle Türme, die warten.",
+    "fog": "Der Nebel ist so dicht, dass du dich am Geruch des Meeres orientierst.",
+    "snow": "Der Schnee knirscht unter deinen Stiefeln. Das Nordfeuer steht auf der letzten Klippe vor dem Eis."
+  },
+  "facts": {
+    "pharos": "Der Pharos von Alexandria, eines der Sieben Weltwunder der Antike, gab Leuchttürmen in vielen Sprachen ihren Namen: phare, faro, far.",
+    "singing-dunes": "Manche Dünen singen: Wenn Sand ihre Flanke hinabrutscht, kann ein tiefes Brummen entstehen, das kilometerweit zu hören ist.",
+    "fresnel": "1822 entwarf Augustin-Jean Fresnel eine Ringlinse, mit der eine einzige Lampe Dutzende Kilometer weit leuchten kann.",
+    "steppe": "Die Eurasische Steppe erstreckt sich über rund 8000 km, von der Donau bis in die Mandschurei.",
+    "carnac": "In Carnac in der Bretagne ziehen sich über 3000 prähistorische Menhire in langen Reihen über die Felder.",
+    "windmills": "Die ältesten bekannten Windmühlen drehten sich vor über tausend Jahren in Persien, mit Flügeln an einer senkrechten Achse.",
+    "characteristic": "Jeder Leuchtturm hat seine eigene Kennung, ein Muster von Blitzen, damit Seeleute nachts ein Licht vom anderen unterscheiden können.",
+    "peat": "Moore bedecken nur etwa 3 % der Landfläche, speichern aber ungefähr doppelt so viel Kohlenstoff wie alle Wälder der Welt.",
+    "birch": "Birken sind Pioniere: Oft wachsen sie als erste Bäume nach einem Brand oder auf kahlem Boden nach.",
+    "permafrost": "In der Tundra taut im Sommer nur eine dünne obere Schicht; darunter liegt Permafrost, der Tausende Jahre gefroren bleiben kann.",
+    "aurora": "Polarlichter leuchten, wenn Teilchen der Sonne auf die obere Atmosphäre treffen; das häufige grüne Licht stammt von Sauerstoff in etwa 100–300 km Höhe."
+  },
+  "objects": {
+    "tower-1": "Leuchtturm 1 von 7",
+    "tower-2": "Leuchtturm 2 von 7",
+    "tower-3": "Leuchtturm 3 von 7",
+    "tower-4": "Leuchtturm 4 von 7",
+    "tower-5": "Leuchtturm 5 von 7",
+    "tower-6": "Leuchtturm 6 von 7",
+    "tower-7": "Leuchtturm 7 von 7",
+    "caravan": "Die Karawane nach Norden",
+    "wreck": "Ein Wrack im Sand",
+    "aurora": "Nordlichter"
+  },
+  "achievements": {
+    "ember": {
+      "name": "Glutträger",
+      "description": "Geh deine ersten 100 m."
+    },
+    "first-light": {
+      "name": "Erstes Licht",
+      "description": "Entzünde das Dünenfeuer neu."
+    },
+    "highlands": {
+      "name": "Hochländer",
+      "description": "Überquere das Steppenhochland über 800 m."
+    },
+    "halfway": {
+      "name": "Vier Lichter brennen",
+      "description": "Entzünde das Wrackfeuer neu."
+    },
+    "big-day": {
+      "name": "Langer Marschtag",
+      "description": "Geh 20 km an einem Tag."
+    },
+    "steady": {
+      "name": "Die Disziplin des Wärters",
+      "description": "Committe 10 Tage in Folge."
+    },
+    "commits-300": {
+      "name": "Dreihundert Schritte",
+      "description": "Mach 300 Commits auf dieser Route."
+    },
+    "seven": {
+      "name": "Sieben Lichter",
+      "description": "Entzünde alle sieben Leuchttürme neu."
+    }
+  }
+}

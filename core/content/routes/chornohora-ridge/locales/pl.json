@@ -1,0 +1,87 @@
+{
+  "name": "Pasmo Czarnohory",
+  "description": "Najwyższe pasmo górskie Ukrainy, od Zarośliaka przez Howerlę po Pop Iwana. Odległości są przybliżone.",
+  "waypoints": {
+    "zaroslyak": {
+      "name": "Zaroślak",
+      "text": "Szlak zaczyna się przy starej bazie w świerkowym lesie."
+    },
+    "hoverla": {
+      "name": "Howerla",
+      "text": "2061 m, najwyższy punkt Ukrainy."
+    },
+    "breskul": {
+      "name": "Breskuł",
+      "text": "Przed tobą otwiera się grań."
+    },
+    "pozhyzhevska": {
+      "name": "Pożyżewska",
+      "text": "Połoniny po obu stronach, wiatr w twarz."
+    },
+    "nesamovyte": {
+      "name": "Jezioro Niesamowite",
+      "text": "Legenda mówi, że kamień wrzucony do tego jeziora sprowadza burzę. Lepiej nie próbować."
+    },
+    "brebeneskul-lake": {
+      "name": "Jezioro Brebeneskuł",
+      "text": "Najwyżej położone jezioro Ukrainy."
+    },
+    "pip-ivan": {
+      "name": "Pop Iwan",
+      "text": "Na szczycie stoi obserwatorium Biały Słoń. Przeszedłeś całą grań!"
+    }
+  },
+  "story": {
+    "treeline": "Świerki rzedną. Nad tobą tylko trawa i niebo.",
+    "ridge-wind": "Tu w górze wiatr nigdy nie ustaje. Zapinasz kurtkę i idziesz dalej.",
+    "white-elephant": "Daleko przed tobą na szczycie szarzeje budynek: stare obserwatorium."
+  },
+  "facts": {
+    "six-2000": "Na Czarnohorze leży sześć ukraińskich szczytów powyżej 2000 m: Howerla, Brebeneskuł, Pop Iwan, Petros, Hutyn Tomnatyk i Rebra.",
+    "prut": "Prut, jedna z dużych rzek Ukrainy i Mołdawii, zaczyna się jako strumień na zboczach Howerli.",
+    "border-posts": "Między wojnami tą granią biegła granica polsko-czechosłowacka. Ponumerowane kamienne słupki wciąż stoją wzdłuż ścieżki.",
+    "polonyna": "Połonina to wysokogórska łąka. Każdego lata huculscy pasterze wypędzali tu stada i do jesieni mieszkali w drewnianych kolibach.",
+    "reserve": "Duża część Czarnohory jest chroniona przez Karpacki Rezerwat Biosfery i Karpacki Narodowy Park Przyrody.",
+    "cirques": "Jeziora Niesamowite i Brebeneskuł leżą w karach: nieckach wyżłobionych przez lodowce, które pokrywały te góry w ostatniej epoce lodowcowej.",
+    "observatory": "Obserwatorium na Popie Iwanie zbudowała Polska w latach 1936–1938 do badań astronomicznych i meteorologicznych. Miejscowi nazwali je Białym Słoniem."
+  },
+  "objects": {
+    "hoverla-top": "Szczyt Howerli",
+    "koliba": "Pasterska koliba",
+    "white-elephant": "Biały Słoń"
+  },
+  "achievements": {
+    "first-steps": {
+      "name": "Pierwsze kroki",
+      "description": "Przejdź pierwsze 100 m."
+    },
+    "roof-of-ukraine": {
+      "name": "Dach Ukrainy",
+      "description": "Dojdź na Howerlę."
+    },
+    "above-2000": {
+      "name": "Ponad 2000",
+      "description": "Stań wyżej niż 2000 m."
+    },
+    "quiet-stones": {
+      "name": "Bez paniki",
+      "description": "Dojdź do Jeziora Niesamowitego, nie wrzucając ani jednego kamienia."
+    },
+    "kilometre-up": {
+      "name": "Kilometr w górę",
+      "description": "Pokonaj łącznie 1000 m podejścia."
+    },
+    "steady-pace": {
+      "name": "Równe tempo",
+      "description": "Commituj 5 dni z rzędu."
+    },
+    "hundred": {
+      "name": "Setka",
+      "description": "Zrób 100 commitów na tej trasie."
+    },
+    "ridge-walker": {
+      "name": "Wędrowiec granią",
+      "description": "Przejdź całą grań Czarnohory."
+    }
+  }
+}

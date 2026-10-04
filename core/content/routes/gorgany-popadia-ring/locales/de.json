@@ -1,0 +1,69 @@
+{
+  "name": "Gorgany: der Popadja-Ring",
+  "description": "Ein Rundweg über die Steinfelder der Gorgany: Osmoloda, Hrofa, Parenky, Popadja, Koretwyna und zurück. Die Strecke verbindet die Halte; Halte ohne geprüfte Koordinaten sind entlang der Strecke verteilt.",
+  "waypoints": {
+    "osmoloda": {
+      "name": "Osmoloda",
+      "text": "Ein Walddorf im Herzen der Gorgany, Start des Rings."
+    },
+    "kin-hrofetskyi": {
+      "name": "Kin Hrofezkyj",
+      "text": "Das „Pferd der Hrofa“, der erste Aussichtspunkt über dem Wald."
+    },
+    "grofa": {
+      "name": "Hrofa",
+      "text": "An klaren Tagen siehst du die Howerla, 84 km entfernt."
+    },
+    "parenky": {
+      "name": "Parenky",
+      "text": "Ein steiniger Gipfel mit weitem Blick auf Petros und Popadja."
+    },
+    "mala-popadia": {
+      "name": "Mala Popadja",
+      "text": "Die kleine Schwester der Popadja."
+    },
+    "popadia": {
+      "name": "Popadja",
+      "text": "Ihre Steinfelder, die „Gorgany“, gaben den Bergen ihren Namen."
+    },
+    "koretvyna": {
+      "name": "Koretwyna",
+      "text": "Der letzte Gipfel vor dem langen Abstieg."
+    },
+    "osmoloda-return": {
+      "name": "Zurück in Osmoloda",
+      "text": "Der Ring schließt sich, wo er begann."
+    }
+  },
+  "story": {
+    "stone-fields": "Oberhalb der Latschen quert der Pfad Felder aus grauem Stein, der sich unter den Füßen bewegt.",
+    "dwarf-pine": "Die Latschenkiefer wächst hier hüfthoch und verbirgt den Pfad."
+  },
+  "facts": {
+    "gorgan-word": "„Gorgan“ ist das örtliche Wort für ein Blockfeld aus Sandstein; nach ihnen ist das ganze Gebirge benannt.",
+    "grofa-view": "Von der Hrofa sieht man die Howerla und den Tschornohora-Kamm, 84 km entfernt.",
+    "highest": "Der höchste Gipfel der Gorgany ist die Welyka Syvulja, 1836 m, östlich dieses Rings."
+  },
+  "achievements": {
+    "gorg-start": {
+      "name": "In die Gorgany",
+      "description": "Geh deine ersten 100 m."
+    },
+    "gorg-grofa": {
+      "name": "Howerla in Sicht",
+      "description": "Erreiche die Hrofa."
+    },
+    "gorg-popadia": {
+      "name": "Steingänger",
+      "description": "Quere die Steinfelder bis zur Popadja."
+    },
+    "gorg-finish": {
+      "name": "Ring geschlossen",
+      "description": "Geh den ganzen Popadja-Ring zurück nach Osmoloda."
+    },
+    "gorg-day": {
+      "name": "Langer steiniger Tag",
+      "description": "Geh 8 km an einem Tag."
+    }
+  }
+}

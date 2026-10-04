@@ -1,0 +1,103 @@
+{
+  "name": "Droga Francuska do Santiago",
+  "description": "Francuska Droga św. Jakuba, 772 km od Saint-Jean-Pied-de-Port przez Pireneje i całą Hiszpanię do Santiago de Compostela. Trasa łączy przystanki; Cruz de Ferro rozmieszczono wzdłuż niej.",
+  "waypoints": {
+    "sjpp": {
+      "name": "Saint-Jean-Pied-de-Port",
+      "text": "Pielgrzymi dostają tu pierwszą pieczątkę, u stóp Pirenejów."
+    },
+    "roncesvalles": {
+      "name": "Roncesvalles",
+      "text": "Przez Pireneje do Hiszpanii: opactwo i schronisko dla pielgrzymów."
+    },
+    "pamplona": {
+      "name": "Pampeluna",
+      "text": "Miasto gonitwy byków."
+    },
+    "puente-la-reina": {
+      "name": "Puente la Reina",
+      "text": "Most z XI wieku zbudowany dla pielgrzymów."
+    },
+    "estella": {
+      "name": "Estella",
+      "text": "Niedaleko stąd fontanna nalewa pielgrzymom wino."
+    },
+    "logrono": {
+      "name": "Logroño",
+      "text": "Stolica wina Rioja."
+    },
+    "burgos": {
+      "name": "Burgos",
+      "text": "Gotycka katedra na skraju Mesety."
+    },
+    "leon": {
+      "name": "León",
+      "text": "Przez szeroką Mesetę do katedry światła."
+    },
+    "astorga": {
+      "name": "Astorga",
+      "text": "Gaudí zbudował tu pałac."
+    },
+    "cruz-de-ferro": {
+      "name": "Cruz de Ferro",
+      "text": "Najwyższy punkt: pielgrzymi zostawiają kamień przyniesiony z domu."
+    },
+    "ponferrada": {
+      "name": "Ponferrada",
+      "text": "Zamek templariuszy."
+    },
+    "o-cebreiro": {
+      "name": "O Cebreiro",
+      "text": "Kamienne chaty kryte strzechą u bram Galicji."
+    },
+    "sarria": {
+      "name": "Sarria",
+      "text": "Wielu zaczyna tutaj: 100 km to minimum, by dostać Compostelę."
+    },
+    "portomarin": {
+      "name": "Portomarín",
+      "text": "Kościół przeniesiony kamień po kamieniu, gdy zalano dolinę."
+    },
+    "santiago": {
+      "name": "Santiago de Compostela",
+      "text": "Plac przed katedrą, koniec Drogi."
+    }
+  },
+  "story": {
+    "meseta": "Meseta: pszenica po horyzont, a za towarzystwo własne myśli.",
+    "stone": "Przy żelaznym krzyżu kładziesz kamień, który niosłeś całą drogę.",
+    "galicia": "Galicja: zielone wzgórza, deszcz i eukaliptusy, a na każdym zakręcie żółte strzałki."
+  },
+  "facts": {
+    "shell": "Muszla przegrzebka znakuje Drogę św. Jakuba od tysiąca lat.",
+    "compostela": "Przejdź ostatnie 100 km, a w katedrze dostaniesz Compostelę, certyfikat pielgrzyma.",
+    "unesco": "Drogi do Santiago są wpisane na listę Światowego Dziedzictwa UNESCO.",
+    "km-zero": "Wielu idzie dalej do Finisterre, które kiedyś uważano za koniec świata."
+  },
+  "achievements": {
+    "cam-start": {
+      "name": "Buen Camino",
+      "description": "Przejdź pierwsze 5 km."
+    },
+    "cam-pyrenees": {
+      "name": "Przez Pireneje",
+      "description": "Przejdź do Hiszpanii."
+    },
+    "cam-meseta": {
+      "name": "Meseta za tobą",
+      "description": "Przejdź Mesetę do Leónu."
+    },
+    "cam-stone": {
+      "name": "Zostawiony kamień",
+      "description": "Dojdź do Cruz de Ferro."
+    },
+    "cam-finish": {
+      "name": "Compostela",
+      "description": "Przejdź całą Drogę do Santiago."
+    },
+    "cam-commits": {
+      "name": "Cierpliwość pielgrzyma",
+      "description": "Zrób 500 commitów na Drodze."
+    }
+  }
+}

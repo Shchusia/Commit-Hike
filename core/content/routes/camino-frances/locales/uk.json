@@ -76,27 +76,27 @@
   },
   "achievements": {
     "cam-start": {
-      "name": "Walk your first 5 km.",
+      "name": "Buen Camino",
       "description": "Пройди перші 5 км."
     },
     "cam-pyrenees": {
-      "name": "Cross into Spain.",
+      "name": "Через Піренеї",
       "description": "Перейди до Іспанії."
     },
     "cam-meseta": {
-      "name": "Cross the Meseta to León.",
+      "name": "Месету подолано",
       "description": "Пройди Месету до Леона."
     },
     "cam-stone": {
-      "name": "Reach the Cruz de Ferro.",
+      "name": "Залишений камінь",
       "description": "Дійди до Крус-де-Ферро."
     },
     "cam-finish": {
-      "name": "Walk the whole Way to Santiago.",
+      "name": "Компостела",
       "description": "Пройди весь Шлях до Сантьяго."
     },
     "cam-commits": {
-      "name": "Make 500 commits on the Way.",
+      "name": "Терпіння прочанина",
       "description": "Зроби 500 комітів на Шляху."
     }
   }

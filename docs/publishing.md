@@ -81,11 +81,28 @@ Keep `private.pem` and the password outside the repository (a password manager).
 
 ```bash
 # 1. write what changed under [Unreleased] in CHANGELOG.md
-task version:set V=0.2.0          # VERSION, package.json, READMEs, CHANGELOG section
-task release:check                # ready?
+task version:set V=0.8.0          # VERSION, package.json, READMEs, CHANGELOG section
+task release:check                # ready? also lists new images that still have to be pushed
 task release:build                # prod packages, after every check and verification
-git commit -am "Release 0.2.0" && git tag v0.2.0 && git push --follow-tags
+(cd plugins/jetbrains && ./gradlew signPlugin verifyPluginSignature -PcommitHikeFlavor=prod)
+
+git commit -am "Release 0.8.0"    # commit first…
+git tag v0.8.0                    # …then tag that commit
+git push origin master --follow-tags
+
+# the marketplaces, now that the images are on master:
+task ovsx:publish                 # and task vscode:publish once it's on the Visual Studio Marketplace
+# JetBrains: upload plugins/jetbrains/build/distributions/*-signed.zip → Upload Update
 ```
+
+The order matters for the marketplace pages. They show the screenshots
+straight from `master`, so new images must be pushed before the plugin is
+published. `task release:check` only lists them; the publish tasks
+(`ovsx:publish`, `vscode:publish`, `jetbrains:publish`) refuse to run until
+they are on `origin/master` (they fetch it first).
+
+If you tagged before committing (the tag would point at the commit before the
+release): `git tag -d v0.8.0`, commit, tag again, push.
 
 Pushing the tag also publishes the core on its own: the workflow
 `.github/workflows/core-release.yml` builds it with GoReleaser for Linux, macOS
@@ -97,22 +114,57 @@ first with `task release:snapshot` (output in `dist/`, nothing published);
 **Actions → Core binaries → Run workflow** does the same dry run on GitHub.
 
 **Screenshots.** `task screenshots` remakes `docs/screenshots/` from the real
-panel in all five languages (1280×800, the size both marketplaces like). The
-READMEs and the VS Code page use them straight from the repository, so push
-them before releasing (`task release:check` says so). On JetBrains
-Marketplace upload `en-hike`, `en-map`, `en-places`, `en-stats` and
+panel in all five languages (1280×800, the size both marketplaces like). On
+JetBrains Marketplace upload `en-hike`, `en-map`, `en-places`, `en-stats` and
 `en-share` once in the plugin's **Media** tab; they don't come from the zip.
-
-Then upload by hand: the signed JetBrains zip (`./gradlew signPlugin` in
-`plugins/jetbrains`, see above) on plugins.jetbrains.com → **Upload Update**,
-the `.vsix` with `task ovsx:publish` and on the Visual Studio Marketplace
-publisher page. The GitHub release itself is made by the core workflow above.
 
 To publish from CI later, add a workflow that runs `task release:build` and the
 `*:publish` tasks on version tags, with the secrets from section 2.
 
-**Pre-releases.** A version like `0.3.0-beta` goes to the JetBrains `beta`
+**Pre-releases.** A version like `0.8.0-beta` goes to the JetBrains `beta`
 channel (users opt in to it) and is marked as a pre-release on GitHub.
+
+### Neovim
+
+The Neovim plugin has no marketplace: plugin managers install it straight from
+a git repository and pin it to its tags. A release is the version tag, the
+core binaries it needs (the core workflow above) and, once set up, a mirror
+repository so it installs like any other plugin.
+
+**Once:**
+
+1. Create an empty public repository `commit-hike.nvim` on GitHub (default
+   branch `main`, no README: the mirror brings its own). Add the topics
+   `neovim`, `neovim-plugin` and `lua`; dotfyle.com lists plugins with these.
+2. Create a fine-grained token (**Settings → Developer settings → Fine-grained
+   tokens**): repository access *only* `commit-hike.nvim`, permission
+   **Contents: Read and write**.
+3. In the main repository: **Settings → Secrets and variables → Actions** →
+   secret `NEOVIM_MIRROR_TOKEN` = the token; variable `NEOVIM_MIRROR` =
+   `Shchusia/commit-hike.nvim`.
+4. Publish the current version: **Actions → Neovim plugin mirror → Run
+   workflow** (or by hand, with your SSH key: `task neovim:mirror
+   MIRROR=Shchusia/commit-hike.nvim`).
+5. Tell people: a pull request adding it to
+   [awesome-neovim](https://github.com/rockerBOO/awesome-neovim) (section
+   *Utility*), and a post on r/neovim with a screenshot of the status line.
+
+**Every release:**
+
+1. Before tagging: `task neovim:test` (needs `nvim` 0.10+; `task check` runs it
+   too) and, in your own Neovim, `:checkhealth commit-hike`.
+2. Push the tag as above. Two workflows run: *Core binaries* attaches the core
+   to the GitHub release, *Neovim plugin mirror* pushes `plugins/neovim` to
+   `commit-hike.nvim` with the same tag.
+3. Check: the release page has the archives and `checksums.txt`;
+   `commit-hike.nvim` has the new tag; a clean install works:
+   `curl -fsSL https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/scripts/install.sh | sh`,
+   then `{ "Shchusia/commit-hike.nvim", version = "*", opts = {} }` in lazy.nvim
+   and `:Lazy update`.
+
+Users with `version = "*"` (lazy.nvim) or `{ 'tag': '*' }` (vim-plug) get a
+new version only when you tag one, never a half-finished `master`. Issues stay
+in the main repository: the mirror is read-only, and its README says so.
 
 ## 5. What each task checks
 

@@ -47,7 +47,7 @@ mapa, historias, datos curiosos y logros.
 | IDE de JetBrains 2024.3+: PyCharm, IntelliJ IDEA, GoLand, WebStorm, PhpStorm, RubyMine, CLion, Rider… | [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/34595) |
 | VSCodium, Cursor, Windsurf y otros editores que usan Open VSX | [Open VSX](https://open-vsx.org/extension/shchusia/commit-hike) |
 | VS Code 1.85+ | pronto en Visual Studio Marketplace; mientras tanto, instala el `.vsix` de Open VSX |
-| Neovim 0.10+ y cualquier prompt de shell: starship, bash, zsh, fish | [docs/terminal.md](terminal.md) |
+| Neovim 0.10+ y cualquier prompt de shell: starship, bash, zsh, fish | [commit-hike.nvim](https://github.com/Shchusia/commit-hike.nvim), [docs/terminal.md](terminal.md) |
 | Zed | a través de su terminal, ver [docs/terminal.md](terminal.md#zed) |
 
 ## Instalación
@@ -68,6 +68,12 @@ prompt o a tu barra de estado, ver [docs/terminal.md](terminal.md):
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/scripts/install.sh | sh
+```
+
+En Neovim 0.10+, con lazy.nvim, y luego añade `require("commit-hike").statusline` a tu barra de estado:
+
+```lua
+{ "Shchusia/commit-hike.nvim", version = "*", opts = {} }
 ```
 
 ## Cómo se usa
@@ -94,6 +100,7 @@ La compilación, las pruebas, las versiones, la arquitectura y cómo añadir
 rutas están en el [README en inglés](../README.md#development) y en [docs/](docs/).
 Las traducciones de rutas y de la interfaz son bienvenidas: ver
 [docs/routes.md](routes.md).
+Las versiones, incluido el plugin de Neovim, se describen en [docs/publishing.md](publishing.md).
 
 ## Apoya el proyecto
 

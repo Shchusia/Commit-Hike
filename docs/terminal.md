@@ -103,8 +103,19 @@ end
 
 ## Neovim
 
-The plugin lives in this repository under `plugins/neovim` and needs Neovim
-0.10+ and the core above. With [lazy.nvim](https://github.com/folke/lazy.nvim):
+The plugin needs Neovim 0.10+ and the core above. It's published with every
+release as [`Shchusia/commit-hike.nvim`](https://github.com/Shchusia/commit-hike.nvim),
+a copy of `plugins/neovim`. With [lazy.nvim](https://github.com/folke/lazy.nvim):
+
+```lua
+{ "Shchusia/commit-hike.nvim", version = "*", opts = {} }
+```
+
+`version = "*"` keeps you on released versions. vim-plug:
+`Plug 'Shchusia/commit-hike.nvim', { 'tag': '*' }` and
+`lua require("commit-hike").setup()` after `plug#end()`.
+
+Straight from this repository, e.g. to try `master`:
 
 ```lua
 {
@@ -115,9 +126,6 @@ The plugin lives in this repository under `plugins/neovim` and needs Neovim
   end,
 }
 ```
-
-vim-plug: `Plug 'Shchusia/Commit-Hike', { 'rtp': 'plugins/neovim' }` and
-`lua require("commit-hike").setup()` after `plug#end()`.
 
 Show it in your status line, e.g. with lualine:
 

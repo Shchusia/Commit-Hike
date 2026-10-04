@@ -47,7 +47,7 @@ historiami, ciekawostkami i osiągnięciami.
 | IDE JetBrains 2024.3+: PyCharm, IntelliJ IDEA, GoLand, WebStorm, PhpStorm, RubyMine, CLion, Rider… | [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/34595) |
 | VSCodium, Cursor, Windsurf i inne edytory korzystające z Open VSX | [Open VSX](https://open-vsx.org/extension/shchusia/commit-hike) |
 | VS Code 1.85+ | wkrótce w Visual Studio Marketplace; do tego czasu zainstaluj `.vsix` z Open VSX |
-| Neovim 0.10+ i dowolny znak zachęty: starship, bash, zsh, fish | [docs/terminal.md](terminal.md) |
+| Neovim 0.10+ i dowolny znak zachęty: starship, bash, zsh, fish | [commit-hike.nvim](https://github.com/Shchusia/commit-hike.nvim), [docs/terminal.md](terminal.md) |
 | Zed | przez jego terminal, zob. [docs/terminal.md](terminal.md#zed) |
 
 ## Instalacja
@@ -67,6 +67,12 @@ znaku zachęty lub paska stanu, zob. [docs/terminal.md](terminal.md):
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/scripts/install.sh | sh
+```
+
+W Neovimie 0.10+ z lazy.nvim, a potem dodaj `require("commit-hike").statusline` do paska stanu:
+
+```lua
+{ "Shchusia/commit-hike.nvim", version = "*", opts = {} }
 ```
 
 ## Jak używać
@@ -92,6 +98,7 @@ schowku, wystarczy ją wkleić.
 Budowanie, testy, wydania, architektura i dodawanie tras są opisane w
 [angielskim README](../README.md#development) oraz w [docs/](docs/). Tłumaczenia
 tras i interfejsu są mile widziane: zob. [docs/routes.md](routes.md).
+Wydania, w tym wtyczki do Neovima, opisuje [docs/publishing.md](publishing.md).
 
 ## Wesprzyj projekt
 

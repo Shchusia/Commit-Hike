@@ -7,7 +7,7 @@ const en = {
   seriesNextText: "Next in “{0}”: {1}.", walkOn: "Walk on: {0}",
   badgeSaveTitle: "Save the badge", badgeSaved: "Badge saved to {0}. Put it next to your README and show it with Markdown.", copyMarkdown: "Copy Markdown",
   reportCopied: "The report is copied. Paste it into a new issue on GitHub.", openIssues: "Open issues",
-  postcardSaveTitle: "Save the postcard", postcardSaved: "Postcard saved to {0}.", openBtn: "Open",
+  postcardSaveTitle: "Save the postcard", postcardSaved: "Postcard saved to {0}.", openBtn: "Open", postcardForPost: "The postcard is saved as {0}: attach it to your post.", showFile: "Show the file",
   restTitle: "Days off: days without commits on these days don't break your streak",
   restNone: "No days off", restAllDays: "At least one day has to be a working day.",
   backupSaveTitle: "Export Commit Hike progress", backupSaved: "Progress saved to {0}. The file holds your private key: keep it to yourself.",
@@ -70,7 +70,7 @@ const uk: Record<Key, string> = {
   seriesNextText: "Далі в серії «{0}»: {1}.", walkOn: "Іти далі: {0}",
   badgeSaveTitle: "Зберегти бейдж", badgeSaved: "Бейдж збережено в {0}. Поклади його поруч із README й покажи через Markdown.", copyMarkdown: "Скопіювати Markdown",
   reportCopied: "Звіт скопійовано. Встав його в нове issue на GitHub.", openIssues: "Відкрити issues",
-  postcardSaveTitle: "Зберегти листівку", postcardSaved: "Листівку збережено в {0}.", openBtn: "Відкрити",
+  postcardSaveTitle: "Зберегти листівку", postcardSaved: "Листівку збережено в {0}.", openBtn: "Відкрити", postcardForPost: "Листівку збережено як {0}: додай її до свого допису.", showFile: "Показати файл",
   restTitle: "Вихідні дні: дні без комітів у ці дні не переривають серію",
   restNone: "Без вихідних", restAllDays: "Хоча б один день має бути робочим.",
   backupSaveTitle: "Експорт прогресу Commit Hike", backupSaved: "Прогрес збережено в {0}. Файл містить ваш особистий ключ: не передавайте його іншим.",
@@ -132,7 +132,7 @@ const pl: Record<Key, string> = {
   seriesNextText: "Dalej w serii „{0}”: {1}.", walkOn: "Idź dalej: {0}",
   badgeSaveTitle: "Zapisz odznakę", badgeSaved: "Odznakę zapisano w {0}. Umieść ją obok README i pokaż przez Markdown.", copyMarkdown: "Kopiuj Markdown",
   reportCopied: "Raport skopiowany. Wklej go do nowego zgłoszenia na GitHubie.", openIssues: "Otwórz zgłoszenia",
-  postcardSaveTitle: "Zapisz pocztówkę", postcardSaved: "Pocztówkę zapisano w {0}.", openBtn: "Otwórz",
+  postcardSaveTitle: "Zapisz pocztówkę", postcardSaved: "Pocztówkę zapisano w {0}.", openBtn: "Otwórz", postcardForPost: "Pocztówka zapisana jako {0}: dołącz ją do swojego posta.", showFile: "Pokaż plik",
   restTitle: "Dni wolne: dni bez commitów w te dni nie przerywają serii",
   restNone: "Bez dni wolnych", restAllDays: "Przynajmniej jeden dzień musi być roboczy.",
   backupSaveTitle: "Eksport postępu Commit Hike", backupSaved: "Postęp zapisano w {0}. Plik zawiera twój prywatny klucz: nie udostępniaj go.",
@@ -194,7 +194,7 @@ const de: Record<Key, string> = {
   seriesNextText: "Weiter in „{0}“: {1}.", walkOn: "Weitergehen: {0}",
   badgeSaveTitle: "Abzeichen speichern", badgeSaved: "Abzeichen gespeichert unter {0}. Leg es neben deine README und zeig es mit Markdown.", copyMarkdown: "Markdown kopieren",
   reportCopied: "Der Bericht ist kopiert. Füge ihn in ein neues Issue auf GitHub ein.", openIssues: "Issues öffnen",
-  postcardSaveTitle: "Postkarte speichern", postcardSaved: "Postkarte gespeichert unter {0}.", openBtn: "Öffnen",
+  postcardSaveTitle: "Postkarte speichern", postcardSaved: "Postkarte gespeichert unter {0}.", openBtn: "Öffnen", postcardForPost: "Die Postkarte ist gespeichert unter {0}: hänge sie an deinen Beitrag an.", showFile: "Datei zeigen",
   restTitle: "Freie Tage: Tage ohne Commits an diesen Tagen unterbrechen deine Serie nicht",
   restNone: "Keine freien Tage", restAllDays: "Mindestens ein Tag muss ein Arbeitstag sein.",
   backupSaveTitle: "Commit-Hike-Fortschritt exportieren", backupSaved: "Fortschritt gespeichert unter {0}. Die Datei enthält deinen privaten Schlüssel: behalte sie für dich.",
@@ -256,7 +256,7 @@ const es: Record<Key, string> = {
   seriesNextText: "Sigue en «{0}»: {1}.", walkOn: "Seguir: {0}",
   badgeSaveTitle: "Guardar la insignia", badgeSaved: "Insignia guardada en {0}. Ponla junto a tu README y muéstrala con Markdown.", copyMarkdown: "Copiar Markdown",
   reportCopied: "Informe copiado. Pégalo en un issue nuevo de GitHub.", openIssues: "Abrir issues",
-  postcardSaveTitle: "Guardar la postal", postcardSaved: "Postal guardada en {0}.", openBtn: "Abrir",
+  postcardSaveTitle: "Guardar la postal", postcardSaved: "Postal guardada en {0}.", openBtn: "Abrir", postcardForPost: "La postal está guardada como {0}: adjúntala a tu publicación.", showFile: "Mostrar el archivo",
   restTitle: "Días libres: los días sin commits en estos días no rompen tu racha",
   restNone: "Sin días libres", restAllDays: "Al menos un día tiene que ser laborable.",
   backupSaveTitle: "Exportar el progreso de Commit Hike", backupSaved: "Progreso guardado en {0}. El archivo contiene tu clave privada: guárdalo para ti.",
@@ -327,7 +327,7 @@ export function setLanguage(tag: string | undefined): void {
 export function language(): string { return currentLang; }
 
 export function t(key: Key, ...args: (string | number)[]): string {
-  return (current[key] ?? en[key]).replace(/\{(\d)\}/g, (_, i: string) => String(args[Number(i)] ?? ""));
+  return (current[key] ?? en[key]).replace(/\{(\d)}/g, (_, i: string) => String(args[Number(i)] ?? ""));
 }
 
 export function formatDistanceL(m: number): string {

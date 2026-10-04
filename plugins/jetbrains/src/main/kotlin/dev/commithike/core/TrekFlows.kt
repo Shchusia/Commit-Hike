@@ -45,6 +45,9 @@ interface TrekUi {
     fun open(file: File)
 
     fun browse(url: String)
+
+    /** Puts a PNG picture into the system clipboard. */
+    fun copyImageToClipboard(png: ByteArray)
 }
 
 /** What the user flows need from the plugin: the core, its state, and refreshing what changed. */
@@ -232,6 +235,15 @@ class TrekFlows(private val host: TrekHost, private val ui: TrekUi, private val 
         ui.notify(if (on) I18n.t("teamOn") else I18n.t("teamOff"), title = "")
     }
 
+    /** The team goal from the Team tab: [route] is checked (see PanelCommand), "" removes it. */
+    fun setTeamGoal(route: String) {
+        val repo = host.currentRepo ?: return
+        if (!host.initialized) return
+        host.core { it.setTeamGoal(repo, route) }
+        host.forgetTeam()
+        host.refreshProject()
+    }
+
     // ---------- days off, settings, difficulty ----------
 
     fun setRestDays() {
@@ -295,6 +307,12 @@ class TrekFlows(private val host: TrekHost, private val ui: TrekUi, private val 
         val target = ui.chooseFileToSave(I18n.t("postcardSaveTitle"), I18n.t("postcardSaveDesc"), "png", fileName) ?: return
         target.writeBytes(png)
         ui.notify(I18n.t("postcardSaved", target.path), I18n.t("openBtn")) { ui.open(target) }
+    }
+
+    /** Sharing: the postcard into the clipboard, ready to paste into a post. [png] is already checked. */
+    fun copyPostcard(png: ByteArray) {
+        ui.copyImageToClipboard(png)
+        ui.notify(I18n.t("postcardCopied"))
     }
 
     /** "Copy a report for the developer": versions, settings and recent errors, nothing personal. */

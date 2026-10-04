@@ -68,10 +68,10 @@ func (r *repo) commit(email, file string, lines int) {
 	p := filepath.Join(r.dir, file)
 	var b strings.Builder
 	if old, err := os.ReadFile(p); err == nil {
-		b.Write(old)
+		_, _ = b.Write(old) // a strings.Builder never fails
 	}
 	for i := 0; i < lines; i++ {
-		fmt.Fprintf(&b, "line %d %d\n", r.ts, i)
+		_, _ = fmt.Fprintf(&b, "line %d %d\n", r.ts, i)
 	}
 	mustWrite(r.t, p, b.String())
 	r.git(email, "add", "-A")

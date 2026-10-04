@@ -37,7 +37,21 @@ sealed interface PanelCommand {
     }
     data class PanelError(val message: String) : PanelCommand
 
+    /** A network's sharing page, already checked by [ShareLinks]. */
+    data class OpenUrl(val url: String) : PanelCommand
+
+    data class CopyText(val text: String) : PanelCommand
+
+    data class CopyImage(val png: ByteArray) : PanelCommand {
+        override fun equals(other: Any?) = other is CopyImage && other.png.contentEquals(png)
+
+        override fun hashCode() = png.contentHashCode()
+    }
+
     data class WalkRoute(val id: String) : PanelCommand
+
+    /** The team goal's route; "" removes the goal. */
+    data class SetTeamGoal(val route: String) : PanelCommand
 
     companion object {
         private val levels = setOf("easy", "medium", "hard")
@@ -77,7 +91,11 @@ sealed interface PanelCommand {
                     SavePostcard(Files.safeName(msg.string("name"), "commit-hike.png", "png"), it)
                 }
                 "panelError" -> PanelError("panel: " + msg.string("message").orEmpty().take(500))
+                "openUrl" -> msg.string("url")?.takeIf { ShareLinks.allowed(it) }?.let { OpenUrl(it) }
+                "copyText" -> msg.string("text")?.takeIf { it.isNotEmpty() }?.let { CopyText(it.take(4000)) }
+                "copyImage" -> Files.png(msg.string("data"))?.let { CopyImage(it) }
                 "walkRoute" -> msg.string("id")?.takeIf { routeId.matches(it) }?.let { WalkRoute(it) }
+                "setTeamGoal" -> msg.string("route")?.takeIf { it.isEmpty() || routeId.matches(it) }?.let { SetTeamGoal(it) }
                 else -> null
             }
         }

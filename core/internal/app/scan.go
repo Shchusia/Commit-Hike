@@ -268,6 +268,13 @@ func (s *Service) migrate(cfg *store.Config, st *store.State, pathID, pid string
 		delete(cfg.ProjectJourneys, old)
 		changed = true
 	}
+	if g := cfg.TeamGoals[old]; g != nil {
+		if cfg.TeamGoals[pid] == nil {
+			cfg.TeamGoals[pid] = g
+		}
+		delete(cfg.TeamGoals, old)
+		changed = true
+	}
 	for _, m := range []map[string]bool{cfg.EnabledProjects, cfg.TeamProjects} {
 		if m[old] {
 			m[pid] = true

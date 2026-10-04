@@ -17,7 +17,8 @@ Every command accepts `--lang` (the IDE's language, e.g. `uk`). A language fixed
 | `difficulty [--set easy/medium/hard]` | `{level, levels, typical_day_m: {easy, medium, hard}}`; a change applies to commits from now on |
 | `scan --repo [--prev-head SHA]` | status + `new_commits`, `updated_commits`, `removed_commits`, `rewritten`, `added_m`, `events` |
 | `status [--repo]` | status: `global` and `project` journeys, `today_m`, `total_m`, `locale`, `team`, `difficulty`, `typical_day_m` (a typical day of commits at that level); for an untracked project `tracked: false` and `reason_code` |
-| `team --repo` | everyone who commits to the project on the same route (see below) |
+| `team --repo [--lang]` | everyone who commits to the project on the same route, the team's week and goal (see below) |
+| `project goal --repo --route ID` / `project goal-off --repo` | `{goal}`: the route the project's team walks together, counted from now |
 | `project enable/disable --repo` | `{enabled}` |
 | `project team-on/team-off --repo` | `{team}` |
 | `locale [--set auto/en/uk]` | `{locale, effective, available}`; `locale` is `""` when following the IDE |
@@ -32,6 +33,16 @@ Every command accepts `--lang` (the IDE's language, e.g. `uk`). A language fixed
 | `journey --scope --route [--repo] [--from-history]` | status |
 | `verify --repo` | `{added, updated, removed}` |
 | `render [--scope] [--format svg/scene]` | `{svg}` or `{scene}` |
+| `prompt [--repo] [--lang] [--scan] [--icon]` | **plain text, no envelope** (see below) |
+
+`prompt` is the one exception to the envelope: shell prompts and editor status
+lines print its output as it is. It prints one line, e.g. `🥾 16,0 км · Озеро
+Несамовите` (the journey the panel would show, the distance, the last stop, or
+`✓ <route>` when finished), or nothing when there is nothing to show yet, and
+always exits 0; problems go to stderr. `--repo` defaults to the current folder,
+`--lang` to `LC_ALL`/`LC_MESSAGES`/`LANG` (a language fixed with `locale --set`
+still wins). `--scan` first counts new commits when HEAD moved since the last
+prompt for that work tree (kept in `prompt-heads.json` in the data folder).
 
 ## Scanning
 
@@ -71,6 +82,26 @@ Identities are merged through `.mailmap`, the user's own addresses become one
 `me`, bots are skipped, and the same rules apply as for the user (filters,
 per-commit and daily caps, the journey's start date). Nothing is stored: the
 result is computed from git history on each call, so cache it in the plugin.
+
+The answer also has:
+
+- `week`: this calendar week, Monday to Sunday in the user's time zone:
+  `{from, to, total_m, commits, active_days, prev_total_m, best_day, best_day_m,
+  days_elapsed, members: [{id, name, me, distance_m, commits, active_days}], hidden}`.
+  Everyone, the user included, is counted from git history with the same rules
+  (the user's trail may differ: it also has commits from before the current
+  pace and the daily limit shared with other projects).
+- `goal` (when set with `project goal`): `{route_id, route_name, length_m, since,
+  distance_m, percent, finished, last_waypoint, next_waypoint, to_next_m,
+  pace_m, days_left, members: [{id, name, me, distance_m}]}`: everyone's
+  distance since `since`, each with the daily limit; `pace_m` is the team's
+  average over the last 14 days (or since the start), `days_left` at that pace.
+  Only `{route, since}` is stored, in `config.json` under `team_goals`.
+- `routes`: `[{id, name, length_m}]`, translated, to choose a goal from.
+
+The panel sends `{"command": "setTeamGoal", "route": "camino-frances"}` to set
+the goal (`"route": ""` removes it); hosts accept only route ids
+(`^[a-z0-9]+(-[a-z0-9]+)*$`) and the empty string.
 
 ## Panel
 
@@ -138,6 +169,21 @@ The panel sends `{"command": "savePostcard", "name": "commit-hike-<route>-day-<n
 "data": "data:image/png;base64,…"}` when the user saves a postcard. Hosts accept
 only PNG data URLs under 20 MB, keep only the file name part of `name`, and
 ask where to save.
+
+Sharing sends three more commands:
+
+- `{"command": "openUrl", "url": "…"}`: a network's sharing page. Hosts open
+  only these (`share.ts` in VS Code, `ShareLinks` in JetBrains): X
+  (`https://twitter.com/intent/tweet`), Bluesky, Threads, LinkedIn, Facebook,
+  Telegram, Reddit, and for Mastodon `https://<host name>/share?text=…` with
+  nothing but `text`; always https, no user, port or fragment, up to 4000
+  characters. Anything else is dropped.
+- `{"command": "copyImage", "data": "data:image/png;base64,…"}`: when the panel
+  can't put the postcard into the clipboard itself. JetBrains copies the
+  picture; VS Code (whose clipboard API takes text only) saves it to a
+  temporary file and offers to show it.
+- `{"command": "copyText", "text": "…"}`: the post text, when the panel can't
+  copy it itself (up to 4000 characters).
 
 ## Settings
 

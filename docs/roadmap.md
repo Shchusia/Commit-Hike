@@ -24,13 +24,13 @@ Each stage is one release. Done items are ticked; see CHANGELOG.md for what ship
 - [x] Polish, German and Spanish: the texts of all ten built-in routes and both series
 - [ ] Proofreading by native speakers
 
-## 0.7.0 — team
-- [ ] A team goal walked together, and the team's week
-
-## 0.8.0 — beyond IDEs
-- [ ] Core binaries on GitHub Releases
-- [ ] A starship prompt module and a Neovim plugin
-- [ ] Look into Zed's extension API
+## 0.7.0 — sharing, beyond IDEs, team
+- [x] Share on social networks (X, Bluesky, Mastodon, Threads, LinkedIn, Facebook, Telegram, Reddit)
+- [x] Core binaries on GitHub Releases, a one-command install
+- [x] A starship prompt module (any shell prompt) and a Neovim plugin
+- [x] Look into Zed's extension API: no status bar or panels yet, so the terminal for now (docs/zed.md)
+- [x] READMEs in five languages, new screenshots for both plugins and the marketplace pages
+- [x] A team goal walked together, and the team's week
 
 ## 1.0.0 — route editor
 - [ ] Draw a route on the map (or load a GPX track), place stops, write texts, import in one click

@@ -26,7 +26,8 @@ for (const rel of ["plugins/vscode/package.json", "plugins/vscode/package-lock.j
   fs.writeFileSync(file(rel), JSON.stringify(d, null, 2) + "\n");
 }
 
-for (const rel of ["README.md", "README.uk.md"]) {
+for (const rel of ["README.md", "README.uk.md", "README.pl.md", "README.de.md", "README.es.md"]) {
+  if (!fs.existsSync(file(rel))) continue;
   const s = fs.readFileSync(file(rel), "utf8");
   fs.writeFileSync(file(rel), s.replace(/(\*\*(?:Version|Версія):\*\* )[0-9A-Za-z.-]+/, `$1${v}`));
 }

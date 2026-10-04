@@ -11,6 +11,7 @@ import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.fileEditor.FileEditorManagerEvent
 import com.intellij.openapi.fileEditor.FileEditorManagerListener
+import com.intellij.openapi.ide.CopyPasteManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.ProjectActivity
 import com.intellij.openapi.util.IconLoader
@@ -343,6 +344,13 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
 
     fun savePostcard(fileName: String, png: ByteArray): Job = runFlow { savePostcard(fileName, png) }
 
+    fun copyPostcard(png: ByteArray): Job = runFlow { copyPostcard(png) }
+
+    /** [url] is already checked by ShareLinks (see PanelCommand). */
+    fun openShareUrl(url: String) = BrowserUtil.browse(url)
+
+    fun copyText(text: String) = CopyPasteManager.getInstance().setContents(java.awt.datatransfer.StringSelection(text))
+
     fun copyDiagnostics(): Job = runFlow {
         val info = com.intellij.openapi.application.ApplicationInfo.getInstance()
         copyDiagnostics(
@@ -393,6 +401,8 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
     fun setLocale(value: String): Job = runFlow { setLocale(value) }
 
     fun setTeam(on: Boolean): Job = runFlow { setTeam(on) }
+
+    fun setTeamGoal(route: String): Job = runFlow { setTeamGoal(route) }
 
     /** Walks on to [id], usually the next route of a series. */
     fun walkRoute(id: String): Job = runFlow { walkRoute(id) }

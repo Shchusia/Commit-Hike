@@ -57,7 +57,7 @@
 | IDE JetBrains 2024.3+: PyCharm, IntelliJ IDEA, GoLand, WebStorm, PhpStorm, RubyMine, CLion, Rider… | [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/34595) |
 | VSCodium, Cursor, Windsurf та інші редактори з Open VSX | [Open VSX](https://open-vsx.org/extension/shchusia/commit-hike) |
 | VS Code 1.85+ | незабаром у Visual Studio Marketplace; поки що встанови `.vsix` з Open VSX |
-| Neovim 0.10+ і будь-який рядок запрошення: starship, bash, zsh, fish | [docs/terminal.md](terminal.md) |
+| Neovim 0.10+ і будь-який рядок запрошення: starship, bash, zsh, fish | [commit-hike.nvim](https://github.com/Shchusia/commit-hike.nvim), [docs/terminal.md](terminal.md) |
 | Zed | через його термінал, див. [docs/terminal.md](terminal.md#zed) |
 
 ## Встановлення
@@ -81,6 +81,12 @@
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/scripts/install.sh | sh
+```
+
+У Neovim 0.10+ з lazy.nvim, а потім додай `require("commit-hike").statusline` до рядка стану:
+
+```lua
+{ "Shchusia/commit-hike.nvim", version = "*", opts = {} }
 ```
 
 **З коду.** Див. [Розробка](#розробка): `task jetbrains:install` або
@@ -185,11 +191,16 @@ task jetbrains:cover     # Kotlin через Kover, по класах, плюс 
 
 ```bash
 task release:configure OWNER=твій-нік NAME="Твоє Ім'я" EMAIL=you@example.com   # один раз
-task version:set V=0.2.0     # записи під [Unreleased] у CHANGELOG.md стають версією 0.2.0
-task release:check           # версія, changelog, видавець і вміст готові
+task version:set V=0.8.0     # записи під [Unreleased] у CHANGELOG.md стають версією 0.8.0
+task release:check           # готово? і які нові скриншоти ще треба запушити
 task release:build           # рівно те, що отримають маркетплейси, після всіх перевірок
-git commit -am "Release 0.2.0" && git tag v0.2.0 && git push --follow-tags   # CI публікує
+git commit -am "Release 0.8.0" && git tag v0.8.0 && git push origin master --follow-tags
+task ovsx:publish            # маркетплейси останніми: їхні сторінки беруть картинки з master
 ```
+
+Пуш тегу публікує ядро в GitHub Releases і плагін для Neovim у
+[commit-hike.nvim](https://github.com/Shchusia/commit-hike.nvim) (CI). Підписаний
+zip для JetBrains завантажується вручну.
 
 ## Як додати маршрут або переклад
 

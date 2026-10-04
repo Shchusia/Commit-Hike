@@ -403,6 +403,7 @@ tasks:
       - sh: test -f "{{.VSIX_NAME}}"
         msg: "{{.VSIX_NAME}} not found: run task release:build first"
     cmds:
+      - node ../../scripts/release-check.mjs --published # the README images must already be on origin/master
       - npx vsce publish --packagePath "{{.VSIX_NAME}}"
 
   ovsx:publish:
@@ -414,6 +415,7 @@ tasks:
       - sh: test -f "{{.VSIX_NAME}}"
         msg: "{{.VSIX_NAME}} not found: run task release:build first"
     cmds:
+      - node ../../scripts/release-check.mjs --published # the README images must already be on origin/master
       - npx ovsx publish "{{.VSIX_NAME}}" -p "$OVSX_PAT"
 
   # ───────────────────────────── JetBrains ─────────────────────────────
@@ -434,6 +436,7 @@ tasks:
       - sh: '[ -n "$JETBRAINS_TOKEN" ]'
         msg: "Set JETBRAINS_TOKEN (Marketplace profile > My Tokens). The first upload must be manual: see docs/publishing.md"
     cmds:
+      - node ../../scripts/release-check.mjs --published # the description images must already be on origin/master
       - ./gradlew publishPlugin -PcommitHikeFlavor=prod
       - '[ -n "$CERTIFICATE_CHAIN" ] || echo "Note: published unsigned (CERTIFICATE_CHAIN/PRIVATE_KEY not set); the IDE will warn users."' 
 
@@ -605,6 +608,16 @@ tasks:
       COMMIT_HIKE_BIN: "{{.SANDBOX_BIN}}"
     cmds:
       - node screenshots.mjs {{.ARGS}}
+
+  neovim:mirror:
+    desc: "Push plugins/neovim with the current version tag to its own repository by hand (MIRROR=you/commit-hike.nvim; CI does it on tags)"
+    requires:
+      vars: [MIRROR]
+    cmds:
+      - git subtree split --prefix=plugins/neovim -b nvim-mirror
+      - git push --force "git@github.com:{{.MIRROR}}.git" nvim-mirror:refs/heads/main
+      - git push --force "git@github.com:{{.MIRROR}}.git" "nvim-mirror:refs/tags/v{{.APP_VERSION}}"
+      - git branch -D nvim-mirror
 
   neovim:test:
     desc: Test the Neovim plugin against the real core in a headless Neovim (needs nvim 0.10+ on PATH)

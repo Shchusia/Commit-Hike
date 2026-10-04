@@ -57,7 +57,7 @@ a map, stories, facts and achievements.
 | JetBrains IDEs 2024.3+: PyCharm, IntelliJ IDEA, GoLand, WebStorm, PhpStorm, RubyMine, CLion, Rider… | [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/34595) |
 | VSCodium, Cursor, Windsurf and other editors that use Open VSX | [Open VSX](https://open-vsx.org/extension/shchusia/commit-hike) |
 | VS Code 1.85+ | coming to the Visual Studio Marketplace; until then, install the `.vsix` from Open VSX |
-| Neovim 0.10+, and any shell prompt: starship, bash, zsh, fish | [docs/terminal.md](docs/terminal.md) |
+| Neovim 0.10+, and any shell prompt: starship, bash, zsh, fish | [commit-hike.nvim](https://github.com/Shchusia/commit-hike.nvim), [docs/terminal.md](docs/terminal.md) |
 | Zed | through its terminal, see [docs/terminal.md](docs/terminal.md#zed) |
 
 ## Install
@@ -81,6 +81,12 @@ prompt or your status line, see [docs/terminal.md](docs/terminal.md):
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/Shchusia/Commit-Hike/master/scripts/install.sh | sh
+```
+
+In Neovim 0.10+, with lazy.nvim, then add `require("commit-hike").statusline` to your status line:
+
+```lua
+{ "Shchusia/commit-hike.nvim", version = "*", opts = {} }
 ```
 
 **From source.** See [Development](#development): `task jetbrains:install` or
@@ -185,11 +191,16 @@ accounts, tokens and signing, is in [docs/publishing.md](docs/publishing.md).
 
 ```bash
 task release:configure OWNER=your-github-name NAME="Your Name" EMAIL=you@example.com   # once
-task version:set V=0.2.0     # notes under [Unreleased] in CHANGELOG.md become 0.2.0
-task release:check           # version, changelog, publisher and content are ready
+task version:set V=0.8.0     # notes under [Unreleased] in CHANGELOG.md become 0.8.0
+task release:check           # ready? also lists new screenshots that still have to be pushed
 task release:build           # exactly what the marketplaces get, after every check
-git commit -am "Release 0.2.0" && git tag v0.2.0 && git push --follow-tags   # CI publishes
+git commit -am "Release 0.8.0" && git tag v0.8.0 && git push origin master --follow-tags
+task ovsx:publish            # the marketplaces last: their pages show the images from master
 ```
+
+Pushing the tag publishes the core to GitHub Releases and the Neovim plugin to
+[commit-hike.nvim](https://github.com/Shchusia/commit-hike.nvim) (CI). The
+signed JetBrains zip is uploaded by hand.
 
 ## Adding a route or a translation
 

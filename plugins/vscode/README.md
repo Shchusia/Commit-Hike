@@ -23,7 +23,7 @@ a map, stories, facts and achievements.
 - **Stories, facts and achievements** at every stop, streaks, days off, your year in a calendar and a passport with a stamp for every stop.
 - **Share it.** A postcard of where you are, saved, copied or posted to X, Bluesky, Mastodon, Threads, LinkedIn, Facebook, Telegram or Reddit with the text ready. And an SVG badge for your GitHub profile.
 - **Walk together.** Everyone committing to a project on the same trail, with a leaderboard, the team's week and a team goal: a route you walk together, everyone's commits adding up.
-- **In the terminal too.** The same progress in your shell prompt and in Neovim: [docs/terminal.md](https://github.com/Shchusia/Commit-Hike/blob/master/docs/terminal.md).
+- **In the terminal too.** The same progress in your shell prompt and in Neovim ([commit-hike.nvim](https://github.com/Shchusia/commit-hike.nvim)): [docs/terminal.md](https://github.com/Shchusia/Commit-Hike/blob/master/docs/terminal.md).
 - **Your own routes.** Create one from a template and import it as a folder or a `.zip`.
 - **Five languages.** English, Ukrainian, Polish, German and Spanish.
 

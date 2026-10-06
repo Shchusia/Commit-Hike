@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/Shchusia/commit-hike/core/internal/i18n"
@@ -45,6 +46,7 @@ func (s *Service) SiteRoutes(q site.Query, lang string, version string) (*protoc
 	if err != nil {
 		return nil, siteErr(err)
 	}
+	covers := fetchCovers(client, page.Routes)
 	installs := s.siteInstalls()
 	chain := i18n.Chain(lang)
 	out := &protocol.SitePage{Site: client.Base, Total: page.Total, Page: page.Page, Pages: page.Pages, Routes: []protocol.SiteRoute{}}
@@ -52,7 +54,7 @@ func (s *Service) SiteRoutes(q site.Query, lang string, version string) (*protoc
 		r := protocol.SiteRoute{
 			ID: c.ID, Title: c.Title, Author: c.Author, LengthM: c.LengthM, Stops: c.Stops, AscentM: c.AscentM,
 			Real: c.Real, GPS: c.GPS, Languages: c.Languages, Tags: c.Tags, Downloads: c.Downloads, Rating: c.Rating,
-			Ratings: c.Ratings, Version: c.Version, Cover: c.Cover, Page: c.Page,
+			Ratings: c.Ratings, Version: c.Version, Cover: covers[c.ID], Page: client.Local(c.Page),
 		}
 		for _, l := range chain {
 			if t := c.Titles[l]; t != "" {
@@ -73,6 +75,35 @@ func (s *Service) SiteRoutes(q site.Query, lang string, version string) (*protoc
 		out.Routes = append(out.Routes, r)
 	}
 	return out, nil
+}
+
+// fetchCovers fetches the routes' covers at once (a few at a time) as data: URLs;
+// a cover that can't be fetched is just left out (the panel shows a blank frame).
+func fetchCovers(client *site.Client, cards []site.Card) map[string]string {
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	out := map[string]string{}
+	var mu sync.Mutex
+	var wg sync.WaitGroup
+	slots := make(chan struct{}, 6)
+	for _, c := range cards {
+		if c.Cover == "" {
+			continue
+		}
+		wg.Add(1)
+		go func(id, link string) {
+			defer wg.Done()
+			slots <- struct{}{}
+			defer func() { <-slots }()
+			if data, err := client.Image(ctx, client.Local(link)); err == nil {
+				mu.Lock()
+				out[id] = data
+				mu.Unlock()
+			}
+		}(c.ID, c.Cover)
+	}
+	wg.Wait()
+	return out
 }
 
 // SiteInstall downloads a route from the site and installs it (or updates it).
@@ -131,7 +162,7 @@ func (s *Service) SiteInstall(id string, replaceLocal bool, lang, version string
 	if err := s.st.WriteFile(siteRoutesFile, data); err != nil {
 		return nil, err
 	}
-	return &protocol.SiteInstalled{Route: *route, Version: card.Version, Page: card.Page}, nil
+	return &protocol.SiteInstalled{Route: *route, Version: card.Version, Page: client.Local(card.Page)}, nil
 }
 
 // forgetSiteInstall drops a removed route from the site list.

@@ -98,8 +98,8 @@
         "category": "Commit Hike"
       },
       {
-        "command": "commitHike.createRouteTemplate",
-        "title": "%command.createRouteTemplate%",
+        "command": "commitHike.createOnSite",
+        "title": "%command.createOnSite%",
         "category": "Commit Hike"
       },
       {
@@ -198,7 +198,7 @@
     "url": "https://github.com/Shchusia/Commit-Hike.git",
     "directory": "plugins/vscode"
   },
-  "homepage": "https://github.com/Shchusia/Commit-Hike#readme",
+  "homepage": "https://commit-hike.dev",
   "bugs": {
     "url": "https://github.com/Shchusia/Commit-Hike/issues"
   }

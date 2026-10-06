@@ -4,6 +4,7 @@
 // VS Code's own display language.
 
 const en = {
+  createItem: "$(edit) Create a route on the site…",
   siteItem: "$(globe) Find more routes on the site…",
   seriesNextText: "Next in “{0}”: {1}.", walkOn: "Walk on: {0}",
   badgeSaveTitle: "Save the badge", badgeSaved: "Badge saved to {0}. Put it next to your README and show it with Markdown.", copyMarkdown: "Copy Markdown",
@@ -39,8 +40,7 @@ const en = {
   counting: "Commit Hike: counting your commits",
   openRepoForTrail: "Open a file from a git repository to choose a trail for that project.",
   noProjectTrail: "No trail for this project", noProjectTrailDetail: "Commits here still count toward your main journey.",
-  importItem: "$(cloud-download) Import a route or map…", templateItem: "$(new-file) Create a route template…",
-  trailAll: "Trail for all projects", trailProject: "Trail for this project",
+  importItem: "$(cloud-download) Import a route or map…",   trailAll: "Trail for all projects", trailProject: "Trail for this project",
   histNow: "Start from now", journeyStart: "Where does this journey start?",
   openRepoFirst: "Open a file from a git repository first.",
   allCounted: "All your projects are already counted. To choose projects one by one, run “Commit Hike: Set Up”.",
@@ -50,9 +50,7 @@ const en = {
   importTitle: "Import a route", importWhere: "Where is the route?", fromZip: "From a .zip file", fromFolder: "From a folder",
   importBtn: "Import", routePack: "Route pack", replaceQ: "{0}. Replace it?", replace: "Replace",
   imported: "Imported {0}: {1}, {2} stops.", walkNow: "Walk it now",
-  whereCreate: "Where to create the route", createHere: "Create here", newRoute: "New route",
-  routeIdPrompt: "Route id: lowercase letters, digits and dashes.", routeIdInvalid: "Use lowercase letters, digits and single dashes.",
-  templateCreated: "Route template created. Edit route.json, locales/*.json and assets/, then import the folder.", importNow: "Import now",
+      importNow: "Import now",
   noCustom: "You haven't imported any routes.", removeTitle: "Remove a route",
   removeHint: "Progress you made stays; you just can't choose the route anymore.", removed: "{0} was removed.",
   iconTitle: "Choose a hiker icon (PNG with a transparent background, up to 512×512, facing right)",
@@ -68,6 +66,7 @@ const en = {
 type Key = keyof typeof en;
 
 const uk: Record<Key, string> = {
+  createItem: "$(edit) Створити маршрут на сайті…",
   siteItem: "$(globe) Знайти ще маршрути на сайті…",
   seriesNextText: "Далі в серії «{0}»: {1}.", walkOn: "Іти далі: {0}",
   badgeSaveTitle: "Зберегти бейдж", badgeSaved: "Бейдж збережено в {0}. Поклади його поруч із README й покажи через Markdown.", copyMarkdown: "Скопіювати Markdown",
@@ -103,8 +102,7 @@ const uk: Record<Key, string> = {
   counting: "Commit Hike: рахуємо твої коміти",
   openRepoForTrail: "Відкрий файл із git-репозиторію, щоб вибрати стежку для цього проєкту.",
   noProjectTrail: "Без стежки для цього проєкту", noProjectTrailDetail: "Коміти тут і далі рахуються в основну подорож.",
-  importItem: "$(cloud-download) Імпортувати маршрут або карту…", templateItem: "$(new-file) Створити шаблон маршруту…",
-  trailAll: "Стежка для всіх проєктів", trailProject: "Стежка для цього проєкту",
+  importItem: "$(cloud-download) Імпортувати маршрут або карту…",   trailAll: "Стежка для всіх проєктів", trailProject: "Стежка для цього проєкту",
   histNow: "Почати зараз", journeyStart: "Звідки почнеться ця подорож?",
   openRepoFirst: "Спершу відкрий файл із git-репозиторію.",
   allCounted: "Усі твої проєкти вже рахуються. Щоб вибирати проєкти по одному, запусти «Commit Hike: Set Up».",
@@ -114,9 +112,7 @@ const uk: Record<Key, string> = {
   importTitle: "Імпорт маршруту", importWhere: "Де лежить маршрут?", fromZip: "У .zip-файлі", fromFolder: "У папці",
   importBtn: "Імпортувати", routePack: "Пакет маршруту", replaceQ: "{0}. Замінити?", replace: "Замінити",
   imported: "Імпортовано «{0}»: {1}, зупинок: {2}.", walkNow: "Іти зараз",
-  whereCreate: "Де створити маршрут", createHere: "Створити тут", newRoute: "Новий маршрут",
-  routeIdPrompt: "Id маршруту: малі літери, цифри й дефіси.", routeIdInvalid: "Використовуй малі літери, цифри й одинарні дефіси.",
-  templateCreated: "Шаблон маршруту створено. Відредагуй route.json, locales/*.json та assets/, потім імпортуй папку.", importNow: "Імпортувати",
+      importNow: "Імпортувати",
   noCustom: "Ти ще не імпортував жодного маршруту.", removeTitle: "Видалити маршрут",
   removeHint: "Твій прогрес лишиться; просто маршрут більше не можна буде вибрати.", removed: "«{0}» видалено.",
   iconTitle: "Вибери іконку мандрівника (PNG з прозорим фоном, до 512×512, обличчям праворуч)",
@@ -131,6 +127,7 @@ const uk: Record<Key, string> = {
 };
 
 const pl: Record<Key, string> = {
+  createItem: "$(edit) Utwórz trasę na stronie…",
   siteItem: "$(globe) Znajdź więcej tras na stronie…",
   seriesNextText: "Dalej w serii „{0}”: {1}.", walkOn: "Idź dalej: {0}",
   badgeSaveTitle: "Zapisz odznakę", badgeSaved: "Odznakę zapisano w {0}. Umieść ją obok README i pokaż przez Markdown.", copyMarkdown: "Kopiuj Markdown",
@@ -166,8 +163,7 @@ const pl: Record<Key, string> = {
   counting: "Commit Hike: liczę twoje commity",
   openRepoForTrail: "Otwórz plik z repozytorium git, by wybrać szlak dla tego projektu.",
   noProjectTrail: "Bez szlaku dla tego projektu", noProjectTrailDetail: "Commity tutaj nadal liczą się do głównej wędrówki.",
-  importItem: "$(cloud-download) Importuj trasę lub mapę…", templateItem: "$(new-file) Utwórz szablon trasy…",
-  trailAll: "Szlak dla wszystkich projektów", trailProject: "Szlak dla tego projektu",
+  importItem: "$(cloud-download) Importuj trasę lub mapę…",   trailAll: "Szlak dla wszystkich projektów", trailProject: "Szlak dla tego projektu",
   histNow: "Zacznij od teraz", journeyStart: "Gdzie zaczyna się ta wędrówka?",
   openRepoFirst: "Najpierw otwórz plik z repozytorium git.",
   allCounted: "Wszystkie twoje projekty są już liczone. Aby wybierać projekty pojedynczo, uruchom „Commit Hike: Set Up”.",
@@ -177,9 +173,7 @@ const pl: Record<Key, string> = {
   importTitle: "Import trasy", importWhere: "Gdzie jest trasa?", fromZip: "Z pliku .zip", fromFolder: "Z folderu",
   importBtn: "Importuj", routePack: "Pakiet trasy", replaceQ: "{0}. Zastąpić?", replace: "Zastąp",
   imported: "Zaimportowano {0}: {1}, przystanków: {2}.", walkNow: "Idź nią teraz",
-  whereCreate: "Gdzie utworzyć trasę", createHere: "Utwórz tutaj", newRoute: "Nowa trasa",
-  routeIdPrompt: "Identyfikator trasy: małe litery, cyfry i myślniki.", routeIdInvalid: "Użyj małych liter, cyfr i pojedynczych myślników.",
-  templateCreated: "Utworzono szablon trasy. Edytuj route.json, locales/*.json i assets/, a potem zaimportuj folder.", importNow: "Importuj teraz",
+      importNow: "Importuj teraz",
   noCustom: "Nie zaimportowałeś jeszcze żadnych tras.", removeTitle: "Usuń trasę",
   removeHint: "Twój postęp zostaje; po prostu nie da się już wybrać tej trasy.", removed: "Usunięto {0}.",
   iconTitle: "Wybierz ikonę wędrowca (PNG z przezroczystym tłem, do 512×512, zwrócony w prawo)",
@@ -194,6 +188,7 @@ const pl: Record<Key, string> = {
 };
 
 const de: Record<Key, string> = {
+  createItem: "$(edit) Route auf der Website erstellen…",
   siteItem: "$(globe) Mehr Routen auf der Website finden…",
   seriesNextText: "Weiter in „{0}“: {1}.", walkOn: "Weitergehen: {0}",
   badgeSaveTitle: "Abzeichen speichern", badgeSaved: "Abzeichen gespeichert unter {0}. Leg es neben deine README und zeig es mit Markdown.", copyMarkdown: "Markdown kopieren",
@@ -229,8 +224,7 @@ const de: Record<Key, string> = {
   counting: "Commit Hike: zähle deine Commits",
   openRepoForTrail: "Öffne eine Datei aus einem git-Repository, um einen Weg für dieses Projekt zu wählen.",
   noProjectTrail: "Kein Weg für dieses Projekt", noProjectTrailDetail: "Commits hier zählen weiterhin für deine Hauptwanderung.",
-  importItem: "$(cloud-download) Route oder Karte importieren…", templateItem: "$(new-file) Routenvorlage erstellen…",
-  trailAll: "Weg für alle Projekte", trailProject: "Weg für dieses Projekt",
+  importItem: "$(cloud-download) Route oder Karte importieren…",   trailAll: "Weg für alle Projekte", trailProject: "Weg für dieses Projekt",
   histNow: "Ab jetzt beginnen", journeyStart: "Wo beginnt diese Wanderung?",
   openRepoFirst: "Öffne zuerst eine Datei aus einem git-Repository.",
   allCounted: "Alle deine Projekte werden schon gezählt. Um Projekte einzeln zu wählen, führe „Commit Hike: Set Up“ aus.",
@@ -240,9 +234,7 @@ const de: Record<Key, string> = {
   importTitle: "Route importieren", importWhere: "Wo ist die Route?", fromZip: "Aus einer .zip-Datei", fromFolder: "Aus einem Ordner",
   importBtn: "Importieren", routePack: "Routenpaket", replaceQ: "{0}. Ersetzen?", replace: "Ersetzen",
   imported: "{0} importiert: {1}, {2} Halte.", walkNow: "Jetzt gehen",
-  whereCreate: "Wo die Route erstellen", createHere: "Hier erstellen", newRoute: "Neue Route",
-  routeIdPrompt: "Routen-ID: Kleinbuchstaben, Ziffern und Bindestriche.", routeIdInvalid: "Verwende Kleinbuchstaben, Ziffern und einzelne Bindestriche.",
-  templateCreated: "Routenvorlage erstellt. Bearbeite route.json, locales/*.json und assets/ und importiere dann den Ordner.", importNow: "Jetzt importieren",
+      importNow: "Jetzt importieren",
   noCustom: "Du hast noch keine Routen importiert.", removeTitle: "Route entfernen",
   removeHint: "Dein Fortschritt bleibt; du kannst die Route nur nicht mehr wählen.", removed: "{0} wurde entfernt.",
   iconTitle: "Wanderer-Symbol wählen (PNG mit transparentem Hintergrund, bis 512×512, nach rechts gewandt)",
@@ -257,6 +249,7 @@ const de: Record<Key, string> = {
 };
 
 const es: Record<Key, string> = {
+  createItem: "$(edit) Crear una ruta en el sitio…",
   siteItem: "$(globe) Buscar más rutas en el sitio…",
   seriesNextText: "Sigue en «{0}»: {1}.", walkOn: "Seguir: {0}",
   badgeSaveTitle: "Guardar la insignia", badgeSaved: "Insignia guardada en {0}. Ponla junto a tu README y muéstrala con Markdown.", copyMarkdown: "Copiar Markdown",
@@ -292,8 +285,7 @@ const es: Record<Key, string> = {
   counting: "Commit Hike: contando tus commits",
   openRepoForTrail: "Abre un archivo de un repositorio git para elegir un sendero para ese proyecto.",
   noProjectTrail: "Sin sendero para este proyecto", noProjectTrailDetail: "Los commits de aquí siguen contando para tu travesía principal.",
-  importItem: "$(cloud-download) Importar una ruta o un mapa…", templateItem: "$(new-file) Crear una plantilla de ruta…",
-  trailAll: "Sendero para todos los proyectos", trailProject: "Sendero para este proyecto",
+  importItem: "$(cloud-download) Importar una ruta o un mapa…",   trailAll: "Sendero para todos los proyectos", trailProject: "Sendero para este proyecto",
   histNow: "Empezar ahora", journeyStart: "¿Dónde empieza esta travesía?",
   openRepoFirst: "Primero abre un archivo de un repositorio git.",
   allCounted: "Ya se cuentan todos tus proyectos. Para elegirlos uno a uno, ejecuta «Commit Hike: Set Up».",
@@ -303,9 +295,7 @@ const es: Record<Key, string> = {
   importTitle: "Importar una ruta", importWhere: "¿Dónde está la ruta?", fromZip: "Desde un archivo .zip", fromFolder: "Desde una carpeta",
   importBtn: "Importar", routePack: "Paquete de ruta", replaceQ: "{0}. ¿Sustituirla?", replace: "Sustituir",
   imported: "Importada {0}: {1}, {2} paradas.", walkNow: "Recorrerla ahora",
-  whereCreate: "Dónde crear la ruta", createHere: "Crear aquí", newRoute: "Ruta nueva",
-  routeIdPrompt: "Id de la ruta: minúsculas, dígitos y guiones.", routeIdInvalid: "Usa minúsculas, dígitos y guiones sueltos.",
-  templateCreated: "Plantilla de ruta creada. Edita route.json, locales/*.json y assets/ y luego importa la carpeta.", importNow: "Importar ahora",
+      importNow: "Importar ahora",
   noCustom: "Aún no has importado ninguna ruta.", removeTitle: "Quitar una ruta",
   removeHint: "Tu progreso se queda; solo que ya no podrás elegir la ruta.", removed: "Se quitó {0}.",
   iconTitle: "Elige un icono de caminante (PNG con fondo transparente, hasta 512×512, mirando a la derecha)",

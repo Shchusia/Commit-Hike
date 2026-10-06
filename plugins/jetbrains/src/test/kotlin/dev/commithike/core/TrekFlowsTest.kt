@@ -282,11 +282,15 @@ class TrekFlowsTest {
         assertEquals(null, noRepo.notes.last().second) // no "Open issues" without a repository
     }
 
-    /** A git repository with one commit by me@x.io. */
-    private fun repo(): File {
+    /** A git repository with one commit by me@x.io ([hoursAgo]: dated that long ago). */
+    private fun repo(hoursAgo: Int = 0): File {
         val dir = Files.createTempDirectory("flows-repo").toFile()
-        fun git(vararg a: String) =
-            check(ProcessBuilder(listOf("git", "-C", dir.path) + a).redirectErrorStream(true).start().waitFor() == 0) { a.toList() }
+        val date = "@${System.currentTimeMillis() / 1000 - hoursAgo * 3600L} +0000"
+        fun git(vararg a: String) = check(
+            ProcessBuilder(listOf("git", "-C", dir.path) + a).redirectErrorStream(true)
+                .apply { if (hoursAgo > 0) environment().putAll(mapOf("GIT_AUTHOR_DATE" to date, "GIT_COMMITTER_DATE" to date)) }
+                .start().waitFor() == 0,
+        ) { a.toList() }
         git("init", "-q")
         File(dir, "a.go").writeText((1..40).joinToString("\n") { "line $it" })
         git("add", "-A")
@@ -343,16 +347,12 @@ class TrekFlowsTest {
     }
 
     @Test
-    fun customRoutesFromTemplateToImportToRemoval() {
+    fun customRoutesFromImportToRemoval() {
         val host = Host(freshCli())
         val folder = Files.createTempDirectory("flows-routes").toFile()
-        val user = ScriptedUser(folder = folder, text = " my-ridge ")
-        flows(host, user).createRouteTemplate()
-        val pack = File(folder, "my-ridge")
-        assertEquals(File(pack, "route.json").path, user.edited!!.path)
-
-        user.openFile = pack
-        user.actions.last()() // "Import" on the notification
+        val pack = File(host.cli.routeTemplate("my-ridge", folder.path)) // a pack made outside the site's editor
+        val user = ScriptedUser(openFile = pack)
+        flows(host, user).importRoute()
         assertTrue(host.cli.routes().any { it.id == "my-ridge" })
         user.actions.last()() // "Walk it now"
         assertEquals("my-ridge", host.cli.status().global!!.route.id)
@@ -458,5 +458,24 @@ class TrekFlowsTest {
         offline.init(listOf("me@x.io"), "all", fromHistory = true)
         val err = JsonParser.parseString(flows(Host(offline), ScriptedUser()).siteSearch(Site.searchArgs(null))).asJsonObject
         assertEquals("site_unreachable", err.getAsJsonObject("error").get("code").asString)
+    }
+
+    @Test
+    fun aRouteFromTheSiteAsksAboutPastCommits() {
+        val r = repo(hoursAgo = 1) // a commit made before the walk starts
+        val cli = freshCli()
+        cli.scan(r.path)
+        val host = Host(cli, currentRepo = r.path)
+        // yes: the commit already made counts on the new route
+        flows(host, ScriptedUser(confirms = true)).startRoute("svydovets-ridge")
+        val counted = cli.status(r.path).global!!
+        assertEquals("svydovets-ridge", counted.route?.id)
+        assertTrue(counted.distanceM > 0)
+        assertTrue(host.refreshed > 0)
+        // no: from now on, like walking on to the next route of a series
+        flows(host, ScriptedUser(confirms = false)).startRoute("gorgany-popadia-ring")
+        val fromNow = cli.status(r.path).global!!
+        assertEquals("gorgany-popadia-ring", fromNow.route?.id)
+        assertEquals(0.0, fromNow.distanceM, 0.0)
     }
 }

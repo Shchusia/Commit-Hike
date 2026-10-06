@@ -38,7 +38,9 @@ class EnableProjectAction : TrekAction("enableProject", { setProjectEnabled(true
 class DisableProjectAction : TrekAction("disableProject", { setProjectEnabled(false) })
 class VerifyAction : TrekAction("verify", { verify() })
 class ImportRouteAction : TrekAction("importRoute", { importRoute() })
-class CreateRouteTemplateAction : TrekAction("createRouteTemplate", { createRouteTemplate() })
+class CreateOnSiteAction : TrekAction("createOnSite", { openSitePage("/create") })
+
+class OpenSiteAction : TrekAction("openSite", { openSitePage("/") })
 
 class SetRestDaysAction : TrekAction("setRestDays", { setRestDays() })
 

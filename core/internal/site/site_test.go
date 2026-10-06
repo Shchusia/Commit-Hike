@@ -110,3 +110,54 @@ func TestOffline(t *testing.T) {
 		t.Fatal("the user agent names the version")
 	}
 }
+
+func TestCoversBecomeDataURLs(t *testing.T) {
+	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/media/a.webp":
+			w.Header().Set("Content-Type", "text/plain; charset=utf-8") // as python:3.12-slim serves .webp
+			_, _ = w.Write([]byte("RIFFxxxxWEBPVP8 "))
+		case "/media/fake.png":
+			w.Header().Set("Content-Type", "image/png") // a header that lies
+			_, _ = w.Write([]byte("<html><script>alert(1)</script>"))
+		case "/media/page.html":
+			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			_, _ = w.Write([]byte("<html>"))
+		case "/media/huge.png":
+			w.Header().Set("Content-Type", "image/png")
+			_, _ = w.Write([]byte(strings.Repeat("x", maxImage+1)))
+		default:
+			http.NotFound(w, r)
+		}
+	})
+	ctx := context.Background()
+	got, err := c.Image(ctx, c.Base+"/media/a.webp")
+	if err != nil || got != "data:image/webp;base64,UklGRnh4eHhXRUJQVlA4IA==" {
+		t.Fatalf("%q %v", got, err)
+	}
+	for _, bad := range []string{
+		c.Base + "/media/page.html", c.Base + "/media/huge.png", c.Base + "/media/missing.png",
+		"https://elsewhere.example/a.webp", "http://user:pw@" + strings.TrimPrefix(c.Base, "http://") + "/media/a.webp", "::",
+	} {
+		if _, err := c.Image(ctx, bad); err == nil {
+			t.Fatalf("%q must be refused", bad)
+		}
+	}
+}
+
+func TestLinksArePutOnThisSite(t *testing.T) {
+	c := &Client{Base: "https://commit-hike.dev"}
+	for in, want := range map[string]string{
+		"https://routes.commit-hike.dev/routes/lake-walk": "https://commit-hike.dev/routes/lake-walk",
+		"http://localhost:8000/media/images/ab/cd.webp":   "https://commit-hike.dev/media/images/ab/cd.webp",
+		"/media/images/ab/cd.webp":                        "https://commit-hike.dev/media/images/ab/cd.webp",
+		"https://x.example/?tag=a%20b":                    "https://commit-hike.dev/?tag=a%20b",
+		"":                                                "",
+		"relative/path":                                   "",
+		"::":                                              "",
+	} {
+		if got := c.Local(in); got != want {
+			t.Errorf("%q: %q, want %q", in, got, want)
+		}
+	}
+}

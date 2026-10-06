@@ -7,7 +7,6 @@
   "command.disableProject": "Не рахувати цей проєкт",
   "command.verify": "Перерахувати проєкт з історії git",
   "command.importRoute": "Імпортувати маршрут або карту…",
-  "command.createRouteTemplate": "Створити шаблон маршруту…",
   "command.removeRoute": "Видалити маршрут…",
   "command.setHikerIcon": "Іконка мандрівника…",
   "command.resetHikerIcon": "Стандартна іконка мандрівника",
@@ -24,5 +23,6 @@
   "command.exportProgress": "Експортувати прогрес…",
   "command.importProgress": "Імпортувати прогрес…",
   "command.openSettings": "Налаштування…",
-  "command.findRoutes": "Маршрути з сайту…"
+  "command.findRoutes": "Маршрути з сайту…",
+  "command.createOnSite": "Створити маршрут на сайті…"
 }

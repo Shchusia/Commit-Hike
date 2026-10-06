@@ -27,6 +27,7 @@ import dev.commithike.core.RatingPrompt
 import dev.commithike.core.Route
 import dev.commithike.core.ScanResult
 import dev.commithike.core.Scope
+import dev.commithike.core.Site
 import dev.commithike.core.Status
 import dev.commithike.core.Team
 import dev.commithike.core.TrailView
@@ -327,7 +328,7 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
                 notifier = { title, text, button, action -> notify(title, text, button, action = action) },
                 onImportRoute = { importRoute() },
                 onFindRoutes = { openSite() },
-                onCreateTemplate = { createRouteTemplate() },
+                onCreateOnSite = { openSitePage("/create") },
             ),
         )
     }
@@ -389,7 +390,8 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
 
     fun importRoute(): Job = runFlow { importRoute() }
 
-    fun createRouteTemplate(): Job = runFlow { createRouteTemplate() }
+    /** A page of the routes site in the browser: its home or the route editor. */
+    fun openSitePage(path: String) = BrowserUtil.browse(Site.url() + path)
 
     fun removeRoute(): Job = runFlow { removeRoute() }
 
@@ -407,6 +409,9 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
 
     /** Walks on to [id], usually the next route of a series. */
     fun walkRoute(id: String): Job = runFlow { walkRoute(id) }
+
+    /** Walks a route just installed from the site, asking about past commits first. */
+    fun startRoute(id: String): Job = runFlow { startRoute(id) }
 
     /** The panel's site view: run the flow off the UI thread and hand its answer to [reply]. */
     fun siteSearch(args: List<String>, reply: (String) -> Unit): Job = guarded { reply(flows.siteSearch(args)) }

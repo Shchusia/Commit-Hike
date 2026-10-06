@@ -3,6 +3,7 @@ package dev.commithike.core
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.util.Base64
 
@@ -20,7 +21,7 @@ class PanelCommandTest {
             "exportProgress" to PanelCommand.ExportProgress, "importProgress" to PanelCommand.ImportProgress,
             "copyDiagnostics" to PanelCommand.CopyDiagnostics, "saveBadge" to PanelCommand.SaveBadge,
             "requestTeam" to PanelCommand.RequestTeam, "importRoute" to PanelCommand.ImportRoute,
-            "createRouteTemplate" to PanelCommand.CreateRouteTemplate, "verify" to PanelCommand.Verify,
+            "verify" to PanelCommand.Verify,
         )
         for ((name, cmd) in simple) assertEquals(name, cmd, parse("""{"command":"$name"}"""))
     }
@@ -74,7 +75,8 @@ class PanelCommandTest {
             "https://mastodon.social/share?text=hi&next=x", "https://localhost/share?text=hi", "https://u:p@bsky.app/intent/compose?text=x",
             "https://bsky.app:8443/intent/compose?text=x", "file:///etc/passwd", "javascript:alert(1)",
         )) {
-            assertNull(bad, parse("""{"command":"openUrl","url":"$bad"}"""))
+            // refused, and logged rather than dropped silently
+            assertTrue(parse("""{"command":"openUrl","url":"$bad"}""") is PanelCommand.PanelError)
         }
         assertNull(parse("""{"command":"openUrl","url":42}"""))
         assertEquals(PanelCommand.CopyText("🥾 hi"), parse("""{"command":"copyText","text":"🥾 hi"}"""))

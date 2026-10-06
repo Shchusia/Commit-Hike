@@ -429,7 +429,7 @@ html.reduce-motion .stamp { transform: none; }
 .site-card .meta { display: flex; gap: 10px; } .site-card .meta .langs { margin-left: auto; }
 .site-card .tags { color: var(--ct-blaze); }
 .site-card .row { display: flex; gap: 10px; align-items: center; margin-top: 4px; flex-wrap: wrap; }
-.site-card .badge { font-size: .72em; padding: 1px 6px; border-radius: 999px; color: #fff; background: #4f9d69; } .site-card .badge.story { background: #8a6fd1; }
+.site-kind { white-space: nowrap; flex-shrink: 0; font-size: .72em; padding: 1px 6px; border-radius: 999px; color: #fff; background: #4f9d69; } .site-kind.is-story { background: #8a6fd1; }
 .site-card .error { color: #d0574b; font-size: .86em; }
 .site-state { font-size: .88em; color: var(--ct-muted); } .site-state.ok { color: #4f9d69; font-weight: 600; } .site-actions { display: flex; gap: 8px; align-items: center; }
 .site-pages { display: flex; justify-content: space-between; align-items: center; }
@@ -443,7 +443,7 @@ html.reduce-motion .stamp { transform: none; }
   whose "unused selector" check can't see them; the browser never renders a
   <template>. ui/test/css-classes.spec.mjs keeps this list in step.
 -->
-<template id="script-classes"><i class="site-filters search site-list site-card cover body title by facts tags langs error site-state ok site-actions site-pages site privacy"></i>
+<template id="script-classes"><i class="site-kind is-story site-filters search site-list site-card cover body title by facts tags langs error site-state ok site-actions site-pages site privacy"></i>
   <i class="actions active ahead area-done area-left ava badge badge-row badges bar bar-d bar-hit base big"></i>
   <i class="build-info cal cal-d cal-legend cap card casing chart chart-box chart-tip chip-btn choice ck climb"></i>
   <i class="d danger danger-pin dangerpin day days dev dist dot down dragging dt elev empty fact factpin far"></i>
@@ -473,7 +473,7 @@ html.reduce-motion .stamp { transform: none; }
       startPlace: "Setting out", backToHiker: "Back to the hiker",
       scrollHint: "Drag, scroll or use ← → to look along the trail. Click the profile to jump.",
       menu: "Menu", language: "Language", langAuto: "Same as the IDE", changeTrail: "Change trail…", startNew: "Start a new trail…",
-      importRoute: "Import a route or map…", createTemplate: "Create a route template…", changeIcon: "Hiker icon…", resetIcon: "Default hiker icon",
+      importRoute: "Import a route or map…", createOnSite: "Create a route on the site…", siteHome: "commit-hike.dev: routes, the editor, the plugins", changeIcon: "Hiker icon…", resetIcon: "Default hiker icon",
       showTeam: "Show teammates", recount: "Recount this project",
       setupTitle: "Turn commits into a journey",
       setupText: "Every commit you make moves you along a trail. Nothing is written to your projects and nothing leaves this computer.",
@@ -562,7 +562,7 @@ html.reduce-motion .stamp { transform: none; }
       startPlace: "Вирушаємо", backToHiker: "До мандрівника",
       scrollHint: "Перетягуй, гортай або тисни ← →, щоб роздивитися стежку. Клік по профілю — перейти туди.",
       menu: "Меню", language: "Мова", langAuto: "Як в IDE", changeTrail: "Змінити стежку…", startNew: "Почати нову стежку…",
-      importRoute: "Імпортувати маршрут або карту…", createTemplate: "Створити шаблон маршруту…", changeIcon: "Іконка мандрівника…", resetIcon: "Стандартна іконка",
+      importRoute: "Імпортувати маршрут або карту…", createOnSite: "Створити маршрут на сайті…", siteHome: "commit-hike.dev: маршрути, редактор, плагіни", changeIcon: "Іконка мандрівника…", resetIcon: "Стандартна іконка",
       showTeam: "Показувати команду", recount: "Перерахувати цей проєкт",
       setupTitle: "Перетвори коміти на подорож",
       setupText: "Кожен твій коміт просуває тебе стежкою. У твої проєкти нічого не записується, і нічого не залишає цей комп'ютер.",
@@ -651,7 +651,7 @@ html.reduce-motion .stamp { transform: none; }
       startPlace: "Wyruszasz", backToHiker: "Wróć do wędrowca",
       scrollHint: "Przeciągnij, przewiń lub użyj ← →, by patrzeć wzdłuż szlaku. Kliknij profil, by przeskoczyć.",
       menu: "Menu", language: "Język", langAuto: "Jak w IDE", changeTrail: "Zmień szlak…", startNew: "Zacznij nowy szlak…",
-      importRoute: "Importuj trasę lub mapę…", createTemplate: "Utwórz szablon trasy…", changeIcon: "Ikona wędrowca…", resetIcon: "Domyślna ikona wędrowca",
+      importRoute: "Importuj trasę lub mapę…", createOnSite: "Utwórz trasę na stronie…", siteHome: "commit-hike.dev: trasy, edytor, wtyczki", changeIcon: "Ikona wędrowca…", resetIcon: "Domyślna ikona wędrowca",
       showTeam: "Pokaż zespół", recount: "Przelicz ten projekt",
       setupTitle: "Zamień commity w wędrówkę",
       setupText: "Każdy twój commit przesuwa cię po szlaku. Nic nie jest zapisywane w twoich projektach i nic nie opuszcza tego komputera.",
@@ -739,7 +739,7 @@ html.reduce-motion .stamp { transform: none; }
       startPlace: "Aufbruch", backToHiker: "Zurück zum Wanderer",
       scrollHint: "Ziehen, scrollen oder ← → verwenden, um den Weg entlang zu schauen. Auf das Profil klicken, um zu springen.",
       menu: "Menü", language: "Sprache", langAuto: "Wie in der IDE", changeTrail: "Weg wechseln…", startNew: "Neuen Weg beginnen…",
-      importRoute: "Route oder Karte importieren…", createTemplate: "Routenvorlage erstellen…", changeIcon: "Wanderer-Symbol…", resetIcon: "Standard-Wanderer",
+      importRoute: "Route oder Karte importieren…", createOnSite: "Route auf der Website erstellen…", siteHome: "commit-hike.dev: Routen, Editor, Plugins", changeIcon: "Wanderer-Symbol…", resetIcon: "Standard-Wanderer",
       showTeam: "Team anzeigen", recount: "Dieses Projekt neu zählen",
       setupTitle: "Mach aus Commits eine Wanderung",
       setupText: "Jeder Commit bringt dich auf einem Weg voran. In deine Projekte wird nichts geschrieben, und nichts verlässt diesen Computer.",
@@ -827,7 +827,7 @@ html.reduce-motion .stamp { transform: none; }
       startPlace: "Saliendo", backToHiker: "Volver al caminante",
       scrollHint: "Arrastra, desplaza o usa ← → para mirar a lo largo del sendero. Haz clic en el perfil para saltar.",
       menu: "Menú", language: "Idioma", langAuto: "Como el IDE", changeTrail: "Cambiar de sendero…", startNew: "Empezar un sendero nuevo…",
-      importRoute: "Importar una ruta o un mapa…", createTemplate: "Crear una plantilla de ruta…", changeIcon: "Icono del caminante…", resetIcon: "Caminante predeterminado",
+      importRoute: "Importar una ruta o un mapa…", createOnSite: "Crear una ruta en el sitio…", siteHome: "commit-hike.dev: rutas, editor, plugins", changeIcon: "Icono del caminante…", resetIcon: "Caminante predeterminado",
       showTeam: "Mostrar al equipo", recount: "Recontar este proyecto",
       setupTitle: "Convierte tus commits en una travesía",
       setupText: "Cada commit te hace avanzar por un sendero. No se escribe nada en tus proyectos y nada sale de este ordenador.",
@@ -2663,9 +2663,11 @@ html.reduce-motion .stamp { transform: none; }
     items.push(el("div", { class: "sep" }));
     if (j) items.push(act(j.finished ? t("startNew") : t("changeTrail"), { command: "chooseRoute", scope }));
     items.push(el("button", { role: "menuitem", onclick: openSite }, [el("span", { class: "ck", text: "🌐" }), t("siteMenu")]));
-    items.push(act(t("importRoute"), { command: "importRoute" }), act(t("createTemplate"), { command: "createRouteTemplate" }));
+    items.push(act(t("importRoute"), { command: "importRoute" }), act(t("createOnSite"), { command: "openSite", path: "/create" }));
     items.push(el("div", { class: "sep" }), act(t("changeIcon"), { command: "setAvatar" }));
     if (data.avatar_custom) items.push(act(t("resetIcon"), { command: "resetAvatar" }));
+    items.push(el("div", { class: "sep" }), el("button", { role: "menuitem", onclick: () => { menuOpen = false; send({ command: "openSite", path: "/" }); render(); } },
+      [el("span", { class: "ck", text: "🌐" }), t("siteHome")]));
     if (data.repo && data.status && data.status.tracked) {
       items.push(el("div", { class: "sep" }), act(t("showTeam"), { command: "setTeam", on: !data.status.team }, !!data.status.team),
         act(t("recount"), { command: "verify" }));
@@ -3436,16 +3438,17 @@ html.reduce-motion .stamp { transform: none; }
     else if (r.installed === "site" && r.update) action = el("button", { class: "chip-btn primary", text: t("siteUpdate", { v: r.version }), onclick: () => siteInstall(r) });
     else if (r.installed === "site") action = el("span", { class: "site-actions" }, [
       el("span", { class: "site-state ok", text: "✓ " + t("siteInstalled") }),
-      el("button", { class: "chip-btn primary", text: t("siteWalk"), onclick: () => send({ command: "walkRoute", id: r.id }) })]);
+      // a new route: the host asks whether to count the commits already made (walkRoute is "from now", for series)
+      el("button", { class: "chip-btn primary", text: t("siteWalk"), onclick: () => send({ command: "startRoute", id: r.id }) })]);
     else action = el("button", { class: "chip-btn primary", text: t("siteInstall"), onclick: () => siteInstall(r) });
     return el("article", { class: "site-card" }, [
       r.cover ? el("img", { class: "cover", src: r.cover, alt: "", loading: "lazy" }) : el("div", { class: "cover none" }),
       el("div", { class: "body" }, [
-        el("div", { class: "title" }, [el("b", { text: r.title }), el("span", { class: "badge " + (r.real ? "real" : "story"), text: r.real ? t("siteReal1") : t("siteStory1") })]),
+        el("div", { class: "title" }, [el("b", { text: r.title }), el("span", { class: "site-kind " + (r.real ? "is-real" : "is-story"), text: r.real ? t("siteReal1") : t("siteStory1") })]),
         el("div", { class: "by", text: t("siteBy", { name: r.author }) }),
         el("div", { class: "facts", text: facts.join(" · ") }),
         el("div", { class: "meta" }, [
-          el("span", { text: r.ratings ? "★ " + r.rating.toFixed(1) + " (" + r.ratings + ")" : "" }),
+          r.ratings ? el("span", { text: "★ " + r.rating.toFixed(1) + " (" + r.ratings + ")" }) : null,
           el("span", { text: "⬇ " + r.downloads }),
           el("span", { class: "langs", text: (r.languages || []).join(" · ").toUpperCase() })]),
         (r.tags || []).length ? el("div", { class: "tags", text: r.tags.map(x => "#" + x).join(" ") }) : null,
@@ -3533,10 +3536,12 @@ html.reduce-motion .stamp { transform: none; }
         el("button", { class: "chip-btn", text: t("backupImport"), onclick: () => send({ command: "importProgress" }) })])),
       row(t("setHelp"), t("setHelpHint"), el("div", { class: "set-btns" }, [
         el("button", { class: "chip-btn", text: t("copyReport"), onclick: () => send({ command: "copyDiagnostics" }) })])),
+      el("p", { class: "hint" }, [el("button", { class: "link", text: "🌐 " + t("siteHome"), onclick: () => send({ command: "openSite", path: "/" }) })]),
     ]));
   }
 
   function render() {
+    queueMicrotask(repaintIfClosed);
     if (!data) return;
     lang = pickLang((data.locale_setting && data.locale_setting.effective) || data.locale || (data.status && data.status.locale));
     document.documentElement.lang = lang;
@@ -3582,6 +3587,18 @@ html.reduce-motion .stamp { transform: none; }
     ]));
   }
 
+  // JCEF (JetBrains) renders off screen and can leave a closed menu's image (and its
+  // shadow) behind over the map: a one-frame opacity change repaints the whole page.
+  let lastLayout = "";
+  function repaintIfClosed() {
+    const now = (menuOpen ? "menu" : "") + "|" + view;
+    if (lastLayout && lastLayout !== now) {
+      const b = document.body;
+      b.style.opacity = "0.999";
+      requestAnimationFrame(() => requestAnimationFrame(() => { b.style.opacity = ""; }));
+    }
+    lastLayout = now;
+  }
   document.addEventListener("click", () => { if (menuOpen) { menuOpen = false; render(); } });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && menuOpen) { menuOpen = false; render(); } });
 

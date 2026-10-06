@@ -166,6 +166,15 @@ class TrekFlows(private val host: TrekHost, private val ui: TrekUi, private val 
         }
     }
 
+    /** A route just installed from the site: asks whether to count the commits already made, then walks it. */
+    fun startRoute(id: String) {
+        val name = host.routes.firstOrNull { it.id == id }?.name ?: id
+        val fromHistory = ui.confirm(I18n.t("histAsk", name), I18n.t("histYes"), I18n.t("histNow"))
+        host.core { it.setJourney(Scope.GLOBAL, id, fromHistory) }
+        host.refreshAll()
+        host.showTrail()
+    }
+
     fun walkRoute(id: String) {
         host.core { it.setJourney(Scope.GLOBAL, id, fromHistory = false) }
         host.refreshAll()
@@ -217,15 +226,6 @@ class TrekFlows(private val host: TrekHost, private val ui: TrekUi, private val 
             I18n.t("walkNow"),
             I18n.t("imported"),
         ) { host.launch { walkRoute(route.id) } }
-    }
-
-    /** Writes a template route pack the user can edit and then import. */
-    fun createRouteTemplate() {
-        val folder = ui.chooseFolder(I18n.t("whereCreate")) ?: return
-        val id = ui.askText(I18n.t("routeIdPrompt"), I18n.t("newRoute"), "my-trail")?.trim()?.takeIf { it.isNotEmpty() } ?: return
-        val dir = host.core { it.routeTemplate(id, folder.path) }
-        ui.openInEditor(File(dir, "route.json"))
-        ui.notify(I18n.t("templateText"), I18n.t("importBtn"), I18n.t("templateCreated")) { host.launch { importRoute() } }
     }
 
     /** Removes one of the user's imported routes. */

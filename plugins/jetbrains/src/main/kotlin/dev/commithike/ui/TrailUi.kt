@@ -33,7 +33,6 @@ import dev.commithike.core.I18n
 import dev.commithike.core.PanelCommand
 import dev.commithike.core.PanelPayload
 import dev.commithike.core.Scope
-import dev.commithike.core.Site
 import dev.commithike.core.Status
 import java.awt.Color
 import java.awt.Cursor
@@ -178,7 +177,7 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
         val bridge = "<script nonce=\"$nonce\">window.commitHikeHost={send:function(m){${query.inject("m")}}};</script>"
         // replaceFirst: the page's own script must never be touched by these edits.
         return raw
-            .replace("{{CSP}}", "default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-$nonce'; img-src data: ${Site.url()}")
+            .replace("{{CSP}}", "default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-$nonce'; img-src data:")
             .replace("{{NONCE}}", nonce)
             .replaceFirst("<html lang=\"en\">", "<html lang=\"en\" style=\"${themeVars()}\">")
             .replaceFirst("<head>", "<head>$bridge")
@@ -222,7 +221,7 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
             PanelCommand.SaveBadge -> trek.saveBadge()
             PanelCommand.RequestTeam -> trek.requestTeam()
             PanelCommand.ImportRoute -> trek.importRoute()
-            PanelCommand.CreateRouteTemplate -> trek.createRouteTemplate()
+            is PanelCommand.OpenSite -> ApplicationManager.getApplication().invokeLater { trek.openSitePage(c.path) }
             PanelCommand.Verify -> trek.verify()
             is PanelCommand.ChooseRoute -> trek.chooseRoute(if (c.project) Scope.PROJECT else Scope.GLOBAL)
             is PanelCommand.SetLocale -> trek.setLocale(c.locale)
@@ -234,7 +233,9 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
             is PanelCommand.PanelError -> service<CommitHikeApp>().noteError(c.message)
             is PanelCommand.WalkRoute -> trek.walkRoute(c.id)
             is PanelCommand.SetTeamGoal -> trek.setTeamGoal(c.route)
-            is PanelCommand.OpenUrl -> trek.openShareUrl(c.url)
+            // the browser is opened from the IDE's UI thread, not JCEF's
+            is PanelCommand.OpenUrl -> ApplicationManager.getApplication().invokeLater { trek.openShareUrl(c.url) }
+            is PanelCommand.StartRoute -> trek.startRoute(c.id)
             is PanelCommand.SiteSearch -> trek.siteSearch(c.args, ::sendSite)
             is PanelCommand.SiteInstall -> trek.siteInstall(c.id, c.replaceLocal, ::sendSite)
             is PanelCommand.CopyText -> trek.copyText(c.text)

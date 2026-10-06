@@ -13,10 +13,12 @@ turns them into the section of the new version; the JetBrains Marketplace
 ## [1.0.0] - 2026-10-06
 
 ### Added
-- Routes from the site: find routes other walkers made on [commit-hike.dev](https://commit-hike.dev) right in the IDE. The trail view's 🌐 *Routes from the site* (also in the ⋯ menu, in *Choose a trail* and as a command) searches the catalogue with filters and pages and shows covers, authors, lengths, stops, ascents, languages, ratings and tags. *Install* puts a route among yours after the same checks as an import; *Update to version N* appears when its author publishes a new one; *Walk it now* starts it. A route of your own with the same id is replaced only after you confirm; built-in routes never are. In Neovim: `:CommitHike find [text]` and `:CommitHike install {id}`; in the terminal: `commit-hike site routes|install` (docs/terminal.md).
+- Routes from the site: find routes other walkers made on [commit-hike.dev](https://commit-hike.dev) right in the IDE. The trail view's 🌐 *Routes from the site* (also in the ⋯ menu, in *Choose a trail* and as a command) searches the catalogue with filters and pages and shows covers, authors, lengths, stops, ascents, languages, ratings and tags. *Install* puts a route among yours after the same checks as an import; *Update to version N* appears when its author publishes a new one; *Walk it now* starts it, asking (as when choosing a trail) whether to count the commits you already made. The covers come through the core as pictures, so the trail view itself still never goes online. A route of your own with the same id is replaced only after you confirm; built-in routes never are. In Neovim: `:CommitHike find [text]` and `:CommitHike install {id}`; in the terminal: `commit-hike site routes|install` (docs/terminal.md).
 - Shared postcards link to [commit-hike.dev](https://commit-hike.dev) instead of the GitHub repository.
+- Links to [commit-hike.dev](https://commit-hike.dev) in the ⋯ menu and on the settings page; it's the home page on both marketplaces.
 
 ### Changed
+- *Create a Route Template…* is now *Create a Route on the Site…*: it opens the route editor on commit-hike.dev, which draws routes on a map or a picture, loads GPX tracks and checks them before publishing. Hand-written packs still start from `commit-hike route template` and come in with *Import a Route or Map…*.
 - Commit Hike goes online for the first time, and only for this: the routes site is contacted when you open *Routes from the site* or install a route, to read its public catalogue and download route packs. Nothing about you is sent, and everything else still stays on your computer. Offline, the view says the site can't be reached. The READMEs and the marketplace descriptions say so.
 
 ## [0.7.0] - 2026-10-04

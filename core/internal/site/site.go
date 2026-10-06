@@ -5,6 +5,7 @@ package site
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -22,9 +23,12 @@ import (
 const DefaultURL = "https://commit-hike.dev"
 
 const (
-	maxJSON = 4 << 20  // a page of the catalogue is a few kilobytes
-	maxPack = 40 << 20 // the site takes packs up to 20 MB, plus translations
+	maxJSON  = 4 << 20  // a page of the catalogue is a few kilobytes
+	maxPack  = 40 << 20 // the site takes packs up to 20 MB, plus translations
+	maxImage = 1 << 20  // covers are 480 px thumbnails, tens of kilobytes
 )
+
+var imageTypes = map[string]bool{"image/webp": true, "image/png": true, "image/jpeg": true, "image/gif": true}
 
 var idPattern = regexp.MustCompile(`^[a-z0-9]+(-[a-z0-9]+)*$`)
 
@@ -174,6 +178,53 @@ func (c *Client) Route(ctx context.Context, id string) (*Card, error) {
 		return nil, fmt.Errorf("the site answered something unexpected: %w", err)
 	}
 	return &card, nil
+}
+
+// Local puts a link from the catalogue on this site: only its path is kept.
+// The catalogue builds its links from the site's own idea of its address
+// (BASE_URL), which can be stale after a move; the pages, covers and packs the
+// plugins use are always on the site the core talks to.
+func (c *Client) Local(link string) string {
+	if link == "" {
+		return ""
+	}
+	u, err := url.Parse(link)
+	if err != nil || u.Path == "" || !strings.HasPrefix(u.Path, "/") {
+		return ""
+	}
+	out := c.Base + u.EscapedPath()
+	if u.RawQuery != "" {
+		out += "?" + u.RawQuery
+	}
+	return out
+}
+
+// Image fetches a picture of the site (a route's cover) as a data: URL, so the
+// plugins' panels show it without going online themselves. Only pictures on the
+// site's own address are fetched, whatever the catalogue says.
+func (c *Client) Image(ctx context.Context, link string) (string, error) {
+	u, err := url.Parse(link)
+	if err != nil {
+		return "", err
+	}
+	base, err := url.Parse(c.Base)
+	if err != nil {
+		return "", err
+	}
+	if u.Scheme != base.Scheme || u.Host != base.Host || u.User != nil {
+		return "", fmt.Errorf("%q isn't on %s", link, c.Base)
+	}
+	body, err := c.get(ctx, u.RequestURI(), maxImage)
+	if err != nil {
+		return "", err
+	}
+	// The bytes say what it is, not the header: a server may send WebP as
+	// text/plain (Python's own type table doesn't know .webp), or lie.
+	typ := http.DetectContentType(body)
+	if !imageTypes[typ] {
+		return "", fmt.Errorf("%q isn't a picture (%s)", link, typ)
+	}
+	return "data:" + typ + ";base64," + base64.StdEncoding.EncodeToString(body), nil
 }
 
 // Download fetches a route's pack (a zip).

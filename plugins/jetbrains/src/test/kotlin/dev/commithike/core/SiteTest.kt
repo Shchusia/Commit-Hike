@@ -57,6 +57,12 @@ class SiteTest {
             PanelCommand.OpenUrl("${Site.url()}/routes/lake-walk"),
             parse("""{"command":"openUrl","url":"${Site.url()}/routes/lake-walk"}"""),
         )
-        assertNull(parse("""{"command":"openUrl","url":"${Site.url()}/admin"}"""))
+        // a refused link isn't silent: it goes to the error log
+        assertTrue(parse("""{"command":"openUrl","url":"${Site.url()}/admin"}""") is PanelCommand.PanelError)
+        assertEquals(PanelCommand.StartRoute("lake-walk"), parse("""{"command":"startRoute","id":"lake-walk"}"""))
+        assertNull(parse("""{"command":"startRoute","id":"../x"}"""))
+        assertEquals(PanelCommand.OpenSite("/create"), parse("""{"command":"openSite","path":"/create"}"""))
+        assertEquals(PanelCommand.OpenSite("/"), parse("""{"command":"openSite","path":"/"}"""))
+        assertNull(parse("""{"command":"openSite","path":"/admin"}"""))
     }
 }

@@ -15,7 +15,6 @@ builds:
     binary: commit-hike
     env: [CGO_ENABLED=0]
     flags: [-trimpath]
-    # The same flags as task core:dist; the version comes from the tag (v0.7.0 → 0.7.0).
     ldflags: ["-s -w -X main.version={{ .Version }}"]
     goos: [linux, darwin, windows]
     goarch: [amd64, arm64]

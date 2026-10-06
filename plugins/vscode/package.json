@@ -2,7 +2,7 @@
   "name": "commit-hike",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "0.7.0",
+  "version": "1.0.0",
   "publisher": "shchusia",
   "license": "MIT",
   "icon": "media/icon.png",
@@ -85,6 +85,11 @@
       {
         "command": "commitHike.verify",
         "title": "%command.verify%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.findRoutes",
+        "title": "%command.findRoutes%",
         "category": "Commit Hike"
       },
       {

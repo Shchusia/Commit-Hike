@@ -50,6 +50,11 @@ sealed interface PanelCommand {
 
     data class WalkRoute(val id: String) : PanelCommand
 
+    /** Search the routes website (the panel's "Routes from the site"). */
+    data class SiteSearch(val args: List<String>) : PanelCommand
+
+    data class SiteInstall(val id: String, val replaceLocal: Boolean) : PanelCommand
+
     /** The team goal's route; "" removes the goal. */
     data class SetTeamGoal(val route: String) : PanelCommand
 
@@ -91,7 +96,15 @@ sealed interface PanelCommand {
                     SavePostcard(Files.safeName(msg.string("name"), "commit-hike.png", "png"), it)
                 }
                 "panelError" -> PanelError("panel: " + msg.string("message").orEmpty().take(500))
-                "openUrl" -> msg.string("url")?.takeIf { ShareLinks.allowed(it) }?.let { OpenUrl(it) }
+                "openUrl" -> msg.string("url")?.takeIf { ShareLinks.allowed(it) || Site.isPage(it) }?.let { OpenUrl(it) }
+                "siteSearch" -> SiteSearch(Site.searchArgs(msg.get("query")?.takeIf { it.isJsonObject }?.asJsonObject))
+                "siteInstall" -> msg.string("id")?.takeIf { Site.routeId.matches(it) && it.length <= 80 }
+                    ?.let {
+                        SiteInstall(
+                            it,
+                            msg.get("replaceLocal")?.takeIf { v -> v.isJsonPrimitive && v.asJsonPrimitive.isBoolean }?.asBoolean == true,
+                        )
+                    }
                 "copyText" -> msg.string("text")?.takeIf { it.isNotEmpty() }?.let { CopyText(it.take(4000)) }
                 "copyImage" -> Files.png(msg.string("data"))?.let { CopyImage(it) }
                 "walkRoute" -> msg.string("id")?.takeIf { routeId.matches(it) }?.let { WalkRoute(it) }

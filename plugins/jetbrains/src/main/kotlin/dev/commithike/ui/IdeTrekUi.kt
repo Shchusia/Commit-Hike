@@ -35,6 +35,7 @@ class IdeTrekUi(
     private val project: Project,
     private val notifier: (title: String, text: String, button: String?, action: (() -> Unit)?) -> Unit,
     private val onImportRoute: () -> Unit,
+    private val onFindRoutes: () -> Unit,
     private val onCreateTemplate: () -> Unit,
 ) : TrekUi {
     private fun <T> onEdt(block: () -> T): T {
@@ -78,7 +79,8 @@ class IdeTrekUi(
     }
 
     override fun pickRoute(scope: Scope, routes: List<Route>, canRemove: Boolean): RouteChoice? = onEdt {
-        val dialog = RouteDialog(project, scope, routes, canRemove, onImport = onImportRoute, onTemplate = onCreateTemplate)
+        val dialog =
+            RouteDialog(project, scope, routes, canRemove, onImport = onImportRoute, onTemplate = onCreateTemplate, onSite = onFindRoutes)
         if (dialog.showAndGet()) dialog.result()?.let { RouteChoice(it.routeId, it.fromHistory) } else null
     }
 

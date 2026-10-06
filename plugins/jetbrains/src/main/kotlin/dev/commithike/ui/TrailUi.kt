@@ -33,6 +33,7 @@ import dev.commithike.core.I18n
 import dev.commithike.core.PanelCommand
 import dev.commithike.core.PanelPayload
 import dev.commithike.core.Scope
+import dev.commithike.core.Site
 import dev.commithike.core.Status
 import java.awt.Color
 import java.awt.Cursor
@@ -177,7 +178,7 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
         val bridge = "<script nonce=\"$nonce\">window.commitHikeHost={send:function(m){${query.inject("m")}}};</script>"
         // replaceFirst: the page's own script must never be touched by these edits.
         return raw
-            .replace("{{CSP}}", "default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-$nonce'; img-src data:")
+            .replace("{{CSP}}", "default-src 'none'; style-src 'unsafe-inline'; script-src 'nonce-$nonce'; img-src data: ${Site.url()}")
             .replace("{{NONCE}}", nonce)
             .replaceFirst("<html lang=\"en\">", "<html lang=\"en\" style=\"${themeVars()}\">")
             .replaceFirst("<head>", "<head>$bridge")
@@ -234,6 +235,8 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
             is PanelCommand.WalkRoute -> trek.walkRoute(c.id)
             is PanelCommand.SetTeamGoal -> trek.setTeamGoal(c.route)
             is PanelCommand.OpenUrl -> trek.openShareUrl(c.url)
+            is PanelCommand.SiteSearch -> trek.siteSearch(c.args, ::sendSite)
+            is PanelCommand.SiteInstall -> trek.siteInstall(c.id, c.replaceLocal, ::sendSite)
             is PanelCommand.CopyText -> trek.copyText(c.text)
             is PanelCommand.CopyImage -> trek.copyPostcard(c.png)
         }
@@ -255,6 +258,13 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
             openToken = trek.openToken,
         ) ?: return
         browser.cefBrowser.executeJavaScript(payload.script(), browser.cefBrowser.url, 0)
+    }
+
+    /** An answer for the panel's site view (JSON from TrekFlows; Gson escaped it). */
+    private fun sendSite(message: String) {
+        ApplicationManager.getApplication().invokeLater {
+            browser.cefBrowser.executeJavaScript("window.commitHike && window.commitHike.site($message);", browser.cefBrowser.url, 0)
+        }
     }
 
     override fun dispose() {}

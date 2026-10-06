@@ -13,6 +13,7 @@ import (
 
 	"github.com/Shchusia/commit-hike/core/internal/app"
 	"github.com/Shchusia/commit-hike/core/internal/protocol"
+	"github.com/Shchusia/commit-hike/core/internal/site"
 	"github.com/Shchusia/commit-hike/core/internal/store"
 )
 
@@ -43,6 +44,8 @@ const usage = `commit-hike: turns commits into a journey. Every command prints o
   commit-hike verify   --repo PATH
   commit-hike render   [--scope global|project] [--repo PATH] [--format svg|scene] [--width 300] [--lang uk]
   commit-hike config
+  commit-hike site     routes [--q TEXT] [--kind real|story] [--length s|m|l|xl] [--with-lang de] [--tag a,b] [--min-rating 4] [--gps] [--sort new|popular|rating|short|long] [--page 2] [--per 24] [--lang uk]
+  commit-hike site     install --id ID [--replace-local] [--lang uk]   # from the routes website; updates too
   commit-hike version
   commit-hike prompt   [--repo PATH] [--lang uk] [--scan] [--icon 🥾]   # one line of plain text, for shell prompts and status lines
 `
@@ -88,7 +91,7 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 
 	// "project" and "route" have a positional sub-command before flags.
 	sub := ""
-	if (cmd == "project" || cmd == "route" || cmd == "avatar" || cmd == "backup") && len(args) > 0 {
+	if (cmd == "project" || cmd == "route" || cmd == "avatar" || cmd == "backup" || cmd == "site") && len(args) > 0 {
 		sub, args = args[0], args[1:]
 	}
 
@@ -97,6 +100,9 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 		reduceMotion, highContrast, notifications                                                       *string
 		fromHistory, replace                                                                            *bool
 		width                                                                                           *float64
+		siteQ, siteKind, siteLength, siteLang, siteTags, siteSort                                       *string
+		siteRating, sitePage, sitePer                                                                   *int
+		siteGPS, replaceLocal                                                                           *bool
 	)
 	switch cmd {
 	case "init":
@@ -133,6 +139,19 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 		id = fs.String("id", "", "route id")
 		path = fs.String("path", "", "route folder or .zip (import), target folder (template)")
 		replace = fs.Bool("replace", false, "overwrite an installed user route with the same id")
+	case "site":
+		id = fs.String("id", "", "route id")
+		siteQ = fs.String("q", "", "search text")
+		siteKind = fs.String("kind", "", "real | story")
+		siteLength = fs.String("length", "", "s | m | l | xl")
+		siteLang = fs.String("with-lang", "", "only routes in this language")
+		siteTags = fs.String("tag", "", "tags, comma-separated")
+		siteRating = fs.Int("min-rating", 0, "1..5")
+		siteGPS = fs.Bool("gps", false, "only real GPS tracks")
+		siteSort = fs.String("sort", "", "new | popular | rating | short | long")
+		sitePage = fs.Int("page", 1, "page")
+		sitePer = fs.Int("per", 0, "routes per page (12, 24, 48, 96)")
+		replaceLocal = fs.Bool("replace-local", false, "replace your own route with the same id")
 	case "render":
 		scope = fs.String("scope", app.ScopeGlobal, "global | project")
 		format = fs.String("format", "svg", "svg | scene")
@@ -210,6 +229,21 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 			return map[string]string{"goal": ""}, svc.SetTeamGoal(*repo, "")
 		}
 		return nil, invalid("usage: commit-hike project enable|disable|team-on|team-off --repo PATH")
+	case "site":
+		switch sub {
+		case "routes":
+			var tags []string
+			if *siteTags != "" {
+				tags = strings.Split(*siteTags, ",")
+			}
+			return svc.SiteRoutes(site.Query{
+				Q: *siteQ, Kind: *siteKind, Length: *siteLength, Lang: *siteLang, Tags: tags,
+				MinRating: *siteRating, GPS: *siteGPS, Sort: *siteSort, Page: *sitePage, Per: *sitePer,
+			}, *lang, version)
+		case "install":
+			return svc.SiteInstall(*id, *replaceLocal, *lang, version)
+		}
+		return nil, invalid("usage: commit-hike site routes|install, see `commit-hike help`")
 	case "route":
 		switch sub {
 		case "import":

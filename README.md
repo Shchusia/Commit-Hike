@@ -26,6 +26,7 @@ a map, stories, facts and achievements.
 ## Features
 
 - **Real, literary and original routes.** Walk the Chornohora ridge over Hoverla and New Zealand's Tongariro Alpine Crossing on their real GPS tracks, Santiago's journey from The Alchemist across real Spain, Morocco, the Sahara and Egypt on real terrain, a folk tale through the Carpathians or a fantasy journey past seven lighthouses. Each route has its own stops, story, facts and achievements.
+- **Routes from the site.** Find routes other walkers made on [commit-hike.dev](https://commit-hike.dev) right in the IDE: search, filters, covers, ratings; install with one click, and update when the author publishes a new version. In Neovim: `:CommitHike find`.
 - **Five languages.** English, Ukrainian, Polish, German and Spanish, following your IDE or chosen in the settings.
 - **Series.** Finish a route and walk on to the next: the Carpathians (Chornohora → Svydovets → Gorgany) and the long ways (Tour du Mont Blanc → Camino Francés to Santiago).
 - **Seasons, camps and a passport.** Snow in winter, golden meadows in autumn, a camp by the fire on days without commits, and a passport with a dated stamp for every stop you've reached.
@@ -48,7 +49,7 @@ a map, stories, facts and achievements.
 - **Fair distance.** Meters grow with the size of a commit, but slowly: tiny commits count, huge ones can't be farmed. Lock files, generated code, whitespace-only changes and other people's commits don't count. Squashed, rebased or amended history is recounted, never counted twice.
 - **Your own routes and maps.** Create a route from a template, add pictures and a map, then import it as a folder or a `.zip`, right from the IDE. See [docs/routes.md](docs/routes.md).
 - **Your own hiker.** Replace the default figure with any PNG with a transparent background. The default, [`ui/panel/hiker-default.png`](ui/panel/hiker-default.png), shows the expected format: facing right, feet at the bottom edge.
-- **Private by design.** Nothing is written to your repositories and nothing leaves your computer. No source code, commit messages, file names or repository names are stored.
+- **Private by design.** Nothing is written to your repositories and nothing about you leaves your computer: the only requests go to [commit-hike.dev](https://commit-hike.dev) when you open *Routes from the site* or install a route, and they read the public catalogue without sending anything about you. No source code, commit messages, file names or repository names are stored.
 
 ## Supported IDEs
 

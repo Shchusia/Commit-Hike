@@ -23,5 +23,6 @@
   "command.setRestDays": "Freie Tage…",
   "command.exportProgress": "Fortschritt exportieren…",
   "command.importProgress": "Fortschritt importieren…",
-  "command.openSettings": "Einstellungen…"
+  "command.openSettings": "Einstellungen…",
+  "command.findRoutes": "Routen von der Website…"
 }

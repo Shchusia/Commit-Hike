@@ -67,6 +67,7 @@ class RouteDialog(
     canRemove: Boolean,
     private val onImport: () -> Unit,
     private val onTemplate: () -> Unit,
+    private val onSite: () -> Unit,
 ) : DialogWrapper(project) {
     data class Result(val routeId: String, val fromHistory: Boolean)
 
@@ -101,6 +102,12 @@ class RouteDialog(
             row { radioButton(I18n.t("histNow"), "now") }
         }.bind(::start)
         separator()
+        row {
+            link(I18n.t("siteLink")) {
+                close(CANCEL_EXIT_CODE)
+                onSite()
+            }
+        }
         row {
             link(I18n.t("importLink")) {
                 close(CANCEL_EXIT_CODE)

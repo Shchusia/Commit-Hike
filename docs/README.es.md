@@ -26,6 +26,7 @@ mapa, historias, datos curiosos y logros.
 ## Funciones
 
 - **Rutas reales, literarias y propias.** La cresta de Chornohora por el Hoverla y el Tongariro Alpine Crossing de Nueva Zelanda sobre sus tracks GPS reales, el camino de Santiago de «El Alquimista» por la España, Marruecos, el Sáhara y Egipto reales, un cuento por los Cárpatos o un viaje de fantasía junto a siete faros. Cada ruta tiene sus paradas, su historia, datos curiosos y logros.
+- **Rutas del sitio web.** Busca rutas de otros caminantes en [commit-hike.dev](https://commit-hike.dev) desde el IDE: búsqueda, filtros, portadas, valoraciones; instálalas con un clic y actualízalas cuando el autor publique una nueva versión. En Neovim: `:CommitHike find`.
 - **Cinco idiomas.** Inglés, ucraniano, polaco, alemán y español, como tu IDE o elegido en los ajustes.
 - **Series.** Termina una ruta y sigue a la siguiente: los Cárpatos (Chornohora → Svydovets → Gorgany) y los caminos largos (Tour du Mont Blanc → Camino Francés a Santiago).
 - **Desnivel de verdad.** Las rutas tienen perfil de altitud: el terreno sube y baja, y ves la altitud, la pendiente, el desnivel acumulado y la subida hasta la próxima parada.
@@ -38,7 +39,7 @@ mapa, historias, datos curiosos y logros.
 - **También en la terminal.** Una línea en el prompt de tu shell (starship, bash, zsh, fish) y en la barra de estado de Neovim, del mismo núcleo: `🥾 16,0 km · Lago Nesamovyte`.
 - **Caminad juntos.** Todos los que hacen commits en un proyecto, en el mismo sendero, con clasificación, el resumen de la semana y una meta del equipo: una ruta que recorréis juntos, sumando los commits de todos.
 - **Distancia justa.** Los ficheros lock, el código generado, los cambios solo de espacios y los commits ajenos no cuentan; tras un squash, rebase o amend se recuenta, nunca se cuenta dos veces.
-- **Privado por diseño.** No se escribe nada en tus repositorios y nada sale de tu ordenador. No se guarda código, mensajes de commit ni nombres de ficheros o repositorios.
+- **Privado por diseño.** No se escribe nada en tus repositorios y nada sobre ti sale de tu ordenador: solo se consulta [commit-hike.dev](https://commit-hike.dev) cuando abres *Rutas del sitio web* o instalas una ruta, y se lee el catálogo público sin enviar nada sobre ti. No se guarda código, mensajes de commit ni nombres de ficheros o repositorios.
 
 ## IDE compatibles
 

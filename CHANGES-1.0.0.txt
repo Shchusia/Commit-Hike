@@ -1,0 +1,15 @@
+Commit Hike 1.0.0: routes from the site (commit-hike.dev)
+
+Unpack over the repository (paths are relative to its root), then:
+  task check
+  git add -A && git commit -m "Release 1.0.0" && git tag v1.0.0
+  git push origin master --follow-tags
+and publish as usual (docs/publishing.md).
+
+New:
+  core/internal/site/site.go          the site's client (search, cards, packs); COMMIT_HIKE_SITE overrides the address
+  core/internal/app/site.go (+test)   site routes / site install, install states, updates
+  ui/test/site.spec.mjs               the panel's "Routes from the site"
+  plugins/vscode/src/site.ts (+test)  address, allowed pages, search arguments
+  plugins/jetbrains/.../core/Site.kt (+SiteTest.kt)
+The site's default address everywhere: https://commit-hike.dev

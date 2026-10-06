@@ -1,5 +1,6 @@
 package dev.commithike.core
 
+import com.google.gson.JsonParser
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -386,5 +387,76 @@ class TrekFlowsTest {
         user.language = null
         flows(host, user).changeLanguage() // cancelled
         assertEquals("uk", host.locale)
+    }
+
+    @Test
+    fun routesFromTheSite() {
+        // a fake routes site serving one route's card and its pack (made by the core's template)
+        val packDir = Files.createTempDirectory("site-pack")
+        freshCli(initialize = false).routeTemplate("lake-walk", packDir.toString())
+        val zipBytes = java.io.ByteArrayOutputStream().also { out ->
+            java.util.zip.ZipOutputStream(out).use { z ->
+                Files.walk(packDir).filter { Files.isRegularFile(it) }.forEach { f ->
+                    z.putNextEntry(java.util.zip.ZipEntry(packDir.relativize(f).toString().replace('\\', '/')))
+                    z.write(Files.readAllBytes(f))
+                    z.closeEntry()
+                }
+            }
+        }.toByteArray()
+        val card = """{"id":"lake-walk","title":"Lake Walk","titles":{"uk":"Озерна"},"author":"Olena",""" +
+            """"length_m":5000,"stops":3,"version":2,"page":"x"}"""
+        val server = com.sun.net.httpserver.HttpServer.create(java.net.InetSocketAddress("127.0.0.1", 0), 0)
+        server.createContext("/") { ex ->
+            val path = ex.requestURI.path
+            val (code, body) = when {
+                path == "/api/routes" -> 200 to """{"total":1,"page":1,"pages":1,"routes":[$card]}""".toByteArray()
+                path == "/api/routes/lake-walk" -> 200 to card.toByteArray()
+                path == "/routes/lake-walk/download" -> 200 to zipBytes
+                else -> 404 to ByteArray(0)
+            }
+            ex.sendResponseHeaders(code, if (body.isEmpty()) -1 else body.size.toLong())
+            ex.responseBody.use { it.write(body) }
+        }
+        server.start()
+        try {
+            val site = "http://127.0.0.1:${server.address.port}"
+            val cli = CoreCli(
+                bin(),
+                extraEnv = mapOf(
+                    "COMMIT_HIKE_HOME" to Files.createTempDirectory("flows-home").toString(),
+                    "COMMIT_HIKE_SITE" to site,
+                ),
+            )
+            cli.init(listOf("me@x.io"), "all", fromHistory = true)
+            cli.lang = "uk"
+            val host = Host(cli)
+            val f = flows(host, ScriptedUser())
+            val page = JsonParser.parseString(f.siteSearch(Site.searchArgs(null))).asJsonObject
+            assertEquals("page", page.get("kind").asString)
+            val first = page.getAsJsonObject("page").getAsJsonArray("routes")[0].asJsonObject
+            assertEquals("Озерна", first.get("title").asString)
+            assertFalse(first.has("installed"))
+            val installed = JsonParser.parseString(f.siteInstall("lake-walk", false)).asJsonObject
+            assertEquals("installed", installed.get("kind").asString)
+            assertEquals(2, installed.get("version").asInt)
+            assertTrue(host.refreshed > 0 && cli.routes().any { it.id == "lake-walk" })
+            val again = JsonParser.parseString(f.siteSearch(Site.searchArgs(null))).asJsonObject
+            assertEquals("site", again.getAsJsonObject("page").getAsJsonArray("routes")[0].asJsonObject.get("installed").asString)
+            val missing = JsonParser.parseString(f.siteInstall("nowhere", false)).asJsonObject
+            assertEquals("installError", missing.get("kind").asString)
+            assertEquals("unknown_route", missing.getAsJsonObject("error").get("code").asString)
+        } finally {
+            server.stop(0)
+        }
+        val offline = CoreCli(
+            bin(),
+            extraEnv = mapOf(
+                "COMMIT_HIKE_HOME" to Files.createTempDirectory("flows-home").toString(),
+                "COMMIT_HIKE_SITE" to "http://127.0.0.1:1",
+            ),
+        )
+        offline.init(listOf("me@x.io"), "all", fromHistory = true)
+        val err = JsonParser.parseString(flows(Host(offline), ScriptedUser()).siteSearch(Site.searchArgs(null))).asJsonObject
+        assertEquals("site_unreachable", err.getAsJsonObject("error").get("code").asString)
     }
 }

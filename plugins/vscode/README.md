@@ -32,7 +32,8 @@ a map, stories, facts and achievements.
 ## Private by design
 
 - **Nothing touches your projects.** No git hooks, no files in your repositories: Commit Hike only reads your git history.
-- **Nothing leaves your computer.** No accounts, no telemetry. The only web pages it opens are the sharing pages you pick in the Share menu.
+- **Routes from the site.** *Commit Hike: Routes from the Site…* (or 🌐 in the trail view) finds routes other walkers made on [commit-hike.dev](https://commit-hike.dev): search, filters, covers, ratings, one-click install and updates.
+- **Nothing about you leaves your computer.** No accounts, no telemetry. The plugin talks to [commit-hike.dev](https://commit-hike.dev) only when you open *Routes from the site* or install a route, reading the public catalogue; the only other pages it opens are the sharing pages you pick in the Share menu.
 - **Real work counts.** Lock files, generated code, whitespace-only changes and other people's commits don't.
 
 ## Getting started

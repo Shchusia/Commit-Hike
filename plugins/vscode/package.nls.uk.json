@@ -23,5 +23,6 @@
   "command.setRestDays": "Вихідні дні…",
   "command.exportProgress": "Експортувати прогрес…",
   "command.importProgress": "Імпортувати прогрес…",
-  "command.openSettings": "Налаштування…"
+  "command.openSettings": "Налаштування…",
+  "command.findRoutes": "Маршрути з сайту…"
 }

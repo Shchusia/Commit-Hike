@@ -326,6 +326,7 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
                 project,
                 notifier = { title, text, button, action -> notify(title, text, button, action = action) },
                 onImportRoute = { importRoute() },
+                onFindRoutes = { openSite() },
                 onCreateTemplate = { createRouteTemplate() },
             ),
         )
@@ -406,6 +407,21 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
 
     /** Walks on to [id], usually the next route of a series. */
     fun walkRoute(id: String): Job = runFlow { walkRoute(id) }
+
+    /** The panel's site view: run the flow off the UI thread and hand its answer to [reply]. */
+    fun siteSearch(args: List<String>, reply: (String) -> Unit): Job = guarded { reply(flows.siteSearch(args)) }
+
+    fun siteInstall(id: String, replaceLocal: Boolean, reply: (String) -> Unit): Job = guarded {
+        reply(flows.siteInstall(id, replaceLocal))
+    }
+
+    /** Tools → Commit Hike → Routes from the Site…: the tool window on its site page. */
+    fun openSite() {
+        openView = "site"
+        openToken++
+        showTrail()
+        cs.launch { publish(view) }
+    }
 
     /** Tools → Commit Hike → Settings…: show the tool window on its settings page. */
     fun openSettings() {

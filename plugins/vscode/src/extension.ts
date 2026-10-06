@@ -11,6 +11,7 @@ import * as rating from "./rating";
 import { RepoTracker } from "./repos";
 import { scrubReport } from "./report";
 import { isShareUrl, pngBytes } from "./share";
+import { isRouteId, isSitePage, siteSearchArgs } from "./site";
 
 export async function activate(ctx: vscode.ExtensionContext): Promise<void> {
   let binary: string;
@@ -74,6 +75,7 @@ class App {
       vscode.commands.registerCommand("commitHike.disableProject", () => this.guard(() => this.setProjectEnabled(false))),
       vscode.commands.registerCommand("commitHike.verify", () => this.guard(() => this.verify())),
       vscode.commands.registerCommand("commitHike.importRoute", () => this.guard(() => this.importRoute())),
+      vscode.commands.registerCommand("commitHike.findRoutes", () => this.openSite()),
       vscode.commands.registerCommand("commitHike.createRouteTemplate", () => this.guard(() => this.createRouteTemplate())),
       vscode.commands.registerCommand("commitHike.removeRoute", () => this.guard(() => this.removeRoute())),
       vscode.commands.registerCommand("commitHike.setHikerIcon", () => this.guard(() => this.setHikerIcon())),
@@ -395,6 +397,7 @@ class App {
     }
     items.push(
       { id: "", label: "", kind: vscode.QuickPickItemKind.Separator },
+      { id: "@site", label: t("siteItem") },
       { id: "@import", label: t("importItem") },
       { id: "@template", label: t("templateItem") },
     );
@@ -402,6 +405,7 @@ class App {
       title: scope === "global" ? t("trailAll") : t("trailProject"), placeHolder: t("chooseTrail"),
     });
     if (!pick) return;
+    if (pick.id === "@site") return this.openSite();
     if (pick.id === "@import") return this.importRoute();
     if (pick.id === "@template") return this.createRouteTemplate();
     let fromHistory = false;
@@ -672,12 +676,45 @@ class App {
       case "copyImage": return this.guard(() => this.postcardForPost(m.data));
       case "panelError": this.noteError("panel: " + String(m.message).slice(0, 500)); return;
       case "walkRoute": return this.guard(() => this.walkRoute(String(m.id)));
+      case "siteSearch": return void this.siteSearch(m.query);
+      case "siteInstall": return void this.siteInstall(m.id, m.replaceLocal === true);
       case "importProgress": return this.guard(() => this.importProgress());
     }
   }
 
   /** Opens a network's sharing page; only the ones isShareUrl knows. */
+  /** The panel's "Routes from the site": search through the core, answer the panel. */
+  private async siteSearch(query: unknown): Promise<void> {
+    try {
+      this.panel.site({ kind: "page", page: await this.cli.siteRoutes(siteSearchArgs(query)) });
+    } catch (e) {
+      this.panel.site({ kind: "error", error: { code: e instanceof CliError ? e.code : "internal", message: String((e as Error).message ?? e) } });
+    }
+  }
+
+  private async siteInstall(id: unknown, replaceLocal: boolean): Promise<void> {
+    if (!isRouteId(id)) return;
+    try {
+      const got = await this.cli.siteInstall(id, replaceLocal);
+      this.panel.site({ kind: "installed", id, version: got.version });
+      await this.refresh();
+    } catch (e) {
+      this.panel.site({ kind: "installError", id, error: { code: e instanceof CliError ? e.code : "internal", message: String((e as Error).message ?? e) } });
+    }
+  }
+
+  /** Commit Hike: Routes from the Site…: the trail view on its site page. */
+  private openSite(): void {
+    this.openView = { view: "site", token: Date.now() };
+    this.showTrail();
+    this.postPanel();
+  }
+
   private async openShareUrl(url: unknown): Promise<void> {
+    if (isSitePage(url)) {
+      await vscode.env.openExternal(vscode.Uri.parse(url, true));
+      return;
+    }
     if (!isShareUrl(url)) {
       this.noteError("share: refused a URL that isn't a sharing page");
       return;

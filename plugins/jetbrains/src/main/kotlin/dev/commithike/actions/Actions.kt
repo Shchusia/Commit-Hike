@@ -30,6 +30,7 @@ abstract class TrekAction(private val key: String, private val run: ProjectTrek.
 }
 
 class ShowTrailAction : TrekAction("showTrail", { showTrail() })
+class FindRoutesAction : TrekAction("findRoutes", { openSite() })
 class SetupAction : TrekAction("setup", { setup() })
 class ChooseRouteAction : TrekAction("chooseRoute", { chooseRoute(Scope.GLOBAL) })
 class ChooseProjectRouteAction : TrekAction("chooseProjectRoute", { chooseRoute(Scope.PROJECT) })

@@ -203,6 +203,14 @@ export class Cli {
     return this.run<Route>(this.withLang(["route", "import", "--path", path, ...(replace ? ["--replace"] : [])]));
   }
   removeRoute(id: string) { return this.run<{ removed: string }>(["route", "remove", "--id", id]); }
+
+  /** Searches the routes website. Outside the queue: it waits on the network, not on the core's data. */
+  siteRoutes(args: string[]) { return this.exec<unknown>(this.withLang(args)); }
+  /** Installs (or updates) a route from the website. */
+  siteInstall(id: string, replaceLocal: boolean) {
+    return this.exec<{ route: Route; version: number; page: string }>(
+      this.withLang(["site", "install", "--id", id, ...(replaceLocal ? ["--replace-local"] : [])]));
+  }
   /** Writes a template route pack to dir/id and returns its folder. */
   async routeTemplate(id: string, dir: string) {
     return (await this.run<{ path: string }>(["route", "template", "--id", id, "--path", dir])).path;

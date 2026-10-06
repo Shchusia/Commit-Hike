@@ -4,6 +4,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 import { LocaleInfo, RouteAssets, Status, Team } from "./cli";
+import { siteUrl } from "./site";
 
 export interface PanelData {
   type: "update";
@@ -39,7 +40,9 @@ export type PanelMessage =
   | { command: "setSettings"; reduce_motion?: string; high_contrast?: string; notifications?: string }
   | { command: "exportProgress" | "importProgress" | "copyDiagnostics" | "saveBadge" }
   | { command: "panelError"; message: string }
-  | { command: "walkRoute"; id: string };
+  | { command: "walkRoute"; id: string }
+  | { command: "siteSearch"; query: unknown }
+  | { command: "siteInstall"; id: unknown; replaceLocal?: boolean };
 
 export class TrailPanel implements vscode.WebviewViewProvider {
   static readonly viewId = "commitHike.trail";
@@ -55,7 +58,7 @@ export class TrailPanel implements vscode.WebviewViewProvider {
     const csp = [
       "default-src 'none'",
       `style-src ${view.webview.cspSource} 'unsafe-inline'`,
-      "img-src data:", // the hiker icon is passed as a data URL
+      `img-src data: ${siteUrl()}`, // the hiker icon as a data URL; route covers from the routes site
       `script-src 'nonce-${nonce}'`,
     ].join("; ");
     const html = fs.readFileSync(path.join(this.extensionPath, "media", "panel.html"), "utf8");
@@ -71,5 +74,10 @@ export class TrailPanel implements vscode.WebviewViewProvider {
   update(data: PanelData): void {
     this.last = data;
     if (this.view?.visible) void this.view.webview.postMessage(data);
+  }
+
+  /** An answer for the panel's "Routes from the site" view (not kept: it's not state). */
+  site(message: Record<string, unknown>): void {
+    void this.view?.webview.postMessage({ type: "site", ...message });
   }
 }

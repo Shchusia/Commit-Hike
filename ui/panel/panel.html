@@ -415,6 +415,25 @@ html.reduce-motion .stamp { transform: none; }
 .finished-banner { margin: 10px 0 0; padding: 10px 12px; border-radius: 8px; text-align: center;
   background: linear-gradient(90deg, color-mix(in srgb, var(--ct-blaze) 22%, transparent), color-mix(in srgb, var(--ct-good) 18%, transparent)); }
 .finished-banner b { color: var(--ct-blaze); }
+/* routes from the site */
+.site-filters { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 10px; }
+.site-filters .search { display: flex; gap: 6px; width: 100%; }
+.site-filters input[type=search] { flex: 1; min-width: 0; }
+.site-filters select, .site-filters input { background: var(--ct-card-2); color: var(--ct-fg); border: 1px solid var(--ct-line); border-radius: 6px; padding: 5px 7px; font: inherit; }
+.site-list { display: flex; flex-direction: column; gap: 10px; }
+.site-card { display: grid; grid-template-columns: 96px 1fr; gap: 10px; background: var(--ct-card); border: 1px solid var(--ct-line); border-radius: 8px; padding: 8px; }
+.site-card .cover { width: 96px; height: 72px; object-fit: cover; border-radius: 6px; background: var(--ct-card-2); }
+.site-card .body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.site-card .title { display: flex; gap: 6px; align-items: baseline; flex-wrap: wrap; }
+.site-card .by, .site-card .facts, .site-card .meta, .site-card .tags { font-size: .86em; color: var(--ct-muted); }
+.site-card .meta { display: flex; gap: 10px; } .site-card .meta .langs { margin-left: auto; }
+.site-card .tags { color: var(--ct-blaze); }
+.site-card .row { display: flex; gap: 10px; align-items: center; margin-top: 4px; flex-wrap: wrap; }
+.site-card .badge { font-size: .72em; padding: 1px 6px; border-radius: 999px; color: #fff; background: #4f9d69; } .site-card .badge.story { background: #8a6fd1; }
+.site-card .error { color: #d0574b; font-size: .86em; }
+.site-state { font-size: .88em; color: var(--ct-muted); } .site-state.ok { color: #4f9d69; font-weight: 600; } .site-actions { display: flex; gap: 8px; align-items: center; }
+.site-pages { display: flex; justify-content: space-between; align-items: center; }
+.site .privacy { margin-top: 12px; font-size: .8em; }
 </style>
 </head>
 <body>
@@ -424,7 +443,7 @@ html.reduce-motion .stamp { transform: none; }
   whose "unused selector" check can't see them; the browser never renders a
   <template>. ui/test/css-classes.spec.mjs keeps this list in step.
 -->
-<template id="script-classes">
+<template id="script-classes"><i class="site-filters search site-list site-card cover body title by facts tags langs error site-state ok site-actions site-pages site privacy"></i>
   <i class="actions active ahead area-done area-left ava badge badge-row badges bar bar-d bar-hit base big"></i>
   <i class="build-info cal cal-d cal-legend cap card casing chart chart-box chart-tip chip-btn choice ck climb"></i>
   <i class="d danger danger-pin dangerpin day days dev dist dot down dragging dt elev empty fact factpin far"></i>
@@ -476,6 +495,7 @@ html.reduce-motion .stamp { transform: none; }
       yearStreak: "Longest streak", yearPrev: "Previous year", yearNext: "Next year", yearEmpty: "No commits in {y}.",
       restShort: "days off: {d}", calLess: "Less", calMore: "More",
       camp: "Camp: no commits yet today", campRest: "Day off: resting by the fire", campShort: "Camp", campRestShort: "Day off",
+      siteMenu: "Routes from the site…", siteLink: "Routes from the site", siteTitle: "Routes from the site", siteSearch: "Search routes, places, authors…", siteGo: "Search", siteKind: "Kind", siteAnyKind: "Any kind", siteReal: "Real places", siteStory: "Stories", siteReal1: "Real place", siteStory1: "Story", siteLength: "Length", siteAnyLength: "Any length", siteLen_s: "up to 25 km", siteLen_m: "25–100 km", siteLen_l: "100–500 km", siteLen_xl: "over 500 km", siteSort: "Sort", siteSort_popular: "Most downloaded", siteSort_new: "Newest", siteSort_rating: "Best rated", siteSort_short: "Shortest", siteSort_long: "Longest", siteCount: "{n} routes", siteEmpty: "No routes match.", siteLoading: "Looking…", siteBy: "by {name}", siteStops: "{n} stops", siteInstall: "Install", siteInstalling: "Installing…", siteInstalled: "Installed", siteUpdate: "Update to version {v}", siteReplace: "Replace my route", siteReplaceQ: "You have a route of your own with the id {id}. Replace it with the one from the site?", siteBuiltin: "Built in", siteWalk: "Walk it now", siteOpen: "On the site", siteOffline: "Can't reach the routes site. Check the connection and try again.", sitePrivacy: "Searches the public catalogue at {site}; nothing about you is sent.", sitePrev: "← Previous", siteNext: "Next →", sitePage: "Page {p} of {n}",
       thisTrail: "This trail", passport: "Passport", passportCount: "{n} of {m}",
       seriesNext: "Next in “{s}”", walkOn: "Walk on: {name} ({d}) →", seriesAfter: "After this, “{s}” goes on to {name}.",
       passportEmpty: "Stamps for the stops you reach gather here, from every trail you walk.",
@@ -564,6 +584,7 @@ html.reduce-motion .stamp { transform: none; }
       yearStreak: "Найдовша серія", yearPrev: "Попередній рік", yearNext: "Наступний рік", yearEmpty: "У {y} році комітів не було.",
       restShort: "вихідні: {d}", calLess: "Менше", calMore: "Більше",
       camp: "Привал: сьогодні ще без комітів", campRest: "Вихідний: відпочинок біля вогнища", campShort: "Привал", campRestShort: "Вихідний",
+      siteMenu: "Маршрути з сайту…", siteLink: "Маршрути з сайту", siteTitle: "Маршрути з сайту", siteSearch: "Пошук маршрутів, місць, авторів…", siteGo: "Шукати", siteKind: "Тип", siteAnyKind: "Будь-який тип", siteReal: "Справжні місця", siteStory: "Історії", siteReal1: "Справжнє місце", siteStory1: "Історія", siteLength: "Довжина", siteAnyLength: "Будь-яка довжина", siteLen_s: "до 25 км", siteLen_m: "25–100 км", siteLen_l: "100–500 км", siteLen_xl: "понад 500 км", siteSort: "Сортування", siteSort_popular: "Найчастіше завантажують", siteSort_new: "Нові", siteSort_rating: "Найкраще оцінені", siteSort_short: "Найкоротші", siteSort_long: "Найдовші", siteCount: "Маршрутів: {n}", siteEmpty: "Немає таких маршрутів.", siteLoading: "Шукаємо…", siteBy: "автор: {name}", siteStops: "зупинок: {n}", siteInstall: "Встановити", siteInstalling: "Встановлюємо…", siteInstalled: "Встановлено", siteUpdate: "Оновити до версії {v}", siteReplace: "Замінити мій маршрут", siteReplaceQ: "У тебе є власний маршрут з ідентифікатором {id}. Замінити його маршрутом із сайту?", siteBuiltin: "Вбудований", siteWalk: "Іти зараз", siteOpen: "На сайті", siteOffline: "Не вдається зв'язатися із сайтом маршрутів. Перевір з'єднання й спробуй ще раз.", sitePrivacy: "Пошук у публічному каталозі {site}; нічого про тебе не надсилається.", sitePrev: "← Назад", siteNext: "Далі →", sitePage: "Сторінка {p} з {n}",
       thisTrail: "Ця стежка", passport: "Паспорт", passportCount: "{n} з {m}",
       seriesNext: "Далі в серії «{s}»", walkOn: "Іти далі: {name} ({d}) →", seriesAfter: "Після цієї стежки серія «{s}» веде далі — {name}.",
       passportEmpty: "Тут збиратимуться штампи зупинок, які ти проходиш, з усіх стежок.",
@@ -652,6 +673,7 @@ html.reduce-motion .stamp { transform: none; }
       yearStreak: "Najdłuższa seria", yearPrev: "Poprzedni rok", yearNext: "Następny rok", yearEmpty: "W roku {y} nie było commitów.",
       restShort: "wolne: {d}", calLess: "Mniej", calMore: "Więcej",
       camp: "Obóz: dziś jeszcze bez commitów", campRest: "Dzień wolny: odpoczynek przy ognisku", campShort: "Obóz", campRestShort: "Wolne",
+      siteMenu: "Trasy ze strony…", siteLink: "Trasy ze strony", siteTitle: "Trasy ze strony", siteSearch: "Szukaj tras, miejsc, autorów…", siteGo: "Szukaj", siteKind: "Rodzaj", siteAnyKind: "Dowolny rodzaj", siteReal: "Prawdziwe miejsca", siteStory: "Opowieści", siteReal1: "Prawdziwe miejsce", siteStory1: "Opowieść", siteLength: "Długość", siteAnyLength: "Dowolna długość", siteLen_s: "do 25 km", siteLen_m: "25–100 km", siteLen_l: "100–500 km", siteLen_xl: "ponad 500 km", siteSort: "Sortuj", siteSort_popular: "Najczęściej pobierane", siteSort_new: "Najnowsze", siteSort_rating: "Najlepiej oceniane", siteSort_short: "Najkrótsze", siteSort_long: "Najdłuższe", siteCount: "Tras: {n}", siteEmpty: "Brak takich tras.", siteLoading: "Szukam…", siteBy: "autor: {name}", siteStops: "przystanków: {n}", siteInstall: "Zainstaluj", siteInstalling: "Instaluję…", siteInstalled: "Zainstalowana", siteUpdate: "Zaktualizuj do wersji {v}", siteReplace: "Zastąp moją trasę", siteReplaceQ: "Masz własną trasę o identyfikatorze {id}. Zastąpić ją trasą ze strony?", siteBuiltin: "Wbudowana", siteWalk: "Idź teraz", siteOpen: "Na stronie", siteOffline: "Nie można połączyć się ze stroną tras. Sprawdź połączenie i spróbuj ponownie.", sitePrivacy: "Przeszukuje publiczny katalog {site}; nic o tobie nie jest wysyłane.", sitePrev: "← Wstecz", siteNext: "Dalej →", sitePage: "Strona {p} z {n}",
       thisTrail: "Ten szlak", passport: "Paszport", passportCount: "{n} z {m}",
       seriesNext: "Dalej w serii „{s}”", walkOn: "Idź dalej: {name} ({d}) →", seriesAfter: "Po tym szlaku seria „{s}” prowadzi dalej: {name}.",
       passportEmpty: "Tu zbiorą się pieczątki przystanków, do których dojdziesz, ze wszystkich szlaków.",
@@ -739,6 +761,7 @@ html.reduce-motion .stamp { transform: none; }
       yearStreak: "Längste Serie", yearPrev: "Vorheriges Jahr", yearNext: "Nächstes Jahr", yearEmpty: "Keine Commits im Jahr {y}.",
       restShort: "frei: {d}", calLess: "Weniger", calMore: "Mehr",
       camp: "Lager: heute noch keine Commits", campRest: "Freier Tag: Rast am Feuer", campShort: "Lager", campRestShort: "Frei",
+      siteMenu: "Routen von der Website…", siteLink: "Routen von der Website", siteTitle: "Routen von der Website", siteSearch: "Routen, Orte, Autoren suchen…", siteGo: "Suchen", siteKind: "Art", siteAnyKind: "Jede Art", siteReal: "Echte Orte", siteStory: "Geschichten", siteReal1: "Echter Ort", siteStory1: "Geschichte", siteLength: "Länge", siteAnyLength: "Jede Länge", siteLen_s: "bis 25 km", siteLen_m: "25–100 km", siteLen_l: "100–500 km", siteLen_xl: "über 500 km", siteSort: "Sortierung", siteSort_popular: "Meist heruntergeladen", siteSort_new: "Neueste", siteSort_rating: "Am besten bewertet", siteSort_short: "Kürzeste", siteSort_long: "Längste", siteCount: "{n} Routen", siteEmpty: "Keine passenden Routen.", siteLoading: "Suche…", siteBy: "von {name}", siteStops: "{n} Halte", siteInstall: "Installieren", siteInstalling: "Wird installiert…", siteInstalled: "Installiert", siteUpdate: "Auf Version {v} aktualisieren", siteReplace: "Meine Route ersetzen", siteReplaceQ: "Du hast eine eigene Route mit der ID {id}. Durch die Route von der Website ersetzen?", siteBuiltin: "Eingebaut", siteWalk: "Jetzt gehen", siteOpen: "Auf der Website", siteOffline: "Die Routen-Website ist nicht erreichbar. Prüfe die Verbindung und versuche es noch einmal.", sitePrivacy: "Durchsucht den öffentlichen Katalog auf {site}; nichts über dich wird gesendet.", sitePrev: "← Zurück", siteNext: "Weiter →", sitePage: "Seite {p} von {n}",
       thisTrail: "Dieser Weg", passport: "Pass", passportCount: "{n} von {m}",
       seriesNext: "Weiter in „{s}“", walkOn: "Weitergehen: {name} ({d}) →", seriesAfter: "Danach geht „{s}“ weiter nach {name}.",
       passportEmpty: "Hier sammeln sich die Stempel der Halte, die du erreichst, von jedem Weg.",
@@ -826,6 +849,7 @@ html.reduce-motion .stamp { transform: none; }
       yearStreak: "Racha más larga", yearPrev: "Año anterior", yearNext: "Año siguiente", yearEmpty: "No hubo commits en {y}.",
       restShort: "libres: {d}", calLess: "Menos", calMore: "Más",
       camp: "Campamento: aún sin commits hoy", campRest: "Día libre: descanso junto al fuego", campShort: "Campamento", campRestShort: "Libre",
+      siteMenu: "Rutas del sitio web…", siteLink: "Rutas del sitio web", siteTitle: "Rutas del sitio web", siteSearch: "Buscar rutas, lugares, autores…", siteGo: "Buscar", siteKind: "Tipo", siteAnyKind: "Cualquier tipo", siteReal: "Lugares reales", siteStory: "Historias", siteReal1: "Lugar real", siteStory1: "Historia", siteLength: "Longitud", siteAnyLength: "Cualquier longitud", siteLen_s: "hasta 25 km", siteLen_m: "25–100 km", siteLen_l: "100–500 km", siteLen_xl: "más de 500 km", siteSort: "Orden", siteSort_popular: "Más descargadas", siteSort_new: "Más nuevas", siteSort_rating: "Mejor valoradas", siteSort_short: "Más cortas", siteSort_long: "Más largas", siteCount: "{n} rutas", siteEmpty: "No hay rutas así.", siteLoading: "Buscando…", siteBy: "de {name}", siteStops: "{n} paradas", siteInstall: "Instalar", siteInstalling: "Instalando…", siteInstalled: "Instalada", siteUpdate: "Actualizar a la versión {v}", siteReplace: "Sustituir mi ruta", siteReplaceQ: "Tienes una ruta propia con el id {id}. ¿Sustituirla por la del sitio?", siteBuiltin: "Incluida", siteWalk: "Recorrerla ahora", siteOpen: "En el sitio", siteOffline: "No se puede conectar con el sitio de rutas. Revisa la conexión y vuelve a intentarlo.", sitePrivacy: "Busca en el catálogo público de {site}; no se envía nada sobre ti.", sitePrev: "← Anterior", siteNext: "Siguiente →", sitePage: "Página {p} de {n}",
       thisTrail: "Este sendero", passport: "Pasaporte", passportCount: "{n} de {m}",
       seriesNext: "Sigue en «{s}»", walkOn: "Seguir: {name} ({d}) →", seriesAfter: "Después, «{s}» sigue hacia {name}.",
       passportEmpty: "Aquí se reunirán los sellos de las paradas que alcances, de todos tus senderos.",
@@ -2638,6 +2662,7 @@ html.reduce-motion .stamp { transform: none; }
     }
     items.push(el("div", { class: "sep" }));
     if (j) items.push(act(j.finished ? t("startNew") : t("changeTrail"), { command: "chooseRoute", scope }));
+    items.push(el("button", { role: "menuitem", onclick: openSite }, [el("span", { class: "ck", text: "🌐" }), t("siteMenu")]));
     items.push(act(t("importRoute"), { command: "importRoute" }), act(t("createTemplate"), { command: "createRouteTemplate" }));
     items.push(el("div", { class: "sep" }), act(t("changeIcon"), { command: "setAvatar" }));
     if (data.avatar_custom) items.push(act(t("resetIcon"), { command: "resetAvatar" }));
@@ -2722,7 +2747,7 @@ html.reduce-motion .stamp { transform: none; }
   // Sharing pages of the networks take text and a link, never a picture: the
   // postcard goes to the clipboard first and the post opens with the text,
   // ready to paste the picture into. The hosts only open these URL shapes.
-  const SHARE_LINK = "https://github.com/Shchusia/Commit-Hike";
+  const SHARE_LINK = "https://commit-hike.dev"; // the site: routes to install, and links to the plugins
   const enc = encodeURIComponent;
   const SHARE_NETWORKS = [
     ["x", "X", (tx, u) => `https://twitter.com/intent/tweet?text=${enc(tx)}&url=${enc(u)}`],
@@ -3365,6 +3390,107 @@ html.reduce-motion .stamp { transform: none; }
   // ================================================================ settings
   // One page for every IDE: changes go straight to the core, which sends back
   // a fresh status, so the page always shows what's really stored.
+  // ================================================================ routes from the site
+  // The host asks the core (commit-hike site routes / site install); answers come back
+  // through window.commitHike.site(...) or a {type: "site"} message.
+  const site = { query: { q: "", kind: "", length: "", sort: "popular", page: 1 }, result: null, error: null, loading: false, busy: {}, failed: {} };
+  function siteSearch(page) {
+    site.query.page = page || 1; site.loading = true; site.error = null;
+    send({ command: "siteSearch", query: { ...site.query } });
+    render();
+  }
+  function openSite() {
+    menuOpen = false;
+    if (view !== "site" && view !== "settings") viewBeforeSettings = view;
+    view = "site";
+    if (!site.result && !site.loading) siteSearch(1); else render();
+  }
+  function onSite(msg) {
+    if (msg.kind === "page") { site.loading = false; site.result = msg.page; site.error = null; }
+    else if (msg.kind === "error") { site.loading = false; site.error = msg.error || {}; }
+    else if (msg.kind === "installed" || msg.kind === "installError") {
+      delete site.busy[msg.id];
+      if (msg.kind === "installError") site.failed[msg.id] = (msg.error && msg.error.message) || t("unknownError");
+      else {
+        delete site.failed[msg.id];
+        const r = site.result && site.result.routes.find(x => x.id === msg.id);
+        if (r) Object.assign(r, { installed: "site", installed_version: msg.version, update: false });
+      }
+    }
+    if (view === "site") render();
+  }
+  function siteInstall(r, replaceLocal) {
+    if (replaceLocal && !confirm(t("siteReplaceQ", { id: r.id }))) return;
+    site.busy[r.id] = true; delete site.failed[r.id];
+    send({ command: "siteInstall", id: r.id, replaceLocal: !!replaceLocal });
+    render();
+  }
+  function siteCard(r) {
+    const facts = [fmt(r.length_m), t("siteStops", { n: r.stops })];
+    if (r.ascent_m) facts.push("↑ " + Math.round(r.ascent_m) + " " + t("m"));
+    const busy = site.busy[r.id];
+    let action;
+    if (busy) action = el("button", { class: "chip-btn", disabled: true, text: t("siteInstalling") });
+    else if (r.installed === "builtin") action = el("span", { class: "site-state", text: t("siteBuiltin") });
+    else if (r.installed === "local") action = el("button", { class: "chip-btn", text: t("siteReplace"), onclick: () => siteInstall(r, true) });
+    else if (r.installed === "site" && r.update) action = el("button", { class: "chip-btn primary", text: t("siteUpdate", { v: r.version }), onclick: () => siteInstall(r) });
+    else if (r.installed === "site") action = el("span", { class: "site-actions" }, [
+      el("span", { class: "site-state ok", text: "✓ " + t("siteInstalled") }),
+      el("button", { class: "chip-btn primary", text: t("siteWalk"), onclick: () => send({ command: "walkRoute", id: r.id }) })]);
+    else action = el("button", { class: "chip-btn primary", text: t("siteInstall"), onclick: () => siteInstall(r) });
+    return el("article", { class: "site-card" }, [
+      r.cover ? el("img", { class: "cover", src: r.cover, alt: "", loading: "lazy" }) : el("div", { class: "cover none" }),
+      el("div", { class: "body" }, [
+        el("div", { class: "title" }, [el("b", { text: r.title }), el("span", { class: "badge " + (r.real ? "real" : "story"), text: r.real ? t("siteReal1") : t("siteStory1") })]),
+        el("div", { class: "by", text: t("siteBy", { name: r.author }) }),
+        el("div", { class: "facts", text: facts.join(" · ") }),
+        el("div", { class: "meta" }, [
+          el("span", { text: r.ratings ? "★ " + r.rating.toFixed(1) + " (" + r.ratings + ")" : "" }),
+          el("span", { text: "⬇ " + r.downloads }),
+          el("span", { class: "langs", text: (r.languages || []).join(" · ").toUpperCase() })]),
+        (r.tags || []).length ? el("div", { class: "tags", text: r.tags.map(x => "#" + x).join(" ") }) : null,
+        site.failed[r.id] ? el("div", { class: "error", text: site.failed[r.id] }) : null,
+        el("div", { class: "row" }, [action,
+          el("button", { class: "link", text: t("siteOpen") + " ↗", onclick: () => send({ command: "openUrl", url: r.page }) })]),
+      ])]);
+  }
+  function siteView() {
+    const back = el("button", { class: "link", text: "← " + t("back"), onclick: () => {
+      view = viewBeforeSettings && !["settings", "site"].includes(viewBeforeSettings) ? viewBeforeSettings : "hike"; render(); } });
+    const q = el("input", { type: "search", value: site.query.q, placeholder: t("siteSearch"), "aria-label": t("siteSearch") });
+    const go = () => { site.query.q = q.value.trim(); siteSearch(1); };
+    q.addEventListener("keydown", e => { if (e.key === "Enter") go(); });
+    const select = (key, label, options) => el("select", { "aria-label": label, onchange: e => { site.query[key] = e.target.value; siteSearch(1); } },
+      options.map(([v, text]) => el("option", { value: v, text, selected: site.query[key] === v })));
+    const filters = el("div", { class: "site-filters" }, [
+      el("div", { class: "search" }, [q, el("button", { class: "chip-btn", text: t("siteGo"), onclick: go })]),
+      select("kind", t("siteKind"), [["", t("siteAnyKind")], ["real", t("siteReal")], ["story", t("siteStory")]]),
+      select("length", t("siteLength"), [["", t("siteAnyLength")], ...["s", "m", "l", "xl"].map(k => [k, t("siteLen_" + k)])]),
+      select("sort", t("siteSort"), ["popular", "new", "rating", "short", "long"].map(k => [k, t("siteSort_" + k)])),
+    ]);
+    const list = el("div", { class: "site-list", "aria-live": "polite" });
+    const r = site.result;
+    if (site.error) {
+      const offline = site.error.code === "site_unreachable";
+      list.append(el("div", { class: "empty-state" }, [el("p", { text: offline ? t("siteOffline") : (site.error.message || t("unknownError")) }),
+        el("button", { class: "chip-btn primary", text: t("retry"), onclick: () => siteSearch(site.query.page) })]));
+    } else if (site.loading && !r) list.append(el("p", { class: "hint", text: t("siteLoading") }));
+    else if (r) {
+      list.append(el("p", { class: "hint", text: site.loading ? t("siteLoading") : t("siteCount", { n: r.total }) }));
+      if (!r.routes.length) list.append(el("p", { class: "hint", text: t("siteEmpty") }));
+      r.routes.forEach(x => list.append(siteCard(x)));
+      if (r.pages > 1) list.append(el("div", { class: "site-pages" }, [
+        r.page > 1 ? el("button", { class: "link", text: t("sitePrev"), onclick: () => siteSearch(r.page - 1) }) : el("span"),
+        el("span", { class: "hint", text: t("sitePage", { p: r.page, n: r.pages }) }),
+        r.page < r.pages ? el("button", { class: "link", text: t("siteNext"), onclick: () => siteSearch(r.page + 1) }) : el("span")]));
+    }
+    root.append(el("div", { class: "settings site" }, [
+      el("div", { class: "settings-head" }, [back, el("h2", { text: t("siteTitle") })]),
+      filters, list,
+      el("p", { class: "hint privacy", text: t("sitePrivacy", { site: (r && r.site || "commit-hike.dev").replace(/^https?:\/\//, "") }) })]));
+    if (!site.loading) q.focus();
+  }
+
   function settingsView() {
     const s = data.status || {}, set = s.settings || {};
     const ls = data.locale_setting || {};
@@ -3424,6 +3550,7 @@ html.reduce-motion .stamp { transform: none; }
     root.append(header(j));
     if (menuOpen) root.append(menu(j));
     if (view === "settings") return settingsView();
+    if (view === "site") return siteView();
     if (scope === "project" && !s.tracked) return emptyView(t("notCountedTitle"), t("notCountedText"), t("countBtn"), { command: "enableProject" });
     if (scope === "project" && !s.project) return emptyView(t("noProjectTitle"), t("noProjectText"), t("chooseTrail"), { command: "chooseRoute", scope: "project" });
     if (!j || !j.route) return emptyView(t("noTrailTitle"), t("noTrailText"), t("chooseTrail"), { command: "chooseRoute", scope });
@@ -3451,6 +3578,7 @@ html.reduce-motion .stamp { transform: none; }
     }
     root.append(el("div", { class: "actions" }, [
       el("button", { class: "link", text: j.finished ? t("startNew") : t("changeTrail"), onclick: () => send({ command: "chooseRoute", scope }) }),
+      el("button", { class: "link", text: "🌐 " + t("siteLink"), onclick: openSite }),
     ]));
   }
 
@@ -3462,13 +3590,18 @@ html.reduce-motion .stamp { transform: none; }
     data = next;
     if (next && next.open_view && next.open_token !== openToken) {
       openToken = next.open_token;
-      if (next.open_view === "settings" && view !== "settings") viewBeforeSettings = view;
+      if ((next.open_view === "settings" || next.open_view === "site") && view !== next.open_view) viewBeforeSettings = view;
       view = next.open_view;
+      if (view === "site" && !site.result && !site.loading) { site.query.page = 1; site.loading = true; send({ command: "siteSearch", query: { ...site.query } }); }
     }
     applyPrefs(); render();
   }
-  window.commitHike = { update: d => update(typeof d === "string" ? JSON.parse(d) : d) };
-  window.addEventListener("message", e => { if (e.data && e.data.type === "update") update(e.data); });
+  const parse = d => (typeof d === "string" ? JSON.parse(d) : d);
+  window.commitHike = { update: d => update(parse(d)), site: d => onSite(parse(d)) };
+  window.addEventListener("message", e => {
+    if (e.data && e.data.type === "update") update(e.data);
+    else if (e.data && e.data.type === "site") onSite(e.data);
+  });
   send({ command: "ready" });
 })();
 </script>

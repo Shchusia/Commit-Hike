@@ -26,6 +26,7 @@ historiami, ciekawostkami i osiągnięciami.
 ## Możliwości
 
 - **Prawdziwe, literackie i autorskie trasy.** Czarnohora przez Howerlę i nowozelandzkie Tongariro Alpine Crossing na prawdziwych śladach GPS, droga Santiago z „Alchemika” przez prawdziwą Hiszpanię, Maroko, Saharę i Egipt, baśń w Karpatach albo fantastyczna wędrówka wzdłuż siedmiu latarni. Każda trasa ma własne przystanki, historię, ciekawostki i osiągnięcia.
+- **Trasy ze strony.** Szukaj tras innych wędrowców na [commit-hike.dev](https://commit-hike.dev) prosto w IDE: wyszukiwanie, filtry, okładki, oceny; instalacja jednym kliknięciem i aktualizacja, gdy autor wyda nową wersję. W Neovim: `:CommitHike find`.
 - **Pięć języków.** Angielski, ukraiński, polski, niemiecki i hiszpański — jak w IDE albo wybrany w ustawieniach.
 - **Serie.** Skończ trasę i idź dalej: Karpaty (Czarnohora → Świdowiec → Gorgany) i długie drogi (Tour du Mont Blanc → Camino Francés do Santiago).
 - **Prawdziwe wspinanie.** Trasy mają profile wysokości: teren wznosi się i opada, a ty widzisz wysokość, nachylenie, pokonane przewyższenie i podejście do następnego przystanku.
@@ -38,7 +39,7 @@ historiami, ciekawostkami i osiągnięciami.
 - **Także w terminalu.** Jedna linijka w znaku zachęty (starship, bash, zsh, fish) i w pasku stanu Neovima, z tego samego rdzenia: `🥾 16,0 km · Jezioro Niesamowite`.
 - **Wędrujcie razem.** Wszyscy, którzy commitują do projektu, na jednym szlaku, z tabelą wyników, podsumowaniem tygodnia i celem zespołu: trasą, którą przechodzicie wspólnie, sumując commity wszystkich.
 - **Uczciwy dystans.** Pliki lock, kod generowany, zmiany samych spacji i cudze commity się nie liczą; po squash, rebase czy amend historia jest przeliczana, nigdy liczona dwa razy.
-- **Prywatność przede wszystkim.** Nic nie trafia do twoich repozytoriów i nic nie opuszcza twojego komputera. Nie zapisujemy kodu, opisów commitów, nazw plików ani repozytoriów.
+- **Prywatność przede wszystkim.** Nic nie trafia do twoich repozytoriów i nic o tobie nie opuszcza twojego komputera: jedyne zapytania idą do [commit-hike.dev](https://commit-hike.dev), gdy otworzysz *Trasy ze strony* albo instalujesz trasę, i czytają publiczny katalog, nie wysyłając nic o tobie. Nie zapisujemy kodu, opisów commitów, nazw plików ani repozytoriów.
 
 ## Obsługiwane IDE
 

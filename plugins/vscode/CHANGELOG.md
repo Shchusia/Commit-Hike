@@ -10,6 +10,15 @@ turns them into the section of the new version; the JetBrains Marketplace
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-06
+
+### Added
+- Routes from the site: find routes other walkers made on [commit-hike.dev](https://commit-hike.dev) right in the IDE. The trail view's 🌐 *Routes from the site* (also in the ⋯ menu, in *Choose a trail* and as a command) searches the catalogue with filters and pages and shows covers, authors, lengths, stops, ascents, languages, ratings and tags. *Install* puts a route among yours after the same checks as an import; *Update to version N* appears when its author publishes a new one; *Walk it now* starts it. A route of your own with the same id is replaced only after you confirm; built-in routes never are. In Neovim: `:CommitHike find [text]` and `:CommitHike install {id}`; in the terminal: `commit-hike site routes|install` (docs/terminal.md).
+- Shared postcards link to [commit-hike.dev](https://commit-hike.dev) instead of the GitHub repository.
+
+### Changed
+- Commit Hike goes online for the first time, and only for this: the routes site is contacted when you open *Routes from the site* or install a route, to read its public catalogue and download route packs. Nothing about you is sent, and everything else still stays on your computer. Offline, the view says the site can't be reached. The READMEs and the marketplace descriptions say so.
+
 ## [0.7.0] - 2026-10-04
 
 ### Added
@@ -28,6 +37,7 @@ turns them into the section of the new version; the JetBrains Marketplace
 - The GitHub badge writes the distance like the panel: in metres below 1 km ("640 m", not "0.6 km").
 
 ### Fixed
+- The READMEs in Ukrainian, Polish, German and Spanish moved to `docs/`; their links, the marketplace pages' links to them and `task version:set` follow.
 - `task release:check` refused a release with new screenshots until they were on origin/master, which they can't be before the release commit is pushed. It now lists them as still to push; the publish tasks (`ovsx:publish`, `vscode:publish`, `jetbrains:publish`) fetch master and refuse to publish while they're missing there. Images in the JetBrains description are checked too.
 - The GitHub badge used a decimal point in Polish, German and Spanish ("34.8 km"); it uses the comma now, like the panel.
 - `task` failed on computers without PyCharm (CI machines included): looking for PyCharm broke every task.

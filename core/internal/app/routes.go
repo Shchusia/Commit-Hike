@@ -142,6 +142,7 @@ func (s *Service) RemoveRoute(id string) error {
 			return s.st.SaveState(st)
 		}
 	}
+	s.forgetSiteInstall(id)
 	return nil
 }
 

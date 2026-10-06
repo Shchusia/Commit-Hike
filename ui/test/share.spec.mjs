@@ -20,7 +20,7 @@ test("share on a network: the postcard to the clipboard, then the post with the 
   const j = st.project || st.global;
   expect(url.searchParams.get("text")).toContain(j.route.name);
   expect(url.searchParams.get("text")).toContain("#CommitHike");
-  expect(url.searchParams.get("url")).toBe("https://github.com/Shchusia/Commit-Hike");
+  expect(url.searchParams.get("url")).toBe("https://commit-hike.dev");
   await expect(page.getByRole("menu")).toHaveCount(0); // closed after the choice
   expect(p.errors).toEqual([]);
 });

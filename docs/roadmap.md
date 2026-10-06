@@ -32,8 +32,11 @@ Each stage is one release. Done items are ticked; see CHANGELOG.md for what ship
 - [x] READMEs in five languages, new screenshots for both plugins and the marketplace pages
 - [x] A team goal walked together, and the team's week
 
-## 1.0.0 — route editor
-- [ ] Draw a route on the map (or load a GPX track), place stops, write texts, import in one click
+## 1.0.0 — routes from the site
+- [x] [commit-hike.dev](https://commit-hike.dev): share, find, rate and translate routes; sign-in with Google and GitHub; moderation
+- [x] A route editor on the site: draw on a map or a picture, load a GPX track, place stops and texts, check and publish
+- [x] Find routes from the site in every plugin and the terminal: install in one click, update to the author's new versions
 
-## Later — the routes website (a separate project)
-- [ ] Share, find and rate routes; sign-in with GitHub; moderation; one-click install from the plugin
+## Later
+- [ ] Publish a route from the plugin to the site (a key for the plugin on the site)
+- [ ] Notifications for authors: ratings, comments, translations waiting for approval

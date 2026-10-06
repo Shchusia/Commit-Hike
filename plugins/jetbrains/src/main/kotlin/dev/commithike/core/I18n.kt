@@ -7,6 +7,8 @@ object I18n {
     private val en = mapOf(
         "showTrail" to "Show trail",
         "action.setRestDays" to "Days Off…",
+        "action.findRoutes" to "Routes from the Site…",
+        "siteLink" to "Find more routes on the site…",
         "seriesNextText" to "Next in “{0}”: {1}.",
         "walkOn" to "Walk On: {0}",
         "badgeSaveTitle" to "Save the Badge",
@@ -151,6 +153,8 @@ object I18n {
     private val uk = mapOf(
         "showTrail" to "Показати стежку",
         "action.setRestDays" to "Вихідні дні…",
+        "action.findRoutes" to "Маршрути з сайту…",
+        "siteLink" to "Знайти ще маршрути на сайті…",
         "seriesNextText" to "Далі в серії «{0}»: {1}.",
         "walkOn" to "Іти далі: {0}",
         "badgeSaveTitle" to "Зберегти бейдж",
@@ -291,6 +295,8 @@ object I18n {
     private val pl = mapOf(
         "showTrail" to "Pokaż szlak",
         "action.setRestDays" to "Dni wolne…",
+        "action.findRoutes" to "Trasy ze strony…",
+        "siteLink" to "Znajdź więcej tras na stronie…",
         "seriesNextText" to "Dalej w serii „{0}”: {1}.",
         "walkOn" to "Idź dalej: {0}",
         "badgeSaveTitle" to "Zapisz odznakę",
@@ -432,6 +438,8 @@ object I18n {
     private val de = mapOf(
         "showTrail" to "Weg anzeigen",
         "action.setRestDays" to "Freie Tage…",
+        "action.findRoutes" to "Routen von der Website…",
+        "siteLink" to "Mehr Routen auf der Website finden…",
         "seriesNextText" to "Weiter in „{0}“: {1}.",
         "walkOn" to "Weitergehen: {0}",
         "badgeSaveTitle" to "Abzeichen speichern",
@@ -576,6 +584,8 @@ object I18n {
     private val es = mapOf(
         "showTrail" to "Ver el sendero",
         "action.setRestDays" to "Días libres…",
+        "action.findRoutes" to "Rutas del sitio web…",
+        "siteLink" to "Buscar más rutas en el sitio…",
         "seriesNextText" to "Sigue en «{0}»: {1}.",
         "walkOn" to "Seguir: {0}",
         "badgeSaveTitle" to "Guardar la insignia",

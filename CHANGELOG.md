@@ -10,6 +10,15 @@ turns them into the section of the new version; the JetBrains Marketplace
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-06
+
+### Added
+- Routes from the site: find routes other walkers made on [commit-hike.dev](https://commit-hike.dev) right in the IDE. The trail view's 🌐 *Routes from the site* (also in the ⋯ menu, in *Choose a trail* and as a command) searches the catalogue with filters and pages and shows covers, authors, lengths, stops, ascents, languages, ratings and tags. *Install* puts a route among yours after the same checks as an import; *Update to version N* appears when its author publishes a new one; *Walk it now* starts it. A route of your own with the same id is replaced only after you confirm; built-in routes never are. In Neovim: `:CommitHike find [text]` and `:CommitHike install {id}`; in the terminal: `commit-hike site routes|install` (docs/terminal.md).
+- Shared postcards link to [commit-hike.dev](https://commit-hike.dev) instead of the GitHub repository.
+
+### Changed
+- Commit Hike goes online for the first time, and only for this: the routes site is contacted when you open *Routes from the site* or install a route, to read its public catalogue and download route packs. Nothing about you is sent, and everything else still stays on your computer. Offline, the view says the site can't be reached. The READMEs and the marketplace descriptions say so.
+
 ## [0.7.0] - 2026-10-04
 
 ### Added

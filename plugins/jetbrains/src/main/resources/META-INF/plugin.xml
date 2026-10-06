@@ -21,10 +21,13 @@
       <li><b>Walk together.</b> Everyone committing to a project on the same trail, with a leaderboard, the team's week and a
         team goal: a route you walk together, everyone's commits adding up.</li>
       <li><b>Five languages.</b> English, Ukrainian, Polish, German and Spanish.</li>
+      <li><b>Routes from the site</b>: Tools → Commit Hike → Routes from the Site… finds routes other walkers made on
+        commit-hike.dev; install them with one click, and update them when their authors publish new versions.</li>
     </ul>
     <p><b>Private by design.</b> Nothing is written to your projects (no git hooks, no files): Commit Hike only reads git
-    history. No accounts, no telemetry: the plugin makes no network requests; Share opens a network's page in your
-    browser only when you pick it. Lock files, generated code, whitespace-only changes and other people's commits
+    history. No accounts, no telemetry: the plugin connects only to commit-hike.dev, and only when you open
+    <i>Routes from the site</i> or install a route (reading the public catalogue, sending nothing about you); Share
+    opens a network's page in your browser only when you pick it. Lock files, generated code, whitespace-only changes and other people's commits
     don't count.</p>
     <p>Open the <b>Commit Hike</b> tool window to see your trail; the status bar shows how far you've walked, and
     <b>Tools | Commit Hike</b> has everything else. The same progress also shows in your shell prompt and in Neovim:
@@ -62,6 +65,7 @@
       <action id="CommitHike.ChooseRoute" class="dev.commithike.actions.ChooseRouteAction" text="Choose Trail for All Projects…"/>
       <action id="CommitHike.ChooseProjectRoute" class="dev.commithike.actions.ChooseProjectRouteAction" text="Choose Trail for This Project…"/>
       <separator/>
+      <action id="CommitHike.FindRoutes" class="dev.commithike.actions.FindRoutesAction" text="Routes from the Site…"/>
       <action id="CommitHike.ImportRoute" class="dev.commithike.actions.ImportRouteAction" text="Import a Route or Map…"/>
       <action id="CommitHike.CreateRouteTemplate" class="dev.commithike.actions.CreateRouteTemplateAction" text="Create a Route Template…"/>
       <action id="CommitHike.RemoveRoute" class="dev.commithike.actions.RemoveRouteAction" text="Remove a Route…"/>

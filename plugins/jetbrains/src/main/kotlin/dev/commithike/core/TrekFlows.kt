@@ -126,6 +126,46 @@ class TrekFlows(private val host: TrekHost, private val ui: TrekUi, private val 
         host.refreshProject()
     }
 
+    /** The panel's "Routes from the site": a page of the catalogue, or why not (as the panel's message). */
+    fun siteSearch(args: List<String>): String = try {
+        siteMessage("page", "page" to host.core { it.siteRoutes(args) })
+    } catch (e: CoreException) {
+        siteError("error", null, e)
+    }
+
+    /** Installs or updates a route from the site; refreshes the routes on success. */
+    fun siteInstall(id: String, replaceLocal: Boolean): String = try {
+        val got = host.core { it.siteInstall(id, replaceLocal) }
+        host.refreshAll()
+        siteMessage(
+            "installed",
+            "id" to com.google.gson.JsonPrimitive(id),
+            "version" to (got.get("version") ?: com.google.gson.JsonPrimitive(0)),
+        )
+    } catch (e: CoreException) {
+        siteError("installError", id, e)
+    }
+
+    private fun siteMessage(kind: String, vararg fields: Pair<String, com.google.gson.JsonElement>): String {
+        val o = com.google.gson.JsonObject()
+        o.addProperty("kind", kind)
+        for ((k, v) in fields) o.add(k, v)
+        return o.toString()
+    }
+
+    private fun siteError(kind: String, id: String?, e: CoreException): String {
+        val err = com.google.gson.JsonObject()
+        err.addProperty("code", e.code ?: "internal")
+        err.addProperty("message", e.message ?: "")
+        return if (id ==
+            null
+        ) {
+            siteMessage(kind, "error" to err)
+        } else {
+            siteMessage(kind, "id" to com.google.gson.JsonPrimitive(id), "error" to err)
+        }
+    }
+
     fun walkRoute(id: String) {
         host.core { it.setJourney(Scope.GLOBAL, id, fromHistory = false) }
         host.refreshAll()

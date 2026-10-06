@@ -4,6 +4,7 @@
 // VS Code's own display language.
 
 const en = {
+  siteItem: "$(globe) Find more routes on the site…",
   seriesNextText: "Next in “{0}”: {1}.", walkOn: "Walk on: {0}",
   badgeSaveTitle: "Save the badge", badgeSaved: "Badge saved to {0}. Put it next to your README and show it with Markdown.", copyMarkdown: "Copy Markdown",
   reportCopied: "The report is copied. Paste it into a new issue on GitHub.", openIssues: "Open issues",
@@ -67,6 +68,7 @@ const en = {
 type Key = keyof typeof en;
 
 const uk: Record<Key, string> = {
+  siteItem: "$(globe) Знайти ще маршрути на сайті…",
   seriesNextText: "Далі в серії «{0}»: {1}.", walkOn: "Іти далі: {0}",
   badgeSaveTitle: "Зберегти бейдж", badgeSaved: "Бейдж збережено в {0}. Поклади його поруч із README й покажи через Markdown.", copyMarkdown: "Скопіювати Markdown",
   reportCopied: "Звіт скопійовано. Встав його в нове issue на GitHub.", openIssues: "Відкрити issues",
@@ -129,6 +131,7 @@ const uk: Record<Key, string> = {
 };
 
 const pl: Record<Key, string> = {
+  siteItem: "$(globe) Znajdź więcej tras na stronie…",
   seriesNextText: "Dalej w serii „{0}”: {1}.", walkOn: "Idź dalej: {0}",
   badgeSaveTitle: "Zapisz odznakę", badgeSaved: "Odznakę zapisano w {0}. Umieść ją obok README i pokaż przez Markdown.", copyMarkdown: "Kopiuj Markdown",
   reportCopied: "Raport skopiowany. Wklej go do nowego zgłoszenia na GitHubie.", openIssues: "Otwórz zgłoszenia",
@@ -191,6 +194,7 @@ const pl: Record<Key, string> = {
 };
 
 const de: Record<Key, string> = {
+  siteItem: "$(globe) Mehr Routen auf der Website finden…",
   seriesNextText: "Weiter in „{0}“: {1}.", walkOn: "Weitergehen: {0}",
   badgeSaveTitle: "Abzeichen speichern", badgeSaved: "Abzeichen gespeichert unter {0}. Leg es neben deine README und zeig es mit Markdown.", copyMarkdown: "Markdown kopieren",
   reportCopied: "Der Bericht ist kopiert. Füge ihn in ein neues Issue auf GitHub ein.", openIssues: "Issues öffnen",
@@ -253,6 +257,7 @@ const de: Record<Key, string> = {
 };
 
 const es: Record<Key, string> = {
+  siteItem: "$(globe) Buscar más rutas en el sitio…",
   seriesNextText: "Sigue en «{0}»: {1}.", walkOn: "Seguir: {0}",
   badgeSaveTitle: "Guardar la insignia", badgeSaved: "Insignia guardada en {0}. Ponla junto a tu README y muéstrala con Markdown.", copyMarkdown: "Copiar Markdown",
   reportCopied: "Informe copiado. Pégalo en un issue nuevo de GitHub.", openIssues: "Abrir issues",

@@ -28,8 +28,9 @@ const (
 	CodeRouteInUse      = "route_in_use"
 	CodeInvalidImage    = "invalid_image" // a hiker icon that isn't a usable PNG
 	CodeInternal        = "internal"
-	CodeDataExists      = "data_exists"    // importing a backup over existing progress without --replace
-	CodeInvalidBackup   = "invalid_backup" // not a Commit Hike backup, or a damaged one; message says why
+	CodeDataExists      = "data_exists"      // importing a backup over existing progress without --replace
+	CodeInvalidBackup   = "invalid_backup"   // not a Commit Hike backup, or a damaged one; message says why
+	CodeSiteUnreachable = "site_unreachable" // the routes website can't be reached (offline, proxy, down)
 )
 
 // Envelope wraps every response the core prints.
@@ -462,4 +463,43 @@ type NextRoute struct {
 	LengthM    float64 `json:"length_m"`
 	SeriesID   string  `json:"series_id"`
 	SeriesName string  `json:"series_name"`
+}
+
+// SitePage is a page of the routes website's catalogue (commit-hike site routes).
+type SitePage struct {
+	Site   string      `json:"site"` // the website's address
+	Total  int         `json:"total"`
+	Page   int         `json:"page"`
+	Pages  int         `json:"pages"`
+	Routes []SiteRoute `json:"routes"`
+}
+
+// SiteRoute is a route on the website, and whether it's installed here.
+type SiteRoute struct {
+	ID               string   `json:"id"`
+	Title            string   `json:"title"`
+	Author           string   `json:"author"`
+	LengthM          float64  `json:"length_m"`
+	Stops            int      `json:"stops"`
+	AscentM          float64  `json:"ascent_m"`
+	Real             bool     `json:"real"`
+	GPS              bool     `json:"gps"`
+	Languages        []string `json:"languages"`
+	Tags             []string `json:"tags"`
+	Downloads        int      `json:"downloads"`
+	Rating           float64  `json:"rating"`
+	Ratings          int      `json:"ratings"`
+	Version          int      `json:"version"`
+	Cover            string   `json:"cover,omitempty"`
+	Page             string   `json:"page"`
+	Installed        string   `json:"installed,omitempty"` // "" | site | local (the user's own route, same id) | builtin
+	InstalledVersion int      `json:"installed_version,omitempty"`
+	Update           bool     `json:"update,omitempty"` // installed from the site, and the site has a newer version
+}
+
+// SiteInstalled is a route just installed from the website.
+type SiteInstalled struct {
+	Route   Route  `json:"route"`
+	Version int    `json:"version"`
+	Page    string `json:"page"`
 }

@@ -163,3 +163,17 @@ things work today:
     }
   ]
   ```
+
+## Routes from the site
+
+The core finds and installs routes from [commit-hike.dev](https://commit-hike.dev):
+
+```sh
+commit-hike site routes --q lakes --kind real --sort rating   # a page of the catalogue (JSON)
+commit-hike site install --id svydovets-ridge                 # install, or update to the site's newer version
+commit-hike journey --scope global --route svydovets-ridge    # and walk it
+```
+
+Only these two commands go online, and only to the site's public catalogue:
+nothing about you is sent. `COMMIT_HIKE_SITE` points them at another address.
+

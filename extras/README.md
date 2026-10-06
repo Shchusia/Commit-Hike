@@ -1,21 +1,21 @@
-# Extras: routes that don't ship with the plugin
+# Маршрути для завантаження на routes.commit-hike.dev
 
-These route packs are **not** built into Commit Hike and are never published to
-the JetBrains Marketplace, the Visual Studio Marketplace or Open VSX.
+У кожній папці: пакет маршруту (`*.zip`), головна картинка `cover.jpg`, ще дві картинки
+і `UPLOAD.md` з готовими полями форми завантаження.
 
-`frodo-journey` and `bilbo-journey` follow J. R. R. Tolkien's books: their
-names, places and story belong to the Tolkien Estate and Middle-earth
-Enterprises, who actively enforce these rights. Shipping them in a public
-plugin would get it removed from the marketplaces. They stay here for personal
-use only.
+| Папка | Що це | Публічно? |
+|---|---|---|
+| `west-highland-way` | Справжня шотландська стежка, 154 км | так |
+| `the-odyssey` | Гомер: від Трої до Ітаки, ~4 900 км | так |
+| `journey-to-the-centre-of-the-earth` | Жуль Верн, 1864: Ісландія → підземне море → Стромболі, ~8 300 км | так |
+| `bilbo-journey` | Особистий фан-маршрут | **ні: «Не публікувати після перевірки»** |
+| `frodo-journey` | Особистий фан-маршрут | **ні: «Не публікувати після перевірки»** |
 
-Their maps (`assets/middle-earth-map.svg`) are simple schematic maps drawn for
-this project, not copies of the books' maps; the trail on them follows the real
-road, and every stop is pinned to its place with `x`/`y`.
+**Чому фан-маршрути приховані.** Права на книги й торговельні марки (імена героїв, назви місць)
+належать Tolkien Estate і Middle-earth Enterprises, які активно їх захищають, а сайт публічний і з рекламою.
+Прихований маршрут бачите тільки ви: його можна завантажити на будь-якому комп'ютері й оновлювати.
 
-Use them on your own computer, like any user route:
+Усі п'ять пакетів пройшли ту саму перевірку, що робить сайт. Картинки — власні ілюстрації
+(без персонажів, назв і впізнаваних деталей із книжок чи фільмів).
 
-- all at once: `task routes:install-extras`, then restart the IDE;
-- in the IDE: **Tools → Commit Hike → Import a Route…** and choose a folder here;
-- to try one without touching your real progress: `task route:try SRC=extras/routes/frodo-journey`.
-- Map source: `python3 extras/middle-earth-maps.py` redraws both maps and the paths.
+`make_routes.py` і `make_images.py` — генератори нових маршрутів і картинок (для змін і нових версій).

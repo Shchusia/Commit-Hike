@@ -5,6 +5,7 @@ package dev.commithike.core
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
@@ -140,6 +141,14 @@ class CoreCli(
     fun setProjectEnabled(repo: String, on: Boolean) {
         call<JsonElement>(listOf("project", if (on) "enable" else "disable", "--repo", repo), JsonElement::class.java)
     }
+
+    /** Searches the routes website: the page as the core gives it (the panel reads it as is). */
+    fun siteRoutes(args: List<String>): JsonElement = callRaw(args + langArgs())
+
+    /** Installs (or updates) a route from the website. */
+    fun siteInstall(id: String, replaceLocal: Boolean): JsonObject = callRaw(
+        listOf("site", "install", "--id", id) + (if (replaceLocal) listOf("--replace-local") else emptyList()) + langArgs(),
+    ).asJsonObject
 
     private fun repoArgs(repo: String?) = if (repo == null) emptyList() else listOf("--repo", repo)
 

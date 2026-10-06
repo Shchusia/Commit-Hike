@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>io.github.shchusia.commithike</id>
   <name>Commit Hike</name>
-  <vendor email="denisshchutskyi@gmail.com" url="https://github.com/Shchusia/Commit-Hike">Denis Shchutskyi</vendor>
+  <vendor email="denisshchutskyi@gmail.com" url="https://commit-hike.dev">Denis Shchutskyi</vendor>
   <description><![CDATA[
     <p>Every commit you make moves you along a hiking trail, right inside your IDE. A day of steady work takes you
     about ten kilometers along a real mountain ridge, a desert crossing or a folk tale, with a scene that changes as
@@ -67,7 +67,8 @@
       <separator/>
       <action id="CommitHike.FindRoutes" class="dev.commithike.actions.FindRoutesAction" text="Routes from the Site…"/>
       <action id="CommitHike.ImportRoute" class="dev.commithike.actions.ImportRouteAction" text="Import a Route or Map…"/>
-      <action id="CommitHike.CreateRouteTemplate" class="dev.commithike.actions.CreateRouteTemplateAction" text="Create a Route Template…"/>
+      <action id="CommitHike.CreateOnSite" class="dev.commithike.actions.CreateOnSiteAction" text="Create a Route on the Site…"/>
+      <action id="CommitHike.OpenSite" class="dev.commithike.actions.OpenSiteAction" text="commit-hike.dev"/>
       <action id="CommitHike.RemoveRoute" class="dev.commithike.actions.RemoveRouteAction" text="Remove a Route…"/>
       <action id="CommitHike.SetHikerIcon" class="dev.commithike.actions.SetHikerIconAction" text="Set Hiker Icon…"/>
       <action id="CommitHike.ResetHikerIcon" class="dev.commithike.actions.ResetHikerIconAction" text="Use Default Hiker Icon"/>

@@ -11,7 +11,7 @@ import * as rating from "./rating";
 import { RepoTracker } from "./repos";
 import { scrubReport } from "./report";
 import { isShareUrl, pngBytes } from "./share";
-import { isRouteId, isSitePage, siteSearchArgs } from "./site";
+import { isRouteId, isSitePage, siteSearchArgs, siteUrl } from "./site";
 
 export async function activate(ctx: vscode.ExtensionContext): Promise<void> {
   let binary: string;
@@ -76,7 +76,7 @@ class App {
       vscode.commands.registerCommand("commitHike.verify", () => this.guard(() => this.verify())),
       vscode.commands.registerCommand("commitHike.importRoute", () => this.guard(() => this.importRoute())),
       vscode.commands.registerCommand("commitHike.findRoutes", () => this.openSite()),
-      vscode.commands.registerCommand("commitHike.createRouteTemplate", () => this.guard(() => this.createRouteTemplate())),
+      vscode.commands.registerCommand("commitHike.createOnSite", () => this.openSitePage("/create")),
       vscode.commands.registerCommand("commitHike.removeRoute", () => this.guard(() => this.removeRoute())),
       vscode.commands.registerCommand("commitHike.setHikerIcon", () => this.guard(() => this.setHikerIcon())),
       vscode.commands.registerCommand("commitHike.resetHikerIcon", () => this.guard(() => this.resetHikerIcon())),
@@ -399,7 +399,7 @@ class App {
       { id: "", label: "", kind: vscode.QuickPickItemKind.Separator },
       { id: "@site", label: t("siteItem") },
       { id: "@import", label: t("importItem") },
-      { id: "@template", label: t("templateItem") },
+      { id: "@create", label: t("createItem") },
     );
     const pick = await vscode.window.showQuickPick(items, {
       title: scope === "global" ? t("trailAll") : t("trailProject"), placeHolder: t("chooseTrail"),
@@ -407,7 +407,7 @@ class App {
     if (!pick) return;
     if (pick.id === "@site") return this.openSite();
     if (pick.id === "@import") return this.importRoute();
-    if (pick.id === "@template") return this.createRouteTemplate();
+    if (pick.id === "@create") return this.openSitePage("/create");
     let fromHistory = false;
     if (pick.id !== "none") {
       const h = await vscode.window.showQuickPick([
@@ -486,22 +486,12 @@ class App {
     }
   }
 
-  private async createRouteTemplate(): Promise<void> {
-    const folder = await vscode.window.showOpenDialog({
-      title: t("whereCreate"), openLabel: t("createHere"), canSelectFolders: true, canSelectFiles: false,
-    });
-    if (!folder?.[0]) return;
-    const id = await vscode.window.showInputBox({
-      title: t("newRoute"), prompt: t("routeIdPrompt"), value: "my-trail",
-      validateInput: v => (/^[a-z0-9]+(-[a-z0-9]+)*$/.test(v.trim()) ? undefined : t("routeIdInvalid")),
-    });
-    if (!id) return;
-    const dir = await this.cli.routeTemplate(id.trim(), folder[0].fsPath);
-    await vscode.window.showTextDocument(vscode.Uri.file(`${dir}/route.json`));
-    const a = await vscode.window.showInformationMessage(
-      t("templateCreated"), t("importNow"));
-    if (a) await this.importRoute();
+  /** A page of the routes site: its home, or the route editor. Only these paths. */
+  private openSitePage(path: unknown): void {
+    if (path !== "/" && path !== "/create") return;
+    void vscode.env.openExternal(vscode.Uri.parse(siteUrl() + path, true));
   }
+
 
   private async removeRoute(): Promise<void> {
     const custom = Object.values(this.routes).filter(r => !r.builtin);
@@ -655,7 +645,7 @@ class App {
       case "setTeamGoal": return this.guard(() => this.setTeamGoal(m.route));
       case "requestTeam": if (this.currentRepo && this.lastStatus?.team) void this.loadTeam(this.currentRepo); return;
       case "importRoute": return this.guard(() => this.importRoute());
-      case "createRouteTemplate": return this.guard(() => this.createRouteTemplate());
+      case "openSite": return this.openSitePage(m.path);
       case "verify": return this.guard(() => this.verify());
       case "savePostcard": return this.guard(() => this.savePostcard(m.name, m.data));
       case "setRestDays": return this.guard(async () => {

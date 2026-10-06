@@ -22,7 +22,9 @@ sealed interface PanelCommand {
     data object SaveBadge : PanelCommand
     data object RequestTeam : PanelCommand
     data object ImportRoute : PanelCommand
-    data object CreateRouteTemplate : PanelCommand
+
+    /** A page of the routes site: its home ("/") or the route editor ("/create"). */
+    data class OpenSite(val path: String) : PanelCommand
     data object Verify : PanelCommand
     data class ChooseRoute(val project: Boolean) : PanelCommand
     data class SetLocale(val locale: String) : PanelCommand
@@ -83,7 +85,7 @@ sealed interface PanelCommand {
                 "saveBadge" -> SaveBadge
                 "requestTeam" -> RequestTeam
                 "importRoute" -> ImportRoute
-                "createRouteTemplate" -> CreateRouteTemplate
+                "openSite" -> msg.string("path")?.takeIf { it == "/" || it == "/create" }?.let { OpenSite(it) }
                 "verify" -> Verify
                 "chooseRoute" -> ChooseRoute(project = msg.string("scope") == "project")
                 "setLocale" -> msg.string("locale")?.takeIf { it.isNotBlank() && it.length <= 16 }?.let { SetLocale(it) }

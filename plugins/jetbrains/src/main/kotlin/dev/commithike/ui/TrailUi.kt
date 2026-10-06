@@ -221,7 +221,7 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
             PanelCommand.SaveBadge -> trek.saveBadge()
             PanelCommand.RequestTeam -> trek.requestTeam()
             PanelCommand.ImportRoute -> trek.importRoute()
-            PanelCommand.CreateRouteTemplate -> trek.createRouteTemplate()
+            is PanelCommand.OpenSite -> ApplicationManager.getApplication().invokeLater { trek.openSitePage(c.path) }
             PanelCommand.Verify -> trek.verify()
             is PanelCommand.ChooseRoute -> trek.chooseRoute(if (c.project) Scope.PROJECT else Scope.GLOBAL)
             is PanelCommand.SetLocale -> trek.setLocale(c.locale)

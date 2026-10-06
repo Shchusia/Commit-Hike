@@ -168,12 +168,18 @@ route can be in one series only. The core checks this when it starts, and
 
 ## User routes (without rebuilding anything)
 
-In the IDE: **Create a Route Template…** (Tools → Commit Hike in JetBrains IDEs,
-the Command Palette or the panel's ⋯ menu in VS Code), edit the files, then
-**Import a Route or Map…** (a folder or a `.zip`). The template already contains
-an elevation profile, a fact, an SVG object and a climb achievement to copy
-from. Imported routes are copied into the `routes` folder next to your Commit
-Hike data. A broken pack is rejected with a message saying what's wrong; a
+The easiest way is the route editor on [commit-hike.dev](https://commit-hike.dev/create):
+draw the route on a map or a picture (or load a GPX track), place the stops,
+write the texts, check it and publish it. **Create a Route on the Site…** (Tools
+→ Commit Hike in JetBrains IDEs, the Command Palette or the panel's ⋯ menu in VS
+Code) opens it; *Routes from the site* then installs it like any other.
+
+For packs written by hand (scene objects, assets, dangers, tunnels: everything
+this guide describes), start from a template, edit the files, then **Import a
+Route or Map…** (a folder or a `.zip`). The template already contains an
+elevation profile, a fact, an SVG object and a climb achievement to copy from.
+Imported routes are copied into the `routes` folder next to your Commit Hike
+data. A broken pack is rejected with a message saying what's wrong; a
 route with a built-in route's id can't be imported.
 
 From the command line: `commit-hike route template --id my-trail --path DIR`,

@@ -7,7 +7,6 @@
   "command.disableProject": "Dieses Projekt nicht mehr zählen",
   "command.verify": "Dieses Projekt aus der git-Historie neu zählen",
   "command.importRoute": "Route oder Karte importieren…",
-  "command.createRouteTemplate": "Routenvorlage erstellen…",
   "command.removeRoute": "Route entfernen…",
   "command.setHikerIcon": "Wanderer-Symbol festlegen…",
   "command.resetHikerIcon": "Standard-Wanderer verwenden",
@@ -24,5 +23,6 @@
   "command.exportProgress": "Fortschritt exportieren…",
   "command.importProgress": "Fortschritt importieren…",
   "command.openSettings": "Einstellungen…",
-  "command.findRoutes": "Routen von der Website…"
+  "command.findRoutes": "Routen von der Website…",
+  "command.createOnSite": "Route auf der Website erstellen…"
 }

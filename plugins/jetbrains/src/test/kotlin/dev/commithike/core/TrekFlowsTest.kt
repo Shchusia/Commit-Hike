@@ -347,16 +347,12 @@ class TrekFlowsTest {
     }
 
     @Test
-    fun customRoutesFromTemplateToImportToRemoval() {
+    fun customRoutesFromImportToRemoval() {
         val host = Host(freshCli())
         val folder = Files.createTempDirectory("flows-routes").toFile()
-        val user = ScriptedUser(folder = folder, text = " my-ridge ")
-        flows(host, user).createRouteTemplate()
-        val pack = File(folder, "my-ridge")
-        assertEquals(File(pack, "route.json").path, user.edited!!.path)
-
-        user.openFile = pack
-        user.actions.last()() // "Import" on the notification
+        val pack = File(host.cli.routeTemplate("my-ridge", folder.path)) // a pack made outside the site's editor
+        val user = ScriptedUser(openFile = pack)
+        flows(host, user).importRoute()
         assertTrue(host.cli.routes().any { it.id == "my-ridge" })
         user.actions.last()() // "Walk it now"
         assertEquals("my-ridge", host.cli.status().global!!.route.id)

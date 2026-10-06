@@ -84,3 +84,16 @@ test("the host can open it, e.g. from a command", async ({ page }) => {
   expect(await p.sent()).toContainEqual({ command: "siteSearch", query: { q: "", kind: "", length: "", sort: "popular", page: 1 } });
   await expect(page.getByRole("heading", { name: "Routes from the site" })).toBeVisible();
 });
+
+test("the site's editor and home from the menu; closing the menu repaints the page", async ({ page }) => {
+  const p = await openPanel(page, data(status("en")));
+  await page.getByRole("button", { name: "Menu" }).click();
+  await expect(page.getByRole("menuitem", { name: /route template/i })).toHaveCount(0);
+  await page.getByRole("menuitem", { name: "Create a route on the site…" }).click();
+  expect(await p.sent()).toContainEqual({ command: "openSite", path: "/create" });
+  await page.getByRole("button", { name: "Menu" }).click();
+  await page.getByRole("menuitem", { name: /commit-hike\.dev/ }).click();
+  expect(await p.sent()).toContainEqual({ command: "openSite", path: "/" });
+  // the one-frame repaint after closing ends with the page fully opaque again
+  await expect.poll(() => page.evaluate(() => document.body.style.opacity)).toBe("");
+});

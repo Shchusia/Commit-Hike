@@ -66,7 +66,7 @@ class RouteDialog(
     routes: List<Route>,
     canRemove: Boolean,
     private val onImport: () -> Unit,
-    private val onTemplate: () -> Unit,
+    private val onCreateOnSite: () -> Unit,
     private val onSite: () -> Unit,
 ) : DialogWrapper(project) {
     data class Result(val routeId: String, val fromHistory: Boolean)
@@ -113,9 +113,9 @@ class RouteDialog(
                 close(CANCEL_EXIT_CODE)
                 onImport()
             }
-            link(I18n.t("templateLink")) {
+            link(I18n.t("createOnSiteLink")) {
                 close(CANCEL_EXIT_CODE)
-                onTemplate()
+                onCreateOnSite()
             }
         }
     }

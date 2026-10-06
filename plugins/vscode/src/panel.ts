@@ -25,7 +25,8 @@ export interface PanelData {
 
 export type PanelMessage =
   | { command: "ready" | "setup" | "refresh" | "enableProject" | "setAvatar" | "resetAvatar"
-    | "importRoute" | "createRouteTemplate" | "verify" | "requestTeam" }
+    | "importRoute" | "verify" | "requestTeam" }
+  | { command: "openSite"; path: unknown }
   | { command: "chooseRoute"; scope: "global" | "project" }
   | { command: "setLocale"; locale: string }
   | { command: "setTeam"; on: boolean }

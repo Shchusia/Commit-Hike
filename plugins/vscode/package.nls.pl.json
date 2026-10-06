@@ -7,7 +7,6 @@
   "command.disableProject": "Przestań liczyć ten projekt",
   "command.verify": "Przelicz ten projekt z historii git",
   "command.importRoute": "Importuj trasę lub mapę…",
-  "command.createRouteTemplate": "Utwórz szablon trasy…",
   "command.removeRoute": "Usuń trasę…",
   "command.setHikerIcon": "Ustaw ikonę wędrowca…",
   "command.resetHikerIcon": "Użyj domyślnej ikony wędrowca",
@@ -24,5 +23,6 @@
   "command.exportProgress": "Eksportuj postęp…",
   "command.importProgress": "Importuj postęp…",
   "command.openSettings": "Ustawienia…",
-  "command.findRoutes": "Trasy ze strony…"
+  "command.findRoutes": "Trasy ze strony…",
+  "command.createOnSite": "Utwórz trasę na stronie…"
 }

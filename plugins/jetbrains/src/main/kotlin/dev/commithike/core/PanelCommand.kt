@@ -55,6 +55,9 @@ sealed interface PanelCommand {
 
     data class SiteInstall(val id: String, val replaceLocal: Boolean) : PanelCommand
 
+    /** Walk a route just installed from the site (asks whether to count past commits). */
+    data class StartRoute(val id: String) : PanelCommand
+
     /** The team goal's route; "" removes the goal. */
     data class SetTeamGoal(val route: String) : PanelCommand
 
@@ -96,7 +99,17 @@ sealed interface PanelCommand {
                     SavePostcard(Files.safeName(msg.string("name"), "commit-hike.png", "png"), it)
                 }
                 "panelError" -> PanelError("panel: " + msg.string("message").orEmpty().take(500))
-                "openUrl" -> msg.string("url")?.takeIf { ShareLinks.allowed(it) || Site.isPage(it) }?.let { OpenUrl(it) }
+                // a refused link goes to the error log (Copy a report), so it never fails silently
+                "openUrl" -> msg.string("url")?.let {
+                    if (ShareLinks.allowed(it) ||
+                        Site.isPage(it)
+                    ) {
+                        OpenUrl(it)
+                    } else {
+                        PanelError("refused a link: ${it.take(200)}")
+                    }
+                }
+                "startRoute" -> msg.string("id")?.takeIf { Site.routeId.matches(it) && it.length <= 80 }?.let { StartRoute(it) }
                 "siteSearch" -> SiteSearch(Site.searchArgs(msg.get("query")?.takeIf { it.isJsonObject }?.asJsonObject))
                 "siteInstall" -> msg.string("id")?.takeIf { Site.routeId.matches(it) && it.length <= 80 }
                     ?.let {

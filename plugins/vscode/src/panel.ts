@@ -4,7 +4,6 @@ import * as fs from "fs";
 import * as path from "path";
 import * as vscode from "vscode";
 import { LocaleInfo, RouteAssets, Status, Team } from "./cli";
-import { siteUrl } from "./site";
 
 export interface PanelData {
   type: "update";
@@ -42,7 +41,8 @@ export type PanelMessage =
   | { command: "panelError"; message: string }
   | { command: "walkRoute"; id: string }
   | { command: "siteSearch"; query: unknown }
-  | { command: "siteInstall"; id: unknown; replaceLocal?: boolean };
+  | { command: "siteInstall"; id: unknown; replaceLocal?: boolean }
+  | { command: "startRoute"; id: unknown };
 
 export class TrailPanel implements vscode.WebviewViewProvider {
   static readonly viewId = "commitHike.trail";
@@ -58,7 +58,7 @@ export class TrailPanel implements vscode.WebviewViewProvider {
     const csp = [
       "default-src 'none'",
       `style-src ${view.webview.cspSource} 'unsafe-inline'`,
-      `img-src data: ${siteUrl()}`, // the hiker icon as a data URL; route covers from the routes site
+      "img-src data:", // the hiker icon and the site's route covers come as data URLs (the core fetches the covers)
       `script-src 'nonce-${nonce}'`,
     ].join("; ");
     const html = fs.readFileSync(path.join(this.extensionPath, "media", "panel.html"), "utf8");

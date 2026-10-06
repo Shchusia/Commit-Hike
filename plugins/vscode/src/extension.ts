@@ -678,6 +678,7 @@ class App {
       case "walkRoute": return this.guard(() => this.walkRoute(String(m.id)));
       case "siteSearch": return void this.siteSearch(m.query);
       case "siteInstall": return void this.siteInstall(m.id, m.replaceLocal === true);
+      case "startRoute": return this.guard(() => this.startRoute(m.id));
       case "importProgress": return this.guard(() => this.importProgress());
     }
   }
@@ -701,6 +702,19 @@ class App {
     } catch (e) {
       this.panel.site({ kind: "installError", id, error: { code: e instanceof CliError ? e.code : "internal", message: String((e as Error).message ?? e) } });
     }
+  }
+
+  /** Walks a route just installed from the site: like choosing a trail, asks whether to count past commits. */
+  private async startRoute(id: unknown): Promise<void> {
+    if (!isRouteId(id)) return;
+    const h = await vscode.window.showQuickPick([
+      { label: t("histYes"), value: true },
+      { label: t("histNow"), value: false },
+    ], { title: this.routes[id]?.name ?? id, placeHolder: t("journeyStart") });
+    if (!h) return;
+    await this.cli.setJourney("global", id, h.value);
+    await this.refresh();
+    this.showTrail();
   }
 
   /** Commit Hike: Routes from the Site…: the trail view on its site page. */

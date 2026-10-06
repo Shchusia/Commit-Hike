@@ -408,6 +408,9 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
     /** Walks on to [id], usually the next route of a series. */
     fun walkRoute(id: String): Job = runFlow { walkRoute(id) }
 
+    /** Walks a route just installed from the site, asking about past commits first. */
+    fun startRoute(id: String): Job = runFlow { startRoute(id) }
+
     /** The panel's site view: run the flow off the UI thread and hand its answer to [reply]. */
     fun siteSearch(args: List<String>, reply: (String) -> Unit): Job = guarded { reply(flows.siteSearch(args)) }
 

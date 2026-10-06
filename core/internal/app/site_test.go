@@ -67,7 +67,7 @@ func fakeSite(t *testing.T, versions map[string]int, packs map[string][]byte) {
 	card := func(id string) map[string]any {
 		return map[string]any{
 			"id": id, "title": "Title of " + id, "titles": map[string]string{"en": "Title of " + id, "uk": "Назва " + id},
-			"author": "Olena", "length_m": 5000, "stops": 3, "version": versions[id], "page": "https://site/routes/" + id,
+			"author": "Olena", "length_m": 5000, "stops": 3, "version": versions[id], "page": "https://old.example/routes/" + id, "cover": "https://old.example/media/" + id + ".webp", // a stale BASE_URL
 		}
 	}
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -85,6 +85,9 @@ func fakeSite(t *testing.T, versions map[string]int, packs map[string][]byte) {
 				return
 			}
 			_ = json.NewEncoder(w).Encode(card(id))
+		case strings.HasPrefix(r.URL.Path, "/media/"):
+			w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+			_, _ = w.Write([]byte("RIFFxxxxWEBPVP8 "))
 		case strings.HasSuffix(r.URL.Path, "/download"):
 			id := strings.TrimSuffix(strings.TrimPrefix(r.URL.Path, "/routes/"), "/download")
 			if p, ok := packs[id]; ok {
@@ -119,6 +122,12 @@ func TestSearchingTheSiteShowsWhatsInstalled(t *testing.T) {
 	}
 	if got["lake-walk"].Installed != "site" || got["lake-walk"].InstalledVersion != 2 || got["lake-walk"].Update {
 		t.Fatalf("lake-walk: %+v", got["lake-walk"])
+	}
+	if got["lake-walk"].Page != os.Getenv("COMMIT_HIKE_SITE")+"/routes/lake-walk" {
+		t.Fatalf("pages are put on the site the core talks to: %q", got["lake-walk"].Page)
+	}
+	if !strings.HasPrefix(got["lake-walk"].Cover, "data:image/webp;base64,") {
+		t.Fatalf("the cover comes as a data: URL: %.60q", got["lake-walk"].Cover)
 	}
 	if got["demo-trail"].Installed != "builtin" || got["mine"].Installed != "local" || got["lake-walk"].Title != "Назва lake-walk" {
 		t.Fatalf("states: %+v", got)

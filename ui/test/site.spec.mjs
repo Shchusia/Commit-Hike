@@ -36,7 +36,7 @@ test("search, install, walk: everything goes through the host", async ({ page })
   expect(await p.sent()).toContainEqual({ command: "siteInstall", id: "new-one", replaceLocal: false });
   await answer(page, { kind: "installed", id: "new-one", version: 2 });
   await cardOf(page, "new-one").getByRole("button", { name: "Walk it now" }).click();
-  expect(await p.sent()).toContainEqual({ command: "walkRoute", id: "new-one" });
+  expect(await p.sent()).toContainEqual({ command: "startRoute", id: "new-one" });
 
   page.once("dialog", d => d.accept());                                      // replacing your own route asks first
   await cardOf(page, "mine").getByRole("button", { name: "Replace my route" }).click();

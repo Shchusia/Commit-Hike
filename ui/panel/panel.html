@@ -429,7 +429,7 @@ html.reduce-motion .stamp { transform: none; }
 .site-card .meta { display: flex; gap: 10px; } .site-card .meta .langs { margin-left: auto; }
 .site-card .tags { color: var(--ct-blaze); }
 .site-card .row { display: flex; gap: 10px; align-items: center; margin-top: 4px; flex-wrap: wrap; }
-.site-card .badge { font-size: .72em; padding: 1px 6px; border-radius: 999px; color: #fff; background: #4f9d69; } .site-card .badge.story { background: #8a6fd1; }
+.site-kind { white-space: nowrap; flex-shrink: 0; font-size: .72em; padding: 1px 6px; border-radius: 999px; color: #fff; background: #4f9d69; } .site-kind.is-story { background: #8a6fd1; }
 .site-card .error { color: #d0574b; font-size: .86em; }
 .site-state { font-size: .88em; color: var(--ct-muted); } .site-state.ok { color: #4f9d69; font-weight: 600; } .site-actions { display: flex; gap: 8px; align-items: center; }
 .site-pages { display: flex; justify-content: space-between; align-items: center; }
@@ -443,7 +443,7 @@ html.reduce-motion .stamp { transform: none; }
   whose "unused selector" check can't see them; the browser never renders a
   <template>. ui/test/css-classes.spec.mjs keeps this list in step.
 -->
-<template id="script-classes"><i class="site-filters search site-list site-card cover body title by facts tags langs error site-state ok site-actions site-pages site privacy"></i>
+<template id="script-classes"><i class="site-kind is-story site-filters search site-list site-card cover body title by facts tags langs error site-state ok site-actions site-pages site privacy"></i>
   <i class="actions active ahead area-done area-left ava badge badge-row badges bar bar-d bar-hit base big"></i>
   <i class="build-info cal cal-d cal-legend cap card casing chart chart-box chart-tip chip-btn choice ck climb"></i>
   <i class="d danger danger-pin dangerpin day days dev dist dot down dragging dt elev empty fact factpin far"></i>
@@ -3436,16 +3436,17 @@ html.reduce-motion .stamp { transform: none; }
     else if (r.installed === "site" && r.update) action = el("button", { class: "chip-btn primary", text: t("siteUpdate", { v: r.version }), onclick: () => siteInstall(r) });
     else if (r.installed === "site") action = el("span", { class: "site-actions" }, [
       el("span", { class: "site-state ok", text: "✓ " + t("siteInstalled") }),
-      el("button", { class: "chip-btn primary", text: t("siteWalk"), onclick: () => send({ command: "walkRoute", id: r.id }) })]);
+      // a new route: the host asks whether to count the commits already made (walkRoute is "from now", for series)
+      el("button", { class: "chip-btn primary", text: t("siteWalk"), onclick: () => send({ command: "startRoute", id: r.id }) })]);
     else action = el("button", { class: "chip-btn primary", text: t("siteInstall"), onclick: () => siteInstall(r) });
     return el("article", { class: "site-card" }, [
       r.cover ? el("img", { class: "cover", src: r.cover, alt: "", loading: "lazy" }) : el("div", { class: "cover none" }),
       el("div", { class: "body" }, [
-        el("div", { class: "title" }, [el("b", { text: r.title }), el("span", { class: "badge " + (r.real ? "real" : "story"), text: r.real ? t("siteReal1") : t("siteStory1") })]),
+        el("div", { class: "title" }, [el("b", { text: r.title }), el("span", { class: "site-kind " + (r.real ? "is-real" : "is-story"), text: r.real ? t("siteReal1") : t("siteStory1") })]),
         el("div", { class: "by", text: t("siteBy", { name: r.author }) }),
         el("div", { class: "facts", text: facts.join(" · ") }),
         el("div", { class: "meta" }, [
-          el("span", { text: r.ratings ? "★ " + r.rating.toFixed(1) + " (" + r.ratings + ")" : "" }),
+          r.ratings ? el("span", { text: "★ " + r.rating.toFixed(1) + " (" + r.ratings + ")" }) : null,
           el("span", { text: "⬇ " + r.downloads }),
           el("span", { class: "langs", text: (r.languages || []).join(" · ").toUpperCase() })]),
         (r.tags || []).length ? el("div", { class: "tags", text: r.tags.map(x => "#" + x).join(" ") }) : null,

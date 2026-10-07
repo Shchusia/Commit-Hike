@@ -64,6 +64,18 @@
     "gorg-day": {
       "name": "Long Stony Day",
       "description": "Walk 8 km in one day."
+    },
+    "gorg-peaks": {
+      "name": "Every Summit of the Ring",
+      "description": "Stand on all six summits of the ring."
+    },
+    "gorg-scree": {
+      "name": "Sea of Stones",
+      "description": "Walk 15 km over the Gorgany scree."
+    },
+    "gorg-mist": {
+      "name": "Mist in the Valley",
+      "description": "Make 10 commits between 5 and 8 in the morning."
     }
   }
 }

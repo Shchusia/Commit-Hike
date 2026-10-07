@@ -99,6 +99,18 @@
     "rain": {
       "name": "Przywoływacz deszczu",
       "description": "Dojdź na Gromowy Szczyt i wezwij deszcz."
+    },
+    "lights-dance": {
+      "name": "Gdzie tańczą światełka",
+      "description": "Przejdź przez zaczarowany las bukowy."
+    },
+    "many-worlds": {
+      "name": "Wiele światów",
+      "description": "Przejdź przez 7 różnych krain."
+    },
+    "molfar-hour": {
+      "name": "Godzina molfara",
+      "description": "Zrób 7 commitów między północą a 5 rano, gdy czary molfara są najsilniejsze."
     }
   }
 }

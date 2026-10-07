@@ -55,6 +55,18 @@
     "summit": {
       "name": "Arriba del todo",
       "description": "Completa el Sendero de prueba."
+    },
+    "change-of-scenery": {
+      "name": "Cambio de paisaje",
+      "description": "Atraviesa 5 tipos de paisaje distintos."
+    },
+    "weekend-walker": {
+      "name": "Caminante de fin de semana",
+      "description": "Haz 3 commits en fines de semana."
+    },
+    "night-owl": {
+      "name": "Ave nocturna",
+      "description": "Haz 3 commits entre la medianoche y las 5."
     }
   }
 }

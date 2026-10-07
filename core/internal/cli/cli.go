@@ -39,7 +39,7 @@ const usage = `commit-hike: turns commits into a journey. Every command prints o
   commit-hike rest-days [--set sat,sun|none]
   commit-hike diagnostics                  # for bug reports: versions, counts, settings; nothing personal
   commit-hike badge    [--repo PATH] [--lang uk]   # an SVG badge for a README
-  commit-hike settings [--reduce-motion auto|on|off] [--high-contrast auto|on|off] [--notifications all|milestones|off]
+  commit-hike settings [--reduce-motion auto|on|off] [--high-contrast auto|on|off] [--notifications all|milestones|off] [--festive on|off] [--ambient on|off]
   commit-hike backup   export --path FILE.json | import --path FILE.json [--replace]
   commit-hike verify   --repo PATH
   commit-hike render   [--scope global|project] [--repo PATH] [--format svg|scene] [--width 300] [--lang uk]
@@ -97,7 +97,7 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 
 	var (
 		emails, mode, route, locale, scope, format, id, path, prevHead, setLocale, difficulty, restDays *string
-		reduceMotion, highContrast, notifications                                                       *string
+		reduceMotion, highContrast, notifications, festive, ambient                                     *string
 		fromHistory, replace                                                                            *bool
 		width                                                                                           *float64
 		siteQ, siteKind, siteLength, siteLang, siteTags, siteSort                                       *string
@@ -120,6 +120,8 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 		reduceMotion = fs.String("reduce-motion", "", "auto | on | off")
 		highContrast = fs.String("high-contrast", "", "auto | on | off")
 		notifications = fs.String("notifications", "", "all | milestones | off")
+		festive = fs.String("festive", "", "on | off: holidays in the scene")
+		ambient = fs.String("ambient", "", "on | off: weather and wildlife in the scene")
 	case "backup":
 		path = fs.String("path", "", "backup file")
 		replace = fs.Bool("replace", false, "import: replace the progress already on this computer")
@@ -187,7 +189,7 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 	case "badge":
 		return svc.Badge(*repo, *lang)
 	case "settings":
-		return svc.Settings(app.SettingsChange{ReduceMotion: *reduceMotion, HighContrast: *highContrast, Notifications: *notifications})
+		return svc.Settings(app.SettingsChange{ReduceMotion: *reduceMotion, HighContrast: *highContrast, Notifications: *notifications, Festive: *festive, Ambient: *ambient})
 	case "backup":
 		switch sub {
 		case "export":

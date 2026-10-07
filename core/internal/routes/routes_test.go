@@ -218,3 +218,20 @@ func TestMapCoordinatesAndLoop(t *testing.T) {
 		}
 	}
 }
+
+func TestBiomeMetersAndKinds(t *testing.T) {
+	r := &Route{
+		LengthM: 1000, Biomes: []Biome{{AtM: 600, Type: "rock"}, {AtM: 0, Type: "forest"}, {AtM: 800, Type: "forest"}},
+		Waypoints: []Waypoint{{ID: "a", AtM: 0, Kind: "start"}, {ID: "l1", AtM: 300, Kind: "lake"}, {ID: "l2", AtM: 900, Kind: "lake"}},
+	}
+	got := r.BiomeMeters(850)
+	if got["forest"] != 650 || got["rock"] != 200 || len(got) != 2 {
+		t.Fatalf("biome meters: %v", got)
+	}
+	if k := r.KindsReached(500); k["lake"] != 1 || k["start"] != 1 {
+		t.Fatalf("kinds: %v", k)
+	}
+	if top := r.Topology(); top.Kinds["lake"] != 2 || !top.Biomes["rock"] || top.Waypoints["l2"] != 900 {
+		t.Fatalf("topology: %+v", top)
+	}
+}

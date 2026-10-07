@@ -83,6 +83,18 @@
     "crossed": {
       "name": "Überquert",
       "description": "Schaffe das Tongariro Alpine Crossing."
+    },
+    "lakes-of-colour": {
+      "name": "Farbige Seen",
+      "description": "Erreiche die smaragdgrünen und den Blauen See."
+    },
+    "walking-on-ash": {
+      "name": "Auf Asche gehen",
+      "description": "Geh 3 km über vulkanischen Boden."
+    },
+    "first-shuttle": {
+      "name": "Der erste Shuttle",
+      "description": "Mach 5 Commits zwischen 5 und 8 Uhr morgens: die Überquerung beginnt früh."
     }
   }
 }

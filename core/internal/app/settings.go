@@ -66,7 +66,7 @@ func parseRestDays(set string) ([]int, error) {
 
 // SettingsChange lists the settings to change; empty fields stay as they are.
 type SettingsChange struct {
-	ReduceMotion, HighContrast, Notifications string
+	ReduceMotion, HighContrast, Notifications, Festive, Ambient string
 }
 
 // Settings shows or changes the panel and notification choices.
@@ -81,6 +81,8 @@ func (s *Service) Settings(ch SettingsChange) (*protocol.Settings, error) {
 		check("reduce-motion", ch.ReduceMotion, "auto", "on", "off"),
 		check("high-contrast", ch.HighContrast, "auto", "on", "off"),
 		check("notifications", ch.Notifications, "all", "milestones", "off"),
+		check("festive", ch.Festive, "on", "off"),
+		check("ambient", ch.Ambient, "on", "off"),
 	} {
 		if err != nil {
 			return nil, err
@@ -106,6 +108,8 @@ func (s *Service) Settings(ch SettingsChange) (*protocol.Settings, error) {
 		set(&cfg.Prefs.ReduceMotion, ch.ReduceMotion, "auto")
 		set(&cfg.Prefs.HighContrast, ch.HighContrast, "auto")
 		set(&cfg.Prefs.Notifications, ch.Notifications, "all")
+		set(&cfg.Prefs.Festive, ch.Festive, "on")
+		set(&cfg.Prefs.Ambient, ch.Ambient, "on")
 		if err := s.st.SaveConfig(cfg); err != nil {
 			return nil, err
 		}
@@ -129,5 +133,7 @@ func settingsOf(cfg *store.Config) protocol.Settings {
 		ReduceMotion:  or(cfg.Prefs.ReduceMotion, "auto"),
 		HighContrast:  or(cfg.Prefs.HighContrast, "auto"),
 		Notifications: or(cfg.Prefs.Notifications, "all"),
+		Festive:       or(cfg.Prefs.Festive, "on"),
+		Ambient:       or(cfg.Prefs.Ambient, "on"),
 	}
 }

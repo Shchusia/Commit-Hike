@@ -1,6 +1,6 @@
 {
   "id": "molfar-path",
-  "version": 2,
+  "version": 3,
   "default_locale": "en",
   "length_m": 36000,
   "waypoints": [
@@ -19,7 +19,7 @@
     {
       "id": "church",
       "at_m": 6000,
-      "kind": "landmark",
+      "kind": "church",
       "elevation_m": 820
     },
     {
@@ -43,7 +43,7 @@
     {
       "id": "stone-guardian",
       "at_m": 22000,
-      "kind": "landmark",
+      "kind": "statue",
       "elevation_m": 1760
     },
     {
@@ -127,6 +127,10 @@
     {
       "at_m": 7000,
       "type": "grove"
+    },
+    {
+      "at_m": 9600,
+      "type": "enchanted"
     },
     {
       "at_m": 12500,
@@ -317,6 +321,29 @@
       "rule": {
         "type": "streak",
         "days": 7
+      },
+      "hidden": true
+    },
+    {
+      "id": "lights-dance",
+      "rule": {
+        "type": "biome",
+        "biome": "enchanted",
+        "min_m": 1500
+      }
+    },
+    {
+      "id": "many-worlds",
+      "rule": {
+        "type": "biomes",
+        "count": 7
+      }
+    },
+    {
+      "id": "molfar-hour",
+      "rule": {
+        "type": "night",
+        "count": 7
       },
       "hidden": true
     },

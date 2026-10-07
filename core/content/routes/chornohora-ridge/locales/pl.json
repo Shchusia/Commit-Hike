@@ -82,6 +82,18 @@
     "ridge-walker": {
       "name": "Wędrowiec granią",
       "description": "Przejdź całą grań Czarnohory."
+    },
+    "chorn-peaks": {
+      "name": "Cztery szczyty",
+      "description": "Stań na wszystkich czterech szczytach grzbietu."
+    },
+    "chorn-lakes": {
+      "name": "Górskie lustra",
+      "description": "Dojdź do obu jezior pod grzbietem."
+    },
+    "chorn-sunrise": {
+      "name": "Wschód słońca na grani",
+      "description": "Zrób 10 commitów między 5 a 8 rano."
     }
   }
 }

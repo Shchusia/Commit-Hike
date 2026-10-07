@@ -61,6 +61,26 @@
     "santiago": {
       "name": "Santiago de Compostela",
       "text": "Plac przed katedrą, koniec Drogi."
+    },
+    "alto-del-perdon": {
+      "name": "Alto del Perdón",
+      "text": "Wietrzny grzbiet z rzędem wiatraków i żelaznymi pielgrzymami maszerującymi po niebie."
+    },
+    "irache": {
+      "name": "Fontanna wina w Irache",
+      "text": "Obok klasztoru Irache z kranu płynie darmowe czerwone wino dla pielgrzymów."
+    },
+    "san-juan-de-ortega": {
+      "name": "San Juan de Ortega",
+      "text": "Klasztor w dębowych lasach Montes de Oca, założony przez świętego, który budował mosty dla pielgrzymów."
+    },
+    "san-anton": {
+      "name": "Klasztor San Antón",
+      "text": "Droga przechodzi wprost pod gotyckimi łukami ruin klasztoru."
+    },
+    "monte-do-gozo": {
+      "name": "Monte do Gozo",
+      "text": "„Góra Radości”, skąd pielgrzymi tradycyjnie po raz pierwszy widzieli wieże katedry."
     }
   },
   "story": {
@@ -98,6 +118,29 @@
     "cam-commits": {
       "name": "Cierpliwość pielgrzyma",
       "description": "Zrób 500 commitów na Drodze."
+    },
+    "cam-cathedrals": {
+      "name": "Miasta katedr",
+      "description": "Dojdź do katedr w Burgos i León."
+    },
+    "cam-wine": {
+      "name": "Kieliszek na drogę",
+      "description": "Dojdź do fontanny wina w Irache."
+    },
+    "cam-meseta-km": {
+      "name": "Bezkresna Meseta",
+      "description": "Przejdź 100 km przez Mesetę."
+    },
+    "cam-dawn": {
+      "name": "Świt pielgrzyma",
+      "description": "Zrób 15 commitów między 5 a 8 rano: pielgrzymi wyruszają przed wschodem słońca."
+    },
+    "cam-weekend": {
+      "name": "Niedzielny pielgrzym",
+      "description": "Zrób 20 commitów w weekendy."
     }
+  },
+  "objects": {
+    "templars": "Zamek templariuszy w Ponferradzie"
   }
 }

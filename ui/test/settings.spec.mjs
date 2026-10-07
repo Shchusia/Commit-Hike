@@ -8,15 +8,19 @@ async function openSettings(page) {
 test("every setting is on the page and talks to the host", async ({ page }) => {
   const p = await openPanel(page, data(status("en")));
   await openSettings(page);
-  await expect(page.locator(".set-row h3")).toHaveText(["Language", "Difficulty", "Days off", "Notifications", "Less motion", "More contrast", "Your hiker", "Backup", "Something wrong?"]);
+  await expect(page.locator(".set-row h3")).toHaveText(["Language", "Difficulty", "Days off", "Notifications", "Less motion", "Holidays in the scene", "Weather and wildlife", "More contrast", "Your hiker", "Backup", "Something wrong?"]);
   await page.locator(".set-row", { hasText: "Notifications" }).getByRole("radio", { name: "Only milestones" }).click();
   await page.locator(".set-row", { hasText: "More contrast" }).getByRole("radio", { name: "On" }).click();
+  await page.locator(".set-row", { hasText: "Holidays in the scene" }).getByRole("radio", { name: "Off" }).click();
+  await page.locator(".set-row", { hasText: "Weather and wildlife" }).getByRole("radio", { name: "Off" }).click();
   await page.getByRole("button", { name: "Export…" }).click();
   await page.getByRole("button", { name: "Import…" }).click();
   await page.getByRole("button", { name: "Copy a report for the developer" }).click();
   expect(await p.sent()).toEqual([
     { command: "setSettings", notifications: "milestones" },
     { command: "setSettings", high_contrast: "on" },
+    { command: "setSettings", festive: "off" },
+    { command: "setSettings", ambient: "off" },
     { command: "exportProgress" },
     { command: "importProgress" },
     { command: "copyDiagnostics" },

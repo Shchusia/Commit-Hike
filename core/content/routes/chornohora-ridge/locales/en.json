@@ -82,6 +82,18 @@
     "ridge-walker": {
       "name": "Ridge Walker",
       "description": "Walk the whole Chornohora ridge."
+    },
+    "chorn-peaks": {
+      "name": "Four Summits",
+      "description": "Stand on all four summits of the ridge."
+    },
+    "chorn-lakes": {
+      "name": "Mountain Mirrors",
+      "description": "Reach both lakes below the ridge."
+    },
+    "chorn-sunrise": {
+      "name": "Sunrise on the Ridge",
+      "description": "Make 10 commits between 5 and 8 in the morning."
     }
   }
 }

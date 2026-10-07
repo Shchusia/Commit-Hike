@@ -83,6 +83,18 @@
     "crossed": {
       "name": "Przejście zaliczone",
       "description": "Ukończ Przejście Tongariro."
+    },
+    "lakes-of-colour": {
+      "name": "Kolorowe jeziora",
+      "description": "Dojdź do szmaragdowych i Błękitnego jeziora."
+    },
+    "walking-on-ash": {
+      "name": "Po popiele",
+      "description": "Przejdź 3 km po wulkanicznym gruncie."
+    },
+    "first-shuttle": {
+      "name": "Pierwszy bus",
+      "description": "Zrób 5 commitów między 5 a 8 rano: przejście zaczyna się wcześnie."
     }
   }
 }

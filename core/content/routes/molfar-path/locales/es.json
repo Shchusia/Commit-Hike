@@ -99,6 +99,18 @@
     "rain": {
       "name": "Llamador de la lluvia",
       "description": "Llega al Pico del Trueno y llama a la lluvia."
+    },
+    "lights-dance": {
+      "name": "Donde bailan las luces",
+      "description": "Atraviesa el hayedo encantado."
+    },
+    "many-worlds": {
+      "name": "Muchos mundos",
+      "description": "Atraviesa 7 tipos de paisaje distintos."
+    },
+    "molfar-hour": {
+      "name": "La hora del molfar",
+      "description": "Haz 7 commits entre la medianoche y las 5, cuando la magia del molfar es más fuerte."
     }
   }
 }

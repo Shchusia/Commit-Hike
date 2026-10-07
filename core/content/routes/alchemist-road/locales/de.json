@@ -113,6 +113,18 @@
     "treasure": {
       "name": "Wo der Schatz liegt",
       "description": "Erreiche die Pyramiden und erfahre, wo der Schatz liegt."
+    },
+    "thousand-km-sand": {
+      "name": "Tausend Kilometer Sand",
+      "description": "Geh 1.000 km durch die Wüste."
+    },
+    "omens": {
+      "name": "Überall Zeichen",
+      "description": "Mach 12 Commits an einem Tag."
+    },
+    "reading-stars": {
+      "name": "In den Sternen lesen",
+      "description": "Mach 10 Commits zwischen Mitternacht und 5 Uhr, wie eine Karawane, die nachts reist."
     }
   }
 }

@@ -113,6 +113,18 @@
     "treasure": {
       "name": "Tam, gdzie jest skarb",
       "description": "Dojdź do piramid i dowiedz się, gdzie jest skarb."
+    },
+    "thousand-km-sand": {
+      "name": "Tysiąc kilometrów piasku",
+      "description": "Przejdź 1000 km przez pustynię."
+    },
+    "omens": {
+      "name": "Znaki wszędzie",
+      "description": "Zrób 12 commitów jednego dnia."
+    },
+    "reading-stars": {
+      "name": "Czytać z gwiazd",
+      "description": "Zrób 10 commitów między północą a 5 rano, jak karawana podróżująca nocą."
     }
   }
 }

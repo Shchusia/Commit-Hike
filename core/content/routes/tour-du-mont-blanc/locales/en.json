@@ -61,6 +61,10 @@
     "les-houches-return": {
       "name": "Back in Les Houches",
       "text": "Three countries and ten thousand metres of climbing later."
+    },
+    "rifugio-bonatti": {
+      "name": "Rifugio Bonatti",
+      "text": "A hut above Val Ferret facing the Grandes Jorasses, named after the climber Walter Bonatti."
     }
   },
   "story": {
@@ -98,6 +102,18 @@
     "tmb-streak": {
       "name": "Ten Days of Alps",
       "description": "Commit ten days in a row."
+    },
+    "tmb-cols": {
+      "name": "Every Col",
+      "description": "Cross all five cols of the tour."
+    },
+    "tmb-lakes": {
+      "name": "Mirror Lakes",
+      "description": "Reach Champex and Lac Blanc."
+    },
+    "tmb-pastures": {
+      "name": "Alpine Pastures",
+      "description": "Walk 40 km across alpine meadows."
     }
   }
 }

@@ -1,6 +1,6 @@
 {
   "id": "alchemist-road",
-  "version": 3,
+  "version": 4,
   "default_locale": "en",
   "length_m": 4369619,
   "path": [
@@ -158,7 +158,7 @@
     {
       "id": "al-fayoum",
       "at_m": 4161228,
-      "kind": "spring",
+      "kind": "oasis",
       "elevation_m": 20
     },
     {
@@ -253,6 +253,14 @@
     },
     {
       "at_m": 700873,
+      "type": "desert"
+    },
+    {
+      "at_m": 1400000,
+      "type": "saltflat"
+    },
+    {
+      "at_m": 1480000,
       "type": "desert"
     },
     {
@@ -466,6 +474,29 @@
         "type": "streak",
         "days": 30
       }
+    },
+    {
+      "id": "thousand-km-sand",
+      "rule": {
+        "type": "biome",
+        "biome": "desert",
+        "min_m": 1000000
+      }
+    },
+    {
+      "id": "omens",
+      "rule": {
+        "type": "day_commits",
+        "count": 12
+      }
+    },
+    {
+      "id": "reading-stars",
+      "rule": {
+        "type": "night",
+        "count": 10
+      },
+      "hidden": true
     },
     {
       "id": "treasure",

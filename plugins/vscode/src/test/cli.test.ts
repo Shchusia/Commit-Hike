@@ -174,9 +174,10 @@ void test("Cli: settings", async () => {
   process.env.COMMIT_HIKE_HOME = fs.mkdtempSync(path.join(os.tmpdir(), "ct-home6-"));
   const cli = new Cli(bundledBinary(ext));
   await cli.init({ emails: ["me@x.io"], mode: "all", fromHistory: true });
-  assert.deepEqual(await cli.settings(), { reduce_motion: "auto", high_contrast: "auto", notifications: "all" });
+  assert.deepEqual(await cli.settings(), { reduce_motion: "auto", high_contrast: "auto", notifications: "all", festive: "on", ambient: "on" });
   assert.equal((await cli.settings({ notifications: "off", high_contrast: "on" })).notifications, "off");
-  assert.deepEqual((await cli.status()).settings, { reduce_motion: "auto", high_contrast: "on", notifications: "off" });
+  assert.deepEqual((await cli.status()).settings, { reduce_motion: "auto", high_contrast: "on", notifications: "off", festive: "on", ambient: "on" });
+  assert.equal((await cli.settings({ festive: "off", ambient: "off" })).festive, "off");
   await assert.rejects(cli.settings({ reduce_motion: "sometimes" as never }), (e: unknown) => e instanceof CliError && e.code === "invalid_argument");
 });
 

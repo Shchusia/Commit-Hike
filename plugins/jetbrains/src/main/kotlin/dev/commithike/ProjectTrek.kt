@@ -368,8 +368,14 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
     /** Days off from the settings page: 0 = Sunday … 6 = Saturday. */
     fun setRestDaysTo(days: List<Int>): Job = runFlow { setRestDaysTo(days) }
 
-    fun setSettings(reduceMotion: String?, highContrast: String?, notifications: String?): Job = runFlow {
-        setSettings(reduceMotion, highContrast, notifications)
+    fun setSettings(
+        reduceMotion: String?,
+        highContrast: String?,
+        notifications: String?,
+        festive: String? = null,
+        ambient: String? = null,
+    ): Job = runFlow {
+        setSettings(reduceMotion, highContrast, notifications, festive, ambient)
     }
 
     fun exportProgress(): Job = runFlow(needsSetup = true) { exportProgress() }

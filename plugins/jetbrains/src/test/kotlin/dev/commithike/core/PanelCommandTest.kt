@@ -38,6 +38,10 @@ class PanelCommandTest {
             PanelCommand.SetSettings("on", null, "milestones"),
             parse("""{"command":"setSettings","reduce_motion":"on","high_contrast":"maybe","notifications":"milestones"}"""),
         )
+        assertEquals(
+            PanelCommand.SetSettings(null, null, null, festive = "off", ambient = null),
+            parse("""{"command":"setSettings","festive":"off","ambient":"sometimes"}"""),
+        )
         assertEquals(PanelCommand.PanelError("panel: boom"), parse("""{"command":"panelError","message":"boom"}"""))
         assertEquals(PanelCommand.WalkRoute("svydovets-ridge"), parse("""{"command":"walkRoute","id":"svydovets-ridge"}"""))
         assertNull(parse("""{"command":"walkRoute","id":"../../etc"}"""))

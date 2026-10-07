@@ -1,6 +1,6 @@
 {
   "id": "tongariro-crossing",
-  "version": 2,
+  "version": 3,
   "default_locale": "en",
   "length_m": 19400,
   "track": [
@@ -322,6 +322,28 @@
         "min_m": 15000
       },
       "hidden": true
+    },
+    {
+      "id": "lakes-of-colour",
+      "rule": {
+        "type": "kind",
+        "kind": "lake"
+      }
+    },
+    {
+      "id": "walking-on-ash",
+      "rule": {
+        "type": "biome",
+        "biome": "volcanic",
+        "min_m": 3000
+      }
+    },
+    {
+      "id": "first-shuttle",
+      "rule": {
+        "type": "early",
+        "count": 5
+      }
     },
     {
       "id": "crossed",

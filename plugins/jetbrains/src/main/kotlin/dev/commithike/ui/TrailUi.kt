@@ -228,7 +228,7 @@ private class TrailBrowser(private val project: Project, parent: Disposable) : D
             is PanelCommand.SetTeam -> trek.setTeam(c.on)
             is PanelCommand.SetDifficulty -> trek.setDifficulty(c.level)
             is PanelCommand.SetRestDays -> trek.setRestDaysTo(c.days)
-            is PanelCommand.SetSettings -> trek.setSettings(c.reduceMotion, c.highContrast, c.notifications)
+            is PanelCommand.SetSettings -> trek.setSettings(c.reduceMotion, c.highContrast, c.notifications, c.festive, c.ambient)
             is PanelCommand.SavePostcard -> trek.savePostcard(c.fileName, c.png)
             is PanelCommand.PanelError -> service<CommitHikeApp>().noteError(c.message)
             is PanelCommand.WalkRoute -> trek.walkRoute(c.id)

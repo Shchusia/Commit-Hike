@@ -55,6 +55,18 @@
     "summit": {
       "name": "Ganz oben",
       "description": "Schaffe den Probeweg."
+    },
+    "change-of-scenery": {
+      "name": "Tapetenwechsel",
+      "description": "Wandere durch 5 verschiedene Landschaften."
+    },
+    "weekend-walker": {
+      "name": "Wochenendwanderer",
+      "description": "Mach 3 Commits am Wochenende."
+    },
+    "night-owl": {
+      "name": "Nachteule",
+      "description": "Mach 3 Commits zwischen Mitternacht und 5 Uhr."
     }
   }
 }

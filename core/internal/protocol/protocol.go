@@ -71,7 +71,8 @@ type Waypoint struct {
 // Biome is the terrain from AtM until the next biome.
 type Biome struct {
 	AtM  float64 `json:"at_m"`
-	Type string  `json:"type"` // forest, grove, meadow, fields, steppe, desert, rock, snow, tundra, water, swamp, coast, volcanic, village
+	Type string  `json:"type"` // forest, grove, meadow, fields, steppe, desert, rock, snow, tundra, water, swamp, coast, volcanic, village,
+	// jungle, savanna, canyon, glacier, heath, bamboo, sakura, tropical, wasteland, enchanted, city, ruins
 }
 
 // ProfilePoint is a known elevation along a route.
@@ -238,6 +239,8 @@ type Settings struct {
 	ReduceMotion  string `json:"reduce_motion"` // auto | on | off
 	HighContrast  string `json:"high_contrast"` // auto | on | off
 	Notifications string `json:"notifications"` // all | milestones | off
+	Festive       string `json:"festive"`       // on | off: holidays in the scene
+	Ambient       string `json:"ambient"`       // on | off: weather and wildlife in the scene
 }
 
 // RestDaysInfo answers `rest-days`.

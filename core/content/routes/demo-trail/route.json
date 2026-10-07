@@ -1,6 +1,6 @@
 {
   "id": "demo-trail",
-  "version": 2,
+  "version": 3,
   "default_locale": "en",
   "length_m": 20000,
   "waypoints": [
@@ -155,6 +155,28 @@
         "type": "day_distance",
         "min_m": 15000
       }
+    },
+    {
+      "id": "change-of-scenery",
+      "rule": {
+        "type": "biomes",
+        "count": 5
+      }
+    },
+    {
+      "id": "weekend-walker",
+      "rule": {
+        "type": "weekend",
+        "count": 3
+      }
+    },
+    {
+      "id": "night-owl",
+      "rule": {
+        "type": "night",
+        "count": 3
+      },
+      "hidden": true
     },
     {
       "id": "summit",

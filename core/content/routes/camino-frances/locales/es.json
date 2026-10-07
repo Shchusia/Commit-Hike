@@ -61,6 +61,26 @@
     "santiago": {
       "name": "Santiago de Compostela",
       "text": "La plaza de la catedral, el final del Camino."
+    },
+    "alto-del-perdon": {
+      "name": "Alto del Perdón",
+      "text": "Una loma ventosa con molinos y peregrinos de hierro que caminan por el cielo."
+    },
+    "irache": {
+      "name": "Fuente del Vino de Irache",
+      "text": "Junto al monasterio de Irache, un grifo sirve vino tinto gratis a los peregrinos."
+    },
+    "san-juan-de-ortega": {
+      "name": "San Juan de Ortega",
+      "text": "Un monasterio en los robledales de los Montes de Oca, fundado por un santo que construía puentes para los peregrinos."
+    },
+    "san-anton": {
+      "name": "Convento de San Antón",
+      "text": "El camino pasa justo bajo los arcos góticos de un convento en ruinas."
+    },
+    "monte-do-gozo": {
+      "name": "Monte do Gozo",
+      "text": "El «monte de la alegría», desde donde los peregrinos veían por primera vez las torres de la catedral."
     }
   },
   "story": {
@@ -98,6 +118,29 @@
     "cam-commits": {
       "name": "Paciencia de peregrino",
       "description": "Haz 500 commits en el Camino."
+    },
+    "cam-cathedrals": {
+      "name": "Ciudades catedral",
+      "description": "Llega a las catedrales de Burgos y León."
+    },
+    "cam-wine": {
+      "name": "Un trago para el camino",
+      "description": "Llega a la Fuente del Vino de Irache."
+    },
+    "cam-meseta-km": {
+      "name": "La meseta infinita",
+      "description": "Camina 100 km por la meseta."
+    },
+    "cam-dawn": {
+      "name": "Alba del peregrino",
+      "description": "Haz 15 commits entre las 5 y las 8 de la mañana: los peregrinos salen antes del amanecer."
+    },
+    "cam-weekend": {
+      "name": "Peregrino de domingo",
+      "description": "Haz 20 commits en fines de semana."
     }
+  },
+  "objects": {
+    "templars": "Castillo templario de Ponferrada"
   }
 }

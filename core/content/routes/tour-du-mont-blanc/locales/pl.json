@@ -61,6 +61,10 @@
     "les-houches-return": {
       "name": "Znów w Les Houches",
       "text": "Trzy kraje i dziesięć tysięcy metrów podejść później."
+    },
+    "rifugio-bonatti": {
+      "name": "Rifugio Bonatti",
+      "text": "Schronisko nad Val Ferret naprzeciw Grandes Jorasses, nazwane na cześć wspinacza Waltera Bonattiego."
     }
   },
   "story": {
@@ -98,6 +102,18 @@
     "tmb-streak": {
       "name": "Dziesięć dni Alp",
       "description": "Commituj dziesięć dni z rzędu."
+    },
+    "tmb-cols": {
+      "name": "Wszystkie przełęcze",
+      "description": "Przejdź wszystkie pięć przełęczy trasy."
+    },
+    "tmb-lakes": {
+      "name": "Lustrzane jeziora",
+      "description": "Dojdź do Champex i Lac Blanc."
+    },
+    "tmb-pastures": {
+      "name": "Alpejskie hale",
+      "description": "Przejdź 40 km przez alpejskie łąki."
     }
   }
 }

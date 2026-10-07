@@ -188,8 +188,8 @@ Sharing sends three more commands:
 ## Settings
 
 ```
-commit-hike settings [--reduce-motion auto|on|off] [--high-contrast auto|on|off] [--notifications all|milestones|off]
-  -> {"reduce_motion": "auto", "high_contrast": "on", "notifications": "milestones"}
+commit-hike settings [--reduce-motion auto|on|off] [--high-contrast auto|on|off] [--notifications all|milestones|off] [--festive on|off] [--ambient on|off]
+  -> {"reduce_motion": "auto", "high_contrast": "on", "notifications": "milestones", "festive": "on", "ambient": "on"}
 ```
 
 Every status carries them as `settings`. The panel follows `reduce_motion` and
@@ -198,7 +198,7 @@ Every status carries them as `settings`. The panel follows `reduce_motion` and
 achievements and the finish, `off` shows no pop-ups at all.
 
 The settings page lives in the panel. It sends `setLocale`, `setDifficulty`,
-`setRestDays {days: [0..6]}`, `setSettings {reduce_motion?, high_contrast?, notifications?}`,
+`setRestDays {days: [0..6]}`, `setSettings {reduce_motion?, high_contrast?, notifications?, festive?, ambient?}`,
 `setAvatar`, `resetAvatar`, `exportProgress` and `importProgress`. A host opens
 it by adding `open_view: "settings"` and a new `open_token` to the data it
 sends; the panel opens a page once per token.

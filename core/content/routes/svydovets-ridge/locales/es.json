@@ -68,6 +68,18 @@
     "svyd-streak": {
       "name": "Cinco días en la cresta",
       "description": "Haz commits cinco días seguidos."
+    },
+    "svyd-peaks": {
+      "name": "Tres cumbres",
+      "description": "Sube a las tres cumbres de la cresta."
+    },
+    "svyd-glacial": {
+      "name": "Lagos glaciares",
+      "description": "Llega a los dos lagos glaciares de la cresta."
+    },
+    "svyd-polonyna": {
+      "name": "Polonyna",
+      "description": "Camina 10 km por los prados de altura."
     }
   }
 }

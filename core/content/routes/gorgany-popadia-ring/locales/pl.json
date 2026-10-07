@@ -64,6 +64,18 @@
     "gorg-day": {
       "name": "Długi kamienisty dzień",
       "description": "Przejdź 8 km w jeden dzień."
+    },
+    "gorg-peaks": {
+      "name": "Wszystkie szczyty pętli",
+      "description": "Stań na wszystkich sześciu szczytach pętli."
+    },
+    "gorg-scree": {
+      "name": "Morze kamieni",
+      "description": "Przejdź 15 km po gorgańskich gołoborzach."
+    },
+    "gorg-mist": {
+      "name": "Mgła w dolinie",
+      "description": "Zrób 10 commitów między 5 a 8 rano."
     }
   }
 }

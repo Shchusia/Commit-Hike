@@ -119,6 +119,22 @@
     "seven": {
       "name": "Sieben Lichter",
       "description": "Entzünde alle sieben Leuchttürme neu."
+    },
+    "salt-road": {
+      "name": "Salzstraße",
+      "description": "Geh 30 km über die Salzpfanne."
+    },
+    "every-shore": {
+      "name": "Jede Küste, jedes Feld",
+      "description": "Wandere durch 12 verschiedene Landschaften."
+    },
+    "keepers-sunday": {
+      "name": "Sonntag des Wärters",
+      "description": "Mach 12 Commits am Wochenende: Leuchtturmwärter ruhen nie."
+    },
+    "lamp-lighter": {
+      "name": "Lampenanzünder",
+      "description": "Mach 10 Commits zwischen Mitternacht und 5 Uhr, während die Feuer brennen."
     }
   }
 }

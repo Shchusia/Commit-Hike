@@ -297,8 +297,14 @@ class TrekFlows(private val host: TrekHost, private val ui: TrekUi, private val 
         host.refreshAll()
     }
 
-    fun setSettings(reduceMotion: String?, highContrast: String?, notifications: String?) {
-        host.core { it.settings(reduceMotion, highContrast, notifications) }
+    fun setSettings(
+        reduceMotion: String?,
+        highContrast: String?,
+        notifications: String?,
+        festive: String? = null,
+        ambient: String? = null,
+    ) {
+        host.core { it.settings(reduceMotion, highContrast, notifications, festive, ambient) }
         host.refreshAll()
     }
 

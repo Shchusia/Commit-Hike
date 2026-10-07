@@ -84,7 +84,13 @@ class CoreCli(
         call(listOf("rest-days") + (if (set == null) emptyList() else listOf("--set", set)), RestDaysInfo::class.java)
 
     /** Changes the given settings (null = keep) and returns them all. */
-    fun settings(reduceMotion: String? = null, highContrast: String? = null, notifications: String? = null): Settings = call(
+    fun settings(
+        reduceMotion: String? = null,
+        highContrast: String? = null,
+        notifications: String? = null,
+        festive: String? = null,
+        ambient: String? = null,
+    ): Settings = call(
         listOf("settings") +
             listOfNotNull(
                 reduceMotion?.let {
@@ -92,6 +98,8 @@ class CoreCli(
                 },
                 highContrast?.let { "--high-contrast=$it" },
                 notifications?.let { "--notifications=$it" },
+                festive?.let { "--festive=$it" },
+                ambient?.let { "--ambient=$it" },
             ),
         Settings::class.java,
     )

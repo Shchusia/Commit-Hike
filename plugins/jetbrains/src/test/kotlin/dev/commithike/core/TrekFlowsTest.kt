@@ -196,9 +196,11 @@ class TrekFlowsTest {
         assertEquals(emptyList<Int>(), host.cli.restDays().days)
         flows.setSettings(null, "on", "off")
         assertEquals(Settings("auto", "on", "off"), host.cli.status().settings)
+        flows.setSettings(null, null, null, festive = "off")
+        assertEquals(Settings("auto", "on", "off", festive = "off"), host.cli.status().settings)
         flows.changeDifficulty()
         assertEquals("hard", host.cli.difficulty().level)
-        assertEquals(4, host.refreshed)
+        assertEquals(5, host.refreshed)
     }
 
     @Test

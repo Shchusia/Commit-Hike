@@ -139,11 +139,20 @@ func isWindowsTest() bool { return os.PathSeparator == '\\' }
 func TestSettings(t *testing.T) {
 	s, r := setup(t, "demo-trail")
 	got, err := s.Settings(SettingsChange{})
-	if err != nil || *got != (protocol.Settings{ReduceMotion: "auto", HighContrast: "auto", Notifications: "all"}) {
+	if err != nil || *got != (protocol.Settings{ReduceMotion: "auto", HighContrast: "auto", Notifications: "all", Festive: "on", Ambient: "on"}) {
 		t.Fatalf("defaults: %+v %v", got, err)
 	}
 	if got, _ = s.Settings(SettingsChange{ReduceMotion: "on", Notifications: "milestones"}); got.ReduceMotion != "on" || got.HighContrast != "auto" || got.Notifications != "milestones" {
 		t.Fatalf("partial change: %+v", got)
+	}
+	if got, _ = s.Settings(SettingsChange{Festive: "off", Ambient: "off"}); got.Festive != "off" || got.Ambient != "off" || got.ReduceMotion != "on" {
+		t.Fatalf("holidays and weather off: %+v", got)
+	}
+	if got, _ = s.Settings(SettingsChange{Festive: "on"}); got.Festive != "on" || got.Ambient != "off" {
+		t.Fatalf("holidays back on: %+v", got)
+	}
+	if _, err := s.Settings(SettingsChange{Festive: "sometimes"}); code(err) != protocol.CodeInvalidArgument {
+		t.Fatalf("bad festive value: %v", err)
 	}
 	if _, err := s.Settings(SettingsChange{HighContrast: "maybe"}); code(err) != protocol.CodeInvalidArgument {
 		t.Fatalf("bad value: %v", err)

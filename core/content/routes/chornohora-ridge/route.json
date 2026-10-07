@@ -1,6 +1,6 @@
 {
   "id": "chornohora-ridge",
-  "version": 2,
+  "version": 3,
   "default_locale": "en",
   "length_m": 24000,
   "track": [
@@ -376,6 +376,27 @@
         "count": 100
       },
       "hidden": true
+    },
+    {
+      "id": "chorn-peaks",
+      "rule": {
+        "type": "kind",
+        "kind": "peak"
+      }
+    },
+    {
+      "id": "chorn-lakes",
+      "rule": {
+        "type": "kind",
+        "kind": "lake"
+      }
+    },
+    {
+      "id": "chorn-sunrise",
+      "rule": {
+        "type": "early",
+        "count": 10
+      }
     },
     {
       "id": "ridge-walker",

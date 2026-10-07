@@ -655,7 +655,7 @@ class App {
         await this.refresh();
       });
       case "setSettings": return this.guard(async () => {
-        await this.cli.settings({ reduce_motion: m.reduce_motion, high_contrast: m.high_contrast, notifications: m.notifications } as Partial<Settings>);
+        await this.cli.settings({ reduce_motion: m.reduce_motion, high_contrast: m.high_contrast, notifications: m.notifications, festive: m.festive, ambient: m.ambient } as Partial<Settings>);
         await this.refresh();
       });
       case "exportProgress": return this.guard(() => this.exportProgress());

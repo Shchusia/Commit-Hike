@@ -99,6 +99,18 @@
     "rain": {
       "name": "Rain-Caller",
       "description": "Reach Thunder Peak and call the rain."
+    },
+    "lights-dance": {
+      "name": "Where the Lights Dance",
+      "description": "Walk through the enchanted beech wood."
+    },
+    "many-worlds": {
+      "name": "Many Worlds",
+      "description": "Walk through 7 different kinds of land."
+    },
+    "molfar-hour": {
+      "name": "Molfar's Hour",
+      "description": "Make 7 commits between midnight and 5 am, when a molfar's magic is strongest."
     }
   }
 }

@@ -113,6 +113,18 @@
     "treasure": {
       "name": "Donde está el tesoro",
       "description": "Llega a las pirámides y descubre dónde está el tesoro."
+    },
+    "thousand-km-sand": {
+      "name": "Mil kilómetros de arena",
+      "description": "Camina 1.000 km por el desierto."
+    },
+    "omens": {
+      "name": "Señales por todas partes",
+      "description": "Haz 12 commits en un solo día."
+    },
+    "reading-stars": {
+      "name": "Leer las estrellas",
+      "description": "Haz 10 commits entre la medianoche y las 5, como una caravana que viaja de noche."
     }
   }
 }

@@ -55,6 +55,18 @@
     "summit": {
       "name": "On Top",
       "description": "Finish the Demo Trail."
+    },
+    "change-of-scenery": {
+      "name": "Change of Scenery",
+      "description": "Walk through 5 different kinds of land."
+    },
+    "weekend-walker": {
+      "name": "Weekend Walker",
+      "description": "Make 3 commits on weekends."
+    },
+    "night-owl": {
+      "name": "Night Owl",
+      "description": "Make 3 commits between midnight and 5 am."
     }
   }
 }

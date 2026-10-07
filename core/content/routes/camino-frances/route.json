@@ -1,6 +1,6 @@
 {
   "id": "camino-frances",
-  "version": 1,
+  "version": 2,
   "default_locale": "en",
   "length_m": 772000,
   "track": [
@@ -77,7 +77,7 @@
     {
       "id": "roncesvalles",
       "at_m": 21939,
-      "kind": "village",
+      "kind": "monastery",
       "elevation_m": 952,
       "lat": 43.0092,
       "lon": -1.3195
@@ -89,6 +89,11 @@
       "elevation_m": 450,
       "lat": 42.8125,
       "lon": -1.6458
+    },
+    {
+      "id": "alto-del-perdon",
+      "at_m": 76600,
+      "kind": "statue"
     },
     {
       "id": "puente-la-reina",
@@ -107,6 +112,11 @@
       "lon": -2.032
     },
     {
+      "id": "irache",
+      "at_m": 112000,
+      "kind": "spring"
+    },
+    {
       "id": "logrono",
       "at_m": 158204,
       "kind": "village",
@@ -115,17 +125,27 @@
       "lon": -2.4456
     },
     {
+      "id": "san-juan-de-ortega",
+      "at_m": 257000,
+      "kind": "monastery"
+    },
+    {
       "id": "burgos",
       "at_m": 282130,
-      "kind": "landmark",
+      "kind": "church",
       "elevation_m": 860,
       "lat": 42.344,
       "lon": -3.6969
     },
     {
+      "id": "san-anton",
+      "at_m": 322000,
+      "kind": "ruin"
+    },
+    {
       "id": "leon",
       "at_m": 468686,
-      "kind": "landmark",
+      "kind": "church",
       "elevation_m": 840,
       "lat": 42.5987,
       "lon": -5.5671
@@ -141,7 +161,7 @@
     {
       "id": "cruz-de-ferro",
       "at_m": 550274,
-      "kind": "landmark",
+      "kind": "shrine",
       "elevation_m": 1504
     },
     {
@@ -177,6 +197,11 @@
       "lon": -7.616
     },
     {
+      "id": "monte-do-gozo",
+      "at_m": 767000,
+      "kind": "viewpoint"
+    },
+    {
       "id": "santiago",
       "at_m": 772000,
       "kind": "finish",
@@ -199,7 +224,15 @@
       "type": "grove"
     },
     {
-      "at_m": 115800,
+      "at_m": 100000,
+      "type": "fields"
+    },
+    {
+      "at_m": 135000,
+      "type": "vineyard"
+    },
+    {
+      "at_m": 200000,
       "type": "fields"
     },
     {
@@ -221,6 +254,10 @@
     {
       "at_m": 555840,
       "type": "rock"
+    },
+    {
+      "at_m": 575000,
+      "type": "vineyard"
     },
     {
       "at_m": 602160,
@@ -297,6 +334,43 @@
       }
     },
     {
+      "id": "cam-cathedrals",
+      "rule": {
+        "type": "kind",
+        "kind": "church"
+      }
+    },
+    {
+      "id": "cam-wine",
+      "rule": {
+        "type": "waypoint",
+        "waypoint": "irache"
+      }
+    },
+    {
+      "id": "cam-meseta-km",
+      "rule": {
+        "type": "biome",
+        "biome": "steppe",
+        "min_m": 100000
+      }
+    },
+    {
+      "id": "cam-dawn",
+      "rule": {
+        "type": "early",
+        "count": 15
+      }
+    },
+    {
+      "id": "cam-weekend",
+      "rule": {
+        "type": "weekend",
+        "count": 20
+      },
+      "hidden": true
+    },
+    {
       "id": "cam-finish",
       "rule": {
         "type": "finish"
@@ -308,6 +382,50 @@
         "type": "commits",
         "count": 500
       }
+    }
+  ],
+  "objects": [
+    {
+      "id": "puente",
+      "at_m": 87983,
+      "asset": "assets/stone-bridge.svg",
+      "height_px": 70,
+      "fade_m": 9000
+    },
+    {
+      "id": "rioja",
+      "at_m": 150000,
+      "asset": "assets/vineyard.svg",
+      "height_px": 46,
+      "fade_m": 9000
+    },
+    {
+      "id": "ortega",
+      "at_m": 257000,
+      "asset": "assets/monastery.svg",
+      "height_px": 110,
+      "fade_m": 12000
+    },
+    {
+      "id": "meseta-flock",
+      "at_m": 330000,
+      "asset": "assets/sheep.svg",
+      "height_px": 40,
+      "fade_m": 8000
+    },
+    {
+      "id": "templars",
+      "at_m": 574711,
+      "asset": "assets/castle.svg",
+      "height_px": 120,
+      "fade_m": 14000
+    },
+    {
+      "id": "bierzo",
+      "at_m": 585000,
+      "asset": "assets/vineyard.svg",
+      "height_px": 46,
+      "fade_m": 9000
     }
   ]
 }

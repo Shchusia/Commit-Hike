@@ -68,6 +68,18 @@
     "svyd-streak": {
       "name": "Pięć dni na grani",
       "description": "Commituj pięć dni z rzędu."
+    },
+    "svyd-peaks": {
+      "name": "Trzy szczyty",
+      "description": "Stań na wszystkich trzech szczytach grzbietu."
+    },
+    "svyd-glacial": {
+      "name": "Jeziora polodowcowe",
+      "description": "Dojdź do obu jezior polodowcowych grzbietu."
+    },
+    "svyd-polonyna": {
+      "name": "Połonina",
+      "description": "Przejdź 10 km przez połoniny."
     }
   }
 }

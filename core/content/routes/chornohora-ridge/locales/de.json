@@ -82,6 +82,18 @@
     "ridge-walker": {
       "name": "Kammwanderer",
       "description": "Geh den ganzen Tschornohora-Kamm."
+    },
+    "chorn-peaks": {
+      "name": "Vier Gipfel",
+      "description": "Steh auf allen vier Gipfeln des Kamms."
+    },
+    "chorn-lakes": {
+      "name": "Bergspiegel",
+      "description": "Erreiche beide Seen unter dem Kamm."
+    },
+    "chorn-sunrise": {
+      "name": "Sonnenaufgang am Kamm",
+      "description": "Mach 10 Commits zwischen 5 und 8 Uhr morgens."
     }
   }
 }

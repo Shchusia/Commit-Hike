@@ -22,7 +22,7 @@ export interface DifficultyInfo { level: Level; levels: Level[]; typical_day_m: 
 export interface RestDaysInfo { days: number[] } // 0 = Sunday … 6 = Saturday
 export type AutoOnOff = "auto" | "on" | "off";
 /** Panel and notification choices, shared by every IDE on this computer. */
-export interface Settings { reduce_motion: AutoOnOff; high_contrast: AutoOnOff; notifications: "all" | "milestones" | "off" }
+export interface Settings { reduce_motion: AutoOnOff; high_contrast: AutoOnOff; notifications: "all" | "milestones" | "off"; festive: "on" | "off"; ambient: "on" | "off" }
 export interface BackupResult { path: string; created_at: number; commits: number; routes: number; avatar: boolean }
 export interface Span { from_m: number; to_m: number }
 export interface Danger { id: string; at_m: number; text: string }

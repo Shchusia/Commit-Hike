@@ -68,6 +68,18 @@
     "svyd-streak": {
       "name": "Five Days on the Ridge",
       "description": "Commit five days in a row."
+    },
+    "svyd-peaks": {
+      "name": "Three Summits",
+      "description": "Stand on all three summits of the ridge."
+    },
+    "svyd-glacial": {
+      "name": "Glacial Lakes",
+      "description": "Reach both glacial lakes of the ridge."
+    },
+    "svyd-polonyna": {
+      "name": "Polonyna",
+      "description": "Walk 10 km across the high meadows."
     }
   }
 }

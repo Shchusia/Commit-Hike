@@ -34,6 +34,9 @@ type journeyStats struct {
 	commits  int
 	byDay    map[int64]float64 // effective meters per local calendar day
 	byDayN   map[int64]int     // counted commits per local calendar day
+	night    int               // counted commits made 00:00–04:59 local time
+	early    int               // 05:00–07:59
+	weekend  int               // on Saturdays and Sundays
 }
 
 // dayOf maps a unix time to a day number in the user's time zone, so "today",
@@ -120,6 +123,16 @@ func (s *Service) stats(st *store.State, eff map[string]float64, j journey) jour
 		js.commits++
 		js.byDay[s.dayOf(r.Time)] += m
 		js.byDayN[s.dayOf(r.Time)]++
+		lt := time.Unix(r.Time, 0).In(s.loc)
+		switch h := lt.Hour(); {
+		case h < 5:
+			js.night++
+		case h < 8:
+			js.early++
+		}
+		if wd := lt.Weekday(); wd == time.Saturday || wd == time.Sunday {
+			js.weekend++
+		}
 	}
 	return js
 }
@@ -161,20 +174,30 @@ func streak(byDay map[int64]float64, today int64, rest restDays) int {
 }
 
 func (s *Service) achievementContext(j journey, js journeyStats) achievements.Context {
-	best := 0.0
+	best, bestN := 0.0, 0
 	for _, m := range js.byDay {
 		best = math.Max(best, m)
 	}
+	for _, n := range js.byDayN {
+		bestN = max(bestN, n)
+	}
 	d := math.Min(js.distance, j.route.LengthM)
 	return achievements.Context{
-		DistanceM:   js.distance,
-		LengthM:     j.route.LengthM,
-		WaypointAtM: j.route.WaypointPositions(),
-		Commits:     js.commits,
-		StreakDays:  streak(js.byDay, s.today(), j.rest),
-		BestDayM:    best,
-		MaxElevM:    j.route.MaxElevation(d),
-		AscentM:     j.route.Ascent(d),
+		BiomeM:         j.route.BiomeMeters(d),
+		KindsReached:   j.route.KindsReached(d),
+		KindsTotal:     j.route.Topology().Kinds,
+		NightCommits:   js.night,
+		EarlyCommits:   js.early,
+		WeekendCommits: js.weekend,
+		BestDayCommits: bestN,
+		DistanceM:      js.distance,
+		LengthM:        j.route.LengthM,
+		WaypointAtM:    j.route.WaypointPositions(),
+		Commits:        js.commits,
+		StreakDays:     streak(js.byDay, s.today(), j.rest),
+		BestDayM:       best,
+		MaxElevM:       j.route.MaxElevation(d),
+		AscentM:        j.route.Ascent(d),
 	}
 }
 

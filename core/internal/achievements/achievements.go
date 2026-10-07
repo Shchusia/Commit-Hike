@@ -20,7 +20,22 @@ const (
 	TypeDayDistance = "day_distance" // at least MinM in a single day
 	TypeAltitude    = "altitude"     // stood at AltitudeM or higher (needs an elevation profile)
 	TypeClimb       = "climb"        // climbed at least MinM in total on this journey
+
+	// Added in 1.1.0.
+	TypeBiome      = "biome"       // walked at least MinM through Biome
+	TypeBiomes     = "biomes"      // walked through at least Count different biomes
+	TypeKind       = "kind"        // reached at least Count stops of Kind (Count 0: all of them)
+	TypeNight      = "night"       // at least Count commits between midnight and 5 am
+	TypeEarly      = "early"       // at least Count commits between 5 and 8 am
+	TypeWeekend    = "weekend"     // at least Count commits on Saturdays and Sundays
+	TypeDayCommits = "day_commits" // at least Count commits in a single day
 )
+
+// Types lists every rule type this core knows.
+var Types = []string{
+	TypeDistance, TypeWaypoint, TypeFinish, TypeCommits, TypeStreak, TypeDayDistance, TypeAltitude, TypeClimb,
+	TypeBiome, TypeBiomes, TypeKind, TypeNight, TypeEarly, TypeWeekend, TypeDayCommits,
+}
 
 // Rule is one condition; which fields matter depends on Type.
 type Rule struct {
@@ -30,6 +45,8 @@ type Rule struct {
 	Count     int     `json:"count,omitempty"`
 	Days      int     `json:"days,omitempty"`
 	AltitudeM float64 `json:"altitude_m,omitempty"`
+	Biome     string  `json:"biome,omitempty"`
+	Kind      string  `json:"kind,omitempty"`
 }
 
 // Def is an achievement as defined in a route pack.
@@ -49,6 +66,21 @@ type Context struct {
 	BestDayM    float64
 	MaxElevM    float64 // highest point walked so far; 0 when the route has no heights
 	AscentM     float64 // total climb walked so far
+
+	BiomeM         map[string]float64 // meters walked in each biome type
+	KindsReached   map[string]int     // stops reached, by kind
+	KindsTotal     map[string]int     // stops on the route, by kind
+	NightCommits   int                // counted commits made 00:00–04:59 local time
+	EarlyCommits   int                // 05:00–07:59
+	WeekendCommits int                // on Saturdays and Sundays
+	BestDayCommits int                // most counted commits in one day
+}
+
+// Topology is what validation needs to know about the route.
+type Topology struct {
+	Waypoints map[string]float64 // id -> position
+	Kinds     map[string]int     // stops by kind
+	Biomes    map[string]bool    // biome types on the route
 }
 
 // Met reports whether the rule is satisfied.
@@ -71,12 +103,59 @@ func (r Rule) Met(c Context) bool {
 		return c.MaxElevM > 0 && c.MaxElevM >= r.AltitudeM
 	case TypeClimb:
 		return c.AscentM >= r.MinM
+	case TypeBiome:
+		return c.BiomeM[r.Biome] >= r.MinM
+	case TypeBiomes:
+		n := 0
+		for _, m := range c.BiomeM {
+			if m > 0 {
+				n++
+			}
+		}
+		return n >= r.Count
+	case TypeKind:
+		want := r.Count
+		if want == 0 {
+			want = c.KindsTotal[r.Kind]
+		}
+		return want > 0 && c.KindsReached[r.Kind] >= want
+	case TypeNight:
+		return c.NightCommits >= r.Count
+	case TypeEarly:
+		return c.EarlyCommits >= r.Count
+	case TypeWeekend:
+		return c.WeekendCommits >= r.Count
+	case TypeDayCommits:
+		return c.BestDayCommits >= r.Count
 	}
 	return false
 }
 
-func (r Rule) validate(waypoints map[string]float64) error {
+func (r Rule) validate(t Topology) error {
+	waypoints := t.Waypoints
 	switch r.Type {
+	case TypeBiome:
+		if r.MinM <= 0 {
+			return errors.New("min_m must be positive")
+		}
+		if !t.Biomes[r.Biome] {
+			return fmt.Errorf("the route has no %q biome", r.Biome)
+		}
+	case TypeBiomes:
+		if r.Count < 2 || r.Count > len(t.Biomes) {
+			return fmt.Errorf("count must be between 2 and the route's %d biome types", len(t.Biomes))
+		}
+	case TypeKind:
+		if t.Kinds[r.Kind] == 0 {
+			return fmt.Errorf("the route has no stops of kind %q", r.Kind)
+		}
+		if r.Count < 0 || r.Count > t.Kinds[r.Kind] {
+			return fmt.Errorf("count must be between 0 (all) and %d", t.Kinds[r.Kind])
+		}
+	case TypeNight, TypeEarly, TypeWeekend, TypeDayCommits:
+		if r.Count <= 0 {
+			return errors.New("count must be positive")
+		}
 	case TypeAltitude:
 		if r.AltitudeM <= 0 {
 			return errors.New("altitude_m must be positive")
@@ -105,7 +184,7 @@ func (r Rule) validate(waypoints map[string]float64) error {
 }
 
 // Validate checks a route's achievement list.
-func Validate(defs []Def, waypoints map[string]float64) error {
+func Validate(defs []Def, t Topology) error {
 	seen := map[string]bool{}
 	for _, d := range defs {
 		if d.ID == "" {
@@ -115,7 +194,7 @@ func Validate(defs []Def, waypoints map[string]float64) error {
 			return fmt.Errorf("duplicate achievement %q", d.ID)
 		}
 		seen[d.ID] = true
-		if err := d.Rule.validate(waypoints); err != nil {
+		if err := d.Rule.validate(t); err != nil {
 			return fmt.Errorf("achievement %q: %w", d.ID, err)
 		}
 	}

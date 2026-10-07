@@ -119,6 +119,22 @@
     "seven": {
       "name": "Siete luces",
       "description": "Vuelve a encender los siete faros."
+    },
+    "salt-road": {
+      "name": "El camino de la sal",
+      "description": "Camina 30 km por el salar."
+    },
+    "every-shore": {
+      "name": "Cada costa y cada campo",
+      "description": "Atraviesa 12 tipos de paisaje distintos."
+    },
+    "keepers-sunday": {
+      "name": "Domingo del farero",
+      "description": "Haz 12 commits en fines de semana: los fareros nunca descansan."
+    },
+    "lamp-lighter": {
+      "name": "Encendedor de faros",
+      "description": "Haz 10 commits entre la medianoche y las 5, mientras arden los faros."
     }
   }
 }

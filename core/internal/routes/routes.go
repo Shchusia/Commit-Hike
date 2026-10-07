@@ -12,6 +12,7 @@
 package routes
 
 import (
+	"cmp"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -51,6 +52,9 @@ type Biome struct {
 var WaypointKinds = []string{
 	"start", "finish", "peak", "pass", "lake", "river", "bridge", "hut", "village", "landmark",
 	"castle", "tower", "ruin", "cave", "spring", "viewpoint", "camp", "volcano", "lighthouse", "harbor",
+	// added in 1.1.0
+	"church", "temple", "monastery", "windmill", "waterfall", "shrine", "statue", "gate", "mine", "lair",
+	"battlefield", "wreck", "oasis", "inn",
 }
 
 // BiomeTypes are the kinds of terrain front ends know how to draw. Front ends
@@ -71,6 +75,31 @@ var BiomeTypes = []string{
 	"coast",    // beach and sea
 	"volcanic", // ash, lava rock, steam
 	"village",  // houses and fences
+	// added in 1.1.0
+	"jungle",     // rainforest, palms, ferns, lianas
+	"savanna",    // tall dry grass, acacias
+	"canyon",     // red rock, hoodoos, mesas on the horizon
+	"glacier",    // blue ice, seracs, crevasses
+	"heath",      // heather, gorse, standing stones
+	"bamboo",     // bamboo groves, karst towers on the horizon
+	"sakura",     // cherry trees that bloom in spring, stone lanterns
+	"tropical",   // palm beach and sea
+	"wasteland",  // cracked earth, dead trees, rust
+	"enchanted",  // glowing mushrooms and crystals, fireflies at night
+	"city",       // buildings, street lamps, a skyline
+	"ruins",      // broken columns and arches overgrown with ivy
+	"birch",      // birch groves
+	"lavender",   // lavender rows, cypresses, olives
+	"vineyard",   // vine rows, cypresses
+	"rice",       // flooded paddies; terraced hills on the horizon
+	"mangrove",   // trees on arching roots over water
+	"saltflat",   // white crust cracked into hexagons
+	"reef",       // coral beach, turquoise sea
+	"seaice",     // ice floes, seals or penguins, icebergs
+	"taiga",      // spruce and larch (golden in autumn)
+	"underwater", // kelp and coral under a blue-green sea; fish and bubbles
+	"moon",       // grey craters under a black sky with the Earth in it
+	"mars",       // red rocks under a butterscotch sky with two small moons
 }
 
 // IDPattern is what route ids may look like: they become folder names on
@@ -217,6 +246,48 @@ func (r *Route) WaypointPositions() map[string]float64 {
 		m[w.ID] = w.AtM
 	}
 	return m
+}
+
+// Topology is what achievement rules may refer to.
+func (r *Route) Topology() achievements.Topology {
+	t := achievements.Topology{Waypoints: r.WaypointPositions(), Kinds: map[string]int{}, Biomes: map[string]bool{}}
+	for _, w := range r.Waypoints {
+		if w.Kind != "" {
+			t.Kinds[w.Kind]++
+		}
+	}
+	for _, b := range r.Biomes {
+		t.Biomes[b.Type] = true
+	}
+	return t
+}
+
+// BiomeMeters is how far a walk of d meters went through each biome type.
+func (r *Route) BiomeMeters(d float64) map[string]float64 {
+	out := map[string]float64{}
+	bs := slices.Clone(r.Biomes)
+	slices.SortStableFunc(bs, func(a, b Biome) int { return cmp.Compare(a.AtM, b.AtM) })
+	for i, b := range bs {
+		end := r.LengthM
+		if i+1 < len(bs) {
+			end = bs[i+1].AtM
+		}
+		if from, to := b.AtM, math.Min(end, d); to > from {
+			out[b.Type] += to - from
+		}
+	}
+	return out
+}
+
+// KindsReached counts the stops passed within d meters, by kind.
+func (r *Route) KindsReached(d float64) map[string]int {
+	out := map[string]int{}
+	for _, w := range r.Waypoints {
+		if w.Kind != "" && w.AtM <= d {
+			out[w.Kind]++
+		}
+	}
+	return out
 }
 
 // Elevations merges waypoint heights and profile points into one sorted
@@ -510,7 +581,7 @@ func (r *Route) Validate() error {
 	if len(r.Track) > 0 && len(r.Path) > 0 {
 		return errors.New("use either track (real coordinates) or path (a drawn shape), not both")
 	}
-	if err := achievements.Validate(r.Achievements, r.WaypointPositions()); err != nil {
+	if err := achievements.Validate(r.Achievements, r.Topology()); err != nil {
 		return err
 	}
 	def, ok := r.Texts[r.DefaultLocale]

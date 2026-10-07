@@ -1,6 +1,6 @@
 {
   "id": "svydovets-ridge",
-  "version": 1,
+  "version": 2,
   "default_locale": "en",
   "length_m": 34000,
   "track": [
@@ -125,6 +125,22 @@
       "type": "meadow"
     },
     {
+      "at_m": 22450,
+      "type": "water"
+    },
+    {
+      "at_m": 23000,
+      "type": "meadow"
+    },
+    {
+      "at_m": 26050,
+      "type": "water"
+    },
+    {
+      "at_m": 26750,
+      "type": "meadow"
+    },
+    {
       "at_m": 29920,
       "type": "forest"
     }
@@ -176,6 +192,28 @@
       }
     },
     {
+      "id": "svyd-peaks",
+      "rule": {
+        "type": "kind",
+        "kind": "peak"
+      }
+    },
+    {
+      "id": "svyd-glacial",
+      "rule": {
+        "type": "kind",
+        "kind": "lake"
+      }
+    },
+    {
+      "id": "svyd-polonyna",
+      "rule": {
+        "type": "biome",
+        "biome": "meadow",
+        "min_m": 10000
+      }
+    },
+    {
       "id": "svyd-finish",
       "rule": {
         "type": "finish"
@@ -187,6 +225,22 @@
         "type": "streak",
         "days": 5
       }
+    }
+  ],
+  "objects": [
+    {
+      "id": "brailka-hut",
+      "at_m": 6124,
+      "asset": "assets/hut.svg",
+      "height_px": 64,
+      "fade_m": 500
+    },
+    {
+      "id": "brailka-flock",
+      "at_m": 6500,
+      "asset": "assets/sheep.svg",
+      "height_px": 38,
+      "fade_m": 450
     }
   ]
 }

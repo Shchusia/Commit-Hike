@@ -51,6 +51,8 @@ data class Settings(
     val reduceMotion: String = "auto", // auto | on | off
     val highContrast: String = "auto", // auto | on | off
     val notifications: String = "all", // all | milestones | off
+    val festive: String = "on", // on | off: holidays in the scene
+    val ambient: String = "on", // on | off: weather and wildlife in the scene
 )
 
 data class BackupResult(

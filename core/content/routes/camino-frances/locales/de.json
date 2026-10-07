@@ -61,6 +61,26 @@
     "santiago": {
       "name": "Santiago de Compostela",
       "text": "Der Platz vor der Kathedrale, das Ende des Weges."
+    },
+    "alto-del-perdon": {
+      "name": "Alto del Perdón",
+      "text": "Ein windiger Kamm mit Windrädern und eisernen Pilgern, die über den Himmel ziehen."
+    },
+    "irache": {
+      "name": "Weinbrunnen von Irache",
+      "text": "Neben dem Kloster Irache fließt für Pilger kostenlos Rotwein aus dem Hahn."
+    },
+    "san-juan-de-ortega": {
+      "name": "San Juan de Ortega",
+      "text": "Ein Kloster in den Eichenwäldern der Montes de Oca, gegründet von einem Heiligen, der Brücken für Pilger baute."
+    },
+    "san-anton": {
+      "name": "Kloster San Antón",
+      "text": "Der Weg führt direkt unter den gotischen Bögen eines verfallenen Klosters hindurch."
+    },
+    "monte-do-gozo": {
+      "name": "Monte do Gozo",
+      "text": "Der „Berg der Freude“, von dem aus Pilger traditionell zum ersten Mal die Türme der Kathedrale sahen."
     }
   },
   "story": {
@@ -98,6 +118,29 @@
     "cam-commits": {
       "name": "Geduld des Pilgers",
       "description": "Mach 500 Commits auf dem Weg."
+    },
+    "cam-cathedrals": {
+      "name": "Kathedralstädte",
+      "description": "Erreiche die Kathedralen von Burgos und León."
+    },
+    "cam-wine": {
+      "name": "Ein Glas für unterwegs",
+      "description": "Erreiche den Weinbrunnen von Irache."
+    },
+    "cam-meseta-km": {
+      "name": "Die endlose Meseta",
+      "description": "Geh 100 km über die Meseta."
+    },
+    "cam-dawn": {
+      "name": "Pilgermorgen",
+      "description": "Mach 15 Commits zwischen 5 und 8 Uhr morgens: Pilger brechen vor Sonnenaufgang auf."
+    },
+    "cam-weekend": {
+      "name": "Sonntagspilger",
+      "description": "Mach 20 Commits am Wochenende."
     }
+  },
+  "objects": {
+    "templars": "Templerburg von Ponferrada"
   }
 }

@@ -82,6 +82,18 @@
     "ridge-walker": {
       "name": "Caminante de crestas",
       "description": "Recorre toda la cresta de Chornohora."
+    },
+    "chorn-peaks": {
+      "name": "Cuatro cumbres",
+      "description": "Sube a las cuatro cumbres de la cresta."
+    },
+    "chorn-lakes": {
+      "name": "Espejos de montaña",
+      "description": "Llega a los dos lagos bajo la cresta."
+    },
+    "chorn-sunrise": {
+      "name": "Amanecer en la cresta",
+      "description": "Haz 10 commits entre las 5 y las 8 de la mañana."
     }
   }
 }

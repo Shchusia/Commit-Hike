@@ -119,6 +119,22 @@
     "seven": {
       "name": "Siedem świateł",
       "description": "Zapal na nowo wszystkie siedem latarni."
+    },
+    "salt-road": {
+      "name": "Solny szlak",
+      "description": "Przejdź 30 km przez solnisko."
+    },
+    "every-shore": {
+      "name": "Każdy brzeg i pole",
+      "description": "Przejdź przez 12 różnych krain."
+    },
+    "keepers-sunday": {
+      "name": "Niedziela latarnika",
+      "description": "Zrób 12 commitów w weekendy: latarnicy nigdy nie odpoczywają."
+    },
+    "lamp-lighter": {
+      "name": "Latarnik nocy",
+      "description": "Zrób 10 commitów między północą a 5 rano, gdy płoną latarnie."
     }
   }
 }

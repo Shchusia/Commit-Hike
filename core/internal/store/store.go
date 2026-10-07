@@ -95,11 +95,13 @@ type TeamGoal struct {
 	Since   int64  `json:"since"` // unix seconds
 }
 
-// Prefs are the panel and notification choices; "" means the default (auto, auto, all).
+// Prefs are the panel and notification choices; "" means the default (auto, auto, all, on, on).
 type Prefs struct {
 	ReduceMotion  string `json:"reduce_motion,omitempty"` // auto | on | off
 	HighContrast  string `json:"high_contrast,omitempty"` // auto | on | off
 	Notifications string `json:"notifications,omitempty"` // all | milestones | off
+	Festive       string `json:"festive,omitempty"`       // on | off
+	Ambient       string `json:"ambient,omitempty"`       // on | off
 }
 
 // DifficultyChange is one switch of the difficulty level.

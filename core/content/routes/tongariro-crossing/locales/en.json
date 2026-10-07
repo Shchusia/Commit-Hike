@@ -83,6 +83,18 @@
     "crossed": {
       "name": "Crossed",
       "description": "Complete the Tongariro Alpine Crossing."
+    },
+    "lakes-of-colour": {
+      "name": "Lakes of Colour",
+      "description": "Reach the emerald and the blue crater lakes."
+    },
+    "walking-on-ash": {
+      "name": "Walking on Ash",
+      "description": "Walk 3 km over volcanic ground."
+    },
+    "first-shuttle": {
+      "name": "First Shuttle",
+      "description": "Make 5 commits between 5 and 8 in the morning: the crossing starts early."
     }
   }
 }

@@ -99,6 +99,18 @@
     "rain": {
       "name": "Regenrufer",
       "description": "Erreiche den Donnergipfel und ruf den Regen."
+    },
+    "lights-dance": {
+      "name": "Wo die Lichter tanzen",
+      "description": "Geh durch den verzauberten Buchenwald."
+    },
+    "many-worlds": {
+      "name": "Viele Welten",
+      "description": "Wandere durch 7 verschiedene Landschaften."
+    },
+    "molfar-hour": {
+      "name": "Die Stunde des Molfars",
+      "description": "Mach 7 Commits zwischen Mitternacht und 5 Uhr, wenn der Zauber des Molfars am stärksten ist."
     }
   }
 }

@@ -68,6 +68,18 @@
     "svyd-streak": {
       "name": "Fünf Tage auf dem Kamm",
       "description": "Committe fünf Tage in Folge."
+    },
+    "svyd-peaks": {
+      "name": "Drei Gipfel",
+      "description": "Steh auf allen drei Gipfeln des Kamms."
+    },
+    "svyd-glacial": {
+      "name": "Gletscherseen",
+      "description": "Erreiche beide Gletscherseen des Kamms."
+    },
+    "svyd-polonyna": {
+      "name": "Polonyna",
+      "description": "Geh 10 km über die Hochalmen."
     }
   }
 }

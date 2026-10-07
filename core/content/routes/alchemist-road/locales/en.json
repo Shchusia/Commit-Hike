@@ -113,6 +113,18 @@
     "treasure": {
       "name": "Where the Treasure Is",
       "description": "Reach the Pyramids and learn where the treasure is."
+    },
+    "thousand-km-sand": {
+      "name": "A Thousand Kilometres of Sand",
+      "description": "Walk 1,000 km through the desert."
+    },
+    "omens": {
+      "name": "Omens Everywhere",
+      "description": "Make 12 commits in a single day."
+    },
+    "reading-stars": {
+      "name": "Reading the Stars",
+      "description": "Make 10 commits between midnight and 5 am, like a caravan travelling by night."
     }
   }
 }

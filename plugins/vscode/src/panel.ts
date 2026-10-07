@@ -37,7 +37,7 @@ export type PanelMessage =
   | { command: "copyText"; text: string }
   | { command: "copyImage"; data: string }
   | { command: "setRestDays"; days: number[] }
-  | { command: "setSettings"; reduce_motion?: string; high_contrast?: string; notifications?: string }
+  | { command: "setSettings"; reduce_motion?: string; high_contrast?: string; notifications?: string; festive?: string; ambient?: string }
   | { command: "exportProgress" | "importProgress" | "copyDiagnostics" | "saveBadge" }
   | { command: "panelError"; message: string }
   | { command: "walkRoute"; id: string }

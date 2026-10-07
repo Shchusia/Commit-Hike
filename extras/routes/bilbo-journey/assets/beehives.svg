@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 90">
-  <g id="h"><path d="M10 90V60c0-26 44-26 44 0v30z" fill="#d9a441"/>
-    <g stroke="#a8772a" stroke-width="2.5"><path d="M11 66h42M11 76h42M14 56h36M20 47h24"/></g>
-    <path d="M26 90a6 6 0 0 1 12 0z" fill="#3a2a1a"/></g>
-  <use href="#h" transform="translate(66 6) scale(.9)"/>
-  <use href="#h" transform="translate(126 -4) scale(1.1)"/>
-  <g fill="#2a2a2a"><circle cx="70" cy="30" r="2"/><circle cx="96" cy="22" r="2"/><circle cx="150" cy="16" r="2"/><circle cx="60" cy="18" r="1.6"/></g>
-</svg>

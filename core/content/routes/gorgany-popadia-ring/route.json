@@ -1,6 +1,6 @@
 {
   "id": "gorgany-popadia-ring",
-  "version": 1,
+  "version": 2,
   "default_locale": "en",
   "length_m": 41000,
   "loop": true,
@@ -104,11 +104,27 @@
       "type": "rock"
     },
     {
+      "at_m": 9000,
+      "type": "tundra"
+    },
+    {
+      "at_m": 11200,
+      "type": "rock"
+    },
+    {
       "at_m": 18450,
       "type": "tundra"
     },
     {
       "at_m": 22550,
+      "type": "rock"
+    },
+    {
+      "at_m": 26800,
+      "type": "tundra"
+    },
+    {
+      "at_m": 29400,
       "type": "rock"
     },
     {
@@ -160,6 +176,28 @@
       "rule": {
         "type": "waypoint",
         "waypoint": "popadia"
+      }
+    },
+    {
+      "id": "gorg-peaks",
+      "rule": {
+        "type": "kind",
+        "kind": "peak"
+      }
+    },
+    {
+      "id": "gorg-scree",
+      "rule": {
+        "type": "biome",
+        "biome": "rock",
+        "min_m": 15000
+      }
+    },
+    {
+      "id": "gorg-mist",
+      "rule": {
+        "type": "early",
+        "count": 10
       }
     },
     {

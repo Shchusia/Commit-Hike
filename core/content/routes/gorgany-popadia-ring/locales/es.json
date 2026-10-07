@@ -64,6 +64,18 @@
     "gorg-day": {
       "name": "Largo día pedregoso",
       "description": "Camina 8 km en un solo día."
+    },
+    "gorg-peaks": {
+      "name": "Todas las cumbres del circuito",
+      "description": "Sube a las seis cumbres del circuito."
+    },
+    "gorg-scree": {
+      "name": "Mar de piedras",
+      "description": "Camina 15 km por los pedregales de los Gorgany."
+    },
+    "gorg-mist": {
+      "name": "Niebla en el valle",
+      "description": "Haz 10 commits entre las 5 y las 8 de la mañana."
     }
   }
 }

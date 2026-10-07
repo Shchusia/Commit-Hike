@@ -1,6 +1,6 @@
 {
   "id": "seven-lighthouses",
-  "version": 2,
+  "version": 3,
   "default_locale": "en",
   "length_m": 700000,
   "path": [
@@ -78,7 +78,7 @@
     {
       "id": "three-wells",
       "at_m": 130000,
-      "kind": "spring",
+      "kind": "oasis",
       "elevation_m": 90,
       "x": 0.4625,
       "y": 0.7955
@@ -213,6 +213,10 @@
   "biomes": [
     {
       "at_m": 0,
+      "type": "saltflat"
+    },
+    {
+      "at_m": 40000,
       "type": "desert"
     },
     {
@@ -241,7 +245,7 @@
     },
     {
       "at_m": 300000,
-      "type": "steppe"
+      "type": "heath"
     },
     {
       "at_m": 345000,
@@ -257,7 +261,7 @@
     },
     {
       "at_m": 535000,
-      "type": "grove"
+      "type": "birch"
     },
     {
       "at_m": 585000,
@@ -270,6 +274,10 @@
     {
       "at_m": 665000,
       "type": "snow"
+    },
+    {
+      "at_m": 682000,
+      "type": "glacier"
     }
   ],
   "story": [
@@ -349,48 +357,6 @@
       "fade_m": 16000
     },
     {
-      "id": "tower-2",
-      "at_m": 200000,
-      "asset": "assets/lighthouse.svg",
-      "height_px": 150,
-      "fade_m": 16000
-    },
-    {
-      "id": "tower-3",
-      "at_m": 310000,
-      "asset": "assets/lighthouse.svg",
-      "height_px": 140,
-      "fade_m": 16000
-    },
-    {
-      "id": "tower-4",
-      "at_m": 420000,
-      "asset": "assets/lighthouse.svg",
-      "height_px": 130,
-      "fade_m": 16000
-    },
-    {
-      "id": "tower-5",
-      "at_m": 520000,
-      "asset": "assets/lighthouse.svg",
-      "height_px": 120,
-      "fade_m": 16000
-    },
-    {
-      "id": "tower-6",
-      "at_m": 620000,
-      "asset": "assets/lighthouse.svg",
-      "height_px": 140,
-      "fade_m": 16000
-    },
-    {
-      "id": "tower-7",
-      "at_m": 700000,
-      "asset": "assets/lighthouse.svg",
-      "height_px": 170,
-      "fade_m": 16000
-    },
-    {
       "id": "caravan",
       "at_m": 136000,
       "asset": "assets/caravan.png",
@@ -398,11 +364,25 @@
       "fade_m": 9000
     },
     {
+      "id": "tower-2",
+      "at_m": 200000,
+      "asset": "assets/lighthouse.svg",
+      "height_px": 150,
+      "fade_m": 16000
+    },
+    {
       "id": "sentinels",
       "at_m": 305000,
       "asset": "assets/standing-stones.svg",
       "height_px": 60,
       "fade_m": 7000
+    },
+    {
+      "id": "tower-3",
+      "at_m": 310000,
+      "asset": "assets/lighthouse.svg",
+      "height_px": 140,
+      "fade_m": 16000
     },
     {
       "id": "mill-1",
@@ -427,12 +407,40 @@
       "fade_m": 8000
     },
     {
+      "id": "tower-4",
+      "at_m": 420000,
+      "asset": "assets/lighthouse.svg",
+      "height_px": 130,
+      "fade_m": 16000
+    },
+    {
+      "id": "tower-5",
+      "at_m": 520000,
+      "asset": "assets/lighthouse.svg",
+      "height_px": 120,
+      "fade_m": 16000
+    },
+    {
+      "id": "tower-6",
+      "at_m": 620000,
+      "asset": "assets/lighthouse.svg",
+      "height_px": 140,
+      "fade_m": 16000
+    },
+    {
       "id": "aurora",
       "at_m": 694000,
       "asset": "assets/aurora.html",
       "height_px": 110,
       "lift_px": 120,
       "fade_m": 25000
+    },
+    {
+      "id": "tower-7",
+      "at_m": 700000,
+      "asset": "assets/lighthouse.svg",
+      "height_px": 170,
+      "fade_m": 16000
     }
   ],
   "achievements": [
@@ -483,6 +491,36 @@
       "rule": {
         "type": "commits",
         "count": 300
+      },
+      "hidden": true
+    },
+    {
+      "id": "salt-road",
+      "rule": {
+        "type": "biome",
+        "biome": "saltflat",
+        "min_m": 30000
+      }
+    },
+    {
+      "id": "every-shore",
+      "rule": {
+        "type": "biomes",
+        "count": 12
+      }
+    },
+    {
+      "id": "keepers-sunday",
+      "rule": {
+        "type": "weekend",
+        "count": 12
+      }
+    },
+    {
+      "id": "lamp-lighter",
+      "rule": {
+        "type": "night",
+        "count": 10
       },
       "hidden": true
     },

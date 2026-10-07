@@ -119,6 +119,22 @@
     "seven": {
       "name": "Seven Lights",
       "description": "Relight all seven lighthouses."
+    },
+    "salt-road": {
+      "name": "Salt Road",
+      "description": "Walk 30 km across the salt flat."
+    },
+    "every-shore": {
+      "name": "Every Shore and Field",
+      "description": "Walk through 12 different kinds of land."
+    },
+    "keepers-sunday": {
+      "name": "Keeper's Sunday",
+      "description": "Make 12 commits on weekends: lighthouse keepers never rest."
+    },
+    "lamp-lighter": {
+      "name": "Lamp Lighter",
+      "description": "Make 10 commits between midnight and 5 am, while the lights burn."
     }
   }
 }

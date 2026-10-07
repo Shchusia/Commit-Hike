@@ -55,6 +55,18 @@
     "summit": {
       "name": "Na górze",
       "description": "Ukończ Szlak próbny."
+    },
+    "change-of-scenery": {
+      "name": "Zmiana krajobrazu",
+      "description": "Przejdź przez 5 różnych krain."
+    },
+    "weekend-walker": {
+      "name": "Weekendowy wędrowiec",
+      "description": "Zrób 3 commity w weekendy."
+    },
+    "night-owl": {
+      "name": "Nocny marek",
+      "description": "Zrób 3 commity między północą a 5 rano."
     }
   }
 }

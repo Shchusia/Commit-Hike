@@ -64,6 +64,18 @@
     "gorg-day": {
       "name": "Langer steiniger Tag",
       "description": "Geh 8 km an einem Tag."
+    },
+    "gorg-peaks": {
+      "name": "Alle Gipfel der Runde",
+      "description": "Steh auf allen sechs Gipfeln der Runde."
+    },
+    "gorg-scree": {
+      "name": "Steinmeer",
+      "description": "Geh 15 km über das Geröll der Gorgany."
+    },
+    "gorg-mist": {
+      "name": "Nebel im Tal",
+      "description": "Mach 10 Commits zwischen 5 und 8 Uhr morgens."
     }
   }
 }

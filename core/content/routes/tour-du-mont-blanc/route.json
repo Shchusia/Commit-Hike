@@ -1,6 +1,6 @@
 {
   "id": "tour-du-mont-blanc",
-  "version": 1,
+  "version": 2,
   "default_locale": "en",
   "length_m": 170000,
   "loop": true,
@@ -114,6 +114,12 @@
       "elevation_m": 1224,
       "lat": 45.7967,
       "lon": 6.969
+    },
+    {
+      "id": "rifugio-bonatti",
+      "at_m": 80000,
+      "kind": "hut",
+      "elevation_m": 2025
     },
     {
       "id": "grand-col-ferret",
@@ -284,6 +290,28 @@
       }
     },
     {
+      "id": "tmb-cols",
+      "rule": {
+        "type": "kind",
+        "kind": "pass"
+      }
+    },
+    {
+      "id": "tmb-lakes",
+      "rule": {
+        "type": "kind",
+        "kind": "lake"
+      }
+    },
+    {
+      "id": "tmb-pastures",
+      "rule": {
+        "type": "biome",
+        "biome": "meadow",
+        "min_m": 40000
+      }
+    },
+    {
       "id": "tmb-finish",
       "rule": {
         "type": "finish"
@@ -295,6 +323,15 @@
         "type": "streak",
         "days": 10
       }
+    }
+  ],
+  "objects": [
+    {
+      "id": "bonatti-hut",
+      "at_m": 80000,
+      "asset": "assets/hut.svg",
+      "height_px": 70,
+      "fade_m": 3000
     }
   ]
 }

@@ -31,7 +31,13 @@ sealed interface PanelCommand {
     data class SetTeam(val on: Boolean) : PanelCommand
     data class SetDifficulty(val level: String) : PanelCommand
     data class SetRestDays(val days: List<Int>) : PanelCommand // 0 = Sunday … 6 = Saturday, checked
-    data class SetSettings(val reduceMotion: String?, val highContrast: String?, val notifications: String?) : PanelCommand
+    data class SetSettings(
+        val reduceMotion: String?,
+        val highContrast: String?,
+        val notifications: String?,
+        val festive: String? = null,
+        val ambient: String? = null,
+    ) : PanelCommand
     data class SavePostcard(val fileName: String, val png: ByteArray) : PanelCommand {
         override fun equals(other: Any?) = other is SavePostcard && other.fileName == fileName && other.png.contentEquals(png)
 
@@ -67,6 +73,7 @@ sealed interface PanelCommand {
         private val levels = setOf("easy", "medium", "hard")
         private val autoOnOff = setOf("auto", "on", "off")
         private val notifications = setOf("all", "milestones", "off")
+        private val onOff = setOf("on", "off")
         private val routeId = Regex("^[a-z0-9]+(-[a-z0-9]+)*$")
 
         /** The command in [raw] JSON, or null for anything malformed or unknown. */
@@ -96,7 +103,9 @@ sealed interface PanelCommand {
                     msg.string("reduce_motion")?.takeIf { it in autoOnOff },
                     msg.string("high_contrast")?.takeIf { it in autoOnOff },
                     msg.string("notifications")?.takeIf { it in notifications },
-                ).takeIf { it.reduceMotion != null || it.highContrast != null || it.notifications != null }
+                    msg.string("festive")?.takeIf { it in onOff },
+                    msg.string("ambient")?.takeIf { it in onOff },
+                ).takeIf { listOf(it.reduceMotion, it.highContrast, it.notifications, it.festive, it.ambient).any { v -> v != null } }
                 "savePostcard" -> Files.png(msg.string("data"))?.let {
                     SavePostcard(Files.safeName(msg.string("name"), "commit-hike.png", "png"), it)
                 }

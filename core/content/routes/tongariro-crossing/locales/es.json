@@ -83,6 +83,18 @@
     "crossed": {
       "name": "Cruzado",
       "description": "Completa la Travesía Alpina del Tongariro."
+    },
+    "lakes-of-colour": {
+      "name": "Lagos de colores",
+      "description": "Llega a los lagos esmeralda y al lago Azul."
+    },
+    "walking-on-ash": {
+      "name": "Caminar sobre ceniza",
+      "description": "Camina 3 km sobre suelo volcánico."
+    },
+    "first-shuttle": {
+      "name": "El primer autobús",
+      "description": "Haz 5 commits entre las 5 y las 8 de la mañana: la travesía empieza temprano."
     }
   }
 }

@@ -61,6 +61,10 @@
     "les-houches-return": {
       "name": "De vuelta en Les Houches",
       "text": "Tres países y diez mil metros de subida después."
+    },
+    "rifugio-bonatti": {
+      "name": "Rifugio Bonatti",
+      "text": "Un refugio sobre el Val Ferret frente a las Grandes Jorasses, con el nombre del alpinista Walter Bonatti."
     }
   },
   "story": {
@@ -98,6 +102,18 @@
     "tmb-streak": {
       "name": "Diez días de Alpes",
       "description": "Haz commits diez días seguidos."
+    },
+    "tmb-cols": {
+      "name": "Todos los collados",
+      "description": "Cruza los cinco collados de la ruta."
+    },
+    "tmb-lakes": {
+      "name": "Lagos espejo",
+      "description": "Llega a Champex y al Lac Blanc."
+    },
+    "tmb-pastures": {
+      "name": "Pastos alpinos",
+      "description": "Camina 40 km por praderas alpinas."
     }
   }
 }

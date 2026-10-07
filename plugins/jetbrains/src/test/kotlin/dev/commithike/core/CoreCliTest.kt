@@ -9,6 +9,10 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 
 class CoreCliTest {
 
@@ -61,6 +65,7 @@ class CoreCliTest {
         assertEquals("milestones", cli.settings(notifications = "milestones").notifications)
         assertEquals("on", cli.settings(reduceMotion = "on").reduceMotion)
         assertEquals(Settings("on", "auto", "milestones"), cli.status().settings)
+        assertEquals(Settings("on", "auto", "milestones", festive = "off", ambient = "off"), cli.settings(festive = "off", ambient = "off"))
         val badge = cli.badge()
         assertTrue(badge.svg.startsWith("<svg") && badge.fileName == "commit-hike-badge.svg")
         assertTrue(!cli.diagnosticsJson().contains("me@x.io"))
@@ -106,7 +111,7 @@ class CoreCliTest {
         assertEquals("Old Bridge", scan.global!!.nextWaypoint!!.name)
         // 650 m: past the 100 m "first steps" threshold and nothing else
         assertEquals(listOf("first-steps"), scan.events.orEmpty().mapNotNull { it.achievement?.id })
-        assertEquals(5, scan.global!!.achievements!!.size)
+        assertEquals(8, scan.global!!.achievements!!.size) // the demo trail has 8, one of them hidden
         assertEquals(1, scan.global!!.achievements!!.count { it.unlockedAt != 0L })
 
         cli.lang = "uk"
@@ -144,11 +149,13 @@ class CoreCliTest {
         assertEquals(2061.0, hoverla.elevationM, 0.001)
         assertTrue(proj.project!!.route.biomes!!.isNotEmpty())
         assertEquals(14, proj.project!!.daily!!.size)
-        // Day 1 is the day of the first commit (UTC). Test commits are dated a few
-        // hours back, so early in the UTC morning that is already yesterday.
-        val firstCommitDay = gitOut(repo, "log", "--reverse", "--format=%at").lines().first().trim().toLong() / 86_400
-        val today = System.currentTimeMillis() / 1000 / 86_400
-        assertEquals((today - firstCommitDay + 1).toInt(), proj.project!!.day)
+        // Day 1 is the day of the first commit in the local calendar, as the core
+        // counts days. Test commits are dated a few hours back, so early in the
+        // morning that is already yesterday.
+        val zone = ZoneId.systemDefault()
+        val firstCommitAt = gitOut(repo, "log", "--reverse", "--format=%at").lines().first().trim().toLong()
+        val firstCommitDay = Instant.ofEpochSecond(firstCommitAt).atZone(zone).toLocalDate()
+        assertEquals(ChronoUnit.DAYS.between(firstCommitDay, LocalDate.now(zone)).toInt() + 1, proj.project!!.day)
 
         // Custom routes: template -> import -> remove.
         val work = Files.createTempDirectory("ch-routes").toString()

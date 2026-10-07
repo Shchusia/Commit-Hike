@@ -61,6 +61,26 @@
     "santiago": {
       "name": "Santiago de Compostela",
       "text": "The cathedral square, the end of the Way."
+    },
+    "alto-del-perdon": {
+      "name": "Alto del Perdón",
+      "text": "A windy ridge with a row of wind turbines and iron pilgrims marching across the sky."
+    },
+    "irache": {
+      "name": "Irache Wine Fountain",
+      "text": "Next to the Irache monastery a tap pours free red wine for pilgrims."
+    },
+    "san-juan-de-ortega": {
+      "name": "San Juan de Ortega",
+      "text": "A monastery in the oak woods of the Montes de Oca, founded by a saint who built bridges for pilgrims."
+    },
+    "san-anton": {
+      "name": "Convent of San Antón",
+      "text": "The road passes right under the Gothic arches of a ruined convent."
+    },
+    "monte-do-gozo": {
+      "name": "Monte do Gozo",
+      "text": "The 'Mount of Joy', where pilgrims traditionally caught their first sight of the cathedral towers."
     }
   },
   "story": {
@@ -98,6 +118,29 @@
     "cam-commits": {
       "name": "Pilgrim's Patience",
       "description": "Make 500 commits on the Way."
+    },
+    "cam-cathedrals": {
+      "name": "Cathedral Cities",
+      "description": "Reach the cathedrals of Burgos and León."
+    },
+    "cam-wine": {
+      "name": "A Glass for the Road",
+      "description": "Reach the wine fountain of Irache."
+    },
+    "cam-meseta-km": {
+      "name": "The Endless Meseta",
+      "description": "Walk 100 km across the meseta."
+    },
+    "cam-dawn": {
+      "name": "Pilgrim's Dawn",
+      "description": "Make 15 commits between 5 and 8 in the morning: pilgrims set off before sunrise."
+    },
+    "cam-weekend": {
+      "name": "Sunday Pilgrim",
+      "description": "Make 20 commits on weekends."
     }
+  },
+  "objects": {
+    "templars": "Templar castle of Ponferrada"
   }
 }

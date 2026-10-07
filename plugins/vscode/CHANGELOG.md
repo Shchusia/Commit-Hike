@@ -10,6 +10,12 @@ turns them into the section of the new version; the JetBrains Marketplace
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-10-07
+
+- *Routes from the site* shows the best-rated routes first (then the most downloaded) and can sort by rating or downloads either way.
+
+## [1.1.0] - 2026-10-07
+
 ### Added
 - Twelve new kinds of terrain for routes, each with its own plants, things along the trail and distant land: `jungle` (giant trees with lianas, palms, ferns, flowers), `savanna` (tall grass, flat-topped acacias, termite mounds), `canyon` (red rock, hoodoos, junipers; flat-topped mesas on the horizon), `glacier` (blue seracs, crevasses, cairns), `heath` (heather, gorse, standing stones), `bamboo` (bamboo groves and stone lanterns; karst towers on the horizon), `sakura` (cherry trees that bloom in spring and redden in autumn), `tropical` (a palm beach with shells and the sea), `wasteland` (dead trees, cracked earth, rusty barrels, tumbleweed), `enchanted` (glowing mushrooms and crystals, fireflies at night), `city` (buildings whose windows light up at night, street lamps, a skyline) and `ruins` (broken columns and arches overgrown with ivy). Six more came with them: `birch`, `lavender` (rows of lavender, cypresses, olives), `vineyard`, `rice` (flooded paddies, terraced hills on the horizon), `mangrove` and `saltflat`. They blend with the others, change with the seasons and the time of day, and have names on the map legend in all five languages. The route editor on commit-hike.dev offers them too.
 - A long stretch of one terrain no longer looks the same for kilometres: thickets alternate with clearings and the plants change character (birches in a spruce forest, flower meadows, rocky desert); every few screens a scene of its own stands by the trail (a hunter's cabin, deer, a roadside shrine, haystacks, beehives, horses, a windmill, a scarecrow, a kurgan with a stone figure, a yurt, an oasis, a caravan, camel bones, an ibex, a summit cross with prayer flags, reindeer, an inukshuk, a jetty, a heron, a stilt hut, will-o'-the-wisps, a boat, gulls, a fumarole, a lava crack, a chapel, a well, a cow, a jungle temple, a waterfall, giraffes, elephants, a baobab, a stone arch, a stone circle, a torii, a panda, a pagoda, a hammock, a turtle, a car wreck, a fairy ring, a glowing portal, a fountain, a statue, a fallen stone head, an obelisk, flamingos and more); castles, spires, windmills, lighthouses and pagodas stand on the far hills; the far north and the high ice get northern lights at night, and now and then a star falls.
@@ -22,7 +28,6 @@ turns them into the section of the new version; the JetBrains Marketplace
 - The built-in routes got new achievements in all five languages (all summits, all lakes, every col of the Tour du Mont Blanc, the Meseta, the cathedrals of Burgos and León, a thousand kilometres of Sahara sand, the salt road of the Seven Lighthouses, a molfar's hour at night…), more varied terrain (vineyards of La Rioja and El Bierzo, an enchanted beech wood on the Molfar's Path, salt flats, heath and birch woods on the way to the Seven Lighthouses), new stops on the Camino Francés (Alto del Perdón, the wine fountain of Irache, San Juan de Ortega, the convent of San Antón, Monte do Gozo) and the Tour du Mont Blanc (Rifugio Bonatti), and the stops that are churches, monasteries, shrines, statues or oases now look like them. Routes without pictures along the way got some.
 
 ### Changed
-- *Routes from the site* shows the best-rated routes first (then the most downloaded) and can sort by rating or downloads either way.
 - Routes that use the new terrain, kinds of stops or achievements need this version: older plugins can't load them. The site gives older plugins a copy with the nearest older terrain and stops instead (a jungle becomes a forest, a city a village, an inn a hut) and without the new kinds of achievements, so its routes still install everywhere.
 
 ## [1.0.0] - 2026-10-06

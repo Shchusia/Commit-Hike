@@ -2501,19 +2501,28 @@ html.reduce-motion .stamp { transform: none; }
     const AMBIENT = opts.ambient !== false;
     const WET = new Set(["meadow", "fields", "forest", "grove", "birch", "taiga", "swamp", "water", "heath", "enchanted", "village", "rice", "mangrove", "jungle", "bamboo", "vineyard"]);
     const DRY = new Set(["desert", "saltflat", "canyon", "wasteland", "savanna", "mars", "moon", "underwater", "volcanic"]);
-    const COLDS = new Set(["snow", "glacier", "seaice", "tundra"]);
+    const COLDS = new Set(["snow", "glacier", "seaice"]); // frozen all year: precipitation here is snow
     const SPACE = new Set(["moon", "mars", "underwater"]);
     function weatherAt(w) {
       let dry = 0, cold = 0, space = 0, fogable = 0;
       for (const k in w) { if (DRY.has(k)) dry += w[k]; if (COLDS.has(k)) cold += w[k]; if (SPACE.has(k)) space += w[k]; if (WET.has(k)) fogable += w[k]; }
       const wet = AMBIENT && space < 0.5 && cloudiness > 0.68 && hash(daySeed, 51) < 0.8 - dry * 0.75;
-      const snowy = winter || cold > 0.5 || (rm.hasElev && rm.elevAt(clamp((camX + W / 2) / pxPerM, 0, L)) > 2600);
+      // Snow, not rain: in winter, on ice and snowfields, up high; on the tundra and
+      // the fells only at the edges of winter (November, March) or above 1,800 m.
+      const elevNow = rm.hasElev ? rm.elevAt(clamp((camX + W / 2) / pxPerM, 0, L)) : 0;
+      const edgeOfWinter = sm === 10 || sm === 2;
+      const snowy = winter || cold > 0.5 || elevNow > 2600 || ((w.tundra || 0) > 0.5 && (edgeOfWinter || elevNow > 1800));
+      // nothing falls in a tunnel; on a holiday with snow, the rain falls as snow
+      const open = 1 - clamp(rm.ugWeight(clamp((camX + W / 2) / pxPerM, 0, L), ugRamp), 0, 1);
+      const festiveSnow = FD && FD.snow && space < 0.5;
+      const rain = wet && !snowy && !festiveSnow ? clamp((cloudiness - 0.6) * 2.5, 0.35, 1) : 0;
+      const realSnow = wet && (snowy || festiveSnow) ? clamp((cloudiness - 0.55) * 2.2, 0.3, 1) : 0;
+      const snow = Math.max(realSnow, festiveSnow ? 0.35 : 0); // holiday snow falls from a fair sky too
       return {
-        rain: wet && !snowy ? clamp((cloudiness - 0.6) * 2.5, 0.25, 1) : 0,
-        snow: (wet && snowy ? clamp((cloudiness - 0.55) * 2.2, 0.3, 1) : 0) || (FD && FD.snow && space < 0.5 ? 0.35 : 0),
-        storm: wet && !snowy && cloudiness > 0.9 && !winter,
-        fog: AMBIENT && space < 0.5 && sky.hour > 4.5 && sky.hour < 10 && hash(daySeed, 52) < 0.38 ? fogable : 0,
-        space,
+        rain: rain * open, snow: snow * open,
+        storm: open > 0.5 && rain > 0 && cloudiness > 0.9 && !winter,
+        fog: AMBIENT && space < 0.5 && sky.hour > 4.5 && sky.hour < 10 && hash(daySeed, 52) < 0.38 ? fogable * open : 0,
+        space, wet: (rain + realSnow * 0.9) * open,
       };
     }
 
@@ -2609,10 +2618,13 @@ html.reduce-motion .stamp { transform: none; }
         oc.addColorStop(0, `rgba(88,96,108,${(0.62 * we.rain).toFixed(3)})`); oc.addColorStop(1, `rgba(88,96,108,${(0.12 * we.rain).toFixed(3)})`);
         c.fillStyle = oc; c.fillRect(0, 0, W, H * 0.6);
         c.fillStyle = `rgba(50,60,72,${(0.14 * we.rain).toFixed(3)})`; c.fillRect(0, 0, W, H);
-        c.strokeStyle = alpha("#c8d4e0", 0.45); c.lineWidth = 1; c.beginPath();
-        const n = Math.round(90 * we.rain);
-        for (let k = 0; k < n; k++) { const x = (hash(k, 21) * W * 1.2 + tt * 60) % (W * 1.2) - W * 0.1, y = (hash(k, 22) * H + tt * (300 + hash(k, 23) * 120)) % H; c.moveTo(x, y); c.lineTo(x - 3, y + 10); }
+        c.strokeStyle = alpha("#d2dce6", 0.35 + 0.3 * we.rain); c.lineWidth = 1; c.beginPath();
+        const n = Math.round(50 + 110 * we.rain), len = 9 + 7 * we.rain;
+        for (let k = 0; k < n; k++) { const x = (hash(k, 21) * W * 1.2 + tt * 60) % (W * 1.2) - W * 0.1, y = (hash(k, 22) * H + tt * (300 + hash(k, 23) * 120)) % H; c.moveTo(x, y); c.lineTo(x - len * 0.3, y + len); }
         c.stroke();
+        // splashes where the drops hit the ground
+        c.fillStyle = alpha("#d2dce6", 0.4 * we.rain);
+        for (let k = 0; k < 14; k++) { const x = (hash(k, 24) * W + tt * 37 * (k % 3 + 1)) % W, ph = (tt * 2 + hash(k, 25)) % 1; if (ph < 0.3) { c.beginPath(); c.ellipse(x, groundY(camX + x) + 1, 2 + ph * 8, 0.8 + ph, 0, 0, 7); c.fill(); } }
         if (we.storm) { const ph = (tt / 9 + hash(daySeed, 53)) % 1; if (ph < 0.025) { c.fillStyle = `rgba(255,255,255,${(0.5 * (1 - ph / 0.025)).toFixed(3)})`; c.fillRect(0, 0, W, H); } }
       }
       if (we.snow > 0) {
@@ -3298,19 +3310,21 @@ html.reduce-motion .stamp { transform: none; }
 
       // ---- sky ----
       const g = b.createLinearGradient(0, 0, 0, H * 0.8);
-      const top = cloudiness > 0.8 ? mix(sky.stops[0], "#8a949c", 0.35 * (1 - sky.night)) : sky.stops[0];
-      g.addColorStop(0, top); g.addColorStop(0.55, mix(sky.stops[1], horizon, 0.2)); g.addColorStop(1, horizon);
+      const wxBg = weatherAt(weightsAt(clamp((camX + W / 2) / pxPerM, 0, L), tw * 4));
+      const grey = clamp(wxBg.wet * 1.4, 0, 0.85); // a rainy or snowy day: a grey sky, a hidden sun
+      const top = mix(cloudiness > 0.8 ? mix(sky.stops[0], "#8a949c", 0.35 * (1 - sky.night)) : sky.stops[0], sky.night > 0.5 ? "#1c2026" : "#7d8790", grey * 0.8);
+      g.addColorStop(0, top); g.addColorStop(0.55, mix(mix(sky.stops[1], horizon, 0.2), sky.night > 0.5 ? "#2a3038" : "#a3abb3", grey * 0.6)); g.addColorStop(1, horizon);
       b.fillStyle = g; b.fillRect(0, 0, W, H);
       if (sky.night > 0.05) {
         for (let i = 0; i < 90; i++) {
           const x = ((hash(i, seed) * 2400 - camX * 0.02) % W + W) % W, y = hash(i + 99, seed) * H * 0.55;
-          b.fillStyle = alpha("#ffffff", (0.25 + hash(i + 7, seed) * 0.65) * sky.night); b.fillRect(x, y, 1.3, 1.3);
+          b.fillStyle = alpha("#ffffff", (0.25 + hash(i + 7, seed) * 0.65) * sky.night * (1 - grey)); b.fillRect(x, y, 1.3, 1.3);
         }
         // northern lights over the far north, the tundra and the ice; a shooting star now and then
         const north = track.length > 0 && Math.abs(track.reduce((a, p) => a + p[0], 0) / track.length) > 58;
         const wNow = weightsAt(clamp((camX + W / 2) / pxPerM, 0, L), tw * 4);
         const icy = (wNow.tundra || 0) + (wNow.glacier || 0) + (wNow.snow || 0);
-        const aur = sky.night * clamp((north ? 0.8 : 0) + (icy > 0.5 && rm.maxE > 1800 ? 0.4 : 0) + (icy > 0.5 && north ? 0.2 : 0), 0, 1);
+        const aur = sky.night * (1 - grey) * clamp((north ? 0.8 : 0) + (icy > 0.5 && rm.maxE > 1800 ? 0.4 : 0) + (icy > 0.5 && north ? 0.2 : 0), 0, 1);
         if (aur > 0.05) {
           b.save(); b.globalCompositeOperation = "lighter";
           for (let band = 0; band < 3; band++) {
@@ -3335,24 +3349,25 @@ html.reduce-motion .stamp { transform: none; }
           }
         }
         const mx = W * 0.8 - camX * 0.01 % 40, my = H * 0.16;
-        b.fillStyle = alpha("#f1eedc", sky.night); b.beginPath(); b.arc(mx, my, 9, 0, 7); b.fill();
+        b.fillStyle = alpha("#f1eedc", sky.night * (1 - grey * 0.8)); b.beginPath(); b.arc(mx, my, 9, 0, 7); b.fill();
         b.fillStyle = alpha(sky.stops[0], sky.night * 0.9); b.beginPath(); b.arc(mx + 4, my - 2, 8, 0, 7); b.fill(); // crescent
       }
       if (sky.night < 0.95) {
         const dayK = clamp((sky.hour - 6) / 14, 0, 1);
         const sx = lerp(W * 0.1, W * 0.9, dayK), sy = H * 0.52 - Math.sin(dayK * Math.PI) * H * 0.4;
         const glow = b.createRadialGradient(sx, sy, 2, sx, sy, 60);
-        glow.addColorStop(0, alpha("#fff4d6", 0.9 * (1 - sky.night))); glow.addColorStop(0.25, alpha("#ffe7b0", 0.35 * (1 - sky.night))); glow.addColorStop(1, alpha("#ffe7b0", 0));
+        const sun = (1 - sky.night) * (1 - grey * 0.9);
+        glow.addColorStop(0, alpha("#fff4d6", 0.9 * sun)); glow.addColorStop(0.25, alpha("#ffe7b0", 0.35 * sun)); glow.addColorStop(1, alpha("#ffe7b0", 0));
         b.fillStyle = glow; b.fillRect(sx - 60, sy - 60, 120, 120);
-        b.fillStyle = alpha("#fffaf0", 1 - sky.night); b.beginPath(); b.arc(sx, sy, 10, 0, 7); b.fill();
+        b.fillStyle = alpha("#fffaf0", sun); b.beginPath(); b.arc(sx, sy, 10, 0, 7); b.fill();
       }
       // clouds: how many and how grey depends on the day
-      const nClouds = Math.round(cloudiness * 6);
+      const nClouds = Math.round(cloudiness * 6 + grey * 4);
       for (let i = 0; i < nClouds; i++) {
         const span = W + 300;
         const x = ((hash(i, daySeed + 3) * 1800 - camX * (0.03 + hash(i, 5) * 0.03)) % span + span) % span - 150;
         const y = 16 + hash(i + 40, daySeed) * H * 0.28, size = 7 + hash(i + 5, daySeed) * 9, puffs = 4 + Math.floor(hash(i, daySeed + 8) * 4);
-        const lit = mix(sky.night > 0.5 ? "#7d88a3" : "#ffffff", horizon, 0.18 + cloudiness * 0.25 + sky.warm * 0.25);
+        const lit = mix(mix(sky.night > 0.5 ? "#7d88a3" : "#ffffff", horizon, 0.18 + cloudiness * 0.25 + sky.warm * 0.25), sky.night > 0.5 ? "#3a404a" : "#8a929c", grey * 0.7);
         const cg = b.createLinearGradient(0, y - size * 1.6, 0, y + size * 0.5);
         cg.addColorStop(0, alpha(lit, 0.92)); cg.addColorStop(1, alpha(mix(lit, sky.stops[1], 0.45), 0.8));
         b.fillStyle = cg;

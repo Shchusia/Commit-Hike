@@ -10,6 +10,17 @@ turns them into the section of the new version; the JetBrains Marketplace
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-10-07
+
+### Changed
+- Rain looks like rain: on a rainy day the sky turns grey, the sun hides behind the clouds, there are more clouds, the drops are denser and longer and splash on the ground. A snowy day is grey too (holiday snow still falls from a fair sky), and on a wet night the stars and the northern lights hide.
+
+### Fixed
+- Snow fell on the tundra on any rainy day, in summer and autumn too (on Frodo's way, right after Tom Bombadil's house). Snow, glaciers and sea ice still get snow; the tundra only at the edges of winter (November and March) or above 1,800 m, and rain otherwise.
+- Rain and snow fell inside tunnels: underground nothing falls now.
+- At Christmas south of the equator, rain and the holiday snow fell together: it's snow now.
+- Extras: the Barrow-downs on Frodo's journey are heath, not alpine tundra.
+
 ## [1.1.1] - 2026-10-07
 
 - *Routes from the site* shows the best-rated routes first (then the most downloaded) and can sort by rating or downloads either way.

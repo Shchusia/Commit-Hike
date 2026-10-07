@@ -18,7 +18,7 @@ async function openSite(page) {
 test("search, install, walk: everything goes through the host", async ({ page }) => {
   const p = await openPanel(page, data(status("en")));
   await openSite(page);
-  expect(await p.sent()).toContainEqual({ command: "siteSearch", query: { q: "", kind: "", length: "", sort: "popular", page: 1 } });
+  expect(await p.sent()).toContainEqual({ command: "siteSearch", query: { q: "", kind: "", length: "", sort: "top", page: 1 } });
   await expect(page.getByText("Looking…")).toBeVisible();
   await answer(page, catalogue([card("new-one"), card("mine", { installed: "local" }), card("old-one", { installed: "site", installed_version: 1, update: true }),
     card("got-it", { installed: "site", installed_version: 2 }), card("demo-trail", { installed: "builtin" })]));
@@ -54,7 +54,7 @@ test("filters, search and pages ask the host again", async ({ page }) => {
   await openSite(page);
   await answer(page, catalogue([card("a")], { total: 30, pages: 2 }));
   await page.getByRole("combobox", { name: "Kind" }).selectOption("story");
-  expect((await p.sent()).at(-1)).toEqual({ command: "siteSearch", query: { q: "", kind: "story", length: "", sort: "popular", page: 1 } });
+  expect((await p.sent()).at(-1)).toEqual({ command: "siteSearch", query: { q: "", kind: "story", length: "", sort: "top", page: 1 } });
   await answer(page, catalogue([card("a")], { total: 30, pages: 2 }));
   await page.getByRole("searchbox").fill("lakes");
   await page.getByRole("searchbox").press("Enter");
@@ -81,7 +81,7 @@ test("the host can open it, e.g. from a command", async ({ page }) => {
   const st = status("en");
   const p = await openPanel(page, data(st));
   await p.update(data(st, { open_view: "site", open_token: 7 }));
-  expect(await p.sent()).toContainEqual({ command: "siteSearch", query: { q: "", kind: "", length: "", sort: "popular", page: 1 } });
+  expect(await p.sent()).toContainEqual({ command: "siteSearch", query: { q: "", kind: "", length: "", sort: "top", page: 1 } });
   await expect(page.getByRole("heading", { name: "Routes from the site" })).toBeVisible();
 });
 

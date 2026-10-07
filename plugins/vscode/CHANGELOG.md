@@ -22,6 +22,7 @@ turns them into the section of the new version; the JetBrains Marketplace
 - The built-in routes got new achievements in all five languages (all summits, all lakes, every col of the Tour du Mont Blanc, the Meseta, the cathedrals of Burgos and León, a thousand kilometres of Sahara sand, the salt road of the Seven Lighthouses, a molfar's hour at night…), more varied terrain (vineyards of La Rioja and El Bierzo, an enchanted beech wood on the Molfar's Path, salt flats, heath and birch woods on the way to the Seven Lighthouses), new stops on the Camino Francés (Alto del Perdón, the wine fountain of Irache, San Juan de Ortega, the convent of San Antón, Monte do Gozo) and the Tour du Mont Blanc (Rifugio Bonatti), and the stops that are churches, monasteries, shrines, statues or oases now look like them. Routes without pictures along the way got some.
 
 ### Changed
+- *Routes from the site* shows the best-rated routes first (then the most downloaded) and can sort by rating or downloads either way.
 - Routes that use the new terrain, kinds of stops or achievements need this version: older plugins can't load them. The site gives older plugins a copy with the nearest older terrain and stops instead (a jungle becomes a forest, a city a village, an inn a hut) and without the new kinds of achievements, so its routes still install everywhere.
 
 ## [1.0.0] - 2026-10-06

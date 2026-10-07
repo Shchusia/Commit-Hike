@@ -10,6 +10,10 @@ turns them into the section of the new version; the JetBrains Marketplace
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-10-07
+
+- *Routes from the site* shows the best-rated routes first (then the most downloaded) and can sort by rating or downloads either way.
+
 ## [1.1.0] - 2026-10-07
 
 ### Added

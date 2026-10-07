@@ -21,7 +21,7 @@ export function isSitePage(url: unknown, base = siteUrl()): url is string {
 const ONE_OF = {
   kind: ["real", "story"],
   length: ["s", "m", "l", "xl"],
-  sort: ["new", "popular", "rating", "short", "long"],
+  sort: ["top", "rating", "rating_asc", "popular", "downloads_asc", "new", "short", "long"],
 } as const;
 
 /** The panel's search as arguments for `commit-hike site routes`; anything odd is dropped. */

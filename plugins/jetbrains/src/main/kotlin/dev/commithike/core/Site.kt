@@ -15,7 +15,7 @@ object Site {
     private val oneOf = mapOf(
         "kind" to setOf("real", "story"),
         "length" to setOf("s", "m", "l", "xl"),
-        "sort" to setOf("new", "popular", "rating", "short", "long"),
+        "sort" to setOf("top", "rating", "rating_asc", "popular", "downloads_asc", "new", "short", "long"),
     )
 
     /** The site; COMMIT_HIKE_SITE overrides it (the core reads the same variable). */

@@ -44,7 +44,7 @@ const usage = `commit-hike: turns commits into a journey. Every command prints o
   commit-hike verify   --repo PATH
   commit-hike render   [--scope global|project] [--repo PATH] [--format svg|scene] [--width 300] [--lang uk]
   commit-hike config
-  commit-hike site     routes [--q TEXT] [--kind real|story] [--length s|m|l|xl] [--with-lang de] [--tag a,b] [--min-rating 4] [--gps] [--sort new|popular|rating|short|long] [--page 2] [--per 24] [--lang uk]
+  commit-hike site     routes [--q TEXT] [--kind real|story] [--length s|m|l|xl] [--with-lang de] [--tag a,b] [--min-rating 4] [--gps] [--sort top|rating|rating_asc|popular|downloads_asc|new|short|long] [--page 2] [--per 24] [--lang uk]
   commit-hike site     install --id ID [--replace-local] [--lang uk]   # from the routes website; updates too
   commit-hike version
   commit-hike prompt   [--repo PATH] [--lang uk] [--scan] [--icon 🥾]   # one line of plain text, for shell prompts and status lines

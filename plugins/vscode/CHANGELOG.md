@@ -10,6 +10,13 @@ turns them into the section of the new version; the JetBrains Marketplace
 
 ## [Unreleased]
 
+### Added
+- *Recount history by the new rules…* in the ⋯ menu of the trail view, under the difficulty, next to the other settings of how commits count. It asks first and shows the distance before and after, like the command in the IDE menu.
+
+### Changed
+- *Recount this project* is now *Re-read this project from git*, in the ⋯ menu, the IDE menus and the command palette. It reads the project's commits again and never changes how they count; the similar names made it easy to pick it instead of *Recount history by the new rules…*.
+- Use 1.2 everywhere you run Commit Hike (every IDE, the terminal): an older version that saves the progress drops what it doesn't know, the changed lines of each commit and when the new rules started, and 1.2 then takes the moment it sees that as the update again, which turns a recount of the history back off.
+
 ## [1.2.0] - 2026-10-23
 
 ### Changed

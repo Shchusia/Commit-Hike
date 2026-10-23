@@ -97,3 +97,14 @@ test("the site's editor and home from the menu; closing the menu repaints the pa
   // the one-frame repaint after closing ends with the page fully opaque again
   await expect.poll(() => page.evaluate(() => document.body.style.opacity)).toBe("");
 });
+
+test("the menu recounts the history by the new rules, apart from re-reading the project", async ({ page }) => {
+  const p = await openPanel(page, data(status("uk")));
+  await page.getByRole("button", { name: /Меню|Menu/ }).click();
+  await page.getByRole("menuitem", { name: "Перерахувати історію за новими правилами…" }).click();
+  expect(await p.sent()).toContainEqual({ command: "recountHistory" });
+  await page.getByRole("button", { name: /Меню|Menu/ }).click();
+  await page.getByRole("menuitem", { name: "Перечитати цей проєкт з git" }).click();
+  expect(await p.sent()).toContainEqual({ command: "verify" });
+  expect(p.errors).toEqual([]);
+});

@@ -21,7 +21,7 @@ class PanelCommandTest {
             "exportProgress" to PanelCommand.ExportProgress, "importProgress" to PanelCommand.ImportProgress,
             "copyDiagnostics" to PanelCommand.CopyDiagnostics, "saveBadge" to PanelCommand.SaveBadge,
             "requestTeam" to PanelCommand.RequestTeam, "importRoute" to PanelCommand.ImportRoute,
-            "verify" to PanelCommand.Verify,
+            "verify" to PanelCommand.Verify, "recountHistory" to PanelCommand.RecountHistory,
         )
         for ((name, cmd) in simple) assertEquals(name, cmd, parse("""{"command":"$name"}"""))
     }

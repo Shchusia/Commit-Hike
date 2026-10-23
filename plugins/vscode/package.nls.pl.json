@@ -5,7 +5,7 @@
   "command.chooseProjectRoute": "Wybierz szlak dla tego projektu",
   "command.enableProject": "Licz ten projekt",
   "command.disableProject": "Przestań liczyć ten projekt",
-  "command.verify": "Przelicz ten projekt z historii git",
+  "command.verify": "Wczytaj ten projekt ponownie z gita",
   "command.importRoute": "Importuj trasę lub mapę…",
   "command.removeRoute": "Usuń trasę…",
   "command.setHikerIcon": "Ustaw ikonę wędrowca…",

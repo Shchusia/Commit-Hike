@@ -5,7 +5,7 @@
   "command.chooseProjectRoute": "Вибрати стежку для цього проєкту",
   "command.enableProject": "Рахувати цей проєкт",
   "command.disableProject": "Не рахувати цей проєкт",
-  "command.verify": "Перерахувати проєкт з історії git",
+  "command.verify": "Перечитати цей проєкт з git",
   "command.importRoute": "Імпортувати маршрут або карту…",
   "command.removeRoute": "Видалити маршрут…",
   "command.setHikerIcon": "Іконка мандрівника…",

@@ -5,7 +5,7 @@
   "command.chooseProjectRoute": "Weg für dieses Projekt wählen",
   "command.enableProject": "Dieses Projekt zählen",
   "command.disableProject": "Dieses Projekt nicht mehr zählen",
-  "command.verify": "Dieses Projekt aus der git-Historie neu zählen",
+  "command.verify": "Dieses Projekt neu aus Git lesen",
   "command.importRoute": "Route oder Karte importieren…",
   "command.removeRoute": "Route entfernen…",
   "command.setHikerIcon": "Wanderer-Symbol festlegen…",

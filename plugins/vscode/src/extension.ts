@@ -668,6 +668,7 @@ class App {
       case "importRoute": return this.guard(() => this.importRoute());
       case "openSite": return this.openSitePage(m.path);
       case "verify": return this.guard(() => this.verify());
+      case "recountHistory": return this.guard(() => this.recountHistory());
       case "savePostcard": return this.guard(() => this.savePostcard(m.name, m.data));
       case "setRestDays": return this.guard(async () => {
         const names = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];

@@ -80,7 +80,7 @@
       <separator/>
       <action id="CommitHike.EnableProject" class="dev.commithike.actions.EnableProjectAction" text="Count This Project"/>
       <action id="CommitHike.DisableProject" class="dev.commithike.actions.DisableProjectAction" text="Stop Counting This Project"/>
-      <action id="CommitHike.Verify" class="dev.commithike.actions.VerifyAction" text="Recount This Project from Git History"/>
+      <action id="CommitHike.Verify" class="dev.commithike.actions.VerifyAction" text="Re-read This Project from Git"/>
       <action id="CommitHike.ToggleTeam" class="dev.commithike.actions.ToggleTeamAction" text="Show or Hide Teammates"
               description="Put everyone who commits to this project on the same trail. Names come from git history and are never stored."/>
       <separator/>

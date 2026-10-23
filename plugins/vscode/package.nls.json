@@ -5,7 +5,7 @@
   "command.chooseProjectRoute": "Choose Trail for This Project",
   "command.enableProject": "Count This Project",
   "command.disableProject": "Stop Counting This Project",
-  "command.verify": "Recount This Project from Git History",
+  "command.verify": "Re-read This Project from Git",
   "command.importRoute": "Import a Route or Map…",
   "command.removeRoute": "Remove a Route…",
   "command.setHikerIcon": "Set Hiker Icon…",

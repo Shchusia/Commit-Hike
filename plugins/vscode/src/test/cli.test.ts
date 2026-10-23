@@ -49,11 +49,17 @@ void test("Cli talks to the real core end to end", async () => {
   // concurrent calls are queued, not failing on the lock
   const [a, b] = await Promise.all([cli.scan(repo), cli.scan(repo)]);
   assert.equal(a.new_commits + b.new_commits, 1);
-  assert.equal(a.total_m, 650); // 3 lines = 50 base points × 13 (medium)
+  assert.equal(a.total_m, 221); // 3 lines = 17 base points (45·log2(1 + 3/10)) × 13 (medium)
+
+  // A new install counts its whole history by size: nothing to recount.
+  const scoring = await cli.scoring();
+  assert.equal(scoring.history, true);
+  assert.equal(scoring.upgraded_at, undefined);
+  await assert.rejects(cli.scoring("off"), (e: CliError) => e.code === "invalid_argument");
 
   cli.lang = "uk";
   const st = await cli.status(repo);
-  assert.equal(st.global?.distance_m, 650);
+  assert.equal(st.global?.distance_m, 221);
   assert.equal(st.locale, "uk");
   assert.equal(st.global?.route.name, "Демо-стежка");
 

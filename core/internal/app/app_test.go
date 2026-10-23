@@ -3,6 +3,7 @@ package app
 import (
 	"errors"
 	"fmt"
+	"math"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -90,7 +91,40 @@ func setup(t *testing.T, route string) (*Service, *repo) {
 	if _, err := s.Init(InitOptions{Emails: []string{" Me@X.io "}, RouteID: route, FromHistory: true}); err != nil {
 		t.Fatal(err)
 	}
+	perCommitRules(t, s)
 	return s, newRepo(t)
+}
+
+// volumeRules puts a test on the volume rules for the whole history. With
+// legacyScore's pace of 1, base points read as meters: 1 changed line = 6.2 m,
+// 3 lines = 17 m (45·log2(1 + lines/10)).
+func volumeRules(t *testing.T, s *Service) {
+	t.Helper()
+	cfg, err := s.st.LoadConfig()
+	if err != nil {
+		t.Fatal(err)
+	}
+	zero := int64(0)
+	cfg.ScoringFrom = &zero
+	if err := s.st.SaveConfig(cfg); err != nil {
+		t.Fatal(err)
+	}
+}
+
+// perCommitRules keeps a test on the per-commit rules (before 1.2.0), so tests
+// of scanning read in plain meters: 1 base point = 1 m, and legacyScore's
+// daily cap. The volume rules are tested in volume_test.go.
+func perCommitRules(t *testing.T, s *Service) {
+	t.Helper()
+	cfg, err := s.st.LoadConfig()
+	if err != nil {
+		t.Fatal(err)
+	}
+	never := int64(math.MaxInt64)
+	cfg.ScoringFrom = &never
+	if err := s.st.SaveConfig(cfg); err != nil {
+		t.Fatal(err)
+	}
 }
 
 func scan(t *testing.T, s *Service, dir, lang string) *protocol.ScanResult {

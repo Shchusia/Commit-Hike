@@ -19,6 +19,7 @@
   "extension.displayName": "Commit Hike",
   "extension.description": "Your commits move you along a hiking trail. Local-only, never touches your repositories.",
   "command.changeDifficulty": "Change Difficulty…",
+  "command.recountHistory": "Recount History by the New Rules…",
   "command.setRestDays": "Days Off…",
   "command.exportProgress": "Export Progress…",
   "command.importProgress": "Import Progress…",

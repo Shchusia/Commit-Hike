@@ -1,8 +1,10 @@
 package app
 
 import (
+	"cmp"
 	"math"
 	"slices"
+	"strings"
 	"time"
 
 	"github.com/Shchusia/commit-hike/core/internal/achievements"
@@ -64,32 +66,67 @@ func (s *Service) journeys(cfg *store.Config, pid string) []journey {
 	return out
 }
 
-// effective turns stored base points into meters (pace × the difficulty that
-// applied when each commit was made), applies the daily discount across all
-// tracked projects, then distributes it back to commits proportionally, so
-// per-project journeys always sum to the global one.
+// effective turns stored commits into meters walked, per commit id. Commits
+// from scoring_from on follow the volume rules: worth their size, in time order
+// through one walker for all tracked projects. Older ones keep the per-commit
+// rules: base points × the pace and difficulty of their time, with the daily
+// discount over the old commits of each day. Every commit keeps its own
+// share, so per-project journeys always sum to the global one.
 func (s *Service) effective(cfg *store.Config, st *store.State) map[string]float64 {
-	scaled := make(map[string]float64, len(st.Commits))
+	from := scoringFrom(cfg)
+	out := make(map[string]float64, len(st.Commits))
 	dayRaw := map[int64]float64{}
 	dayLast := map[int64]int64{} // latest commit of the day decides the day's level
+	var walked []string
 	for id, r := range st.Commits {
-		if !s.tracked(cfg, r.Project) {
-			continue
-		}
-		m := r.Meters * s.scaleAt(cfg, r.Time)
-		scaled[id] = m
-		d := s.dayOf(r.Time)
-		dayRaw[d] += m
-		if r.Time > dayLast[d] {
-			dayLast[d] = r.Time
+		switch {
+		case !s.tracked(cfg, r.Project):
+		case r.Time >= from:
+			walked = append(walked, id)
+		default:
+			m := r.Meters * s.scaleAt(cfg, r.Time)
+			out[id] = m
+			d := s.dayOf(r.Time)
+			dayRaw[d] += m
+			if r.Time > dayLast[d] {
+				dayLast[d] = r.Time
+			}
 		}
 	}
-	out := make(map[string]float64, len(scaled))
-	for id, m := range scaled {
+	for id, m := range out {
 		d := s.dayOf(st.Commits[id].Time)
 		out[id] = m * s.score.DailyFactor(dayRaw[d], levelAt(cfg, dayLast[d]))
 	}
+	slices.SortFunc(walked, func(a, b string) int {
+		if ta, tb := st.Commits[a].Time, st.Commits[b].Time; ta != tb {
+			return cmp.Compare(ta, tb)
+		}
+		return strings.Compare(a, b)
+	})
+	w := s.score.NewWalker()
+	for _, id := range walked {
+		r := st.Commits[id]
+		m := s.score.CommitPoints(s.linesOf(r)) * s.scaleAt(cfg, r.Time)
+		out[id] = w.Step(r.Time, m, levelAt(cfg, r.Time))
+	}
 	return out
+}
+
+// scoringFrom is when the volume rules start: never for a config not migrated yet.
+func scoringFrom(cfg *store.Config) int64 {
+	if cfg.ScoringFrom == nil {
+		return math.MaxInt64
+	}
+	return *cfg.ScoringFrom
+}
+
+// linesOf is a commit's changed lines, recovered from its per-commit points
+// when it was stored before lines were.
+func (s *Service) linesOf(r *store.CommitRec) int {
+	if r.Lines > 0 {
+		return r.Lines
+	}
+	return s.score.LinesOf(r.Meters)
 }
 
 // scaleAt is meters per base point for a commit made at t: the real pace at

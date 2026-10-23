@@ -95,6 +95,13 @@ ch._core({ "difficulty", "--set", "hard" }, function(ok, data)
   done = ok and data.level == "hard"
 end)
 check("difficulty via the core", vim.wait(3000, function() return done end, 20))
+check("complete scoring values", vim.deep_equal(ch.complete("o", "CommitHike scoring o"), { "off", "on" }), ch.complete("o", "CommitHike scoring o"))
+local scoring
+ch._core({ "scoring" }, function(ok, data)
+  scoring = ok and data or false
+end)
+check("scoring via the core: a new install counts its history by size",
+  vim.wait(3000, function() return scoring ~= nil end, 20) and scoring and scoring.history == true, scoring)
 
 -- routes from the site: a fake site (python3's http.server over a folder) and the real core
 if vim.fn.executable("python3") == 1 then

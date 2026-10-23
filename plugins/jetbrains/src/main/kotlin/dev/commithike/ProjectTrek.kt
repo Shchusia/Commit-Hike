@@ -384,6 +384,8 @@ class ProjectTrek(private val project: Project, private val cs: CoroutineScope) 
 
     fun changeDifficulty(): Job = runFlow(needsSetup = true) { changeDifficulty() }
 
+    fun recountHistory(): Job = runFlow(needsSetup = true) { recountHistory() }
+
     fun setDifficulty(level: String): Job = runFlow { setDifficulty(level) }
 
     fun setup(): Job = runFlow { setup() }

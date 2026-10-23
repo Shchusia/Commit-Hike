@@ -23,7 +23,7 @@ const (
 	// whose committer date is slightly older than its author date is still seen.
 	querySlack = 24 * time.Hour
 	// Commits dated further in the future than this are ignored: a wrong clock
-	// or a forged date must not bypass the daily cap.
+	// or a forged date must not bypass the walking-speed limit.
 	futureSlack = 24 * time.Hour
 )
 
@@ -126,6 +126,7 @@ func (s *Service) sync(repo, lang string, o ScanOptions, scanning bool) (*protoc
 
 	cfgChanged := s.migrate(cfg, st, pathID, pid, measured)
 	cfgChanged = s.migratePace(cfg) || cfgChanged
+	cfgChanged = s.migrateScoring(cfg) || cfgChanged
 	before := s.status(cfg, st, pid, lang)
 	v := s.merge(st, pid, pathID, measured, full, cut)
 	st.Projects[pid] = &store.ProjectRec{LastScan: started.Unix()}
@@ -165,17 +166,18 @@ func (s *Service) sync(repo, lang string, o ScanOptions, scanning bool) (*protoc
 // (from cut on) for a normal scan, everywhere for a full one. A record is
 // only dropped by the clone that counted it, so clones with different
 // unpushed commits don't undo each other.
-func (s *Service) merge(st *store.State, pid, src string, measured map[commitKey]float64, full bool, cut time.Time) protocol.VerifyResult {
+func (s *Service) merge(st *store.State, pid, src string, measured map[commitKey]measurement, full bool, cut time.Time) protocol.VerifyResult {
 	var v protocol.VerifyResult
 	seen := make(map[string]bool, len(measured))
 	owned := func(r *store.CommitRec) bool { return r.Src == "" || r.Src == src }
-	for key, m := range measured {
+	for key, ms := range measured {
 		seen[key.id] = true
+		m := ms.points
 		rec := st.Commits[key.id]
 		switch {
 		case rec == nil:
 			if m > 0 {
-				st.Commits[key.id] = &store.CommitRec{Project: pid, Time: key.time, Meters: m, Src: src}
+				st.Commits[key.id] = &store.CommitRec{Project: pid, Time: key.time, Meters: m, Lines: ms.lines, Src: src}
 				v.Added++
 			}
 		case rec.Project != pid:
@@ -190,10 +192,11 @@ func (s *Service) merge(st *store.State, pid, src string, measured map[commitKey
 			if rec.Src == "" {
 				rec.Src = src // legacy record: this clone adopts it
 			}
-			if rec.Meters != m || rec.Time != key.time { // amended or rewritten
+			if rec.Meters != m || rec.Time != key.time || (rec.Lines != 0 && rec.Lines != ms.lines) { // amended or rewritten
 				rec.Meters, rec.Time = m, key.time
 				v.Updated++
 			}
+			rec.Lines = ms.lines // a record from before 1.2.0 learns its lines quietly
 		}
 	}
 	for id, rec := range st.Commits {
@@ -214,7 +217,7 @@ func (s *Service) merge(st *store.State, pid, src string, measured map[commitKey
 // It reports whether the config changed. A different repository that now
 // lives at the same path is told apart by sharing no commits with the old
 // one and by the old one having been seen elsewhere.
-func (s *Service) migrate(cfg *store.Config, st *store.State, pathID, pid string, measured map[commitKey]float64) bool {
+func (s *Service) migrate(cfg *store.Config, st *store.State, pathID, pid string, measured map[commitKey]measurement) bool {
 	old := st.Paths[pathID]
 	if old == "" || old == pid {
 		return false
@@ -353,26 +356,34 @@ type commitKey struct {
 	time int64
 }
 
-// measure keeps the user's own non-merge commits and computes raw meters.
+// measurement is what a commit is worth: its significant changed lines and
+// its base points by the per-commit rules (kept for commits counted with them).
+type measurement struct {
+	points float64
+	lines  int
+}
+
+// measure keeps the user's own non-merge commits and measures them.
 // The dedup key is HMAC(author email | author time): it survives amend,
 // rebase and cherry-pick, so rewritten history is never counted twice. If
 // several versions of one commit are reachable, the largest wins.
-func (s *Service) measure(cfg *store.Config, commits []gitlog.Commit) map[commitKey]float64 {
+func (s *Service) measure(cfg *store.Config, commits []gitlog.Commit) map[commitKey]measurement {
 	mine := make(map[string]bool, len(cfg.Emails))
 	for _, e := range cfg.Emails {
 		mine[e] = true
 	}
 	flt := filter.New(cfg.Ignore)
 	limit := s.now().Add(futureSlack).Unix()
-	out := map[commitKey]float64{}
+	out := map[commitKey]measurement{}
 	for _, c := range commits {
 		if c.Parents > 1 || !mine[c.AuthorEmail] || c.AuthorTime.Unix() > limit {
 			continue
 		}
 		t := c.AuthorTime.Unix()
 		k := commitKey{id: s.st.ID("commit", c.AuthorEmail, strconv.FormatInt(t, 10)), time: t}
-		if m := s.score.CommitMeters(countLines(flt, c)); m >= out[k] {
-			out[k] = m
+		lines := countLines(flt, c)
+		if prev, ok := out[k]; !ok || lines > prev.lines {
+			out[k] = measurement{points: s.score.CommitMeters(lines), lines: lines}
 		}
 	}
 	return out

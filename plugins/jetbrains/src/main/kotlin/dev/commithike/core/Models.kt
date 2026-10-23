@@ -194,6 +194,16 @@ data class Avatar(val custom: Boolean = false, val dataUrl: String? = null)
 
 data class VerifyResult(val added: Int = 0, val updated: Int = 0, val removed: Int = 0)
 
+/** Which rules count the commits: by size from [from] on, the per-commit rules before it (command `scoring`). */
+data class Scoring(
+    val from: Long = 0,
+    val history: Boolean = false,
+    val upgradedAt: Long = 0, // 0: this install started with the rules by size
+    val totalM: Double = 0.0,
+    val previousM: Double = 0.0,
+    val verified: VerifyResult? = null,
+)
+
 data class CoreConfig(val mode: String = "all", val emails: List<String>? = null, val locale: String? = null)
 
 data class Member(

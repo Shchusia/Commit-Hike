@@ -72,6 +72,13 @@ class CoreCli(
 
     fun verify(repo: String): VerifyResult = call(listOf("verify", "--repo", repo), VerifyResult::class.java)
 
+    /** Reads the scoring rules; [history] "on" recounts the whole history by size, "off" only commits since the update. */
+    fun scoring(history: String? = null, repo: String? = null): Scoring = call(
+        listOf("scoring") + (if (history == null) emptyList() else listOf("--history", history)) +
+            (if (repo == null) emptyList() else listOf("--repo", repo)),
+        Scoring::class.java,
+    )
+
     fun init(emails: List<String>, mode: String, fromHistory: Boolean, difficulty: String? = null): CoreConfig = call(
         listOf("init", "--email", emails.joinToString(","), "--mode", mode, "--from-history=$fromHistory") +
             (if (difficulty == null) emptyList() else listOf("--difficulty", difficulty)),

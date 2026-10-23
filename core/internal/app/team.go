@@ -20,8 +20,9 @@ const maxTeam = 40
 
 // Team puts everyone who commits to the project on the same route: the
 // project's own journey if it has one, otherwise the global one. It uses the
-// same rules as the user's own progress (filters, per-commit and daily caps,
-// the journey's start date), counted only within this repository. It also
+// same rules as the user's own progress (filters, the volume rules with the
+// walking-speed limit, the journey's start date), counted only within this
+// repository; teammates always by today's rules. It also
 // sums up the team's week and, when one is set, the team goal.
 //
 // Privacy: names come from the local git history (after .mailmap), are
@@ -73,8 +74,8 @@ func (s *Service) Team(repo, lang string) (*protocol.Team, error) {
 		mine[e] = true
 	}
 	type entry struct {
-		t int64
-		m float64
+		t     int64
+		lines int
 	}
 	type person struct {
 		id, name string
@@ -107,36 +108,44 @@ func (s *Service) Team(repo, lang string) (*protocol.Team, error) {
 			}
 			people[key] = p
 		}
-		m := s.score.CommitMeters(countLines(flt, c)) * s.score.Scale(levelAt(cfg, t)) // teammates: always today's rules
-		if m <= 0 {
+		lines := countLines(flt, c)
+		if lines <= 0 {
 			continue
 		}
 		ck := c.AuthorEmail + "|" + strconv.FormatInt(t, 10)
-		if prev, ok := p.seen[ck]; !ok || m > prev.m {
-			p.seen[ck] = entry{t, m}
+		if prev, ok := p.seen[ck]; !ok || lines > prev.lines {
+			p.seen[ck] = entry{t, lines}
 		}
 	}
 	for _, p := range people {
+		// Each teammate walks on their own: their commits in time order through one walker.
+		entries := make([]entry, 0, len(p.seen))
 		for _, e := range p.seen {
+			entries = append(entries, e)
+		}
+		sort.Slice(entries, func(a, b int) bool { return entries[a].t < entries[b].t })
+		w := s.score.NewWalker()
+		for _, e := range entries {
+			level := levelAt(cfg, e.t)
+			m := w.Step(e.t, s.score.CommitPoints(e.lines)*s.score.Scale(level), level)
 			d := s.dayOf(e.t)
 			if e.t >= j.assign.Since {
-				p.byDay[d] += e.m
+				p.byDay[d] += m
 				p.commits++
 				if e.t > p.last {
 					p.last = e.t
 				}
 			}
 			if d >= prevStart {
-				p.weekRaw[d] += e.m
+				p.weekRaw[d] += m
 				p.weekN[d]++
 			}
 			if goalRoute != nil && e.t >= goal.Since {
-				p.goalRaw[d] += e.m
+				p.goalRaw[d] += m
 			}
 		}
 	}
-	level := levelAt(cfg, s.now().Unix())
-	eff := func(raw float64) float64 { return s.score.DailyEffective(raw, level) }
+	eff := func(walked float64) float64 { return walked } // the walker already limited it
 
 	r := j.route
 	out := &protocol.Team{Scope: j.scope, RouteID: r.ID, LengthM: r.LengthM}

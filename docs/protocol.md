@@ -32,6 +32,7 @@ Every command accepts `--lang` (the IDE's language, e.g. `uk`). A language fixed
 | `route template --id --path` | `{path}` of the new pack |
 | `journey --scope --route [--repo] [--from-history]` | status |
 | `verify --repo` | `{added, updated, removed}` |
+| `scoring [--history on/off] [--repo]` | `{from, history, upgraded_at, total_m, previous_m, verified}`: which rules count the commits. Commits from `from` on are worth their size under the walking-speed limit (1.2), older ones keep the per-commit rules. `on` applies the volume rules to the whole history, `off` back to the upgrade (`upgraded_at`; `invalid_argument` on an install that started with them). `--repo` then re-reads that project like `verify`, so its older commits count their exact lines |
 | `render [--scope] [--format svg/scene]` | `{svg}` or `{scene}` |
 | `prompt [--repo] [--lang] [--scan] [--icon]` | **plain text, no envelope** (see below) |
 
@@ -80,7 +81,7 @@ member is `{id, name, me, distance_m, percent, finished, commits, today_m,
 last_commit_at, elevation_m}`. `id` is an HMAC for colours, never an email.
 Identities are merged through `.mailmap`, the user's own addresses become one
 `me`, bots are skipped, and the same rules apply as for the user (filters,
-per-commit and daily caps, the journey's start date). Nothing is stored: the
+the volume rules with one walker per person, the journey's start date). Nothing is stored: the
 result is computed from git history on each call, so cache it in the plugin.
 
 The answer also has:

@@ -97,6 +97,7 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 
 	var (
 		emails, mode, route, locale, scope, format, id, path, prevHead, setLocale, difficulty, restDays *string
+		history                                                                                         *string
 		reduceMotion, highContrast, notifications, festive, ambient                                     *string
 		fromHistory, replace                                                                            *bool
 		width                                                                                           *float64
@@ -116,6 +117,8 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 		difficulty = fs.String("set", "", "easy | medium | hard: applies to commits from now on")
 	case "rest-days":
 		restDays = fs.String("set", "", "weekdays off, e.g. sat,sun; none for no days off")
+	case "scoring":
+		history = fs.String("history", "", "on | off: the volume rules for the whole history, or from the upgrade on")
 	case "settings":
 		reduceMotion = fs.String("reduce-motion", "", "auto | on | off")
 		highContrast = fs.String("high-contrast", "", "auto | on | off")
@@ -184,6 +187,8 @@ func run(args []string, stderr io.Writer, version, dataDir string) (any, error) 
 		return svc.Difficulty(*difficulty)
 	case "rest-days":
 		return svc.RestDays(*restDays)
+	case "scoring":
+		return svc.Scoring(*history, *repo)
 	case "diagnostics":
 		return svc.Diagnostics(version)
 	case "badge":

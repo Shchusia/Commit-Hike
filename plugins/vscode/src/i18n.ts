@@ -62,6 +62,8 @@ const en = {
   diffTitle: "Commit Hike difficulty", diffQuestion: "How fast should commits move you?",
   diffHint: "Applies to commits from now on; distance already walked stays.",
   diff_easy: "Easy", diff_medium: "Medium", diff_hard: "Hard", diffDetail: "A typical day of commits: about {0}",
+  scoringTitle: "Commit Hike rules for commits made before 1.2", scoringOn: "Recount the whole history by the new rules", scoringOnDetail: "A commit is worth its size, at most 5 km an hour of walking, with no daily cap. Your distance changes.",
+  scoringOff: "Keep the old rules for commits made before the update", scoringOffDetail: "Small and big commits count nearly the same, with a daily cap. Distance already walked stays as it was.", scoringAlways: "Your whole history already counts by the new rules: Commit Hike started with them.", scoringDone: "Distance recounted: {0} → {1}.",
 };
 type Key = keyof typeof en;
 
@@ -124,6 +126,8 @@ const uk: Record<Key, string> = {
   diffTitle: "Складність Commit Hike", diffQuestion: "Як швидко коміти мають тебе просувати?",
   diffHint: "Діє для комітів відтепер; уже пройдене лишається.",
   diff_easy: "Легка", diff_medium: "Середня", diff_hard: "Складна", diffDetail: "Типовий день комітів: близько {0}",
+  scoringTitle: "Правила Commit Hike для комітів, зроблених до 1.2", scoringOn: "Перерахувати всю історію за новими правилами", scoringOnDetail: "Коміт важить стільки, скільки змінює, але не більше ніж 5 км ходьби на годину, без денного ліміту. Відстань зміниться.",
+  scoringOff: "Лишити старі правила для комітів, зроблених до оновлення", scoringOffDetail: "Кожен коміт важить майже однаково, з денним лімітом. Уже пройдене лишається як було.", scoringAlways: "Уся твоя історія вже рахується за новими правилами: Commit Hike почав саме з них.", scoringDone: "Відстань перераховано: {0} → {1}.",
 };
 
 const pl: Record<Key, string> = {
@@ -185,6 +189,8 @@ const pl: Record<Key, string> = {
   diffTitle: "Trudność Commit Hike", diffQuestion: "Jak szybko commity mają cię przesuwać?",
   diffHint: "Dotyczy commitów od teraz; przebyta droga zostaje.",
   diff_easy: "Łatwa", diff_medium: "Średnia", diff_hard: "Trudna", diffDetail: "Typowy dzień commitów: około {0}",
+  scoringTitle: "Zasady Commit Hike dla commitów sprzed wersji 1.2", scoringOn: "Przelicz całą historię według nowych zasad", scoringOnDetail: "Commit jest wart tyle, ile zmienia, najwyżej 5 km marszu na godzinę, bez dziennego limitu. Twój dystans się zmieni.",
+  scoringOff: "Zostaw stare zasady dla commitów sprzed aktualizacji", scoringOffDetail: "Każdy commit liczy się prawie tak samo, z dziennym limitem. Przebyta droga zostaje bez zmian.", scoringAlways: "Cała twoja historia już liczy się według nowych zasad: Commit Hike zaczął od nich.", scoringDone: "Dystans przeliczony: {0} → {1}.",
 };
 
 const de: Record<Key, string> = {
@@ -246,6 +252,8 @@ const de: Record<Key, string> = {
   diffTitle: "Schwierigkeit von Commit Hike", diffQuestion: "Wie schnell sollen dich Commits voranbringen?",
   diffHint: "Gilt für Commits ab jetzt; der gegangene Weg bleibt.",
   diff_easy: "Leicht", diff_medium: "Mittel", diff_hard: "Schwer", diffDetail: "Ein typischer Tag mit Commits: etwa {0}",
+  scoringTitle: "Commit-Hike-Regeln für Commits vor Version 1.2", scoringOn: "Den ganzen Verlauf nach den neuen Regeln neu zählen", scoringOnDetail: "Ein Commit zählt nach seiner Größe, höchstens 5 km Gehen pro Stunde, ohne Tageslimit. Deine Strecke ändert sich.",
+  scoringOff: "Für Commits vor dem Update die alten Regeln behalten", scoringOffDetail: "Jeder Commit zählt fast gleich, mit Tageslimit. Die gegangene Strecke bleibt, wie sie ist.", scoringAlways: "Dein ganzer Verlauf zählt schon nach den neuen Regeln: Commit Hike hat mit ihnen begonnen.", scoringDone: "Strecke neu gezählt: {0} → {1}.",
 };
 
 const es: Record<Key, string> = {
@@ -307,6 +315,8 @@ const es: Record<Key, string> = {
   diffTitle: "Dificultad de Commit Hike", diffQuestion: "¿Qué tan rápido deben hacerte avanzar los commits?",
   diffHint: "Se aplica a los commits a partir de ahora; lo recorrido se queda.",
   diff_easy: "Fácil", diff_medium: "Media", diff_hard: "Difícil", diffDetail: "Un día típico de commits: unos {0}",
+  scoringTitle: "Reglas de Commit Hike para los commits anteriores a la 1.2", scoringOn: "Recontar todo el historial con las nuevas reglas", scoringOnDetail: "Un commit vale según lo que cambia, como mucho 5 km de caminata por hora, sin límite diario. Tu distancia cambiará.",
+  scoringOff: "Mantener las reglas antiguas para los commits anteriores a la actualización", scoringOffDetail: "Cada commit cuenta casi igual, con límite diario. La distancia ya recorrida se queda como estaba.", scoringAlways: "Todo tu historial ya cuenta con las nuevas reglas: Commit Hike empezó con ellas.", scoringDone: "Distancia recontada: {0} → {1}.",
 };
 
 /** Every runtime catalog, by language (exported for the tests). */

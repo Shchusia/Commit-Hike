@@ -63,6 +63,10 @@ export interface ScanResult extends Status {
 }
 export interface Avatar { custom: boolean; data_url?: string }
 export interface VerifyResult { added: number; updated: number; removed: number }
+/** Which rules count the commits: by size from `from` on, the per-commit rules before it. */
+export interface Scoring {
+  from: number; history: boolean; upgraded_at?: number; total_m: number; previous_m: number; verified?: VerifyResult;
+}
 export interface Config { mode: "all" | "selected"; emails: string[]; locale?: string }
 export interface Member {
   id: string; name: string; me?: boolean; distance_m: number; percent: number; finished?: boolean;
@@ -187,6 +191,10 @@ export class Cli {
     return this.run<BackupResult>(["backup", "import", "--path", path, ...(replace ? ["--replace"] : [])]);
   }
   verify(repo: string) { return this.run<VerifyResult>(["verify", "--repo", repo]); }
+  /** Reads the scoring rules; history "on" recounts the whole history by size, "off" only commits since the update. */
+  scoring(history?: "on" | "off", repo?: string) {
+    return this.run<Scoring>(["scoring", ...(history ? ["--history", history] : []), ...(repo ? ["--repo", repo] : [])]);
+  }
 
   init(o: { emails: string[]; mode: "all" | "selected"; fromHistory: boolean; difficulty?: Level }) {
     return this.run<Config>(["init", "--email", o.emails.join(","), "--mode", o.mode, `--from-history=${o.fromHistory}`,

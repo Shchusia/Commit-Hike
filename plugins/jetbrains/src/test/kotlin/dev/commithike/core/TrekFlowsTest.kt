@@ -204,6 +204,38 @@ class TrekFlowsTest {
     }
 
     @Test
+    fun recountingHistoryAsksAndCanGoBack() {
+        // A new install started with the rules by size: nothing to ask.
+        val fresh = Host(freshCli())
+        val freshUser = ScriptedUser()
+        flows(fresh, freshUser).recountHistory()
+        assertEquals(0, freshUser.asked)
+        assertTrue(freshUser.notes.last().first.contains("already counts"))
+
+        // A config written by 1.1: the rules by size start at the upgrade.
+        val home = Files.createTempDirectory("flows-home")
+        val cli = CoreCli(bin(), extraEnv = mapOf("COMMIT_HIKE_HOME" to home.toString()))
+        cli.init(listOf("me@x.io"), "all", fromHistory = true)
+        val config = home.resolve("config.json").toFile()
+        config.writeText(config.readText().replace(Regex(""","?\s*"scoring_(from|upgraded_at)":\s*\d+"""), ""))
+        val host = Host(cli)
+        val user = ScriptedUser(confirms = false)
+        val flows = flows(host, user)
+        flows.recountHistory() // the user closes the question: nothing changes
+        assertEquals(1, user.asked)
+        assertFalse(cli.scoring().history)
+        assertTrue(cli.scoring().upgradedAt > 0)
+
+        user.confirms = true
+        flows.recountHistory()
+        assertTrue(cli.scoring().history)
+        assertTrue(user.notes.last().first.startsWith("Distance recounted"))
+        flows.recountHistory() // asked again, now to go back
+        assertFalse(cli.scoring().history)
+        assertEquals(3, user.asked)
+    }
+
+    @Test
     fun backupsGoOutAndComeBackAskingBeforeReplacing() {
         val first = Host(freshCli())
         first.cli.restDays("sat")

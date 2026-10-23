@@ -13,12 +13,12 @@
 ```
 cmd/commit-hike      main: wires the data dir and calls cli.Run
 cli               args -> use case -> one JSON envelope (no logic)
-app               use cases: Init, Scan, Verify, Status, Team, SetJourney, Locale, routes, Render
+app               use cases: Init, Scan, Verify, Scoring, Status, Team, SetJourney, Locale, routes, Render
   ├─ routes       route packs: loading, validation, elevation profile, assets, translated texts
   ├─ achievements rule engine (distance, waypoint, finish, commits, streak, day_distance, altitude, climb)
   ├─ render       trail geometry (scene JSON) and SVG
   ├─ i18n         locale chains (uk-UA -> uk -> en) and catalogs
-  ├─ score        commit size -> meters, daily soft cap
+  ├─ score        commit size -> meters, the walking-speed limit (and the older per-commit rules)
   ├─ filter       which files count
   ├─ gitlog       read-only git access (log with .mailmap identities, HEAD, ancestry)
   └─ store        local files, locking, atomic writes, HMAC ids
@@ -34,19 +34,43 @@ Dependencies point downward only. `app` is the only package that knows about all
 - **Rewritten history is recounted.** Commits are keyed by HMAC(author email | author time), which survives amend, rebase and cherry-pick. Every scan also re-checks the last 7 days (by committer date, with a day of slack) and drops records git no longer has. If the plugin reports a previous HEAD that is not an ancestor of the current one, the whole project is recounted.
 - **Clones don't fight.** Each record remembers which work tree counted it (HMAC of the path); only that clone may drop it.
 - **The project follows a new root.** A project's id is an HMAC of its root commit. The state remembers which id each work tree had; when it changes (the first commit was amended or everything was squashed), records, achievements, the project journey and settings move to the new id. A different repository cloned into a known path is told apart by sharing no commits with the old one and by the old one being known elsewhere.
-- **The user's calendar.** "Today", streaks and the daily cap use the local time zone. Commits dated more than a day in the future are ignored.
+- **The user's calendar.** "Today", streaks and the daily cap of the older rules use the local time zone. Commits dated more than a day in the future are ignored.
 
 ## Pace and difficulty
 
-The state stores base points per commit (10 + 20·log2(1 + changed lines),
-at most 200). Meters are computed when read: base points × pace (13) × the
-difficulty of the time the commit was made (easy ×1.25, medium ×1, hard ×0.8).
-A typical day of about 6 commits of ~60 lines is then about 10 km on medium,
+A commit's size is its significant changed lines (added + deleted, after the
+filters). Since 1.2 the state stores them per commit (`l`) next to the base
+points of the older per-commit rules (`m`). Meters are computed when read.
+
+**Volume rules (1.2 on).** A commit is worth 45·log2(1 + lines/10) base points,
+at most 300 (reached at about 1,000 lines): a one-line commit is 6.2, 60 lines
+126.3. Base points × pace (13) × the difficulty of the time the commit was made
+(easy ×1.25, medium ×1, hard ×0.8) give meters. Then the walking-speed limit:
+all the user's commits in the tracked projects go, in time order, through one
+walker whose reserve of trail refills at 5 km an hour up to 10 km (both scaled
+by the difficulty); a commit gets at most what the reserve holds. A typical day
+of about 6 commits of ~60 lines is 9.9 km on medium and never meets the limit,
 roughly half of a hiker's day, so real-length routes take months (Frodo's
-2,863 km take ~286 typical days on medium). One commit gives at most 2.6 km
-(3.25 km on easy): no route can be finished with a couple of commits. Per day,
-meters count in full up to 15 km, at 35% up to 30 km and at 5% beyond (scaled
-by the level), so farming commits is pointless.
+2,863 km take ~290 typical days on medium). One commit gives at most 3.9 km
+(4.9 km on easy): no route can be finished with a couple of commits. A burst of
+commits is cut to the reserve, and splitting work into tiny commits gains
+little (60 one-line commits are worth about 3 commits of 60 lines). Commits
+spread over a working day count in full however late they come: there is no
+daily cap.
+
+**Per-commit rules (before 1.2).** 10 + 20·log2(1 + lines) base points, at
+most 200, × pace × difficulty; per day, meters count in full up to 15 km, at
+35% up to 30 km and at 5% beyond (scaled by the level).
+
+**Which rules apply.** `scoring_from` in `config.json` says from when the volume
+rules count. New installs set it to 0: their whole history counts by volume. A
+config written before 1.2 gets it set to the moment of its first write after
+the upgrade (and `scoring_upgraded_at` to the same), so distance already walked
+stays as it was. `scoring --history on` moves it back to where the real pace
+starts (`pace_from`), recounting the history by volume; `--history off` moves
+it back to `scoring_upgraded_at`. Records stored before 1.2 have no lines: they
+are recovered from their base points (exactly up to ~723 lines, 723 beyond)
+until a scan or `scoring --repo`/`verify` re-reads the project and stores them.
 
 A difficulty change applies from its moment on (`config.json` keeps the
 history of changes), so switching never rewrites distance already walked. For
@@ -85,7 +109,7 @@ HTML objects are sanitized in a `<template>`, rendered in a closed shadow root, 
 
 `~/.config/commit-hike` (Linux), `~/Library/Application Support/commit-hike` (macOS), `%AppData%\commit-hike` (Windows), overridable with `COMMIT_HIKE_HOME`:
 
-- `config.json`: mode, emails, locale, journeys, projects with teammates turned on, difficulty changes, `pace_from`
+- `config.json`: mode, emails, locale, journeys, projects with teammates turned on, difficulty changes, `pace_from`, `scoring_from`, `scoring_upgraded_at`
 - `state.json`: counted commits (project id, time, meters, which clone), work trees seen (HMAC of path → project id) and unlocked achievements
 - `key`: random key for HMAC ids
 - `avatar.png`: optional custom hiker

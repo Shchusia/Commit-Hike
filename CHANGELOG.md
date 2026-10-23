@@ -10,6 +10,8 @@ turns them into the section of the new version; the JetBrains Marketplace
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-10-23
+
 ### Added
 - *Recount history by the new rules…* in the ⋯ menu of the trail view, under the difficulty, next to the other settings of how commits count. It asks first and shows the distance before and after, like the command in the IDE menu.
 

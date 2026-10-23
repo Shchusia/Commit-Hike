@@ -82,6 +82,15 @@ type Config struct {
 	// keep the distance they had (1 base point = 1 m), so upgrading never
 	// changes what was already walked. Nil = an older config, not migrated yet.
 	PaceFrom *int64 `json:"pace_from,omitempty"`
+	// ScoringFrom is when the volume rules (1.2.0) started to apply: commits
+	// from then on are worth their size under the walking-speed limit, older
+	// ones keep their per-commit points and daily cap. Nil = an older config,
+	// not migrated yet. `scoring --history on` moves it back to apply the
+	// volume rules to the whole history, `--history off` to ScoringUpgradedAt.
+	ScoringFrom *int64 `json:"scoring_from,omitempty"`
+	// ScoringUpgradedAt is when this config moved to the volume rules; 0 for
+	// an install that started with them.
+	ScoringUpgradedAt int64 `json:"scoring_upgraded_at,omitempty"`
 	// RestDays are weekdays off (0 = Sunday … 6 = Saturday): a day off without
 	// commits doesn't break a streak, a day off with commits still counts.
 	RestDays []int `json:"rest_days,omitempty"`
@@ -114,7 +123,11 @@ type DifficultyChange struct {
 type CommitRec struct {
 	Project string  `json:"p"`
 	Time    int64   `json:"t"` // author time, unix seconds
-	Meters  float64 `json:"m"` // raw meters before the daily cap
+	Meters  float64 `json:"m"` // per-commit base points (rules before 1.2.0)
+	// Lines are the significant changed lines the volume rules count. 0 in a
+	// record stored before 1.2.0: they are recovered from Meters until a
+	// rescan of the project stores them.
+	Lines int `json:"l,omitempty"`
 	// Clone that first counted it: HMAC(work tree path). Only that clone may
 	// drop the record when the commit disappears from its history, so two
 	// clones of one project with different unpushed commits don't fight.

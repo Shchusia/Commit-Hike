@@ -318,6 +318,27 @@ class TrekFlows(private val host: TrekHost, private val ui: TrekUi, private val 
         host.refreshAll()
     }
 
+    /** Whether commits made before 1.2 count by their size too; closing the question changes nothing. */
+    fun recountHistory() {
+        val cur = host.core { it.scoring() }
+        if (cur.upgradedAt == 0L) {
+            ui.notify(I18n.t("scoringAlways"))
+            return
+        }
+        val target = if (cur.history) "off" else "on"
+        val asked =
+            if (target == "on") {
+                ui.confirm(I18n.t("scoringAskOn"), I18n.t("scoringOn"))
+            } else {
+                ui.confirm(I18n.t("scoringAskOff"), I18n.t("scoringOff"))
+            }
+        if (!asked) return
+        // The open project is re-read from git, so its older commits count their exact lines.
+        val res = host.core { it.scoring(target, host.currentRepo) }
+        host.refreshAll()
+        ui.notify(I18n.t("scoringDone", I18n.distance(res.previousM), I18n.distance(res.totalM)))
+    }
+
     fun exportProgress(today: LocalDate = LocalDate.now()) {
         val target =
             ui.chooseFileToSave(I18n.t("backupSaveTitle"), I18n.t("backupSaveDesc"), "json", "commit-hike-backup-$today.json") ?: return

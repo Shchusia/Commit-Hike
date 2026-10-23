@@ -105,11 +105,11 @@ class CoreCliTest {
         cli.init(listOf("me@x.io"), "all", fromHistory = true)
         val scan = cli.scan(repo.path)
         assertEquals(1, scan.newCommits)
-        assertEquals(650.0, scan.addedM, 0.001) // 3 lines = 50 base points × 13 (medium)
-        assertEquals(650.0, scan.status().global!!.distanceM, 0.001)
+        assertEquals(221.0, scan.addedM, 0.001) // 3 lines = 17 base points (45·log2(1 + 3/10)) × 13 (medium)
+        assertEquals(221.0, scan.status().global!!.distanceM, 0.001)
         assertEquals("medium", scan.difficulty)
         assertEquals("Old Bridge", scan.global!!.nextWaypoint!!.name)
-        // 650 m: past the 100 m "first steps" threshold and nothing else
+        // 221 m: past the 100 m "first steps" threshold and nothing else
         assertEquals(listOf("first-steps"), scan.events.orEmpty().mapNotNull { it.achievement?.id })
         assertEquals(8, scan.global!!.achievements!!.size) // the demo trail has 8, one of them hidden
         assertEquals(1, scan.global!!.achievements!!.count { it.unlockedAt != 0L })
@@ -124,7 +124,7 @@ class CoreCliTest {
         assertTrue(ridge.waypoints!!.isNotEmpty())
         val proj = cli.setJourney(Scope.PROJECT, ridge.id, fromHistory = true, repo = repo.path)
         assertEquals("Чорногірський хребет", proj.project!!.route.name)
-        assertEquals(650.0, proj.project!!.distanceM, 0.001)
+        assertEquals(221.0, proj.project!!.distanceM, 0.001)
 
         try {
             cli.setJourney(Scope.GLOBAL, "atlantis", fromHistory = false)
@@ -193,7 +193,7 @@ class CoreCliTest {
         val ridgeRoute = proj.project!!.route
         assertEquals(2061.0, ridgeRoute.maxElevationM, 0.001)
         assertTrue(ridgeRoute.facts!!.isNotEmpty() && ridgeRoute.objects!!.isNotEmpty())
-        assertEquals(1358.0, proj.project!!.elevationM!!, 5.0)
+        assertEquals(1313.0, proj.project!!.elevationM!!, 5.0) // 221 m up the ridge: 1290 m + 221/2000 × 210 m
 
         // A rewrite (reset) is recounted when the previous HEAD is passed.
         val head = gitOut(repo, "rev-parse", "HEAD")
@@ -220,6 +220,16 @@ class CoreCliTest {
         assertTrue(assets.html!!.containsKey("assets/aurora.html"))
 
         // Difficulty, tunnels and encounters.
+        // A new install counts its whole history by size: nothing to recount.
+        assertTrue(cli.scoring().history)
+        assertEquals(0L, cli.scoring().upgradedAt)
+        try {
+            cli.scoring("off")
+            fail("expected invalid_argument")
+        } catch (e: CoreException) {
+            assertEquals("invalid_argument", e.code)
+        }
+
         assertEquals("easy", cli.difficulty("easy").level)
         assertTrue(cli.difficulty().typicalDayM!!.getValue("easy") > cli.difficulty().typicalDayM!!.getValue("hard"))
         // Tunnels and encounters, from a fixture pack rather than shipped content.

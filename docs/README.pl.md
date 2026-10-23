@@ -38,7 +38,7 @@ historiami, ciekawostkami i osiągnięciami.
 - **Udostępnij.** Pocztówka z miejscem, w którym jesteś: zapisz ją, skopiuj albo opublikuj w X, Bluesky, Mastodonie, Threads, LinkedInie, na Facebooku, w Telegramie lub na Reddicie z gotowym tekstem.
 - **Także w terminalu.** Jedna linijka w znaku zachęty (starship, bash, zsh, fish) i w pasku stanu Neovima, z tego samego rdzenia: `🥾 16,0 km · Jezioro Niesamowite`.
 - **Wędrujcie razem.** Wszyscy, którzy commitują do projektu, na jednym szlaku, z tabelą wyników, podsumowaniem tygodnia i celem zespołu: trasą, którą przechodzicie wspólnie, sumując commity wszystkich.
-- **Uczciwy dystans.** Pliki lock, kod generowany, zmiany samych spacji i cudze commity się nie liczą; po squash, rebase czy amend historia jest przeliczana, nigdy liczona dwa razy.
+- **Uczciwy dystans.** Metry rosną z rozmiarem commita, od kilku kroków za jednolinijkową poprawkę do prawie 4 km za dużą zmianę, a szybciej niż około 5 km na godzinę nie pójdziesz: drobne commity ani commity seriami nic nie dają, a długi dzień pracy liczy się w całości, późne commity też. Pliki lock, kod generowany, zmiany samych spacji i cudze commity się nie liczą; po squash, rebase czy amend historia jest przeliczana, nigdy liczona dwa razy.
 - **Prywatność przede wszystkim.** Nic nie trafia do twoich repozytoriów i nic o tobie nie opuszcza twojego komputera: jedyne zapytania idą do [commit-hike.dev](https://commit-hike.dev), gdy otworzysz *Trasy ze strony* albo instalujesz trasę, i czytają publiczny katalog, nie wysyłając nic o tobie. Nie zapisujemy kodu, opisów commitów, nazw plików ani repozytoriów.
 
 ## Obsługiwane IDE

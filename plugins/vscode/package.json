@@ -2,7 +2,7 @@
   "name": "commit-hike",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "publisher": "shchusia",
   "license": "MIT",
   "icon": "media/icon.png",
@@ -130,6 +130,11 @@
       {
         "command": "commitHike.changeDifficulty",
         "title": "%command.changeDifficulty%",
+        "category": "Commit Hike"
+      },
+      {
+        "command": "commitHike.recountHistory",
+        "title": "%command.recountHistory%",
         "category": "Commit Hike"
       },
       {

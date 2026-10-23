@@ -286,6 +286,24 @@ type ScanResult struct {
 	Events         []Event `json:"events,omitempty"`
 }
 
+// Scoring says which rules count the commits (command `scoring`).
+type Scoring struct {
+	// From: commits from then on follow the volume rules (1.2.0), older ones
+	// keep the per-commit rules with the daily cap they were counted with.
+	From int64 `json:"from"`
+	// History: the volume rules count the whole history.
+	History bool `json:"history"`
+	// UpgradedAt is when this install moved to the volume rules; 0 when it
+	// started with them, and then the whole history is counted by them anyway.
+	UpgradedAt int64 `json:"upgraded_at,omitempty"`
+	// TotalM is the distance by the rules now in force; PreviousM what it was
+	// before this command changed them.
+	TotalM    float64 `json:"total_m"`
+	PreviousM float64 `json:"previous_m"`
+	// Verified: with --repo, how re-reading that project from git changed it.
+	Verified *VerifyResult `json:"verified,omitempty"`
+}
+
 // VerifyResult reports how a recount changed the stored data.
 type VerifyResult struct {
 	Added   int `json:"added"`

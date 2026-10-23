@@ -19,6 +19,7 @@
   "extension.displayName": "Commit Hike",
   "extension.description": "Twoje commity prowadzą cię górskim szlakiem. Wszystko lokalnie, nie dotyka repozytoriów.",
   "command.changeDifficulty": "Zmień trudność…",
+  "command.recountHistory": "Przelicz historię według nowych zasad…",
   "command.setRestDays": "Dni wolne…",
   "command.exportProgress": "Eksportuj postęp…",
   "command.importProgress": "Importuj postęp…",

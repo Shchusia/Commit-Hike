@@ -38,7 +38,7 @@ unterwegs verändert, einer Karte, Geschichten, Fakten und Erfolgen.
 - **Teilen.** Eine Postkarte von deinem Standort: speichern, kopieren oder mit fertigem Text auf X, Bluesky, Mastodon, Threads, LinkedIn, Facebook, Telegram oder Reddit posten.
 - **Auch im Terminal.** Eine Zeile in deinem Shell-Prompt (starship, bash, zsh, fish) und in der Statuszeile von Neovim, vom selben Kern: `🥾 16,0 km · See Nessamowyte`.
 - **Gemeinsam wandern.** Alle, die in ein Projekt committen, auf demselben Weg, mit Rangliste, Wochenbilanz und Teamziel: einer Route, die ihr gemeinsam geht, die Commits aller zählen zusammen.
-- **Faire Strecke.** Lock-Dateien, generierter Code, reine Leerzeichen-Änderungen und fremde Commits zählen nicht; nach Squash, Rebase oder Amend wird neu gezählt, nie doppelt.
+- **Faire Strecke.** Die Meter wachsen mit der Größe eines Commits, von ein paar Schritten für eine Einzeilenkorrektur bis fast 4 km für eine große Änderung, und schneller als etwa 5 km pro Stunde gehst du nie: winzige Commits oder Commits im Stapel bringen nichts, ein langer Arbeitstag zählt voll, späte Commits auch. Lock-Dateien, generierter Code, reine Leerzeichen-Änderungen und fremde Commits zählen nicht; nach Squash, Rebase oder Amend wird neu gezählt, nie doppelt.
 - **Privat von Grund auf.** Nichts wird in deine Repositories geschrieben, nichts über dich verlässt deinen Computer: Anfragen gehen nur an [commit-hike.dev](https://commit-hike.dev), wenn du *Routen von der Website* öffnest oder eine Route installierst, und sie lesen den öffentlichen Katalog, ohne etwas über dich zu senden. Kein Code, keine Commit-Nachrichten, keine Datei- oder Repository-Namen werden gespeichert.
 
 ## Unterstützte IDEs

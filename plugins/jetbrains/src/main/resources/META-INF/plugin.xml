@@ -86,6 +86,8 @@
       <separator/>
       <action id="CommitHike.ChangeDifficulty" class="dev.commithike.actions.ChangeDifficultyAction" text="Change Difficulty…"
               description="How far a typical day of commits takes you; applies to commits from now on"/>
+      <action id="CommitHike.RecountHistory" class="dev.commithike.actions.RecountHistoryAction" text="Recount History by the New Rules…"
+              description="Count commits made before version 1.2 by their size too, or keep the old rules for them"/>
       <action id="CommitHike.ChangeLanguage" class="dev.commithike.actions.ChangeLanguageAction" text="Change Language…"
               description="Language of route texts, the trail view and Commit Hike messages"/>
     </group>

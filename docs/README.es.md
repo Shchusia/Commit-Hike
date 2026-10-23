@@ -38,7 +38,7 @@ mapa, historias, datos curiosos y logros.
 - **Compártelo.** Una postal de dónde estás: guárdala, cópiala o publícala en X, Bluesky, Mastodon, Threads, LinkedIn, Facebook, Telegram o Reddit con el texto listo.
 - **También en la terminal.** Una línea en el prompt de tu shell (starship, bash, zsh, fish) y en la barra de estado de Neovim, del mismo núcleo: `🥾 16,0 km · Lago Nesamovyte`.
 - **Caminad juntos.** Todos los que hacen commits en un proyecto, en el mismo sendero, con clasificación, el resumen de la semana y una meta del equipo: una ruta que recorréis juntos, sumando los commits de todos.
-- **Distancia justa.** Los ficheros lock, el código generado, los cambios solo de espacios y los commits ajenos no cuentan; tras un squash, rebase o amend se recuenta, nunca se cuenta dos veces.
+- **Distancia justa.** Los metros crecen con el tamaño de un commit, de unos pasos por un arreglo de una línea a casi 4 km por un cambio grande, y nunca caminas más rápido que unos 5 km por hora: partir el trabajo en commits diminutos o hacerlos en ráfagas no da nada, y un día largo de trabajo cuenta entero, también los commits tardíos. Los ficheros lock, el código generado, los cambios solo de espacios y los commits ajenos no cuentan; tras un squash, rebase o amend se recuenta, nunca se cuenta dos veces.
 - **Privado por diseño.** No se escribe nada en tus repositorios y nada sobre ti sale de tu ordenador: solo se consulta [commit-hike.dev](https://commit-hike.dev) cuando abres *Rutas del sitio web* o instalas una ruta, y se lee el catálogo público sin enviar nada sobre ti. No se guarda código, mensajes de commit ni nombres de ficheros o repositorios.
 
 ## IDE compatibles

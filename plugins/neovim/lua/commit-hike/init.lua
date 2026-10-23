@@ -39,6 +39,9 @@ local TEXTS = {
     pickRoute = "Choose a trail", history = "Count the commits you already made?", yes = "Yes, from the start of the history",
     no = "No, from now on", pickDifficulty = "Difficulty", pickLang = "Language", auto = "Same as the editor",
     scanned = "Counted %d new commits", initDone = "Commit Hike is set up for %s",
+    pickScoring = "Rules for commits made before 1.2", scoringOn = "Recount the whole history by the new rules",
+    scoringOff = "Keep the old rules for them", scoringDone = "Distance recounted: %s → %s",
+    scoringAlways = "Your whole history already counts by the new rules",
   },
   uk = {
     siteFind = "Маршрути з сайту", siteNone = "На сайті не знайшлося маршрутів", siteOffline = "Не вдається зв'язатися із сайтом маршрутів: перевір з'єднання",
@@ -51,6 +54,9 @@ local TEXTS = {
     pickRoute = "Вибери стежку", history = "Рахувати вже зроблені коміти?", yes = "Так, від початку історії",
     no = "Ні, відтепер", pickDifficulty = "Складність", pickLang = "Мова", auto = "Як у редакторі",
     scanned = "Пораховано нових комітів: %d", initDone = "Commit Hike налаштовано для %s",
+    pickScoring = "Правила для комітів, зроблених до 1.2", scoringOn = "Перерахувати всю історію за новими правилами",
+    scoringOff = "Лишити для них старі правила", scoringDone = "Відстань перераховано: %s → %s",
+    scoringAlways = "Уся твоя історія вже рахується за новими правилами",
   },
   pl = {
     siteFind = "Trasy ze strony", siteNone = "Nie znaleziono tras na stronie", siteOffline = "Nie można połączyć się ze stroną tras: sprawdź połączenie",
@@ -63,6 +69,9 @@ local TEXTS = {
     pickRoute = "Wybierz szlak", history = "Liczyć już zrobione commity?", yes = "Tak, od początku historii",
     no = "Nie, od teraz", pickDifficulty = "Poziom trudności", pickLang = "Język", auto = "Jak w edytorze",
     scanned = "Policzono nowych commitów: %d", initDone = "Commit Hike skonfigurowany dla %s",
+    pickScoring = "Zasady dla commitów sprzed wersji 1.2", scoringOn = "Przelicz całą historię według nowych zasad",
+    scoringOff = "Zostaw dla nich stare zasady", scoringDone = "Dystans przeliczony: %s → %s",
+    scoringAlways = "Cała twoja historia już liczy się według nowych zasad",
   },
   de = {
     siteFind = "Routen von der Website", siteNone = "Keine Routen auf der Website gefunden", siteOffline = "Die Routen-Website ist nicht erreichbar: prüfe die Verbindung",
@@ -75,6 +84,9 @@ local TEXTS = {
     pickRoute = "Weg wählen", history = "Schon gemachte Commits mitzählen?", yes = "Ja, ab Beginn der Historie",
     no = "Nein, ab jetzt", pickDifficulty = "Schwierigkeit", pickLang = "Sprache", auto = "Wie im Editor",
     scanned = "Neue Commits gezählt: %d", initDone = "Commit Hike ist eingerichtet für %s",
+    pickScoring = "Regeln für Commits vor Version 1.2", scoringOn = "Den ganzen Verlauf nach den neuen Regeln neu zählen",
+    scoringOff = "Für sie die alten Regeln behalten", scoringDone = "Strecke neu gezählt: %s → %s",
+    scoringAlways = "Dein ganzer Verlauf zählt schon nach den neuen Regeln",
   },
   es = {
     siteFind = "Rutas del sitio web", siteNone = "No se encontraron rutas en el sitio", siteOffline = "No se puede conectar con el sitio de rutas: revisa la conexión",
@@ -87,6 +99,9 @@ local TEXTS = {
     pickRoute = "Elige una ruta", history = "¿Contar los commits que ya hiciste?", yes = "Sí, desde el inicio del historial",
     no = "No, desde ahora", pickDifficulty = "Dificultad", pickLang = "Idioma", auto = "Como el editor",
     scanned = "Commits nuevos contados: %d", initDone = "Commit Hike configurado para %s",
+    pickScoring = "Reglas para los commits anteriores a la 1.2", scoringOn = "Recontar todo el historial con las nuevas reglas",
+    scoringOff = "Mantener para ellos las reglas antiguas", scoringDone = "Distancia recontada: %s → %s",
+    scoringAlways = "Todo tu historial ya cuenta con las nuevas reglas",
   },
 }
 local LEVELS = { easy = { "Easy", "Легка", "Łatwy", "Leicht", "Fácil" }, medium = { "Medium", "Середня", "Średni", "Mittel", "Media" },
@@ -443,6 +458,49 @@ function commands.difficulty(level)
   end)
 end
 
+-- Whether commits made before 1.2 count by their size too (the core's `scoring`).
+function commands.scoring(history)
+  local function set(h)
+    local args = { "scoring", "--history", h }
+    local root = repo_root(vim.fn.getcwd())
+    if root then -- re-read from git, so this repository's older commits count their exact lines
+      vim.list_extend(args, { "--repo", root })
+    end
+    core(args, function(ok, data, err)
+      if not ok then
+        return report(data, err)
+      end
+      local T = texts()
+      vim.notify(string.format(T.scoringDone, M.distance(data.previous_m, editor_lang()), M.distance(data.total_m, editor_lang())),
+        vim.log.levels.INFO, { title = "Commit Hike" })
+      M.refresh()
+    end)
+  end
+  if history and history ~= "" then
+    return set(history)
+  end
+  core({ "scoring" }, function(ok, data, err)
+    if not ok then
+      return report(data, err)
+    end
+    local T = texts()
+    if not data.upgraded_at or data.upgraded_at == 0 then
+      return vim.notify(T.scoringAlways, vim.log.levels.INFO, { title = "Commit Hike" })
+    end
+    vim.ui.select({ "on", "off" }, {
+      prompt = T.pickScoring,
+      format_item = function(h)
+        local current = (h == "on") == data.history and " ✓" or ""
+        return (h == "on" and T.scoringOn or T.scoringOff) .. current
+      end,
+    }, function(h)
+      if h and (h == "on") ~= data.history then
+        set(h)
+      end
+    end)
+  end)
+end
+
 function commands.lang(code)
   local function set(c)
     core({ "locale", "--set", c }, function(ok, data, err)
@@ -562,6 +620,7 @@ M.commands = commands
 
 local VALUES = {
   difficulty = { "easy", "medium", "hard" },
+  scoring = { "on", "off" },
   lang = { "auto", "en", "uk", "pl", "de", "es" },
 }
 

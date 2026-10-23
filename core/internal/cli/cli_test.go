@@ -114,3 +114,20 @@ func TestProjectGoal(t *testing.T) {
 		t.Fatalf("goal-off: %+v", env.Error)
 	}
 }
+
+func TestScoring(t *testing.T) {
+	dir := t.TempDir()
+	if env, _, _ := call(t, dir, "init", "--email", "me@x.io"); !env.OK {
+		t.Fatalf("init: %+v", env)
+	}
+	env, data, code := call(t, dir, "scoring")
+	if code != 0 || !env.OK || data["history"] != true || data["from"] != float64(0) {
+		t.Fatalf("a new install counts its history by volume: %+v %v", env, data)
+	}
+	if env, _, _ := call(t, dir, "scoring", "--history", "off"); env.Error.Code != protocol.CodeInvalidArgument {
+		t.Fatalf("history off on a new install: %+v", env.Error)
+	}
+	if env, _, _ := call(t, dir, "scoring", "--history", "sometimes"); env.Error.Code != protocol.CodeInvalidArgument {
+		t.Fatalf("bad value: %+v", env.Error)
+	}
+}

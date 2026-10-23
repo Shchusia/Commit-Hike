@@ -19,6 +19,7 @@
   "extension.displayName": "Commit Hike",
   "extension.description": "Твої коміти ведуть тебе туристичною стежкою. Працює локально й ніколи не змінює твої репозиторії.",
   "command.changeDifficulty": "Змінити складність…",
+  "command.recountHistory": "Перерахувати історію за новими правилами…",
   "command.setRestDays": "Вихідні дні…",
   "command.exportProgress": "Експортувати прогрес…",
   "command.importProgress": "Імпортувати прогрес…",

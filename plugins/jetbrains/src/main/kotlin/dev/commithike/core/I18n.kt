@@ -138,6 +138,17 @@ object I18n {
         "action.toggleTeam" to "Show or Hide Teammates",
         "action.changeLanguage" to "Change Language…",
         "action.changeDifficulty" to "Change Difficulty…",
+        "action.recountHistory" to "Recount History by the New Rules…",
+        "scoringAskOn" to
+            "Recount your whole history by the new rules? A commit is worth its size, at most 5 km an hour of " +
+            "walking, with no daily cap. Your distance changes; you can go back at any time.",
+        "scoringAskOff" to
+            "Go back to the old rules for commits made before the update? Small and big commits count nearly the " +
+            "same, with a daily cap.",
+        "scoringOn" to "Recount",
+        "scoringOff" to "Use the Old Rules",
+        "scoringAlways" to "Your whole history already counts by the new rules: Commit Hike started with them.",
+        "scoringDone" to "Distance recounted: {0} → {1}.",
         "diffTitle" to "Commit Hike Difficulty",
         "diffQuestion" to "How fast should commits move you?",
         "diffLabel" to "Difficulty:",
@@ -277,6 +288,17 @@ object I18n {
         "action.toggleTeam" to "Показати чи сховати команду",
         "action.changeLanguage" to "Змінити мову…",
         "action.changeDifficulty" to "Змінити складність…",
+        "action.recountHistory" to "Перерахувати історію за новими правилами…",
+        "scoringAskOn" to
+            "Перерахувати всю історію за новими правилами? Коміт важить стільки, скільки змінює, але не більше " +
+            "ніж 5 км ходьби на годину, без денного ліміту. Відстань зміниться; повернутися можна будь-коли.",
+        "scoringAskOff" to
+            "Повернути старі правила для комітів, зроблених до оновлення? Малі й великі коміти важать майже " +
+            "однаково, з денним лімітом.",
+        "scoringOn" to "Перерахувати",
+        "scoringOff" to "Старі правила",
+        "scoringAlways" to "Уся твоя історія вже рахується за новими правилами: Commit Hike почав саме з них.",
+        "scoringDone" to "Відстань перераховано: {0} → {1}.",
         "diffTitle" to "Складність Commit Hike",
         "diffQuestion" to "Як швидко коміти мають тебе просувати?",
         "diffLabel" to "Складність:",
@@ -417,6 +439,17 @@ object I18n {
         "action.toggleTeam" to "Pokaż lub ukryj zespół",
         "action.changeLanguage" to "Zmień język…",
         "action.changeDifficulty" to "Zmień trudność…",
+        "action.recountHistory" to "Przelicz historię według nowych zasad…",
+        "scoringAskOn" to
+            "Przeliczyć całą historię według nowych zasad? Commit jest wart tyle, ile zmienia, najwyżej 5 km " +
+            "marszu na godzinę, bez dziennego limitu. Twój dystans się zmieni; możesz wrócić w każdej chwili.",
+        "scoringAskOff" to
+            "Wrócić do starych zasad dla commitów sprzed aktualizacji? Małe i duże commity liczą się prawie tak " +
+            "samo, z dziennym limitem.",
+        "scoringOn" to "Przelicz",
+        "scoringOff" to "Stare zasady",
+        "scoringAlways" to "Cała twoja historia już liczy się według nowych zasad: Commit Hike zaczął od nich.",
+        "scoringDone" to "Dystans przeliczony: {0} → {1}.",
         "diffTitle" to "Trudność Commit Hike",
         "diffQuestion" to "Jak szybko commity mają cię przesuwać?",
         "diffLabel" to "Trudność:",
@@ -560,6 +593,17 @@ object I18n {
         "action.toggleTeam" to "Team anzeigen oder ausblenden",
         "action.changeLanguage" to "Sprache ändern…",
         "action.changeDifficulty" to "Schwierigkeit ändern…",
+        "action.recountHistory" to "Verlauf nach den neuen Regeln neu zählen…",
+        "scoringAskOn" to
+            "Den ganzen Verlauf nach den neuen Regeln neu zählen? Ein Commit zählt nach seiner Größe, höchstens 5 " +
+            "km Gehen pro Stunde, ohne Tageslimit. Deine Strecke ändert sich; du kannst jederzeit zurück.",
+        "scoringAskOff" to
+            "Für Commits vor dem Update zu den alten Regeln zurück? Kleine und große Commits zählen fast gleich, " +
+            "mit Tageslimit.",
+        "scoringOn" to "Neu zählen",
+        "scoringOff" to "Alte Regeln",
+        "scoringAlways" to "Dein ganzer Verlauf zählt schon nach den neuen Regeln: Commit Hike hat mit ihnen begonnen.",
+        "scoringDone" to "Strecke neu gezählt: {0} → {1}.",
         "diffTitle" to "Schwierigkeit von Commit Hike",
         "diffQuestion" to "Wie schnell sollen dich Commits voranbringen?",
         "diffLabel" to "Schwierigkeit:",
@@ -701,6 +745,18 @@ object I18n {
         "action.toggleTeam" to "Mostrar u ocultar al equipo",
         "action.changeLanguage" to "Cambiar idioma…",
         "action.changeDifficulty" to "Cambiar dificultad…",
+        "action.recountHistory" to "Recontar el historial con las nuevas reglas…",
+        "scoringAskOn" to
+            "¿Recontar todo tu historial con las nuevas reglas? Un commit vale según lo que cambia, como mucho 5 " +
+            "km de caminata por hora, sin límite diario. Tu distancia cambiará; puedes volver atrás cuando " +
+            "quieras.",
+        "scoringAskOff" to
+            "¿Volver a las reglas antiguas para los commits anteriores a la actualización? Los commits pequeños y " +
+            "grandes cuentan casi igual, con límite diario.",
+        "scoringOn" to "Recontar",
+        "scoringOff" to "Reglas antiguas",
+        "scoringAlways" to "Todo tu historial ya cuenta con las nuevas reglas: Commit Hike empezó con ellas.",
+        "scoringDone" to "Distancia recontada: {0} → {1}.",
         "diffTitle" to "Dificultad de Commit Hike",
         "diffQuestion" to "¿Qué tan rápido deben hacerte avanzar los commits?",
         "diffLabel" to "Dificultad:",
@@ -738,5 +794,5 @@ object I18n {
         return t("diff.$level", distance(TYPICAL_MEDIUM_DAY_M * factor))
     }
 
-    private const val TYPICAL_MEDIUM_DAY_M = 10030.0
+    private const val TYPICAL_MEDIUM_DAY_M = 9851.4
 }

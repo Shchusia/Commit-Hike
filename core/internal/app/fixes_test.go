@@ -183,10 +183,11 @@ func TestDaysFollowTheLocalCalendar(t *testing.T) {
 
 func TestTeam(t *testing.T) {
 	s, r := setup(t, "chornohora-ridge")
+	volumeRules(t, s)
 	mustWrite(t, filepath.Join(r.dir, ".mailmap"), "Anna Koval <anna@team.io>\nAnna Koval <anna@team.io> <anna@old.io>\n")
-	r.commit("", "a.go", 1)                                            // me: 50 (with .mailmap)
-	r.commit("anna@old.io", "b.go", 1)                                 // anna: 30
-	r.commit("anna@team.io", "c.go", 3)                                // anna: +50
+	r.commit("", "a.go", 1)                                            // me: 6.2 (with .mailmap)
+	r.commit("anna@old.io", "b.go", 1)                                 // anna: 6.2
+	r.commit("anna@team.io", "c.go", 3)                                // anna: +17
 	r.commit("dependabot[bot]@users.noreply.github.com", "go.mod", 10) // bot
 	team, err := s.Team(r.dir, "en")
 	if err != nil {
@@ -196,7 +197,7 @@ func TestTeam(t *testing.T) {
 		t.Fatalf("team: %+v", team)
 	}
 	top := team.Members[0]
-	if top.Name != "Anna Koval" || top.DistanceM != 80 || top.Commits != 2 || top.Me || top.ElevationM == nil {
+	if top.Name != "Anna Koval" || top.DistanceM != 23.2 || top.Commits != 2 || top.Me || top.ElevationM == nil {
 		t.Fatalf("anna: %+v", top)
 	}
 	// The user's row is their trail, not a recount from git: before a scan the
@@ -391,6 +392,7 @@ func TestUpgradeKeepsWalkedDistance(t *testing.T) {
 // Wednesday 30 September 2026 at noon, in UTC.
 func TestTeamWeekAndGoal(t *testing.T) {
 	s, r := setup(t, "chornohora-ridge")
+	volumeRules(t, s)
 	at := func(day, hour int) int64 { return time.Date(2026, 9, day, hour, 0, 0, 0, time.UTC).Unix() }
 	r.ts = at(1, 10)
 	r.commit("other@x.io", "README", 1)                         // long before: the project needs a first commit
@@ -399,11 +401,11 @@ func TestTeamWeekAndGoal(t *testing.T) {
 		t.Fatal(err)
 	}
 	r.ts = at(24, 10) - 60
-	r.commit("anna@team.io", "x.go", 3) // Thursday last week: 50 m, before the goal
+	r.commit("anna@team.io", "x.go", 3) // Thursday last week: 17 m, before the goal
 	r.ts = at(28, 10) - 60
-	r.commit("", "a.go", 3) // Monday: me, 50 m
+	r.commit("", "a.go", 3) // Monday: me, 17 m
 	r.ts = at(29, 10) - 60
-	r.commit("anna@team.io", "b.go", 1) // Tuesday: anna, 30 m
+	r.commit("anna@team.io", "b.go", 1) // Tuesday: anna, 6.2 m
 	s.now = func() time.Time { return time.Unix(at(30, 12), 0) }
 
 	team, err := s.Team(r.dir, "en")
@@ -414,21 +416,21 @@ func TestTeamWeekAndGoal(t *testing.T) {
 	if w.From != "2026-09-28" || w.To != "2026-10-04" || w.DaysElapsed != 3 {
 		t.Fatalf("week bounds: %+v", w)
 	}
-	if w.TotalM != 80 || w.Commits != 2 || w.ActiveDays != 2 || w.PrevTotalM != 50 || w.BestDay != "2026-09-28" || w.BestDayM != 50 {
+	if w.TotalM != 23.2 || w.Commits != 2 || w.ActiveDays != 2 || w.PrevTotalM != 17 || w.BestDay != "2026-09-28" || w.BestDayM != 17 {
 		t.Fatalf("week totals: %+v", w)
 	}
-	if len(w.Members) != 2 || !w.Members[0].Me || w.Members[0].DistanceM != 50 || w.Members[1].Name != "T" || w.Members[1].ActiveDays != 1 {
+	if len(w.Members) != 2 || !w.Members[0].Me || w.Members[0].DistanceM != 17 || w.Members[1].Name != "T" || w.Members[1].ActiveDays != 1 {
 		t.Fatalf("week members: %+v", w.Members)
 	}
 
 	g := team.Goal
-	if g == nil || g.RouteID != "demo-trail" || g.RouteName != "Demo Trail" || g.DistanceM != 80 || g.Finished {
+	if g == nil || g.RouteID != "demo-trail" || g.RouteName != "Demo Trail" || g.DistanceM != 23.2 || g.Finished {
 		t.Fatalf("goal: %+v", g)
 	}
-	if len(g.Members) != 2 || g.Members[0].DistanceM != 50 || g.Members[1].DistanceM != 30 {
+	if len(g.Members) != 2 || g.Members[0].DistanceM != 17 || g.Members[1].DistanceM != 6.2 {
 		t.Fatalf("goal members (anna's last-week commit must not count): %+v", g.Members)
 	}
-	if g.PaceM != 26.7 || g.DaysLeft != 747 { // 80 m over 3 days since Monday; (20000 − 80) / 26.7 = 746.07, rounded up
+	if g.PaceM != 7.7 || g.DaysLeft != 2595 { // 23.2 m over 3 days since Monday; (20000 − 23.2) / 7.7 = 2594.4, rounded up
 		t.Fatalf("pace %v, days left %d", g.PaceM, g.DaysLeft)
 	}
 	if g.LastWaypoint == nil || g.NextWaypoint == nil || g.ToNextM <= 0 {

@@ -10,7 +10,11 @@ if (files.length === 0) {
 }
 fs.mkdirSync(out, { recursive: true });
 for (const f of files) {
-  fs.copyFileSync(path.join(dist, f), path.join(out, f));
-  fs.chmodSync(path.join(out, f), 0o755);
+  // Copy beside, then rename over: writing into a binary that is running (a test,
+  // an Extension Development Host) fails with ETXTBSY on Linux, a rename doesn't.
+  const tmp = path.join(out, `.${f}.${process.pid}.tmp`);
+  fs.copyFileSync(path.join(dist, f), tmp);
+  fs.chmodSync(tmp, 0o755);
+  fs.renameSync(tmp, path.join(out, f));
 }
 console.log(`copied ${files.length} core binaries to bin/`);

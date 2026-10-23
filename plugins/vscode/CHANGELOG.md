@@ -10,6 +10,23 @@ turns them into the section of the new version; the JetBrains Marketplace
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-10-23
+
+### Changed
+- Distance follows the size of your work, at the pace of a walker. A commit is worth more the more it changes, from a few steps for a one-line fix to almost 4 km for a big change (45·log2(1 + lines/10) base points, at most 300 at about 1,000 lines, × 13 m × the difficulty). Instead of the daily cap, the hiker can't walk faster than about 5 km an hour: a reserve of up to 10 km refills at that speed (both scaled by the difficulty) and a commit gets at most what it holds. Commits made in a burst are cut to the reserve, while a long working day counts in full, the commits of the evening as much as those of the morning. All of a person's commits in all tracked projects share one walker. Examples on medium:
+  - 1 changed line: 390 m before, 81 m now; 10 lines: 1,030 m → 585 m; 60 lines: 1,672 m → 1,642 m; 200 lines: 2,119 m → 2,570 m; 1,000 lines or more: 2,600 m → 3,895–3,900 m.
+  - A typical day, 6 commits of 60 lines: 10.0 km → 9.9 km, so routes take as long as they did (12.3 km on easy, 7.9 km on hard).
+  - A long day, 15 commits of 150 lines from 9:00 to 18:00: 20.3 km → 35.1 km. Its last commit added 649 m because of the daily cap; now it adds its full 2,340 m.
+  - A big day, 30 commits of 300 lines from 9:00 to 19:00: 22.2 km → 60 km, the most a walker covers in those ten hours with a full reserve.
+  - Farming: 200 one-line commits in half an hour gave 22.6 km, now 12.5 km (the reserve plus half an hour of walking); spread over 9 hours, 16.1 km. Splitting work into tiny commits gains little: 60 one-line commits are worth about 3 commits of 60 lines (before, 14).
+- Updating changes nothing you already walked: commits made before the update keep the old rules and the daily cap, commits from the update on count by size. A new install counts its whole history by size.
+- Teammates (the Team tab, the team's week and goal) are counted by size too, each with their own walker.
+- A typical day on the difficulty picker reads 9.9 km on medium (was 10.0 km).
+
+### Added
+- Recount the history by the new rules: *Recount History by the New Rules…* in VS Code and JetBrains IDEs, `:CommitHike scoring [on|off]` in Neovim, `commit-hike scoring --history on|off [--repo PATH]` in the terminal. It counts the commits made before the update by size too, and tells you the distance before and after; you can go back to the old rules for them at any time. The open project is re-read from git on the way, so its older commits count their exact lines; in other projects lines are recovered from what was stored (exactly up to about 723 lines, 723 for bigger commits) until they are scanned again.
+- The core stores the changed lines of each commit (`l` in `state.json`) and when the new rules started (`scoring_from`, `scoring_upgraded_at` in `config.json`). Older versions read these files and ignore the new fields.
+
 ## [1.1.2] - 2026-10-07
 
 ### Changed

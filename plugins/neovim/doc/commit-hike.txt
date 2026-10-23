@@ -78,6 +78,11 @@ COMMANDS                                         *commit-hike-commands* *:Commit
 :CommitHike difficulty [easy|medium|hard]
                            How far a typical day of commits takes you. Applies
                            to commits from now on.
+:CommitHike scoring [on|off]
+                           Since 1.2 a commit is worth its size, at most
+                           5 km an hour of walking. on: count the commits
+                           made before the update this way too; off: keep
+                           the old rules for them.
 :CommitHike lang [auto|en|uk|pl|de|es]
                            The language of route texts, for every editor.
 :CommitHike init           First-time setup with your commit e-mail.

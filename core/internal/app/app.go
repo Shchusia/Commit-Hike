@@ -105,12 +105,13 @@ func (s *Service) Init(o InitOptions) (*protocol.Config, error) {
 
 	cfg, err := s.st.LoadConfig()
 	if errors.Is(err, store.ErrNotInitialized) {
-		zero := int64(0) // a new install walks all its history at the real pace
+		zero, zero2 := int64(0), int64(0) // a new install walks all its history at the real pace, by volume
 		cfg = &store.Config{
 			Mode:            store.ModeAll,
 			ProjectJourneys: map[string]*store.Assignment{},
 			EnabledProjects: map[string]bool{},
 			PaceFrom:        &zero,
+			ScoringFrom:     &zero2,
 		}
 	} else if err != nil {
 		return nil, err
@@ -137,6 +138,7 @@ func (s *Service) Init(o InitOptions) (*protocol.Config, error) {
 		cfg.Locale = o.Locale
 	}
 	s.migratePace(cfg)
+	s.migrateScoring(cfg)
 	if o.Difficulty != "" {
 		if !score.ValidLevel(o.Difficulty) {
 			return nil, fail(protocol.CodeInvalidArgument, "difficulty must be easy, medium or hard")
@@ -352,6 +354,17 @@ func (s *Service) migratePace(cfg *store.Config) bool {
 	return true
 }
 
+// migrateScoring starts the volume rules now for a config from before them.
+// It reports whether the config changed.
+func (s *Service) migrateScoring(cfg *store.Config) bool {
+	if cfg.ScoringFrom != nil {
+		return false
+	}
+	now := s.now().Unix()
+	cfg.ScoringFrom, cfg.ScoringUpgradedAt = &now, now
+	return true
+}
+
 // Difficulty reads the difficulty and, with set, changes it. A change applies
 // to commits from now on: distance already walked stays as it was.
 func (s *Service) Difficulty(set string) (*protocol.DifficultyInfo, error) {
@@ -370,6 +383,7 @@ func (s *Service) Difficulty(set string) (*protocol.DifficultyInfo, error) {
 		}
 		now := s.now().Unix()
 		changed := s.migratePace(cfg)
+		changed = s.migrateScoring(cfg) || changed
 		if levelAt(cfg, now) != set {
 			cfg.Difficulty = append(cfg.Difficulty, store.DifficultyChange{At: now, Level: set})
 			changed = true

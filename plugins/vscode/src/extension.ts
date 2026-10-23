@@ -82,6 +82,7 @@ class App {
       vscode.commands.registerCommand("commitHike.resetHikerIcon", () => this.guard(() => this.resetHikerIcon())),
       vscode.commands.registerCommand("commitHike.changeLanguage", () => this.guard(() => this.changeLanguage())),
       vscode.commands.registerCommand("commitHike.changeDifficulty", () => this.guard(() => this.changeDifficulty())),
+      vscode.commands.registerCommand("commitHike.recountHistory", () => this.guard(() => this.recountHistory())),
       vscode.commands.registerCommand("commitHike.setRestDays", () => this.guard(() => this.setRestDays())),
       vscode.commands.registerCommand("commitHike.openSettings", () => this.openSettings()),
       vscode.commands.registerCommand("commitHike.exportProgress", () => this.guard(() => this.exportProgress())),
@@ -553,7 +554,7 @@ class App {
 
   private levelItems(current?: Level): (vscode.QuickPickItem & { value: Level })[] {
     const factor: Record<Level, number> = { easy: 1.25, medium: 1, hard: 0.8 };
-    const day = 10030; // a typical day on medium, see score.TypicalDay in the core
+    const day = 9851.4; // a typical day on medium, see score.TypicalDay in the core
     return (["easy", "medium", "hard"] as Level[]).map(l => ({
       label: t(`diff_${l}`), value: l, description: current === l ? t("langCurrent") : undefined,
       detail: t("diffDetail", formatDistance(day * factor[l])),
@@ -565,6 +566,26 @@ class App {
     const cur = (await this.cli.difficulty()).level;
     const pick = await vscode.window.showQuickPick(this.levelItems(cur), { title: t("diffTitle"), placeHolder: t("diffHint") });
     if (pick) await this.setDifficulty(pick.value);
+  }
+
+  /** Whether commits made before 1.2 count by their size too (the core's `scoring`). */
+  private async recountHistory(): Promise<void> {
+    if (!this.initialized) return this.setup();
+    const cur = await this.cli.scoring();
+    if (!cur.upgraded_at) {
+      void vscode.window.showInformationMessage(t("scoringAlways"));
+      return;
+    }
+    const items = [
+      { label: t("scoringOn"), detail: t("scoringOnDetail"), value: "on" as const, description: cur.history ? t("langCurrent") : undefined },
+      { label: t("scoringOff"), detail: t("scoringOffDetail"), value: "off" as const, description: cur.history ? undefined : t("langCurrent") },
+    ];
+    const pick = await vscode.window.showQuickPick(items, { title: t("scoringTitle") });
+    if (!pick || pick.value === (cur.history ? "on" : "off")) return;
+    // The open project is re-read from git, so its older commits count their exact lines.
+    const res = await this.cli.scoring(pick.value, this.currentRepo);
+    void vscode.window.showInformationMessage(t("scoringDone", formatDistance(res.previous_m), formatDistance(res.total_m)));
+    await this.refresh();
   }
 
   private async setRestDays(): Promise<void> {

@@ -26,6 +26,7 @@ sealed interface PanelCommand {
     /** A page of the routes site: its home ("/") or the route editor ("/create"). */
     data class OpenSite(val path: String) : PanelCommand
     data object Verify : PanelCommand
+    data object RecountHistory : PanelCommand
     data class ChooseRoute(val project: Boolean) : PanelCommand
     data class SetLocale(val locale: String) : PanelCommand
     data class SetTeam(val on: Boolean) : PanelCommand
@@ -94,6 +95,7 @@ sealed interface PanelCommand {
                 "importRoute" -> ImportRoute
                 "openSite" -> msg.string("path")?.takeIf { it == "/" || it == "/create" }?.let { OpenSite(it) }
                 "verify" -> Verify
+                "recountHistory" -> RecountHistory
                 "chooseRoute" -> ChooseRoute(project = msg.string("scope") == "project")
                 "setLocale" -> msg.string("locale")?.takeIf { it.isNotBlank() && it.length <= 16 }?.let { SetLocale(it) }
                 "setTeam" -> msg.bool("on")?.let { SetTeam(it) }

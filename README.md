@@ -7,6 +7,8 @@
 [![GitHub stars](https://img.shields.io/github/stars/Shchusia/Commit-Hike?style=flat&logo=github)](https://github.com/Shchusia/Commit-Hike)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
+[![Commit Hike: this project's own hike](docs/commit-hike-badge.svg)](https://commit-hike.dev)
+
 *[English](README.md) · [Українська](docs/README.uk.md) · [Polski](docs/README.pl.md) · [Deutsch](docs/README.de.md) · [Español](docs/README.es.md) · [Čeština](docs/README.cs.md) · [What's new](CHANGELOG.md)*
 
 Every commit you make moves you along a hiking trail, right inside your IDE.

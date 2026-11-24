@@ -7,6 +7,8 @@
 [![GitHub stars](https://img.shields.io/github/stars/Shchusia/Commit-Hike?style=flat&logo=github)](https://github.com/Shchusia/Commit-Hike)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](../LICENSE)
 
+[![Commit Hike: this project's own hike](commit-hike-badge.svg)](https://commit-hike.dev)
+
 *[English](../README.md) · [Українська](README.uk.md) · [Polski](README.pl.md) · [Deutsch](README.de.md) · [Español](README.es.md) · [Čeština](README.cs.md) · [Що нового](../CHANGELOG.md)*
 
 Кожен твій коміт просуває тебе туристичною стежкою просто в IDE. День
